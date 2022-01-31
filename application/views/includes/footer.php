@@ -69,6 +69,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <!-- Select2 -->
 <script src="<?php echo $url->assets ?>plugins/select2/js/select2.full.min.js"></script>
+<!-- pace-progress -->
+<script src="<?php echo $url->assets ?>plugins/pace-progress/pace.min.js"></script>
 
 <!-- AdminLTE App -->
 <script src="<?php echo $url->assets ?>js/adminlte.min.js"></script>
@@ -104,7 +106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
   });
   
-  
+  location.base = '<?=url()?>'
 </script>
 
 </body>

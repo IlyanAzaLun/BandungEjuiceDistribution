@@ -80,6 +80,15 @@ class Login extends CI_Controller {
 
             $this->index();
             return;
+        }elseif( $attempt=='is_logged' ){
+
+        	// Show Message if invalid password
+
+            $this->data['message'] = 'You are is logged, in another device';
+            $this->data['message_type'] = 'danger';
+
+            $this->index();
+            return;
         }else{
         	
         	// if invalid value or false returned by $attempt

@@ -44,10 +44,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- pace-progress -->
+  <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/pace-progress/themes/black/pace-theme-flat-top.css">
 
   <!-- Theme style -->
   <link rel="stylesheet" href="<?php echo $url->assets ?>css/adminlte.min.css">
-
+  
   
   <!-- Theme style -->
   <link rel="stylesheet" href="<?php echo $url->assets ?>css/app.css">
@@ -68,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo $url->assets ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </head>
-<body class="hold-transition sidebar-mini <?php echo isset($page->body_classes) ? $page->body_classes : 'layout-fixed' ?>">
+<body class="hold-transition sidebar-mini pace-primary <?php echo isset($page->body_classes) ? $page->body_classes : 'layout-fixed' ?>">
 <div class="wrapper">
 
   <!-- Navbar -->

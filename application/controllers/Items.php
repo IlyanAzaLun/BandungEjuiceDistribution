@@ -49,7 +49,7 @@ class Items extends MY_Controller
             $data = [
                 'item_code' => post('item_code'),
                 'item_name' => post('item_name'),
-                'category' => post('category'),
+                'category' => post('subcategory')?post('subcategory'):post('category'),
                 'brand' => post('brand'),
                 'brands' => post('brands'),
                 'mg' => post('MG'),

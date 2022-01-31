@@ -1,5 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<!-- Theme style -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
 
 <?php include viewPath('includes/header'); ?>
 
@@ -31,6 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <h5><i class="fas fa-info"></i> Note:</h5>
         <?=lang('purchase_info_create')?>
       </div>
+      <?php echo form_open_multipart('invoice/purchase/create', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
       <!-- Information customer START -->
       <div class="card">
         <div class="card-header with-border">
@@ -38,30 +43,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="store_name"><?=lang('customer_code')?></label>
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?=lang('find_customer_code')?>" autocomplete="false" required>
+                <?= form_error('customer_code','<small class="text-danger">','</small>') ?>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="store_name"><?=lang('store_name')?></label>
+                <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?=lang('find_store_name')?>" autocomplete="false" required>
+                <?= form_error('store_name','<small class="text-danger">','</small>') ?>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="contact_phone"><?=lang('contact_phone')?><small class="text-primary"> (whatsapp)</small></label>
+                <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>" required readonly>
+              </div>
+            </div>
+
             <div class="col-sm-12">
               <div class="form-group">
-                <input type="text" name="user_id" id="user_id" class="form-control" placeholder="customer_id" value="<?= set_value('user_id') ?>" readonly>
-              </div>
-            </div>
-
-            <div class="col-sm-12 col-lg-6">
-              <div class="form-group">
-                <label for="fullname">Nama toko</label>
-                <input type="text" name="fullname" id="fullname" class="form-control" value="<?= set_value('fullname') ?>" autocomplete="false" required>
-                <?= form_error('user_id','<small class="text-danger">','</small>') ?>
-              </div>
-            </div>
-
-            <div class="col-sm-12 col-lg-6">
-              <div class="form-group">
-                <label for="contact_number">Nomor kontak <small class="text-primary">(whatsapp)</small></label>
-                <input type="text" name="contact_number" id="contact_number" class="form-control" value="<?= set_value('contact_number') ?>" required readonly>
-              </div>
-            </div>
-
-            <div class="col-sm-12">
-              <div class="form-group">
-                <label for="address">Alamat atau tujuan</label>
+                <label for="address"><?=lang('address_destination')?></label>
                 <textarea type="text" name="address" id="address" class="form-control" required readonly><?= set_value('address') ?></textarea>
               </div>
             </div>
@@ -82,19 +89,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <input type="text" name="order_id" id="order_id" class="form-control" placeholder="order_id" readonly>
               </div>
             </div>
-            <div class="col-10">
-              <div class="form-group">
-                <label for="item_name">Cari nama barang...</label>
-                <input required type="hidden" id="item_id" class="form-control" autocomplete="off">
-                <input required type="text" id="item_name" class="form-control" placeholder="Cari barang..." autocomplete="off">
-              </div>
-              <?= form_error('item_name[]','<small class="text-danger">','</small>') ?>
-              <?= form_error('quantity[]','<small class="text-danger">','</small>') ?>
-              <?= form_error('unit[]','<small class="text-danger">','</small>') ?>
-            </div>
-            <div class="col-2">
-              <label for="">&nbsp;</label>
-              <button type="button" class="btn btn-block btn-primary" id="add_order_item"><i class="fa fa-tw fa-plus"></i></button>
+            <div class="col-12">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th><?=lang('item_code')?></th>
+                  <th><?=lang('item_name')?></th>
+                  <th><?=lang('item_quantity')?></th>
+                  <th><?=lang('item_selling_price')?></th>
+                  <th><?=lang('item_order_quantity')?></th>
+                  <th><?=lang('discount')?></th>
+                  <th><?=lang('option')?></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="input-0">
+                  <td><input class="form-control form-control-sm" type="text" name="item_code"></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_name"></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_quantity"></td>
+                  <td><input class="form-control form-control-sm" type="text" name="iten_selling_price"></td>
+                  <td><input class="form-control form-control-sm" type="text" name="iten_order_quantity"></td>
+                  <td><input class="form-control form-control-sm" type="text" name="discount"></td>
+                  <td><button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="float-right mr-1">
+              <button type="button" class="btn btn btn-info" id="add_more"><?=lang('add_more')?></button></div>
             </div>
           </div>
         </div>
@@ -111,7 +132,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <div class="row">
             <div class="col-12">
               <div class="form-group">
-                <h6>Sub total :</h6>
+                <h6><?=lang('subtotal')?> :</h6>
                 <input type="text" name="sub_total" id="sub_total" class="form-control" required>
               </div>
               <div class="row">
@@ -128,7 +149,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
-                    <h6>Ongkos kirim :</h6>
+                    <h6><?=lang('shipping_cost')?> :</h6>
                     <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" value="0" required>
                   </div>
                 </div>
@@ -137,19 +158,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="col-lg-6 col-sm-12">
               <div class="form-group">
-                <h6>Biaya lainnya :</h6>
+                <h6><?=lang('other_cost')?> :</h6>
                 <input type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
               </div>
             </div>
             <div class="col-lg-6 col-sm-12">
               <div class="form-group">
-                <h6>Grand total :</h6>
+                <h6><b><?=lang('grandtotal')?> :</b></h6>
                 <input type="text" name="grand_total" id="grand_total" class="form-control" required>
               </div>
             </div>
             <div class="col-lg col-sm-12">
               <div class="form-group">
-                <label for="note">Catatan</label>
+                <label for="note"><?=lang('note')?></label>
                 <textarea name="note" id="note" class="form-control"></textarea>
               </div>
             </div>
@@ -158,7 +179,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- /.card-body -->
       </div>
       <!-- Information payment END -->
-    <!-- /.card -->
+      <div class="card">
+        <div class="card-footer">
+          <div class="float-right">
+            <button type="submit" class="btn btn-primary float-right"><?=lang('save')?></button>
+            <button type="cancel" class="btn btn-default mr-2"><?=lang('cancel')?></button>
+          </div>
+        </div>
+      </div>
+      <!-- /.card -->
+      <?php echo form_close(); ?>
     </div>
   </div>
 </section>
@@ -168,3 +198,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
   $('body').addClass('sidebar-collapse');
 </script>
+<!-- Jquery ui -->
+<script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseCreate.js"></script>

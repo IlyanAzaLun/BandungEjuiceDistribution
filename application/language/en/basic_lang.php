@@ -241,6 +241,7 @@ $lang['overview'] = "Overview";
 
 //Options
 $lang['option'] = "Options";
+$lang['add_more'] = "Add More";
 $lang['add_data'] = "Add Data";
 $lang['edit_data'] = "Edit Data";
 $lang['delete_data'] = "Delete Data";
@@ -282,6 +283,7 @@ $lang['customer_add'] = 'Add customer';
 $lang['customer_update'] = 'Update customer';
 $lang['customer_code'] = 'Customer code';
 $lang['store_name'] = 'Store name';
+$lang['address_destination'] = 'Address destination';
 $lang['select_store_name'] = 'Select store name';
 $lang['customer_owner'] = 'Owner name';
 $lang['category_customer'] = 'Customer category';
@@ -320,10 +322,22 @@ $lang['is_open'] = 'Is Open';
  * purchase
  */
 $lang['purchase_list'] = 'Purchase list';
+$lang['find_customer_code'] = 'Find customer code ...';
+$lang['find_store_name'] = 'Find store name ...';
+$lang['purchase_list'] = 'Purchase list';
 $lang['purchase_create'] = 'Purchase create';
 $lang['purchase_info_create'] = 'Add more information data purchase';
 $lang['information_customer'] = 'Customer Information';
 $lang['information_items'] = 'Items Information';
+$lang['find_items'] = 'Find items...';
+$lang['item_order_quantity'] = 'Item order quantity';
+$lang['subtotal'] = 'Sub total';
+$lang['discount'] = 'Discount';
+$lang['shipping_cost'] = 'Shipping cost';
+$lang['other_cost'] = 'Other cost';
+$lang['other_cost'] = 'Other cost';
+$lang['grandtotal'] = 'Grand total';
+$lang['grandtotal'] = 'Grand total';
 $lang['information_payment'] = 'Payment Information';
  
 /**

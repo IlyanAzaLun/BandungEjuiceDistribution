@@ -26,9 +26,12 @@ class Purchase extends Invoice_controller {
 	public function create()
 	{
 		ifPermissions('purchase_create');
-		$this->page_data['title'] = 'purchase_create';
-		$this->page_data['page']->submenu = 'create';
-		$this->load->view('invoice/purchase/create', $this->page_data);
+		$this->form_validation->set_rules('item_name', 'Item name', 'required|trim');
+        if ($this->form_validation->run() == false) {
+			$this->page_data['title'] = 'purchase_create';
+			$this->page_data['page']->submenu = 'create';
+			$this->load->view('invoice/purchase/create', $this->page_data);
+		}
 	}
 
 }

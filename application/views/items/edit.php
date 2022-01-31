@@ -38,15 +38,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="form-group">
                                 <label><?=lang('category_item')?></label>
                                 <select class="form-control select2" disabled style="width: 100%;" name="category" id="category"value="<?=set_value('category')?>" required>
-                                    <option value="ACC" <?=($item->category == 'ACC')?'selected':''?> data-id="ACC" <?=set_select('category', 'ACC' )?>>ACCESSORIES</option>
-                                    <option value="ATO" <?=($item->category == 'ATO')?'selected':''?> data-id="ATOMIZER" <?=set_select('category', 'ATOMIZER' )?>>ATOMIZER</option>
-                                    <option value="BAT" <?=($item->category == 'BAT')?'selected':''?> data-id="BATTERY" <?=set_select('category', 'BATTERY' )?>>BATTERY</option>
-                                    <option value="CAT & COIL" <?=($item->category == 'CAT')?'selected':''?> data-id="CATTRIDGE & COIL"<?=set_select('category', 'CATTRIDGE & COIL' )?>>CATTRIDGE & COIL</option>
-                                    <option value="COT" <?=($item->category == 'COT')?'selected':''?> data-id="COTTON" <?=set_select('category', 'COTTON' )?>>COTTON</option>
-                                    <option value="DEV" <?=($item->category == 'DEV')?'selected':''?> data-id="DEVICE" <?=set_select('category', 'DEVICE' )?>>DEVICE</option>
-                                    <option value="LIQ" <?=($item->category == 'LIQ')?'selected':''?> data-id="LIQUID" <?=set_select('category', 'LIQUID' )?>>LIQUID</option>
-                                    <option value="POD" <?=($item->category == 'POD')?'selected':''?> data-id="PODS" <?=set_select('category', 'PODS' )?>>PODS</option>
-                                    <option value="WIR" <?=($item->category == 'WIR')?'selected':''?> data-id="WIRE" <?=set_select('category', 'WIRE' )?>>WIRE</option>
+                                    <option value="ACC" <?=(explode('-',$item->category)[0] == 'ACC')?'selected':''?> data-id="ACC" <?=set_select('category', 'ACC' )?>>ACCESSORIES</option>
+                                    <option value="ATO" <?=(explode('-',$item->category)[0] == 'ATO')?'selected':''?> data-id="ATOMIZER" <?=set_select('category', 'ATOMIZER' )?>>ATOMIZER</option>
+                                    <option value="BAT" <?=(explode('-',$item->category)[0] == 'BAT')?'selected':''?> data-id="BATTERY" <?=set_select('category', 'BATTERY' )?>>BATTERY</option>
+                                    <option value="CAT & COIL" <?=(explode('-',$item->category)[0] == 'CAT')?'selected':''?> data-id="CATTRIDGE & COIL"<?=set_select('category', 'CATTRIDGE & COIL' )?>>CATTRIDGE & COIL</option>
+                                    <option value="COT" <?=(explode('-',$item->category)[0] == 'COT')?'selected':''?> data-id="COTTON" <?=set_select('category', 'COTTON' )?>>COTTON</option>
+                                    <option value="DEV" <?=(explode('-',$item->category)[0] == 'DEV')?'selected':''?> data-id="DEVICE" <?=set_select('category', 'DEVICE' )?>>DEVICE</option>
+                                    <option value="LIQ" <?=(explode('-',$item->category)[0] == 'LIQ')?'selected':''?> data-id="LIQUID" <?=set_select('category', 'LIQUID' )?>>LIQUID</option>
+                                    <option value="POD" <?=(explode('-',$item->category)[0] == 'POD')?'selected':''?> data-id="PODS" <?=set_select('category', 'PODS' )?>>PODS</option>
+                                    <option value="WIR" <?=(explode('-',$item->category)[0] == 'WIR')?'selected':''?> data-id="WIRE" <?=set_select('category', 'WIRE' )?>>WIRE</option>
                                 </select>
                             </div>
                         </div>

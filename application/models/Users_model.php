@@ -20,12 +20,14 @@ class Users_model extends MY_Model {
 
 			// checks the password
 			if($query->row()->password == hash( "sha256", $data['password'] )){
-
-				if ($query->row()->status==='1')
-					return 'valid'; // if valid password and username and allowed
-				else
-					return 'not_allowed';
-
+				if ($query->row()->is_logged==='0') {
+					if ($query->row()->status==='1')
+						return 'valid'; // if valid password and username and allowed
+					else
+						return 'not_allowed';
+				}else{
+					return 'is_logged';
+				}
 			}
 			else
 				return 'invalid_password'; // if invalid password
@@ -67,11 +69,12 @@ class Users_model extends MY_Model {
 
 		}
 
-		setUserlang('es');
+		setUserlang('en');
 
 
 		$this->update($row->id, [
-			'last_login' => date('Y-m-d H:m:i')
+			'last_login' => date('Y-m-d H:m:i'),
+			'is_logged' => 1
 		]);
 
 		$this->activity_model->add($row->name.' ('.$row->username.') Logged in', $this->input->post() ,$row->id);
@@ -80,6 +83,9 @@ class Users_model extends MY_Model {
 
 	public function logout()
 	{
+		$this->update(logged('id'), [
+			'is_logged' => 0
+		]);
 		// Deleting Sessions
 		$this->session->unset_userdata('login');
 		$this->session->unset_userdata('logged');
