@@ -96,6 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <th><?=lang('item_code')?></th>
                   <th><?=lang('item_name')?></th>
                   <th><?=lang('item_quantity')?></th>
+                  <th><?=lang('item_capital_price')?></th>
                   <th><?=lang('item_selling_price')?></th>
                   <th><?=lang('item_order_quantity')?></th>
                   <th><?=lang('discount')?></th>
@@ -104,12 +105,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </thead>
               <tbody>
                 <tr class="input-0">
-                  <td><input class="form-control form-control-sm" type="text" name="item_code"></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_name"></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_quantity"></td>
-                  <td><input class="form-control form-control-sm" type="text" name="iten_selling_price"></td>
-                  <td><input class="form-control form-control-sm" type="text" name="iten_order_quantity"></td>
-                  <td><input class="form-control form-control-sm" type="text" name="discount"></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_code" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_name" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_quantity" required></td>
+                  <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price" required></td>
+                  <td><input readonly class="form-control form-control-sm" type="text" name="item_selling_price" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_order_quantity"  min="0" value="0" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="discount"  min="0" max="100" value="0" required></td>
                   <td><button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button></td>
                 </tr>
               </tbody>
