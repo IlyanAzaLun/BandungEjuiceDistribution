@@ -166,7 +166,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         
-                        <div class="col-sm-4">
+                        <div class="col">
                           <div class="row">
 
                             <div class="col-sm-6">
@@ -188,12 +188,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                           </div>
                         </div>
-                        <div class="col">
+                        <div class="col-12">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('note')?></label>
                                 <textarea type="text" class="form-control" name="note" id="note"><?=$item->note?></textarea>
                                 <?=form_error('note', '<small class="text-danger">','</small>')?>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                    <input type="checkbox" class="custom-control-input" id="is_active" name="is_active"<?=($item->is_active)?' checked':''?>>
+                                    <label class="custom-control-label" for="is_active"><?=lang('status_active')?></label>
+                                </div>
                             </div>
                         </div>
                     </div>

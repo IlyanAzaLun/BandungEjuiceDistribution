@@ -1,26 +1,26 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
 
 </div>
 <!-- ./wrapper -->
 
-  <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
+<footer class="main-footer">
+  <div class="float-right d-none d-sm-block">
     Made with <i class="fa fa-heart" style="color: red;"></i> for Developers
-      &nbsp; &nbsp; &nbsp; &nbsp; 
-      <b>Version</b> 2.0
-    </div>
-    <strong>Copyright &copy; <?php echo date('Y') ?> <a href="<?php echo url('/') ?>"><?php echo setting('company_name') ?></a>.</strong> All rights
-    reserved.
-  </footer>
+    &nbsp; &nbsp; &nbsp; &nbsp;
+    <b>Version</b> 2.0
+  </div>
+  <strong>Copyright &copy; <?php echo date('Y') ?> <a href="<?php echo url('/') ?>"><?php echo setting('company_name') ?></a>.</strong> All rights
+  reserved.
+</footer>
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+  <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
 
 <!-- ChartJS -->
 <script src="<?php echo $url->assets ?>plugins/chart.js/Chart.min.js"></script>
@@ -80,36 +80,34 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo $url->assets ?>js/attribute.js"></script>
 
 <script>
-  $(function () {
+  $(function() {
     $("#example1").DataTable({
       "responsive": true,
       "autoWidth": false,
     });
 
-    $("input[data-bootstrap-switch]").each(function(){
+    $("input[data-bootstrap-switch]").each(function() {
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
     });
 
     $.validator.setDefaults({
       errorElement: 'span',
-      errorPlacement: function (error, element) {
+      errorPlacement: function(error, element) {
         error.addClass('invalid-feedback');
         element.closest('.form-group').append(error);
       },
-      highlight: function (element, errorClass, validClass) {
+      highlight: function(element, errorClass, validClass) {
         $(element).addClass('is-invalid');
       },
-      unhighlight: function (element, errorClass, validClass) {
+      unhighlight: function(element, errorClass, validClass) {
         $(element).removeClass('is-invalid');
       }
     });
 
   });
-  
-  location.base = '<?=url()?>'
+
+  location.base = '<?= url() ?>'
 </script>
-
 </body>
+
 </html>
-
-

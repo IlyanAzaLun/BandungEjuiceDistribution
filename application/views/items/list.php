@@ -98,7 +98,13 @@ $(function () {
                 data : "item_code",
                 orderable: false},
             {
-                data : "item_name"},
+                data : "item_name",
+                render: function (data, type, row) {
+                  let html = `<span class="float-right badge badge-danger">
+                                <?=lang('is_inactive')?>
+                              </span>`;
+                  return `${data} ${(row['is_active']=="0")?html:''}`
+                }},
             {
                 render : function (data, type, row) {
                     return `${row['item_quantity']} (${row['item_unit']})`;

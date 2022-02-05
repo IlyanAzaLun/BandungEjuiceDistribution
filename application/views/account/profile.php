@@ -157,8 +157,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <textarea type="text" class="form-control" name="address" id="inputAddress" placeholder="<?php echo lang('user_address') ?>" rows="3"><?php echo $user->address ?></textarea>
                 </div>
               </div>
-
-              <div class="form-group hidden">
+              <div class="form-group hidden" style="display:<?=(!hasPermissions('roles_list'))?'none':''?>">
                 <label for="inputContact" class="col-sm-2 control-label"><?php echo lang('user_role') ?></label>
 
                 <div class="col-sm-10">

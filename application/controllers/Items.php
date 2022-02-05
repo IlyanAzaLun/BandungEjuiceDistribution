@@ -158,6 +158,7 @@ class Items extends MY_Controller
                 'selling_price' => post('selling_price'),
                 'customs' => post('customs'),
                 'note' => post('note'),
+                'is_active' => post('is_active')?1:0,
                 'updated_at' => date('Y-m-d H:i:s', time()),
                 'updated_by' => logged('id'),
             ];
@@ -197,7 +198,7 @@ class Items extends MY_Controller
 
     public function serverside_datatables_data_items()
     {
-
+        ifPermissions('items_list');
         $response = array();
 
         $postData = $this->input->post();
@@ -249,6 +250,7 @@ class Items extends MY_Controller
                 "item_unit" => $record->unit,
                 "item_capital_price" => $record->capital_price,
                 "item_selling_price" => $record->selling_price,
+                "is_active" => $record->is_active,
             );
         }
 
@@ -261,6 +263,21 @@ class Items extends MY_Controller
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+
+    public function data_items()
+    {
+        if (ifPermissions('purchase_create') OR ifPermissions('selling_create')) {
+            $search = (object) post('search');
+            $this->db->limit(15);
+            if ($search->value) {
+                $this->db->like('item_code', $search->value, 'both');
+                $this->db->or_like('item_name', $search->value, 'both');
+            }
+            $response = $this->db->get('items')->result();
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        };
+    }
+
 }
 
 /* End of file Items.php */

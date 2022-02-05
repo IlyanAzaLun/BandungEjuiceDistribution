@@ -105,18 +105,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </thead>
               <tbody>
                 <tr class="input-0">
-                  <td><input class="form-control form-control-sm" type="text" name="item_code" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_name" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_quantity" required></td>
-                  <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price" required></td>
-                  <td><input readonly class="form-control form-control-sm" type="text" name="item_selling_price" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_order_quantity"  min="0" value="0" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="discount"  min="0" max="100" value="0" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required></td>
+                  <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                  <td><input readonly class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="item_order_quantity[]" data-id="item_order_quantity"  min="0" value="0" required></td>
+                  <td><input class="form-control form-control-sm" type="text" name="discount[]" data-id="discount"  min="0" max="100" value="0" required></td>
                   <td><button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button></td>
                 </tr>
               </tbody>
             </table>
-            <div class="float-right mr-1">
+            <div class="float-left ml-1">
               <button type="button" class="btn btn btn-info" id="add_more"><?=lang('add_more')?></button></div>
             </div>
           </div>
@@ -184,7 +184,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="card">
         <div class="card-footer">
           <div class="float-right">
-            <button type="submit" class="btn btn-primary float-right"><?=lang('save')?></button>
+            <button type="submit" class="btn btn-info float-right"><?=lang('save')?></button>
             <button type="cancel" class="btn btn-default mr-2"><?=lang('cancel')?></button>
           </div>
         </div>

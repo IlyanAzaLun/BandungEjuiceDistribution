@@ -1,32 +1,34 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 
-$lang['info'] = ['send' => 'Send'];
+$lang['info'] = [
+    'send' => 'Send'
+];
 
 /**
  * Login, Profile & Other Pages like password reset
  */
 $lang['sign_in_session'] = "Masuk untuk memulai sesi Anda";
-$lang['username_or_email'] = "Nama Pengguna atau Email";
-$lang['remember_me'] = "Ingat Aku";
+$lang['username_or_email'] = "Username atau email";
+$lang['remember_me'] = "Ingat saya";
 $lang['signin'] = "Masuk";
-$lang['forget_password_?'] = "Lupa kata sandi Anda?";
+$lang['forget_password_?'] = "Lupa kata sandi Anda ?";
 $lang['message_how_forget_reset'] = "Rumah";
 $lang['message_how_forget_reset'] = "Anda lupa kata sandi Anda? Di sini Anda dapat dengan mudah mengambil kata sandi baru.";
 $lang['request_password'] = "Minta kata sandi baru";
 $lang['mesasge_set_password_step'] = "Anda hanya selangkah lagi dari kata sandi baru Anda, pulihkan kata sandi Anda sekarang.";
-$lang['new_password'] = "Kata Sandi Baru";
-$lang['confirm_new_password'] = "Konfirmasi Kata Sandi Baru";
+$lang['new_password'] = "kata sandi baru";
+$lang['confirm_new_password'] = "Konfirmasi password baru";
 $lang['update_password'] = "Setel Kata Sandi";
-$lang['my_account'] = "Akun Saya";
+$lang['my_account'] = "Akun saya";
 $lang['member_since'] = "Anggota Sejak";
 $lang['change_profile_image'] = "Ubah Gambar Profil";
-$lang['change_password'] = "Ubah Kata Sandi";
-$lang['message_login_again_after_password'] = "Anda harus login lagi setelah password diubah !";
-$lang['message_password_atleast_long'] = "Password harus minimal 6 karakter !";
-$lang['old_password'] = "Kata Sandi Lama";
+$lang['change_password'] = "Ganti kata sandi";
+$lang['message_login_again_after_password'] = "Anda harus login lagi setelah kata sandi diubah!";
+$lang['message_password_atleast_long'] = "Kata sandi harus minimal 6 karakter!";
+$lang['old_password'] = "password lama";
 
 
 /**
@@ -34,7 +36,8 @@ $lang['old_password'] = "Kata Sandi Lama";
  */
 $lang['not_allowed_403'] = "Anda tidak diperbolehkan mengakses halaman ini.";
 $lang['sorry_not_allowed_msg'] = "Maaf, Anda tidak dapat mengakses bagian/halaman web ini.
-Meanwhile, you may <a href='".url('/')."'>return to dashboard</a> or try using the search form.";
+Sementara itu, Anda dapat <a href='" . url('/') . "'>kembali ke dasbor</a> atau coba gunakan formulir pencarian.";
+
 
 $lang['home'] = "Rumah";
 $lang['dashboard'] = "Dasbor";
@@ -57,25 +60,25 @@ $lang['widgets'] = "Widget";
 $lang['layout_options'] = "Opsi Tata Letak";
 $lang['top_navigation'] = "Navigasi Atas";
 $lang['top_navigation_sidebar'] = "Navigasi Atas + Bilah Samping";
-$lang['boxed'] = "Kotak";
+$lang['boxed'] = "Kemas";
 $lang['fixed_sidebar'] = "Bilah Sisi Tetap";
 $lang['fixed_navbar'] = "Memperbaiki Navbar";
-$lang['fixed_footer'] = "Footer Tetap";
-$lang['collapsed_sidebar'] = "Bilah Sisi Diciutkan";
-$lang['charts'] = "Grafik";
-$lang['chartjs'] = "Bagan JS";
+$lang['fixed_footer'] = "Catatan Kaki Tetap";
+$lang['collapsed_sidebar'] = "Bilah Samping yang Diciutkan";
+$lang['charts'] = "grafik";
+$lang['chartjs'] = "ChartJS";
 $lang['flot'] = "Flot";
-$lang['inline'] = "Sebaris";
+$lang['inline'] = "Di barisan";
 $lang['ui_elements'] = "Elemen UI";
 $lang['general'] = "Umum";
-$lang['icons'] = "Ikon";
-$lang['buttons'] = "Tombol";
+$lang['icons'] = "ikon";
+$lang['buttons'] = "tombol";
 $lang['sliders'] = "Penggeser";
 $lang['modals_alerts'] = "Modal & Peringatan";
-$lang['nav_tabs'] = "Bilah Navigasi & Tab";
-$lang['timeline'] = "Garis Waktu";
-$lang['ribbons'] = "Pita";
-$lang['forms'] = "Bentuk";
+$lang['nav_tabs'] = "Navbar & Tab";
+$lang['timeline'] = "Linimasa";
+$lang['ribbons'] = "pita";
+$lang['forms'] = "Formulir";
 $lang['general_elements'] = "Elemen Umum";
 $lang['advanced_elements'] = "Elemen Lanjutan";
 $lang['editors'] = "Editor";
@@ -85,61 +88,64 @@ $lang['simple_tables'] = "Tabel Sederhana";
 $lang['jsgrid'] = "jsGrid";
 $lang['examples'] = "Contoh";
 $lang['gallery'] = "Galeri";
-$lang['mailbox'] = "Kotak surat";
-$lang['inbox'] = "Kotak Masuk";
-$lang['compose'] = "Tulis";
-$lang['read'] = "Baca";
-$lang['pages'] = "Halaman";
+$lang['mailbox'] = "kotak surat";
+$lang['inbox'] = "kotak masuk";
+$lang['compose'] = "Menyusun";
+$lang['read'] = "Membaca";
+$lang['pages'] = "halaman";
 $lang['invoice'] = "faktur";
-$lang['ecommerce'] = "E-niaga";
+$lang['menus'] = "Menu";
+$lang['purchase'] = "pembelian";
+$lang['selling'] = "penjualan";
+$lang['ecommerce'] = "Perdagangan elektronik";
 $lang['projects'] = "Proyek";
-$lang['project_add'] = "Tambah Proyek";
+$lang['project_add'] = "Proyek Tambah";
 $lang['project_edit'] = "Pengeditan Proyek";
-$lang['project_detail'] = "Rincian Proyek";
+$lang['project_detail'] = "Detail Proyek";
 $lang['contacts'] = "Kontak";
 $lang['extras'] = "Ekstra";
-$lang['login'] = "Masuk";
+$lang['login'] = "Gabung";
 $lang['register'] = "Daftar";
-$lang['forgot_password'] = "Lupa Kata Sandi";
+$lang['forgot_password'] = "Tidak ingat kata sandi";
 $lang['recover_password'] = "Pulihkan Kata Sandi";
 $lang['lockscreen'] = "Layar kunci";
 $lang['legacy_user_menu'] = "Menu Pengguna Lama";
 $lang['language_menu'] = "Menu Bahasa";
-$lang['error_404'] = "Kesalahan 404";
+$lang['error_404'] = "kesalahan 404";
 $lang['error_500'] = "Kesalahan 500";
-$lang['pace'] = "Kecepatan";
-$lang['blank_page'] = "Halaman Kosong";
-$lang['starter_page'] = "Halaman Awal";
-$lang['MISCELLANEOUS'] = "LAIN-LAIN";
+$lang['pace'] = "Laju";
+$lang['blank_page'] = "Halaman kosong";
+$lang['starter_page'] = "Halaman Pemula";
+$lang['MISCELLANEOUS'] = "ANEKA RAGAM";
 $lang['documentation'] = "Dokumentasi";
 $lang['multi_level_example'] = "CONTOH MULTI TINGKAT";
 $lang['level'] = "Tingkat";
 $lang['labels'] = "Label";
 $lang['important'] = "Penting";
 $lang['warning'] = "Peringatan";
-$lang['informational'] = "Informasi";
+$lang['informational'] = "informasi";
 
-$lang['id'] = "ID";
+$lang['id'] = "Indo";
 $lang['action'] = "Tindakan";
 $lang['submit'] = "Kirim";
-$lang['cancel'] = "Batalkan";
+$lang['cancel'] = "Membatalkan";
 
 /**
  * layouts
  */
 
-$lang['sample_4h_ago'] = "4 Jam Yang Lalu";
+$lang['sample_4h_ago'] = "4 jam yang lalu";
 $lang['sample_brad'] = "Brad Diesel";
-$lang['sample_call'] = "Hubungi saya kapan pun Anda bisa...";
+$lang['sample_call'] = "Hubungi saya kapan pun Anda bisa ...";
 $lang['c'] = "Saya menerima pesan Anda bro";
 $lang['sample_john'] = "John Pierce";
-$lang['sample_nora'] = "Nora Silver";
-$lang['sample_subject'] = "Subjeknya ada di sini";
+$lang['sample_nora'] = "Nora Silverster";
+$lang['sample_subject'] = "Subjeknya di sini";
 $lang['see_all_messages'] = "Lihat Semua Pesan";
-$lang['notifications'] = "Pemberitahuan";
+$lang['notifications'] = "Notifikasi";
 $lang['see_all_notifications'] = "Lihat semua Pemberitahuan";
-$lang['followers'] = "Pengikut";
-$lang['friends'] = "Teman";
+$lang['followers'] = "pengikut";
+$lang['friends'] = "Teman-teman";
 $lang['profile'] = "Profil";
 $lang['signout'] = "Keluar";
 
@@ -147,43 +153,43 @@ $lang['signout'] = "Keluar";
 
 
 
-$lang['dashboard_new_orders'] = "Order Baru";
-$lang['dashboard_bounce_rate'] = "Rasio Pentalan";
+$lang['dashboard_new_orders'] = "Pesanan baru";
+$lang['dashboard_bounce_rate'] = "Tingkat Pentalan";
 $lang['dashboard_user_register'] = "Pendaftaran Pengguna";
-$lang['dashboard_unique_visitor'] = "Pengunjung Unik";
+$lang['dashboard_unique_visitor'] = "pengunjung unik";
 $lang['dashboard_sales'] = "Penjualan";
-$lang['dashboard_sales_area'] = "Area";
+$lang['dashboard_sales_area'] = "Daerah";
 $lang['dashboard_sales_donut'] = "Donat";
-$lang['dashboard_visitors'] = "Pengunjung";
-$lang['dashboard_online'] = "Online";
+$lang['dashboard_visitors'] = "pengunjung";
+$lang['dashboard_online'] = "On line";
 $lang['dashboard_direct_chat'] = "Obrolan Langsung";
 $lang['dashboard_more_info'] = "Info lebih lanjut";
 
-$lang['dashboard_area'] = "Area";
+$lang['dashboard_area'] = "Daerah";
 $lang['dashboard_donut'] = "Donat";
 $lang['dashboard_direct_chat'] = "Obrolan Langsung";
 $lang['dashboard_alexander_pierce'] = "Alexander Pierce";
-$lang['dashboard_chat_sample'] = "Apakah templat ini benar-benar gratis? Sungguh luar biasa!";
+$lang['dashboard_chat_sample'] = "Apakah template ini benar-benar gratis? Itu tidak bisa dipercaya!";
 
 
 $lang['dashboard_sarah_bullock'] = "Sarah Bullock";
-$lang['dashboard_belive_it'] = "Kamu sebaiknya percaya!";
-$lang['dashboard_love_to'] = "Saya akan senang.";
-$lang['dashboard_how_been'] = "Bagaimana kabarmu? Aku...";
+$lang['dashboard_belive_it'] = "Sebaiknya kamu percaya!";
+$lang['dashboard_love_to'] = "Aku sangat ingin.";
+$lang['dashboard_how_been'] = "Bagaimana kabarmu? aku...";
 
 
-$lang['dashboard_todo_list'] = "Daftar Tugas";
+$lang['dashboard_todo_list'] = "Daftar yang Harus Dilakukan";
 $lang['dashboard_todo_design'] = "Desain tema yang bagus";
 
 $lang['dashboard_todo_design'] = "Desain tema yang bagus";
 $lang['dashboard_todo_responsive'] = "Jadikan tema responsif";
 $lang['dashboard_todo_theme'] = "Biarkan tema bersinar seperti bintang";
-$lang['dashboard_checK_notify'] = "Periksa pesan dan pemberitahuan Anda";
-$lang['dashboard_add_item'] = "Tambahkan barang";
-$lang['dashboard_visitors'] = "Pengunjung";
-$lang['dashboard_online'] = "Online";
-$lang['dashboard_mail_orders'] = "Pesanan Surat";
-$lang['dashbaord_in_store'] = "Di dalam Toko";
+$lang['dashboard_checK_notify'] = "Periksa pesan dan notifikasi Anda";
+$lang['dashboard_add_item'] = "Tambahkan Barang";
+$lang['dashboard_visitors'] = "pengunjung";
+$lang['dashboard_online'] = "On line";
+$lang['dashboard_mail_orders'] = "Mail-Pesanan";
+$lang['dashbaord_in_store'] = "Di toko";
 $lang['calendar'] = "Kalender";
 $lang['dashboard_add_event'] = "Tambahkan acara baru";
 $lang['dashboard_clear_events'] = "Hapus acara";
@@ -194,46 +200,173 @@ $lang['dashboard_view_calendar'] = "Lihat kalender";
  */
 $lang['users'] = "Pengguna";
 $lang['user'] = "Pengguna";
-$lang['new_user'] = "Pengguna Baru";
-$lang['edit_user'] = "Ubah Pengguna";
+$lang['new_user'] = "Pengguna baru";
+$lang['edit_user'] = "Edit Pengguna";
 $lang['view_user'] = "Lihat Pengguna";
-$lang['delete_user'] = "Hapus Pengguna";
+$lang['delete_user'] = "Hapus pengguna";
 $lang['delete_user_cannot'] = "Anda tidak dapat Menghapus Pengguna ini";
-$lang['user_unable_change_status'] = "Tidak dapat mengubah Status ! Coba Lagi";
+$lang['user_unable_change_status'] = "Tidak dapat mengubah Status! Coba lagi";
 $lang['user_basic'] = "Detail Dasar";
 $lang['user_name'] = "Nama";
-$lang['user_enter_name'] = "Masukkan Nama";
-$lang['user_contact'] = "Nomor Kontak";
+$lang['user_enter_name'] = "Masukkan nama";
+$lang['user_contact'] = "Nomor kontak";
 $lang['user_enter_contact'] = "Masukkan Nomor Kontak";
 
-$lang['user_login_details'] = "Detail Masuk";
-$lang['user_email'] = "Email";
+$lang['user_login_details'] = "rincian masuk";
+$lang['user_email'] = "Surel";
 $lang['user_username'] = "Nama pengguna";
-$lang['user_email_exists'] = "Email Sudah Ada";
-$lang['user_enter_username'] = "Masukkan Nama Pengguna";
+$lang['user_email_exists'] = "Email sudah ada";
+$lang['user_enter_username'] = "Masukkan nama pengguna";
 
-$lang['user_enter_email'] = "Masukkan Nama Pengguna";
-$lang['user_username_take'] = "Nama Pengguna Sudah Diambil";
-$lang['user_password'] = "Kata Sandi";
-$lang['user_password_confirm'] = "Konfirmasi Kata Sandi";
-$lang['user_password_leave_blank'] = "Biarkan Kosong agar tetap tidak berubah !";
+$lang['user_enter_email'] = "Masukkan nama pengguna";
+$lang['user_username_take'] = "Nama pengguna Sudah diambil";
+$lang['user_password'] = "Kata sandi";
+$lang['user_password_confirm'] = "setujui password";
+$lang['user_password_leave_blank'] = "Biarkan Kosong agar tetap tidak berubah!";
 
-$lang['user_other_details'] = "Rincian Lainnya";
+$lang['user_other_details'] = "Detail lainnya";
 $lang['user_address'] = "Alamat";
-$lang['user_enter_address'] = "Masukkan Alamat";
+$lang['user_enter_address'] = "Masukkan alamat";
 $lang['user_role'] = "Peran";
 $lang['user_select_role'] = "Pilih Peran";
 $lang['user_status'] = "Status";
 $lang['user_active'] = "Aktif";
 $lang['user_inactive'] = "Tidak Aktif";
-$lang['user_profile_image'] = "Gambar Profil";
+$lang['user_profile_image'] = "Gambar profil";
 $lang['user_image'] = "Gambar";
 $lang['user_upload_image'] = "Unggah Gambar";
 $lang['user_upload_image_preview'] = "Pratinjau Gambar yang Diunggah";
-$lang['user_last_login'] = "Login Terakhir";
+$lang['user_last_login'] = "Login terakhir";
 
 $lang['overview'] = "Ringkasan";
 
+//Options
+$lang['master'] = "Menguasai";
+$lang['option'] = "Pilihan";
+$lang['add_more'] = "Tambahkan Lebih Banyak";
+$lang['add_data'] = "Tambahkan Data";
+$lang['edit_data'] = "Edit Data";
+$lang['delete_data'] = "Hapus Data";
+$lang['note'] = "Catatan";
+$lang['save'] = "Menyimpan";
+$lang['cancel'] = "Membatalkan";
+$lang['update'] = "Memperbarui";
+$lang['created_by'] = "Dibuat oleh";
+$lang['created_at'] = "Dibuat di";
+$lang['updated_by'] = "diperbaharui oleh";
+$lang['updated_at'] = "Diperbarui pada";
+$lang['status_active'] = "Data ini tidak akan ditampilkan jika status dimatikan";
+
+/*
+ * Items
+ */
+$lang['item'] = "barang";
+$lang['item_list'] = "Daftar barang";
+$lang['item_add'] = "Tambahkan Barang";
+$lang['item_update'] = "Perbarui barang";
+$lang['item_code'] = "Kode barang";
+$lang['item_name'] = "Nama barang";
+$lang['item_quantity'] = "jumlah barang";
+$lang['item_capital_price'] = "Harga modal";
+$lang['item_selling_price'] = "Harga penjualan";
+$lang['item_info_add'] = "Tambahkan lebih banyak item data informasi";
+$lang['item_info_edit'] = "Edit item data informasi";
+$lang['category_item'] = "Kategori barang";
+$lang['select_category_item'] = "Pilih item kategori";
+$lang['current_stock'] = "stok saat ini";
+$lang['sub_category'] = "Sub kategori";
+$lang['is_active'] = "Aktif";
+$lang['is_inactive'] = "tidak aktif";
+
+/*
+ * Customer
+ */
+$lang['customer'] = "pelanggan";
+$lang['customer_list'] = "Daftar pelanggan";
+$lang['customer_add'] = "Tambahkan pelanggan";
+$lang['customer_update'] = "Perbarui pelanggan";
+$lang['customer_code'] = "Kode pelanggan";
+$lang['store_name'] = "Nama toko";
+$lang['address_destination'] = "Alamat tujuan";
+$lang['select_store_name'] = "Pilih nama toko";
+$lang['customer_owner'] = "Nama pemilik";
+$lang['category_customer'] = "kategori pelanggan";
+$lang['customer_info_add'] = "Tambahkan lebih banyak informasi data pelanggan";
+$lang['customer_info_edit'] = "Edit informasi data pelanggan";
+$lang['select_category_customer'] = "Pilih kategori pelanggan";
+$lang['customer_category_ws'] = "Jual Dunia";
+$lang['customer_category_agent'] = "Agen";
+$lang['customer_category_special'] = "Agen Khusus";
+$lang['customer_category_distributor'] = "Distributor";
+$lang['customer_category_other'] = "Lainnya";
+$lang['customer_type'] = "Tipe pelanggan";
+$lang['customer_category_other'] = "Lainnya";
+
+/*
+ * Supplier
+ */
+$lang['supplier'] = "pemasok";
+$lang['supplier_list'] = "Daftar pemasok";
+$lang['supplier_add'] = "Tambahkan pemasok";
+$lang['supplier_update'] = "Perbarui pemasok";
+$lang['supplier_code'] = "Kode penyuplai";
+$lang['store_name'] = "Nama toko";
+$lang['address_destination'] = "Alamat tujuan";
+$lang['select_store_name'] = "Pilih nama toko";
+$lang['supplier_owner'] = "Nama pemilik";
+$lang['category_supplier'] = "kategori pemasok";
+$lang['supplier_info_add'] = "Tambahkan lebih banyak informasi pemasok data";
+$lang['supplier_info_edit'] = "Edit informasi data pemasok";
+$lang['select_category_supplier'] = "Pilih pemasok kategori";
+$lang['supplier_category_ws'] = "Jual Dunia";
+$lang['supplier_category_agent'] = "Agen";
+$lang['supplier_category_special'] = "Agen Khusus";
+$lang['supplier_category_distribution'] = "Distribusi";
+$lang['supplier_category_other'] = "Lainnya";
+$lang['supplier_type'] = "jenis pemasok";
+$lang['supplier_category_other'] = "Lainnya";
+
+/*
+ * Address
+ */
+$lang['address'] = "alamat";
+$lang['address_list'] = "Daftar alamat";
+$lang['address_add'] = "Tambahkan alamat";
+$lang['address_edit'] = "Edit alamat";
+$lang['village'] = "Desa";
+$lang['sub_district'] = "Kecamatan";
+$lang['city'] = "Kota";
+$lang['province'] = "Propinsi";
+$lang['zip'] = "Ritsleting";
+$lang['contact_phone'] = "Hubungi telepon";
+$lang['contact_mail'] = "Kontak Email";
+$lang['address_update'] = "Perbarui alamat";
+$lang['address_info_add'] = "Tambahkan lebih banyak informasi alamat data";
+$lang['address_info_edit'] = "Edit informasi alamat data";
+$lang['is_open'] = "Terbuka";
+
+/*
+ * Invoice
+ * purchase
+ */
+$lang['purchase_list'] = "daftar pembelian";
+$lang['find_customer_code'] = "Temukan kode pelanggan...";
+$lang['find_store_name'] = "Cari nama toko...";
+$lang['purchase_list'] = "daftar pembelian";
+$lang['purchase_create'] = "Beli buat";
+$lang['purchase_info_create'] = "Tambahkan lebih banyak informasi pembelian data";
+$lang['information_customer'] = "informasi pengguna";
+$lang['information_items'] = "Informasi Barang";
+$lang['find_items'] = "Temukan item...";
+$lang['item_order_quantity'] = "Jumlah pesanan barang";
+$lang['subtotal'] = "Sub total";
+$lang['discount'] = "Diskon";
+$lang['shipping_cost'] = "Biaya pengiriman";
+$lang['other_cost'] = "Biaya lainnya";
+$lang['other_cost'] = "Biaya lainnya";
+$lang['grandtotal'] = "hasil akhir";
+$lang['grandtotal'] = "hasil akhir";
+$lang['information_payment'] = "Informasi Pembayaran";
 
 /**
  * Activity
@@ -243,11 +376,12 @@ $lang['view_activity'] = "Lihat Aktivitas";
 $lang['activity_logs'] = "Log Aktivitas";
 $lang['activity_ip_address'] = "Alamat IP";
 $lang['activity_message'] = "Pesan";
+$lang['activity_details'] = "rincian";
 $lang['activity_datetime'] = "Tanggal Waktu";
 $lang['list_all_activities'] = "Daftar Semua Kegiatan";
 $lang['select_user'] = "Pilih Pengguna";
-$lang['filter'] = "Penyaring";
-$lang['reset'] = "Setel Ulang";
+$lang['filter'] = "Saring";
+$lang['reset'] = "Mengatur ulang";
 
 /**
  * Roles
@@ -257,7 +391,7 @@ $lang['list_roles'] = "Daftar Peran";
 $lang['create_role'] = "Buat Peran";
 $lang['role_name'] = "Nama";
 $lang['new_role'] = "Peran Baru";
-$lang['edit_roles'] = "Edit Peran";
+$lang['edit_roles'] = "Sunting Peran";
 
 /**
  * Permissions
@@ -266,7 +400,7 @@ $lang['permissions'] = "Izin";
 $lang['list_all_permissions'] = "Daftar Izin";
 $lang['permission_name'] = "Nama";
 $lang['permission_code'] = "Kode";
-$lang['edit_permission'] = "Izin Sunting";
+$lang['edit_permission'] = "Izin Edit";
 $lang['delete_permission'] = "Hapus Izin";
 $lang['create_permission'] = "Buat Izin";
 $lang['permission_code_unique'] = "* kode harus unik";
@@ -275,20 +409,21 @@ $lang['permission_code_unique'] = "* kode harus unik";
  * Roles
  */
 $lang['backup_db'] = "Cadangan Basis Data";
-$lang['backup_generate_message'] = "Buat & Unduh Cadangan Basis Data";
+$lang['backup_generate_message'] = "Hasilkan & Unduh Cadangan Basis Data";
 
 /**
  * Settings
  */
 $lang['email_templates'] = "Template Email";
-$lang['settings_company_name'] = "Nama Perusahaan";
+$lang['settings_company_name'] = "Nama perusahaan";
 $lang['settings_company_email'] = "Email Perusahaan";
+$lang['settings_company_icon'] = "Ikon Perusahaan";
 $lang['settings_timezone'] = "Zona waktu";
-$lang['settings_date_format'] = "Format Tanggal";
+$lang['settings_date_format'] = "Format tanggal";
 $lang['settings_datetime_format'] = "Format TanggalWaktu";
 $lang['settings_g_recaptcha'] = "Google Recaptcha";
 $lang['settings_gr_sitekey'] = "Kunci Situs";
-$lang['settings_gr_secretkey'] = "Kunci Rahasia";
+$lang['settings_gr_secretkey'] = "Kunci rahasia";
 $lang['settings_email_code'] = "Kode";
 $lang['settings_email_name'] = "Nama";
 $lang['edit'] = "Sunting";
@@ -296,6 +431,5 @@ $lang['settings_email_template'] = "Templat";
 $lang['settings_timezone'] = "Zona waktu";
 
 $lang['language'] = "Bahasa";
-$lang['default_lang'] = "Bahasa Standar";
-$lang['blank_page'] = "Halaman Kosong";
-
+$lang['default_lang'] = "Bahasa Bawaan";
+$lang['blank_page'] = "Halaman kosong";

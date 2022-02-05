@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
-          <li class="breadcrumb-item active"><?php echo lang('customer') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('supplier') ?></li>
           <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>
       </div>
@@ -45,10 +45,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <tr>
                   <th></th>
                   <th>No.</th>
-                  <th><?= lang('customer_code') ?></th>
+                  <th><?= lang('supplier_code') ?></th>
                   <th><?= lang('store_name') ?></th>
-                  <th><?= lang('customer_owner') ?></th>
-                  <th><?= lang('customer_type') ?></th>
+                  <th><?= lang('supplier_owner') ?></th>
+                  <th><?= lang('supplier_type') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </thead>
@@ -58,10 +58,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <tr>
                   <th></th>
                   <th>No.</th>
-                  <th><?= lang('customer_code') ?></th>
+                  <th><?= lang('supplier_code') ?></th>
                   <th><?= lang('store_name') ?></th>
-                  <th><?= lang('customer_owner') ?></th>
-                  <th><?= lang('customer_type') ?></th>
+                  <th><?= lang('supplier_owner') ?></th>
+                  <th><?= lang('supplier_type') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </tfoot>
@@ -123,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       responsive: true,
       autoWidth: false,
       ajax: {
-        "url": "<?php echo url('master_information/customer/serverside_datatables_data_customer') ?>",
+        "url": "<?php echo url('master_information/supplier/serverside_datatables_data_supplier') ?>",
         "type": "POST",
         "data": {
           "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content')
@@ -149,7 +149,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "owner_name"
         },
         {
-          data: "customer_type"
+          data: "supplier_type"
         },
         {
           data: "customer_code",
@@ -157,8 +157,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('master_information/customer') ?>/edit?id=${data}" class="btn btn-sm btn-warning"><i class="fa fa-inverse fa-tw fa-edit"></i></a>
-                <a href="<?= url('master_information/customer') ?>/info?id=${data}" class="btn btn-sm btn-primary"><i class="fa fa-tw fa-search-plus"></i></a>
+                <a href="<?= url('master_information/supplier') ?>/edit?id=${data}" class="btn btn-sm btn-warning"><i class="fa fa-inverse fa-tw fa-edit"></i></a>
+                <a href="<?= url('master_information/supplier') ?>/info?id=${data}" class="btn btn-sm btn-primary"><i class="fa fa-tw fa-search-plus"></i></a>
                 </div>`;
           }
         },
@@ -199,7 +199,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
               if (result.value) {
-                location.href = '<?= url('master_information/customer/truncate') ?>';
+                location.href = '<?= url('master_information/supplier/truncate') ?>';
               }
             })
           }
@@ -215,7 +215,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           text: '<?= lang('add_data') ?>',
           className: 'btn-sm',
           action: function(e, dt, node, config) {
-            location.href = '<?= url('master_information/customer/add') ?>'
+            location.href = '<?= url('master_information/supplier/add') ?>'
           }
         },
       ]

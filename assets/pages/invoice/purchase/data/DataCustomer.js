@@ -2,8 +2,11 @@ class DataCustomer {
     user_info(handle) {
         $.ajax({
             url: location.base + 'master_information/customer/serverside_datatables_data_customer',
-            method: 'GET',
+            method: 'POST',
             dataType: 'JSON',
+            // data: {
+            //     'length': 10
+            // },
             success: function (result) {
                 handle(result);
             }
@@ -17,7 +20,8 @@ class DataCustomer {
             data: {
                 'search': {
                     'value': request
-                }
+                },
+                'length': 10
             },
             success: function (result) {
                 handle(result);

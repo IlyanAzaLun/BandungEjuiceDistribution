@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 
 $lang['info'] = [
@@ -36,7 +36,7 @@ $lang['old_password'] = "Old Password";
  */
 $lang['not_allowed_403'] = "You are not allowed to access this page.";
 $lang['sorry_not_allowed_msg'] = "Sorry, you cannot access this section/webpage.
-Meanwhile, you may <a href='".url('/')."'>return to dashboard</a> or try using the search form.";
+Meanwhile, you may <a href='" . url('/') . "'>return to dashboard</a> or try using the search form.";
 
 $lang['home'] = "Home";
 $lang['dashboard'] = "Dashboard";
@@ -94,8 +94,8 @@ $lang['read'] = "Read";
 $lang['pages'] = "Pages";
 $lang['invoice'] = "invoice";
 $lang['menus'] = "Menus";
-$lang['purchase'] = 'purchase';
-$lang['selling'] = 'selling';
+$lang['purchase'] = "purchase";
+$lang['selling'] = "selling";
 $lang['ecommerce'] = "E-commerce";
 $lang['projects'] = "Projects";
 $lang['project_add'] = "Project Add";
@@ -240,6 +240,7 @@ $lang['user_last_login'] = "Last Login";
 $lang['overview'] = "Overview";
 
 //Options
+$lang['master'] = "Master";
 $lang['option'] = "Options";
 $lang['add_more'] = "Add More";
 $lang['add_data'] = "Add Data";
@@ -258,88 +259,114 @@ $lang['status_active'] = "This data will not be displayed if the status is turne
 /*
  * Items
  */
-$lang['item'] = 'item';
-$lang['item_list'] = 'List item';
-$lang['item_add'] = 'Add item';
-$lang['item_update'] = 'Update item';
-$lang['item_code'] = 'Item code';
-$lang['item_name'] = 'Item name';
-$lang['item_quantity'] = 'Item quantity';
-$lang['item_capital_price'] = 'Capital price';
-$lang['item_selling_price'] = 'Selling price';
-$lang['item_info_add'] = 'Add more information data items';
-$lang['item_info_edit'] = 'Edit information data item';
-$lang['category_item'] = 'Category item';
-$lang['select_category_item'] = 'Select category item';
-$lang['current_stock'] = 'Curent stock';
-$lang['sub_category'] = 'Sub category';
- 
+$lang['item'] = "item";
+$lang['item_list'] = "List item";
+$lang['item_add'] = "Add item";
+$lang['item_update'] = "Update item";
+$lang['item_code'] = "Item code";
+$lang['item_name'] = "Item name";
+$lang['item_quantity'] = "Item quantity";
+$lang['item_capital_price'] = "Capital price";
+$lang['item_selling_price'] = "Selling price";
+$lang['item_info_add'] = "Add more information data items";
+$lang['item_info_edit'] = "Edit information data item";
+$lang['category_item'] = "Category item";
+$lang['select_category_item'] = "Select category item";
+$lang['current_stock'] = "Curent stock";
+$lang['sub_category'] = "Sub category";
+$lang['is_active'] = "Is Active";
+$lang['is_inactive'] = "Inactive";
+
 /*
  * Customer
  */
-$lang['customer'] = 'customer';
-$lang['customer_list'] = 'List customer';
-$lang['customer_add'] = 'Add customer';
-$lang['customer_update'] = 'Update customer';
-$lang['customer_code'] = 'Customer code';
-$lang['store_name'] = 'Store name';
-$lang['address_destination'] = 'Address destination';
-$lang['select_store_name'] = 'Select store name';
-$lang['customer_owner'] = 'Owner name';
-$lang['category_customer'] = 'Customer category';
-$lang['customer_info_add'] = 'Add more information data customers';
-$lang['customer_info_edit'] = 'Edit information data customer';
-$lang['select_category_customer'] = 'Select category customer';
-$lang['customer_category_ws'] = 'World Sell';
-$lang['customer_category_agent'] = 'Agent';
-$lang['customer_category_special'] = 'Special Agent';
-$lang['customer_category_distributor'] = 'Distributor';
-$lang['customer_category_other'] = 'Other';
-$lang['customer_type'] = 'Customer type';
-$lang['customer_category_other'] = 'Other';
- 
+$lang['customer'] = "customer";
+$lang['customer_list'] = "List customer";
+$lang['customer_add'] = "Add customer";
+$lang['customer_update'] = "Update customer";
+$lang['customer_code'] = "Customer code";
+$lang['store_name'] = "Store name";
+$lang['address_destination'] = "Address destination";
+$lang['select_store_name'] = "Select store name";
+$lang['customer_owner'] = "Owner name";
+$lang['category_customer'] = "Customer category";
+$lang['customer_info_add'] = "Add more information data customers";
+$lang['customer_info_edit'] = "Edit information data customer";
+$lang['select_category_customer'] = "Select category customer";
+$lang['customer_category_ws'] = "World Sell";
+$lang['customer_category_agent'] = "Agent";
+$lang['customer_category_special'] = "Special Agent";
+$lang['customer_category_distributor'] = "Distributor";
+$lang['customer_category_other'] = "Other";
+$lang['customer_type'] = "Customer type";
+$lang['customer_category_other'] = "Other";
+
+/*
+ * Supplier
+ */
+$lang['supplier'] = "supplier";
+$lang['supplier_list'] = "List supplier";
+$lang['supplier_add'] = "Add supplier";
+$lang['supplier_update'] = "Update supplier";
+$lang['supplier_code'] = "supplier code";
+$lang['store_name'] = "Store name";
+$lang['address_destination'] = "Address destination";
+$lang['select_store_name'] = "Select store name";
+$lang['supplier_owner'] = "Owner name";
+$lang['category_supplier'] = "supplier category";
+$lang['supplier_info_add'] = "Add more information data suppliers";
+$lang['supplier_info_edit'] = "Edit information data supplier";
+$lang['select_category_supplier'] = "Select category supplier";
+$lang['supplier_category_ws'] = "World Sell";
+$lang['supplier_category_agent'] = "Agent";
+$lang['supplier_category_special'] = "Special Agent";
+$lang['supplier_category_distribution'] = "Distribution";
+$lang['supplier_category_other'] = "Other";
+$lang['supplier_type'] = "supplier type";
+$lang['supplier_category_other'] = "Other";
+
 /*
  * Address
  */
-$lang['address'] = 'address';
-$lang['address_list'] = 'List address';
-$lang['address_add'] = 'Add address';
-$lang['address_edit'] = 'Edit address';
-$lang['village'] = 'Village';
-$lang['sub_district'] = 'Sub district';
-$lang['city'] = 'City';
-$lang['province'] = 'Province';
-$lang['zip'] = 'Zip';
-$lang['contact_phone'] = 'Contact phone';
-$lang['contact_mail'] = 'Contact email';
-$lang['address_update'] = 'Update address';
-$lang['address_info_add'] = 'Add more information data address';
-$lang['address_info_edit'] = 'Edit information data address';
-$lang['is_open'] = 'Is Open';
+$lang['address'] = "address";
+$lang['address_list'] = "List address";
+$lang['address_add'] = "Add address";
+$lang['address_edit'] = "Edit address";
+$lang['village'] = "Village";
+$lang['sub_district'] = "Sub district";
+$lang['city'] = "City";
+$lang['province'] = "Province";
+$lang['zip'] = "Zip";
+$lang['contact_phone'] = "Contact phone";
+$lang['contact_mail'] = "Contact email";
+$lang['address_update'] = "Update address";
+$lang['address_info_add'] = "Add more information data address";
+$lang['address_info_edit'] = "Edit information data address";
+$lang['is_open'] = "Is Open";
 
 /*
  * Invoice
  * purchase
  */
-$lang['purchase_list'] = 'Purchase list';
-$lang['find_customer_code'] = 'Find customer code ...';
-$lang['find_store_name'] = 'Find store name ...';
-$lang['purchase_list'] = 'Purchase list';
-$lang['purchase_create'] = 'Purchase create';
-$lang['purchase_info_create'] = 'Add more information data purchase';
-$lang['information_customer'] = 'Customer Information';
-$lang['information_items'] = 'Items Information';
-$lang['find_items'] = 'Find items...';
-$lang['item_order_quantity'] = 'Item order quantity';
-$lang['subtotal'] = 'Sub total';
-$lang['discount'] = 'Discount';
-$lang['shipping_cost'] = 'Shipping cost';
-$lang['other_cost'] = 'Other cost';
-$lang['other_cost'] = 'Other cost';
-$lang['grandtotal'] = 'Grand total';
-$lang['grandtotal'] = 'Grand total';
-$lang['information_payment'] = 'Payment Information';
- 
+$lang['purchase_list'] = "Purchase list";
+$lang['find_customer_code'] = "Find customer code ...";
+$lang['find_store_name'] = "Find store name ...";
+$lang['purchase_list'] = "Purchase list";
+$lang['purchase_create'] = "Purchase create";
+$lang['purchase_info_create'] = "Add more information data purchase";
+$lang['information_customer'] = "Customer Information";
+$lang['information_items'] = "Items Information";
+$lang['find_items'] = "Find items...";
+$lang['item_order_quantity'] = "Item order quantity";
+$lang['subtotal'] = "Sub total";
+$lang['discount'] = "Discount";
+$lang['shipping_cost'] = "Shipping cost";
+$lang['other_cost'] = "Other cost";
+$lang['other_cost'] = "Other cost";
+$lang['grandtotal'] = "Grand total";
+$lang['grandtotal'] = "Grand total";
+$lang['information_payment'] = "Payment Information";
+
 /**
  * Activity
  */
@@ -405,4 +432,3 @@ $lang['settings_timezone'] = "Timezone";
 $lang['language'] = "Language";
 $lang['default_lang'] = "Default Language";
 $lang['blank_page'] = "Blank Page";
-

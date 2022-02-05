@@ -1,14 +1,14 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Customer extends MY_Controller
+class Supplier extends MY_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->page_data['page']->title = 'Customer Management';
-        $this->page_data['page']->menu = 'customer';
+        $this->page_data['page']->title = 'Supllier Management';
+        $this->page_data['page']->menu = 'supplier';
     }
 
     public function index()
@@ -18,109 +18,115 @@ class Customer extends MY_Controller
 
     public function list()
     {
-        ifPermissions('customer_list');
+        ifPermissions('supplier_list');
         $this->page_data['page']->submenu = 'list';
-        $this->page_data['title'] = 'customer_list';
-        $this->page_data['modals']->title = 'Modals upload customer';
-        $this->page_data['modals']->link  = 'master_information/customer/upload';
+        $this->page_data['title'] = 'supplier_list';
+        $this->page_data['modals']->title = 'Modals upload supplier';
+        $this->page_data['modals']->link  = 'master_information/supplier/upload';
 
-        $this->load->view('customer/list', $this->page_data);
+        $this->load->view('supplier/list', $this->page_data);
         $this->load->view('includes/modals', $this->page_data);
     }
 
     public function add()
     {
-        ifPermissions('customer_add');
+        ifPermissions('supplier_add');
         $this->page_data['page']->submenu = 'add';
-        $this->page_data['title'] = 'customer_add';
+        $this->page_data['title'] = 'supplier_add';
 
-        $this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
-        $this->form_validation->set_rules('owner_name', lang('customer_owner'), 'required|trim');
+        $this->form_validation->set_rules('customer_code', lang('customer_code'), 'required|trim');
+        $this->form_validation->set_rules('owner_name', lang('supplier_owner'), 'required|trim');
 
         if ($this->form_validation->run() == false) {
-            $this->page_data['customer_code'] = $this->customer_model->get_code_customer();
-            $this->load->view('customer/add', $this->page_data);
+            $this->page_data['supplier_code'] = $this->supplier_model->get_code_supplier();
+            $this->load->view('supplier/add', $this->page_data);
         } else {
             $data = [
                 'customer_code' => post('customer_code'),
                 'store_name' => strtoupper(post('store_name')),
                 'owner_name' => strtoupper(post('owner_name')),
-                'customer_type' => strtoupper(post('customer_type')),
+                'supplier_type' => strtoupper(post('supplier_type')),
                 'is_active' => 1,
                 'created_by' => logged('id'),
                 'note' => post('note'),
             ];
-            $customer = $this->customer_model->create($data);
-            if ($customer) {
-                $this->activity_model->add("New Customer #$customer, Created by User: #" . logged('id'), (array)$data);
+            $supplier = $this->supplier_model->create($data);
+            if ($supplier) {
+                $this->activity_model->add("New Supplier #$supplier, Created by User: #" . logged('id'), (array)$data);
                 $this->session->set_flashdata('alert-type', 'success');
-                $this->session->set_flashdata('alert', 'New Customer Created Successfully');
+                $this->session->set_flashdata('alert', 'New Supplier Created Successfully');
                 redirect("master_information/address/add?id=" . $data['customer_code']);
+                return false;
             } else {
-                $this->session->set_flashdata('alert-type', 'error');
-                $this->session->set_flashdata('alert', 'New Customer Created Failed');
+                $this->session->set_flashdata('alert-type', 'danger');
+                $this->session->set_flashdata('alert', 'New Supplier Created Failed');
                 redirect("master_information/address/add?id=" . $data['customer_code']);
+                return false;
             }
         }
     }
 
     public function edit()
     {
-        ifPermissions('customer_edit');
+        ifPermissions('supplier_edit');
         $this->form_validation->set_rules('customer_code', lang('customer_code'), 'required|trim');
         $this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
 
         if ($this->form_validation->run() == false) {
-            $this->page_data['customer'] = $this->customer_model->getByWhere(array('customer_code' => GET('id')))[0];
+            $this->page_data['supplier'] = $this->supplier_model->getByWhere(['customer_code' => GET('id')])[0];
             $this->page_data['address'] = $this->address_model->getByWhere(['customer_code' => GET('id')]);
-
-            $this->page_data['title'] = 'customer_update';
-            $this->load->view('customer/edit', $this->page_data);
+            $this->page_data['title'] = 'supplier_update';
+            $this->load->view('supplier/edit', $this->page_data);
         } else {
             $data = [
                 'customer_code' => post('customer_code'),
                 'store_name' => strtoupper(post('store_name')),
                 'owner_name' => strtoupper(post('owner_name')),
-                'customer_type' => strtoupper(post('customer_type')),
+                'supplier_type' => strtoupper(post('supplier_type')),
                 'is_active' => post('is_active') ? 1 : 0,
                 'updated_at' => date('Y-m-d H:i:s', time()),
                 'updated_by' => logged('id'),
                 'note' => post('note'),
             ];
-            $customer = $this->customer_model->update(post('id'), $data);
+            $supplier = $this->supplier_model->update(POST('id'), $data);
 
-            $this->activity_model->add("Update Customer #$customer, Update by User: #" . logged('id'), (array)$this->page_data['customer']);
+            $this->activity_model->add("Update supplier #$supplier, Update by User: #" . logged('id'), (array)$this->page_data['supplier']);
             $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Update Customer Successfully');
+            $this->session->set_flashdata('alert', 'Update supplier Successfully');
 
-            redirect('master_information/customer/list');
+            redirect('master_information/supplier/list');
         }
     }
 
     public function upload()
     {
         ifPermissions('upload_file');
-
+        if (($_FILES['file']['name'] == '')) {
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'New Supplier Fail to Upload');
+            redirect('master_information/supplier/list');
+            die();
+        }
         $data = $this->uploadlib->uploadFile();
-        $request['customer'] = [];
+        $request['supplier'] = [];
         $request['address'] = [];
         $i = 0;
         foreach ($data as $key => $value) {
             if ($key == 1) {
                 continue;
             } else {
-                array_push($request['customer'], [
+                array_push($request['supplier'], [
                     'id' => $value['A'],
-                    'customer_code' => $value['B'],
+                    'supplier_code' => $value['B'],
                     'store_name' => $value['C'],
                     'owner_name' => $value['D'],
-                    'customer_type' => $value['E'],
+                    'supplier_type' => $value['E'],
                     'note' => $value['F'],
                     'created_by' => logged('id'),
                     'is_active' => 1,
                 ]);
                 array_push($request['address'], [
-                    'customer_code' => $value['A'],
+                    'supplier_id' => $value['A'],
                     'address' => $value['G'],
                     'village' => $value['H'],
                     'sub_district' => $value['I'],
@@ -133,21 +139,21 @@ class Customer extends MY_Controller
                     'created_by' => logged('id'),
                     'is_active' => 1,
                 ]);
-                $this->activity_model->add("New Customer Upload, #" . $value['A'] . ", Created by User: #" . logged('id'), $request[$i]);
+                $this->activity_model->add("New supplier Upload, #" . $value['A'] . ", Created by User: #" . logged('id'), $request[$i]);
                 $this->activity_model->add("New Address Upload, #" . $value['A'] . ", Created by User: #" . logged('id'), $request[$i]);
                 $i++;
             }
         }
-        $item = $this->customer_model->create_batch($request['customer']);
+        $item = $this->supplier_model->create_batch($request['supplier']);
         $item = $this->address_model->create_batch($request['address']);
         $this->session->set_flashdata('alert-type', 'success');
-        $this->session->set_flashdata('alert', 'New Customer Upload Successfully');
+        $this->session->set_flashdata('alert', 'New supplier Upload Successfully');
 
-        redirect('master_information/customer/list');
+        redirect('master_information/supplier/list');
     }
 
     // SERVER SIDE
-    public function serverside_datatables_data_customer()
+    public function serverside_datatables_data_supplier()
     {
 
         $response = array();
@@ -171,7 +177,7 @@ class Customer extends MY_Controller
 
         ## Total number of records without filtering
         $this->db->select('count(*) as allcount');
-        $records = $this->db->get('customer_information')->result();
+        $records = $this->db->get('supplier_information')->result();
         $totalRecords = $records[0]->allcount;
 
         ## Total number of record with filtering
@@ -181,23 +187,23 @@ class Customer extends MY_Controller
             $this->db->or_like('owner_name', $searchValue, 'both');
             $this->db->or_like('customer_code', $searchValue, 'both');
         }
-        $records = $this->db->get('customer_information')->result();
+        $records = $this->db->get('supplier_information')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
-        $this->db->select('*, customer_information.id as customer_id');
+        $this->db->select('*, supplier_information.id as customer_id');
         if ($searchQuery != '') {
             $this->db->like('store_name', $searchValue, 'both');
             $this->db->or_like('owner_name', $searchValue, 'both');
             $this->db->or_like('customer_code', $searchValue, 'both');
         }
-        $this->db->join('address_information', 'address_information.customer_code=customer_information.customer_code', 'left');
+        $this->db->join('address_information', 'address_information.customer_code=supplier_information.customer_code', 'left');
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
         $this->db->where('address_information.is_active', 1);
-        $this->db->group_by('customer_information.customer_code');
-        $this->db->order_by('customer_information.customer_code', 'ASC');
-        $records = $this->db->get('customer_information')->result();
+        $this->db->group_by('supplier_information.customer_code');
+        $this->db->order_by('supplier_information.customer_code', 'ASC');
+        $records = $this->db->get('supplier_information')->result();
 
         $data = array();
 
@@ -208,7 +214,7 @@ class Customer extends MY_Controller
                 "customer_code" => $record->customer_code,
                 "store_name" => $record->store_name,
                 "owner_name" => $record->owner_name,
-                "customer_type" => $record->customer_type,
+                "supplier_type" => $record->supplier_type,
 
                 "id" => $record->id,
                 "village" => $record->village,

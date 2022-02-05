@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array( 'session', 'database', 'parser', 'form_validation', 'uploadlib', 'email');
+$autoload['libraries'] = array('session', 'database', 'parser', 'form_validation', 'uploadlib', 'email');
 
 /*
 | -------------------------------------------------------------------
@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array( 'basic', 'url', 'file', 'form', 'cookie', 'security', 'directory', 'language' );
+$autoload['helper'] = array('basic', 'url', 'file', 'form', 'cookie', 'security', 'directory', 'language');
 
 /*
 | -------------------------------------------------------------------
@@ -117,7 +117,7 @@ $autoload['config'] = array();
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
 */
-$autoload['language'] = array( 'basic' );
+$autoload['language'] = array('basic');
 
 /*
 | -------------------------------------------------------------------
@@ -142,5 +142,6 @@ $autoload['model'] = array(
 	'templates_model',
 	'items_model',
 	'customer_model',
+	'supplier_model',
 	'address_model',
 );
