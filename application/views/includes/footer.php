@@ -80,6 +80,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script src="<?php echo $url->assets ?>js/attribute.js"></script>
 
 <script>
+  $(document).ready(function(e) {
+
+    let disableConfirmation = false;
+    $(window).on('beforeunload', event => {
+      const confirmationText = 'Are you sure?';
+      if (!disableConfirmation) {
+        event.returnValue = confirmationText; // Gecko, Trident, Chrome 34+
+        disableConfirmation = false;
+        return confirmationText; // Gecko, WebKit, Chrome <34
+      } else {
+        // Set flag back to false, just in case
+        // user stops loading page after clicking a link.
+        disableConfirmation = false;
+      }
+    });
+    $('a').on('click', function() {
+      disableConfirmation = true;
+    });
+    $('form').submit(function() {
+      disableConfirmation = true;
+    });
+
+  })
   $(function() {
     $("#example1").DataTable({
       "responsive": true,

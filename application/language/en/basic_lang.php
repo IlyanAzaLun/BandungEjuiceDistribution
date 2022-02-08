@@ -15,9 +15,12 @@ $lang['username_or_email'] = "Username or Email";
 $lang['remember_me'] = "Remember Me";
 $lang['signin'] = "Sign In";
 $lang['forget_password_?'] = "Forgot your password ?";
+$lang['reset_status_is_loged_?'] = "Sure to reset is looged account ?";
 $lang['message_how_forget_reset'] = "Home";
 $lang['message_how_forget_reset'] = "You forgot your password? Here you can easily retrieve a new password.";
+$lang['message_how_loggin_reset'] = "You still login in another device, you can reset status logg to brute forst login.";
 $lang['request_password'] = "Request new password";
+$lang['request_is_login'] = "Request update status loggin";
 $lang['mesasge_set_password_step'] = "You are only one step a way from your new password, recover your password now.";
 $lang['new_password'] = "New Password";
 $lang['confirm_new_password'] = "Confirm New Password";
@@ -29,6 +32,7 @@ $lang['change_password'] = "Change Password";
 $lang['message_login_again_after_password'] = "You will need to login again after password is changed !";
 $lang['message_password_atleast_long'] = "Password must be atleast 6 characters long !";
 $lang['old_password'] = "Old Password";
+$lang['leave_without_logout'] = "Do you want to leave this page without logout?";
 
 
 /**
@@ -308,12 +312,12 @@ $lang['supplier'] = "supplier";
 $lang['supplier_list'] = "List supplier";
 $lang['supplier_add'] = "Add supplier";
 $lang['supplier_update'] = "Update supplier";
-$lang['supplier_code'] = "supplier code";
+$lang['supplier_code'] = "Supplier code";
 $lang['store_name'] = "Store name";
 $lang['address_destination'] = "Address destination";
 $lang['select_store_name'] = "Select store name";
 $lang['supplier_owner'] = "Owner name";
-$lang['category_supplier'] = "supplier category";
+$lang['category_supplier'] = "Supplier category";
 $lang['supplier_info_add'] = "Add more information data suppliers";
 $lang['supplier_info_edit'] = "Edit information data supplier";
 $lang['select_category_supplier'] = "Select category supplier";
@@ -349,12 +353,12 @@ $lang['is_open'] = "Is Open";
  * purchase
  */
 $lang['purchase_list'] = "Purchase list";
-$lang['find_customer_code'] = "Find customer code ...";
+$lang['find_supplier_code'] = "Find supplier code ...";
 $lang['find_store_name'] = "Find store name ...";
 $lang['purchase_list'] = "Purchase list";
 $lang['purchase_create'] = "Purchase create";
 $lang['purchase_info_create'] = "Add more information data purchase";
-$lang['information_customer'] = "Customer Information";
+$lang['information_supplier'] = "Supplier Information";
 $lang['information_items'] = "Items Information";
 $lang['find_items'] = "Find items...";
 $lang['item_order_quantity'] = "Item order quantity";

@@ -144,8 +144,8 @@ class Supplier extends MY_Controller
                 $i++;
             }
         }
-        $item = $this->supplier_model->create_batch($request['supplier']);
-        $item = $this->address_model->create_batch($request['address']);
+        $this->supplier_model->create_batch($request['supplier']);
+        $this->address_model->create_batch($request['address']);
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New supplier Upload Successfully');
 
@@ -237,6 +237,27 @@ class Supplier extends MY_Controller
             "aaData" => $data
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    public function data_supplier()
+    {
+        if (ifPermissions('purchase_create') or ifPermissions('selling_create')) {
+            $search = (object) post('search');
+            $this->db->limit(15);
+            if ($search->value) {
+                $this->db->like('supplier_information.customer_code', $search->value, 'both');
+                $this->db->or_like('supplier_information.store_name', $search->value, 'both');
+                $this->db->or_like('supplier_information.owner_name', $search->value, 'both');
+                $this->db->or_like('address_information.address', $search->value, 'both');
+                $this->db->or_like('address_information.village', $search->value, 'both');
+                $this->db->or_like('address_information.sub_district', $search->value, 'both');
+                $this->db->or_like('address_information.city', $search->value, 'both');
+                $this->db->or_like('address_information.province', $search->value, 'both');
+            }
+            $this->db->join('address_information', 'address_information.customer_code=supplier_information.customer_code', 'left');
+            $response = $this->db->get('supplier_information')->result();
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        };
     }
 }
 

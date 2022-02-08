@@ -1,7 +1,7 @@
-class DataItem {
-    item_info_search(request = false, handle) {
+class DataSupplier {
+    user_info_search(request, handle) {
         $.ajax({
-            url: location.base + 'items/data_items',
+            url: location.base + 'master_information/supplier/data_supplier',
             method: 'POST',
             dataType: 'JSON',
             data: {
@@ -16,4 +16,4 @@ class DataItem {
         })
     }
 }
-export default DataItem;
+export default DataSupplier;

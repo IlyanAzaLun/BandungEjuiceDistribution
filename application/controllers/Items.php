@@ -49,7 +49,7 @@ class Items extends MY_Controller
             $data = [
                 'item_code' => post('item_code'),
                 'item_name' => post('item_name'),
-                'category' => post('subcategory')?post('subcategory'):post('category'),
+                'category' => post('subcategory') ? post('subcategory') : post('category'),
                 'brand' => post('brand'),
                 'brands' => post('brands'),
                 'mg' => post('MG'),
@@ -158,7 +158,7 @@ class Items extends MY_Controller
                 'selling_price' => post('selling_price'),
                 'customs' => post('customs'),
                 'note' => post('note'),
-                'is_active' => post('is_active')?1:0,
+                'is_active' => post('is_active') ? 1 : 0,
                 'updated_at' => date('Y-m-d H:i:s', time()),
                 'updated_by' => logged('id'),
             ];
@@ -226,14 +226,16 @@ class Items extends MY_Controller
         ## Total number of record with filtering
         $this->db->select('count(*) as allcount');
         if ($searchQuery != '')
-            $this->db->like('item_name', $searchValue, 'both'); $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->like('item_name', $searchValue, 'both');
+        $this->db->or_like('item_code', $searchValue, 'both');
         $records = $this->db->get('items')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
         $this->db->select('*');
         if ($searchQuery != '')
-            $this->db->like('item_name', $searchValue, 'both'); $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->like('item_name', $searchValue, 'both');
+        $this->db->or_like('item_code', $searchValue, 'both');
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('items')->result();
@@ -266,7 +268,7 @@ class Items extends MY_Controller
 
     public function data_items()
     {
-        if (ifPermissions('purchase_create') OR ifPermissions('selling_create')) {
+        if (ifPermissions('purchase_create') or ifPermissions('selling_create')) {
             $search = (object) post('search');
             $this->db->limit(15);
             if ($search->value) {
@@ -277,7 +279,6 @@ class Items extends MY_Controller
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         };
     }
-
 }
 
 /* End of file Items.php */

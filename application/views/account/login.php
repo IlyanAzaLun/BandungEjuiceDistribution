@@ -76,6 +76,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <p class="mb-1">
         <a href="<?php echo url('login/forget?username=' . post('username')) ?>"><?php echo lang('forget_password_?') ?></a><br>
       </p>
+      <p class="mb-1">
+        <a href="<?php echo url('auth/login/reset_login?username=' . post('username')) ?>"><?php echo lang('reset_status_is_loged_?') ?></a><br>
+      </p>
       <p class="mb-0">
         <!-- <a href="register.html" class="text-center">Register a new membership</a> -->
       </p>

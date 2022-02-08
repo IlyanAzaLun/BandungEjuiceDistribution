@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Theme style -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
@@ -28,47 +28,47 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content">
 
   <!-- Default card -->
-  
+
   <div class="row">
     <div class="col-12">
       <div class="callout callout-info">
         <h5><i class="fas fa-info"></i> Note:</h5>
-        <?=lang('purchase_info_create')?>
+        <?= lang('purchase_info_create') ?>
       </div>
-      <?php echo form_open_multipart('invoice/purchase/create', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <?php echo form_open_multipart('invoice/purchase/create', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information customer START -->
       <div class="card">
         <div class="card-header with-border">
-          <h3 class="card-title"><i class="fa fa-fw fa-dice-one"></i><?php echo lang('information_customer') ?></h3>
+          <h3 class="card-title"><i class="fa fa-fw fa-dice-one"></i><?php echo lang('information_supplier') ?></h3>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col-sm-4">
               <div class="form-group">
-                <label for="store_name"><?=lang('customer_code')?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?=lang('find_customer_code')?>" autocomplete="false" required>
-                <?= form_error('customer_code','<small class="text-danger">','</small>') ?>
+                <label for="store_name"><?= lang('supplier_code') ?></label>
+                <input type="text" name="supplier_code" id="supplier_code" class="form-control" placeholder="<?= lang('find_supplier_code') ?>" autocomplete="false" required>
+                <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
 
             <div class="col-sm-4">
               <div class="form-group">
-                <label for="store_name"><?=lang('store_name')?></label>
-                <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?=lang('find_store_name')?>" autocomplete="false" required>
-                <?= form_error('store_name','<small class="text-danger">','</small>') ?>
+                <label for="store_name"><?= lang('store_name') ?></label>
+                <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
+                <?= form_error('store_name', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
 
             <div class="col-sm-4">
               <div class="form-group">
-                <label for="contact_phone"><?=lang('contact_phone')?><small class="text-primary"> (whatsapp)</small></label>
+                <label for="contact_phone"><?= lang('contact_phone') ?><small class="text-primary"> (whatsapp)</small></label>
                 <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>" required readonly>
               </div>
             </div>
 
             <div class="col-sm-12">
               <div class="form-group">
-                <label for="address"><?=lang('address_destination')?></label>
+                <label for="address"><?= lang('address_destination') ?></label>
                 <textarea type="text" name="address" id="address" class="form-control" required readonly><?= set_value('address') ?></textarea>
               </div>
             </div>
@@ -90,34 +90,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </div>
             </div>
             <div class="col-12">
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th><?=lang('item_code')?></th>
-                  <th><?=lang('item_name')?></th>
-                  <th><?=lang('item_quantity')?></th>
-                  <th><?=lang('item_capital_price')?></th>
-                  <th><?=lang('item_selling_price')?></th>
-                  <th><?=lang('item_order_quantity')?></th>
-                  <th><?=lang('discount')?></th>
-                  <th><?=lang('option')?></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="input-0">
-                  <td><input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required></td>
-                  <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                  <td><input readonly class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="item_order_quantity[]" data-id="item_order_quantity"  min="0" value="0" required></td>
-                  <td><input class="form-control form-control-sm" type="text" name="discount[]" data-id="discount"  min="0" max="100" value="0" required></td>
-                  <td><button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button></td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="float-left ml-1">
-              <button type="button" class="btn btn btn-info" id="add_more"><?=lang('add_more')?></button></div>
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th><?= lang('item_code') ?></th>
+                    <th><?= lang('item_name') ?></th>
+                    <th><?= lang('item_quantity') ?></th>
+                    <th><?= lang('item_capital_price') ?></th>
+                    <th><?= lang('item_selling_price') ?></th>
+                    <th><?= lang('item_order_quantity') ?></th>
+                    <th><?= lang('discount') ?></th>
+                    <th><?= lang('option') ?></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="input-0">
+                    <td><input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></td>
+                    <td>
+                      <div class="input-group input-group-sm">
+                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
+                        <span class="input-group-append">
+                          <span class="input-group-text" data-id="item_unit"></span>
+                        </span>
+                      </div>
+                    </td>
+                    <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td><input readonly class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_order_quantity[]" data-id="item_order_quantity" min="0" value="0" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="discount[]" data-id="discount" min="0" max="100" value="0" required></td>
+                    <td><button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="float-left ml-1">
+                <button type="button" class="btn btn btn-info" id="add_more"><?= lang('add_more') ?></button>
+              </div>
             </div>
           </div>
         </div>
@@ -130,11 +138,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_payment') ?></h3>
         </div>
         <div class="card-body">
-          
+
           <div class="row">
             <div class="col-12">
               <div class="form-group">
-                <h6><?=lang('subtotal')?> :</h6>
+                <h6><?= lang('subtotal') ?> :</h6>
                 <input type="text" name="sub_total" id="sub_total" class="form-control" required>
               </div>
               <div class="row">
@@ -151,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
-                    <h6><?=lang('shipping_cost')?> :</h6>
+                    <h6><?= lang('shipping_cost') ?> :</h6>
                     <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" value="0" required>
                   </div>
                 </div>
@@ -160,19 +168,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="col-lg-6 col-sm-12">
               <div class="form-group">
-                <h6><?=lang('other_cost')?> :</h6>
+                <h6><?= lang('other_cost') ?> :</h6>
                 <input type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
               </div>
             </div>
             <div class="col-lg-6 col-sm-12">
               <div class="form-group">
-                <h6><b><?=lang('grandtotal')?> :</b></h6>
+                <h6><b><?= lang('grandtotal') ?> :</b></h6>
                 <input type="text" name="grand_total" id="grand_total" class="form-control" required>
               </div>
             </div>
             <div class="col-lg col-sm-12">
               <div class="form-group">
-                <label for="note"><?=lang('note')?></label>
+                <label for="note"><?= lang('note') ?></label>
                 <textarea name="note" id="note" class="form-control"></textarea>
               </div>
             </div>
@@ -184,8 +192,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="card">
         <div class="card-footer">
           <div class="float-right">
-            <button type="submit" class="btn btn-info float-right"><?=lang('save')?></button>
-            <button type="cancel" class="btn btn-default mr-2"><?=lang('cancel')?></button>
+            <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
+            <button type="cancel" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
           </div>
         </div>
       </div>
