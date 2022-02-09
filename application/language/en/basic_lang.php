@@ -363,6 +363,7 @@ $lang['information_items'] = "Items Information";
 $lang['find_items'] = "Find items...";
 $lang['item_order_quantity'] = "Item order quantity";
 $lang['subtotal'] = "Sub total";
+$lang['total_price'] = "Harga item total";
 $lang['discount'] = "Discount";
 $lang['shipping_cost'] = "Shipping cost";
 $lang['other_cost'] = "Other cost";
