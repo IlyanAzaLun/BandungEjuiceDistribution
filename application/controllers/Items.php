@@ -59,8 +59,8 @@ class Items extends MY_Controller
                 'flavour' => post('flavour'),
                 'quantity' => post('quantity'),
                 'unit' => post('unit'),
-                'capital_price' => post('capital_price'),
-                'selling_price' => post('selling_price'),
+                'capital_price' => setCurrency(post('capital_price')),
+                'selling_price' => setCurrency(post('selling_price')),
                 'customs' => post('customs'),
                 'note' => post('note'),
                 'created_by' => logged('id'),
@@ -154,8 +154,8 @@ class Items extends MY_Controller
                 'flavour' => post('flavour'),
                 'quantity' => post('quantity'),
                 'unit' => post('unit'),
-                'capital_price' => post('capital_price'),
-                'selling_price' => post('selling_price'),
+                'capital_price' => setCurrency(post('capital_price')),
+                'selling_price' => setCurrency(post('selling_price')),
                 'customs' => post('customs'),
                 'note' => post('note'),
                 'is_active' => post('is_active') ? 1 : 0,
@@ -191,7 +191,7 @@ class Items extends MY_Controller
         $this->activity_model->add("All item, Deleted by User: #" . logged('id'), (array)logged('id'));
 
         $this->session->set_flashdata('alert-type', 'success');
-        $this->session->set_flashdata('alert', "Item #$item has been Updated Successfully");
+        $this->session->set_flashdata('alert', "All Item has been Deleted Successfully");
 
         redirect('items');
     }
@@ -220,6 +220,7 @@ class Items extends MY_Controller
 
         ## Total number of records without filtering
         $this->db->select('count(*) as allcount');
+        $this->db->group_by('item_code');
         $records = $this->db->get('items')->result();
         $totalRecords = $records[0]->allcount;
 
@@ -228,15 +229,17 @@ class Items extends MY_Controller
         if ($searchQuery != '')
             $this->db->like('item_name', $searchValue, 'both');
         $this->db->or_like('item_code', $searchValue, 'both');
+        $this->db->group_by('item_code');
         $records = $this->db->get('items')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
-        $this->db->select('*');
+        $this->db->select('*, sum(quantity) as total_quantity');
         if ($searchQuery != '')
             $this->db->like('item_name', $searchValue, 'both');
         $this->db->or_like('item_code', $searchValue, 'both');
         $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->group_by('item_code');
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('items')->result();
 
@@ -248,7 +251,8 @@ class Items extends MY_Controller
                 "id" => $record->id,
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,
-                "item_quantity" => $record->quantity,
+                "item_quantity" => $record->total_quantity,
+                // "item_quantity" => $record->quantity,
                 "item_unit" => $record->unit,
                 "item_capital_price" => $record->capital_price,
                 "item_selling_price" => $record->selling_price,

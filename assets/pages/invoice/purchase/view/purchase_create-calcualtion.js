@@ -65,7 +65,14 @@ function sum_sub_total() {
 }
 
 function sum_grand_total() {
+    let sub_total = Number(currencyToNum($('input#sub_total').val()));
+    let discount = Number(currencyToNum($('input#discount').val()));
+    let shipping_cost = Number(currencyToNum($('input#shipping_cost').val()));
+    let other_cost = Number(currencyToNum($('input#other_cost').val()));
 
+    let grand_total = sub_total - discount + shipping_cost + other_cost;
+
+    return grand_total;
 }
 
 export { sum_sub_total_item, sum_sub_total, sum_grand_total };

@@ -77,29 +77,33 @@ const main = () => {
             let selfElement = $(this);
             data_items.item_info_search(valueElement, function (data) {
                 let result = data.map(({
-                    item_code, item_name, quantity, unit, capital_price, selling_price
+                    item_code, item_name, quantity, unit, capital_price, selling_price, id
                 }) => [
-                        item_code, item_name, quantity, unit, capital_price, selling_price
+                        item_code, item_name, quantity, unit, capital_price, selling_price, id
                     ]
                 );
                 $('input[data-id="item_code"], input[data-id="item_name"]').autocomplete({
                     source: result,
                     focus: function (event, ui) {
+                        $(`.${parentElement}`).find('input[data-id="item_id"]').val(ui.item[6])
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('input[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
                         $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', `${ui.item[2]}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
+                        $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
                         return false
                     },
                     select: function (event, ui) {
+                        $(`.${parentElement}`).find('input[data-id="item_id"]').val(ui.item[6])
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('input[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
                         $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', `${ui.item[2]}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
+                        $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
                         return false
@@ -112,7 +116,7 @@ const main = () => {
             })
         });
         // discount to currency
-        $(document).on('keyup', 'input[data-id="discount"]', function () {
+        $(document).on('keyup', 'input[data-id="discount"], input[data-id="total_price"]', function () {
             $(this).val(currency(currencyToNum($(this).val())));
         })
 
@@ -121,20 +125,24 @@ const main = () => {
             let input_id = parseInt($('tbody tr:nth-child(n)').last().attr('class').split('-')[1]) + 1;
             let html = `
             <tr class="input-${input_id}">
-                <td><input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required></td>
+                <td>
+                    <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
+                    <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
+                </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required ></td>
                 <td>
                     <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
                         <span class="input-group-append">
                             <span class="input-group-text" data-id="item_unit"></span>
+                            <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
                         </span>
                     </div>
                 </td>
                 <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
                 <td><input readonly class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                <td><input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="0" value="0" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="discount[]" data-id="discount" min="0" max="100" value="0" required></td>
+                <td><input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required></td>
+                <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
                 <td><button type="button" id="remove" class="btn btn-block btn-danger"><i class="fa fa-tw fa-times"></i></button></td>
             </tr> `;
@@ -145,7 +153,7 @@ const main = () => {
             $(this).parents('tr').remove();
         })
         // get sub total items
-        $(document).on('change', 'input[data-id="item_order_quantity"], input[data-id="discount"]', function () {
+        $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item(row);
         })
@@ -157,6 +165,24 @@ const main = () => {
                     break;
                 case 'focusin':
                     $(this).val(currency(sum_sub_total()));
+                    break;
+                default:
+                    console.log(event.type)
+                    break;
+            }
+        });
+        // discount, shipping, other cost to currency
+        $(document).on('keyup', 'input#discount, input#shipping_cost, input#other_cost', function () {
+            $(this).val(currency(currencyToNum($(this).val())));
+        })
+        // get grand total
+        $(document).on('focus keyup', 'input#grand_total', function (event) {
+            switch (event.type) {
+                case 'keyup':
+                    $(this).val(currency(currencyToNum($(this).val())));
+                    break;
+                case 'focusin':
+                    $(this).val(currency(sum_grand_total()));
                     break;
                 default:
                     console.log(event.type)

@@ -371,6 +371,10 @@ $lang['other_cost'] = "Other cost";
 $lang['grandtotal'] = "Grand total";
 $lang['grandtotal'] = "Grand total";
 $lang['information_payment'] = "Payment Information";
+$lang['payment_type'] = "Type Payment";
+$lang['status_payment'] = "Status Payment";
+$lang['debt'] = "Debt";
+$lang['cash'] = "Cash";
 
 /**
  * Activity

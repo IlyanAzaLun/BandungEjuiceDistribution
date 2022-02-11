@@ -141,7 +141,10 @@ $autoload['model'] = array(
 	'activity_model',
 	'templates_model',
 	'items_model',
+	'items_history_model',
 	'customer_model',
 	'supplier_model',
 	'address_model',
+	'invoice/purchase_model',
+	'order/order_purchase_model',
 );
