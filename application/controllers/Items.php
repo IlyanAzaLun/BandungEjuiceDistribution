@@ -67,6 +67,7 @@ class Items extends MY_Controller
             ];
             $item = $this->items_model->create($data);
             $this->activity_model->add("New Item #$item, #" . Post('item_code') . ", Created by User: #" . logged('id'), $data);
+            $this->create_item_history(array(0 => $data), 'IN');
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'New Item Created Successfully');
 
@@ -109,6 +110,7 @@ class Items extends MY_Controller
             }
         }
         $item = $this->items_model->create_batch($request);
+        $this->create_item_history($request, 'IN');
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Item Upload Successfully');
 
@@ -144,6 +146,7 @@ class Items extends MY_Controller
             $this->load->view('items/edit', $this->page_data);
         } else {
             $data = [
+                'item_code' => post('item_code'),
                 'item_name' => post('item_name'),
                 'brand' => post('brand'),
                 'brands' => post('brands'),
@@ -165,6 +168,7 @@ class Items extends MY_Controller
             $history = (array)$this->items_model->getById(Get('id'));
             $item = $this->items_model->update(Get('id'), $data);
             $this->activity_model->add("Updated Item #$item, #" . Post('item_code') . ", Updated by User: #" . logged('id'), $history);
+            $this->create_item_history(array(0 => $data), 'UPDATE');
 
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', "Item #$item has been Updated Successfully");
@@ -173,9 +177,52 @@ class Items extends MY_Controller
         }
     }
 
+    private function create_item_history($data, $status_type)
+    {
+        $item = array();
+        foreach ($data as $key => $value) {
+            array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row());
+            $data[$key]['item_id'] = $item[$key]->id;
+            $data[$key]['item_quantity'] = $item[$key]->quantity - $value['quantity'];
+            $data[$key]['item_order_quantity'] = $value['quantity'];
+            $data[$key]['item_unit'] = $value['unit'];
+            $data[$key]['item_capital_price'] = $value['capital_price'];
+            $data[$key]['item_selling_price'] = $value['selling_price'];
+            $data[$key]['status_type'] = $status_type;
+            $data[$key]['status_transaction'] = __CLASS__;
+            $data[$key]['category'] = $item[$key]->category;
+            $data[$key]['created_by'] = logged('id');
+            unset($data[$key]['capital_price']);
+            unset($data[$key]['is_active']);
+            unset($data[$key]['unit']);
+            unset($data[$key]['quantity']);
+            unset($data[$key]['selling_price']);
+            unset($data[$key]['category']);
+            unset($data[$key]['note']);
+            unset($data[$key]['brand']);
+            unset($data[$key]['brands']);
+            unset($data[$key]['mg']);
+            unset($data[$key]['ml']);
+            unset($data[$key]['vg']);
+            unset($data[$key]['pg']);
+            unset($data[$key]['flavour']);
+            unset($data[$key]['customs']);
+        }
+        return $this->items_history_model->create_batch($data);
+    }
+
     public function info()
     {
         ifPermissions('items_info');
+        $this->page_data['page']->submenu = 'list';
+        $this->page_data['modals']->title = 'Modals upload items';
+        $this->page_data['modals']->link  = 'items/upload';
+        $this->page_data['title'] = 'item_list_information';
+
+        $this->page_data['item'] = $this->db->get_where('items', ['item_code' => get('id')])->row();
+
+        $this->load->view('items/info', $this->page_data);
+        $this->load->view('includes/modals', $this->page_data);
     }
 
     public function delete()
@@ -226,20 +273,21 @@ class Items extends MY_Controller
 
         ## Total number of record with filtering
         $this->db->select('count(*) as allcount');
-        if ($searchQuery != '')
+        if ($searchQuery != '') {
             $this->db->like('item_name', $searchValue, 'both');
-        $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->or_like('item_code', $searchValue, 'both');
+        }
         $this->db->group_by('item_code');
         $records = $this->db->get('items')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
-        $this->db->select('*, sum(quantity) as total_quantity');
-        if ($searchQuery != '')
+        $this->db->select('*');
+        if ($searchQuery != '') {
             $this->db->like('item_name', $searchValue, 'both');
-        $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->or_like('item_code', $searchValue, 'both');
+        }
         $this->db->order_by($columnName, $columnSortOrder);
-        $this->db->group_by('item_code');
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('items')->result();
 
@@ -251,12 +299,87 @@ class Items extends MY_Controller
                 "id" => $record->id,
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,
-                "item_quantity" => $record->total_quantity,
-                // "item_quantity" => $record->quantity,
+                "item_quantity" => $record->quantity,
                 "item_unit" => $record->unit,
                 "item_capital_price" => $record->capital_price,
                 "item_selling_price" => $record->selling_price,
                 "is_active" => $record->is_active,
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    public function serverside_datatables_data_items_information()
+    {
+        ifPermissions('items_list');
+        $response = array();
+
+        $postData = $this->input->post();
+
+        ## Read value
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+
+        ## Total number of records without filtering
+        $this->db->select('count(*) as allcount');
+        $records = $this->db->get_where('items_history', ['item_code' => post('id')])->result();
+        $totalRecords = $records[0]->allcount;
+
+        ## Total number of record with filtering
+        $this->db->select('count(*) as allcount');
+        if ($searchValue != '') {
+            $this->db->like('item_name', $searchValue, 'both');
+            $this->db->or_like('item_code', $searchValue, 'both');
+        }
+        $records = $this->db->get_where('items_history', ['item_code' => post('id')])->result();
+        $totalRecordwithFilter = $records[0]->allcount;
+
+        ## Fetch records
+        $this->db->select('*');
+        if ($searchValue != '') {
+            $this->db->like('item_name', $searchValue, 'both');
+            $this->db->or_like('item_code', $searchValue, 'both');
+        }
+        $this->db->order_by('created_at', 'desc');
+        $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->limit($rowperpage, $start);
+        $records = $this->db->get_where('items_history', ['item_code' => post('id')])->result();
+
+        $data = array();
+
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "id" => $record->id,
+                "item_code" => $record->item_code,
+                "item_name" => $record->item_name,
+                "item_quantity" => $record->item_quantity,
+                "item_order_quantity" => $record->item_order_quantity,
+                "item_unit" => $record->item_unit,
+                "item_capital_price" => $record->item_capital_price,
+                "item_selling_price" => $record->item_selling_price,
+                "item_discount" => $record->item_discount,
+                "total_price" => $record->total_price,
+                "status_type" => $record->status_type,
+                "status_transaction" => $record->status_transaction,
+                "invoice_reference" => $record->invoice_reference,
+                "updated_at" => date(setting('datetime_format'), strtotime($record->updated_at)),
+                "created_by" => $record->created_by,
+                "created_at" => date(setting('datetime_format'), strtotime($record->created_at)),
+                "updated_by" => $record->updated_by,
             );
         }
 

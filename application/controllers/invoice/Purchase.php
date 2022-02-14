@@ -75,7 +75,7 @@ class Purchase extends Invoice_controller
 				'note' => post('note'),
 			);
 			try {
-				$this->add_history_item(); //OK
+				$this->create_item_history($items, 'IN'); //OK
 				$this->add_order_item();   //OK
 				$this->add_invoice();	   //OK
 				$this->add_items();		   //OK
@@ -93,7 +93,7 @@ class Purchase extends Invoice_controller
 		}
 	}
 
-	private function add_history_item()
+	private function create_item_history($data, $status_type)
 	{
 		$history_items = array();
 		foreach (post('item_code') as $key => $value) {
@@ -110,14 +110,13 @@ class Purchase extends Invoice_controller
 					"item_selling_price" => setCurrency(post('item_selling_price')[$key]),
 					"item_discount" => setCurrency(post('item_discount')[$key]),
 					"total_price" => setCurrency(post('total_price')[$key]),
-					"status_type" => __CLASS__,
+					"status_transaction" => __CLASS__,
+					"status_type" =>  $status_type,
 					"invoice_reference" => $this->data['invoice_code'],
 					"created_by" => logged('id'),
 				]
 			);
 		}
-		return $history_items;
-		die();
 		return $this->items_history_model->create_batch($history_items);
 	}
 

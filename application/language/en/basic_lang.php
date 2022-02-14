@@ -265,6 +265,7 @@ $lang['status_active'] = "This data will not be displayed if the status is turne
  */
 $lang['item'] = "item";
 $lang['item_list'] = "List item";
+$lang['item_list_information'] = "List item information";
 $lang['item_add'] = "Add item";
 $lang['item_update'] = "Update item";
 $lang['item_code'] = "Item code";
@@ -280,6 +281,9 @@ $lang['current_stock'] = "Curent stock";
 $lang['sub_category'] = "Sub category";
 $lang['is_active'] = "Is Active";
 $lang['is_inactive'] = "Inactive";
+$lang['item_discount'] = "Discount";
+$lang['status_transaction'] = "Status transaction";
+$lang['invoice_reference'] = "Invoice reference";
 
 /*
  * Customer

@@ -133,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `
                 <div class="btn-group d-flex justify-content-center">
                 <a href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-sm btn-warning"><i class="fa fa-tw fa-edit"></i></a>
-                <a href="<?= url('items') ?>/info?id=${row['id']}" class="btn btn-sm btn-info"><i class="fa fa-tw fa-history"></i></a>
+                <a href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-sm btn-info"><i class="fa fa-tw fa-history"></i></a>
                 </div>`;
           }
         },
