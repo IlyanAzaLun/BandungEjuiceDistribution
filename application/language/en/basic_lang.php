@@ -356,10 +356,11 @@ $lang['is_open'] = "Is Open";
  * Invoice
  * purchase
  */
+$lang['invoice_code'] = "Invoice code";
+
 $lang['purchase_list'] = "Purchase list";
 $lang['find_supplier_code'] = "Find supplier code ...";
 $lang['find_store_name'] = "Find store name ...";
-$lang['purchase_list'] = "Purchase list";
 $lang['purchase_create'] = "Purchase create";
 $lang['purchase_info_create'] = "Add more information data purchase";
 $lang['information_supplier'] = "Supplier Information";

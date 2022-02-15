@@ -115,8 +115,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </span>
                       </div>
                     </td>
-                    <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input readonly class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
@@ -188,7 +188,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
               </div>
             </div>
-            <div class="col-lg-5 col-sm-12">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <h6><b><?= lang('grandtotal') ?> :</b></h6>
                 <div class="input-group mb-3">
@@ -199,7 +199,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
               </div>
             </div>
-            <div class="col-lg-1 col-sm-12">
+            <div class="col-lg-2 col-sm-12">
               <div class="form-group">
                 <h6><?= lang('payment_type') ?></h6>
                 <select class="custom-select" name="payment_type">

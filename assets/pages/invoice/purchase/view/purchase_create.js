@@ -89,7 +89,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('input[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
-                        $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', `${ui.item[2]}`)
+                        $(`.${parentElement}`).find('input[data-id="item_order_quantity"]')
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
@@ -101,7 +101,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('input[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
-                        $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', `${ui.item[2]}`)
+                        $(`.${parentElement}`).find('input[data-id="item_order_quantity"]')
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
@@ -116,7 +116,7 @@ const main = () => {
             })
         });
         // discount to currency
-        $(document).on('keyup', 'input[data-id="discount"], input[data-id="total_price"]', function () {
+        $(document).on('keyup', 'input[data-id="discount"], input[data-id="total_price"], input[data-id="item_selling_price"], input[data-id="item_capital_price"]', function () {
             $(this).val(currency(currencyToNum($(this).val())));
         })
 

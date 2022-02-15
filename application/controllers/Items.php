@@ -166,9 +166,9 @@ class Items extends MY_Controller
                 'updated_by' => logged('id'),
             ];
             $history = (array)$this->items_model->getById(Get('id'));
+            $this->create_item_history(array(0 => $data), 'UPDATE');
             $item = $this->items_model->update(Get('id'), $data);
             $this->activity_model->add("Updated Item #$item, #" . Post('item_code') . ", Updated by User: #" . logged('id'), $history);
-            $this->create_item_history(array(0 => $data), 'UPDATE');
 
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', "Item #$item has been Updated Successfully");
@@ -183,7 +183,7 @@ class Items extends MY_Controller
         foreach ($data as $key => $value) {
             array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row());
             $data[$key]['item_id'] = $item[$key]->id;
-            $data[$key]['item_quantity'] = $item[$key]->quantity - $value['quantity'];
+            $data[$key]['item_quantity'] = $item[$key]->quantity;
             $data[$key]['item_order_quantity'] = $value['quantity'];
             $data[$key]['item_unit'] = $value['unit'];
             $data[$key]['item_capital_price'] = $value['capital_price'];
@@ -267,7 +267,6 @@ class Items extends MY_Controller
 
         ## Total number of records without filtering
         $this->db->select('count(*) as allcount');
-        $this->db->group_by('item_code');
         $records = $this->db->get('items')->result();
         $totalRecords = $records[0]->allcount;
 
@@ -277,7 +276,6 @@ class Items extends MY_Controller
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('item_code', $searchValue, 'both');
         }
-        $this->db->group_by('item_code');
         $records = $this->db->get('items')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
