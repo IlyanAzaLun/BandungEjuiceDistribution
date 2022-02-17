@@ -1,5 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<!-- Daterange picker -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
 <?php include viewPath('includes/header'); ?>
 
@@ -37,29 +39,33 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 10px;">
+            <?php echo form_open('invoice/purchase/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
+            <div class="form-group-sm pb-2 row">
+              <div class="col-4">
+                <input class="form-control" type="text" id="min" name="min">
+              </div>
+            </div>
+            <?php echo form_close(); ?>
+            <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
                   <th>no.</th>
                   <th><?= lang('invoice_code') ?></th>
-                  <th><?= lang('supplier_code') ?></th>
+                  <th><?= lang('supplier_name') ?></th>
+                  <th><?= lang('total_price') ?></th>
+                  <th><?= lang('discount') ?></th>
+                  <th><?= lang('shipping_cost') ?></th>
+                  <th><?= lang('other_cost') ?></th>
+                  <th><?= lang('grandtotal') ?></th>
+                  <th><?= lang('payment_type') ?></th>
+                  <th><?= lang('status_payment') ?></th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('created_by') ?></th>
-                  <th>Last Login</th>
+                  <th><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>
               </tbody>
-              <tfoot>
-                <tr>
-                  <th>no.</th>
-                  <th><?= lang('invoice_code') ?></th>
-                  <th><?= lang('supplier_code') ?></th>
-                  <th><?= lang('created_at') ?></th>
-                  <th><?= lang('created_by') ?></th>
-                  <th>Last Login</th>
-                </tr>
-              </tfoot>
             </table>
 
           </div>
@@ -81,11 +87,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
-    $("#example2").DataTable({
+    //Date range picker
+    $('#min').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'MM/DD/YYYY hh:mm A'
+      }
+    });
+    var table = $("#example2").DataTable({
 
       dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
-                <'row'<'col-12'tr>>
-                <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
+            <'row'<'col-12'tr>>
+            <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
+
       processing: true,
       serverSide: true,
       responsive: true,
@@ -94,7 +109,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
         "type": "POST",
         "data": {
-          "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content')
+          "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
+          "startDate": '<?= get('start') ?>',
+          "finalDate": '<?= get('final') ?>'
         }
       },
       columns: [{
@@ -108,6 +125,52 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "supplier"
+        },
+        {
+          data: "total_price",
+          visible: false,
+          render: function(data, type, row) {
+            return currency(data)
+          }
+        },
+        {
+          data: "discounts",
+          visible: false,
+          render: function(data, type, row) {
+            return currency(data)
+          }
+        },
+        {
+          data: "shipping_cost",
+          visible: false,
+          render: function(data, type, row) {
+            return currency(data)
+          }
+        },
+        {
+          data: "other_cost",
+          visible: false,
+          render: function(data, type, row) {
+            return currency(data)
+          }
+        },
+        {
+          data: "grand_total",
+          render: function(data, type, row) {
+            return currency(data)
+          }
+        },
+        {
+          data: "payment_type",
+          render: function(data, type, row) {
+            return data
+          }
+        },
+        {
+          data: "status_payment",
+          render: function(data, type, row) {
+            return data
+          }
         },
         {
           data: "created_at"
@@ -128,13 +191,51 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
       ],
       buttons: [{
-        text: 'Export',
-        extend: 'excelHtml5',
-        className: 'btn-sm',
-        customize: function(xlsx) {
-          var sheet = xlsx.xl.worksheets['sheet1.xml'];
+          text: 'Export',
+          extend: 'excelHtml5',
+          className: 'btn-sm',
+          customize: function(xlsx) {
+            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+          }
+        },
+        {
+          text: 'Column visibility',
+          extend: 'colvis',
+          className: 'btn-sm'
         }
-      }, ]
+      ]
     });
+
+    var startdate;
+    var enddate;
+    $('#min').on('apply.daterangepicker', function(ev, picker) {
+      startdate = picker.startDate.format('YYYY-MM-DD');
+      enddate = picker.endDate.format('YYYY-MM-DD');
+      $.fn.dataTableExt.afnFiltering.push(
+        function(oSettings, aData, iDataIndex) {
+          if (startdate != undefined) {
+            var coldate = aData[3].split("/");
+            var d = new Date(coldate[2], coldate[1] - 1, coldate[1]);
+            var date = moment(d.toISOString());
+            date = date.format("YYYY-MM-DD");
+            dateMin = startdate.replace(/-/g, "");
+            dateMax = enddate.replace(/-/g, "");
+            date = date.replace(/-/g, "");
+            if (dateMin == "" && date <= dateMax) {
+              return true;
+            } else if (dateMin == "" && date <= dateMax) {
+              return true;
+            } else if (dateMin <= date && "" == dateMax) {
+              return true;
+            } else if (dateMin <= date && date <= dateMax) {
+              return true;
+            }
+            return false;
+          }
+        });
+      // table.draw();
+      // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
+    });
+
   });
 </script>

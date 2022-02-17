@@ -209,6 +209,8 @@ class Purchase extends Invoice_controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
+		$dateStart = ($postData['startDate']) ? $postData['startDate'] : '';
+		$dateFinal = ($postData['finalDate']) ? $postData['finalDate'] : '';
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
@@ -220,6 +222,12 @@ class Purchase extends Invoice_controller
 		if ($searchValue != '') {
 			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
+			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+		}
+		if ($dateStart != '') {
+			// $this->db->where("purchasing.created >=", $dateStart);
+			// $this->db->where("purchasing.created <=", $dateFinal);
+			$this->db->where("purchasing.created BETWEEN $dateStart AND $dateFinal", null, FALSE);
 		}
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
@@ -229,9 +237,15 @@ class Purchase extends Invoice_controller
 		if ($searchValue != '') {
 			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
+			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
 		}
 		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
 		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
+		if ($dateStart != '') {
+			// $this->db->where("purchasing.created >=", $dateStart);
+			// $this->db->where("purchasing.created <=", $dateFinal);
+			$this->db->where("purchasing.created BETWEEN $dateStart AND $dateFinal", null, FALSE);
+		}
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
@@ -244,6 +258,14 @@ class Purchase extends Invoice_controller
 				'id' => $record->purchasing_id,
 				'invoice_code' => $record->invoice_code,
 				'supplier' => $record->store_name,
+				'total_price' => $record->total_price,
+				'discounts' => $record->discounts,
+				'shipping_cost' => $record->shipping_cost,
+				'other_cost' => $record->other_cost,
+				'payment_type' => lang($record->payment_type),
+				'status_payment' => $record->status_payment,
+				'grand_total' => $record->grand_total,
+				'note' => $record->note,
 				'created_at' => $record->purchasing_create_at,
 				'created_by' => $record->user_purchasing_create_by,
 			);

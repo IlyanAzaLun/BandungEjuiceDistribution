@@ -102,6 +102,92 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </ul>
     </li>
   <?php endif ?>
+  <!-- Items -->
+  <?php if (hasPermissions('items_list')) : ?>
+    <li class="nav-header"><strong> <?php echo lang('menus') . ' ' . lang('master') ?> </strong> &nbsp;
+    <li class="nav-item has-treeview <?php echo ($page->menu == 'Items') ? 'menu-open' : '' ?>">
+      <a href="#" class="nav-link  <?php echo ($page->menu == 'Items') ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-database"></i>
+        <p>
+          <?php echo lang('pages') . ' ' . lang('item') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('items/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('item_list') ?> </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="<?php echo url('items/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('item_add') ?> </p>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+  <?php endif ?>
+  <!-- end Items -->
+  <!-- Customer -->
+  <?php if (hasPermissions('customer_list')) : ?>
+    <!-- <li class="nav-header"><strong>  <?php echo lang('menus') . ' ' . lang('customer') ?> </strong> &nbsp; -->
+    <li class="nav-item has-treeview <?php echo ($page->menu == 'customer') ? 'menu-open' : '' ?>">
+      <a href="#" class="nav-link  <?php echo ($page->menu == 'customer') ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-database"></i>
+        <p>
+          <?php echo lang('pages') . ' ' . lang('customer') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/customer/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('customer_list') ?> </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/customer/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('customer_add') ?> </p>
+          </a>
+        </li>
+      </ul>
+    </li>
+  <?php endif ?>
+  <!-- end Customer -->
+  <!-- Supplier -->
+  <?php if (hasPermissions('supplier_list')) : ?>
+    <!-- <li class="nav-header"><strong>  <?php echo lang('menus') . ' ' . lang('supplier') ?> </strong> &nbsp; -->
+    <li class="nav-item has-treeview <?php echo ($page->menu == 'supplier') ? 'menu-open' : '' ?>">
+      <a href="#" class="nav-link  <?php echo ($page->menu == 'supplier') ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-database"></i>
+        <p>
+          <?php echo lang('pages') . ' ' . lang('supplier') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/supplier/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('supplier_list') ?> </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/supplier/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('supplier_add') ?> </p>
+          </a>
+        </li>
+      </ul>
+    </li>
+  <?php endif ?>
+  <!-- end Supplier -->
+
   <!-- Invoice -->
   <li class="nav-header"><strong> <?php echo lang('menus') . ' ' . lang('invoice') ?> </strong> &nbsp;
     <?php if (hasPermissions('purchase_list')) : ?>
@@ -130,91 +216,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
   </li>
 <?php endif ?>
 <!-- end Invoice -->
-<!-- Items -->
-<?php if (hasPermissions('items_list')) : ?>
-  <li class="nav-header"><strong> <?php echo lang('menus') . ' ' . lang('master') ?> </strong> &nbsp;
-  <li class="nav-item has-treeview <?php echo ($page->menu == 'Items') ? 'menu-open' : '' ?>">
-    <a href="#" class="nav-link  <?php echo ($page->menu == 'Items') ? 'active' : '' ?>">
-      <i class="nav-icon fas fa-database"></i>
-      <p>
-        <?php echo lang('pages') . ' ' . lang('item') ?>
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="<?php echo url('items/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('item_list') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('items/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('item_add') ?> </p>
-        </a>
-      </li>
-    </ul>
-  </li>
-
-<?php endif ?>
-<!-- end Items -->
-<!-- Customer -->
-<?php if (hasPermissions('customer_list')) : ?>
-  <!-- <li class="nav-header"><strong>  <?php echo lang('menus') . ' ' . lang('customer') ?> </strong> &nbsp; -->
-  <li class="nav-item has-treeview <?php echo ($page->menu == 'customer') ? 'menu-open' : '' ?>">
-    <a href="#" class="nav-link  <?php echo ($page->menu == 'customer') ? 'active' : '' ?>">
-      <i class="nav-icon fas fa-database"></i>
-      <p>
-        <?php echo lang('pages') . ' ' . lang('customer') ?>
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="<?php echo url('master_information/customer/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('customer_list') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('master_information/customer/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('customer_add') ?> </p>
-        </a>
-      </li>
-    </ul>
-  </li>
-<?php endif ?>
-<!-- end Customer -->
-<!-- Supplier -->
-<?php if (hasPermissions('supplier_list')) : ?>
-  <!-- <li class="nav-header"><strong>  <?php echo lang('menus') . ' ' . lang('supplier') ?> </strong> &nbsp; -->
-  <li class="nav-item has-treeview <?php echo ($page->menu == 'supplier') ? 'menu-open' : '' ?>">
-    <a href="#" class="nav-link  <?php echo ($page->menu == 'supplier') ? 'active' : '' ?>">
-      <i class="nav-icon fas fa-database"></i>
-      <p>
-        <?php echo lang('pages') . ' ' . lang('supplier') ?>
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="<?php echo url('master_information/supplier/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('supplier_list') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('master_information/supplier/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('supplier_add') ?> </p>
-        </a>
-      </li>
-    </ul>
-  </li>
-<?php endif ?>
-<!-- end Supplier -->
 
 <li class="nav-header"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>
