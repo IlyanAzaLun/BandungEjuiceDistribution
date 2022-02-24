@@ -47,7 +47,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th><?= lang('item_discount') ?></th>
                                     <th><?= lang('total_price') ?></th>
                                     <th><?= lang('created_by') ?></th>
-                                    <th><?= lang('option') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,7 +66,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th><?= lang('item_discount') ?></th>
                                     <th><?= lang('total_price') ?></th>
                                     <th><?= lang('created_by') ?></th>
-                                    <th><?= lang('option') ?></th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -103,7 +101,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 "type": "POST",
                 "data": {
                     "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
-                    "id": "<?= get('id') ?>"
+                    "id": "<?= $item->item_code ?>"
                 }
             },
             columns: [{
@@ -113,7 +111,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     data: "created_at"
                 },
                 {
-                    data: "invoice_reference"
+                    data: "invoice_reference",
+                    render: function(data, type, row) {
+                        if (data) {
+                            return `<a href="${location.base}invoice/purchase/info?id=${data}">${data}</a>`;
+                        }
+                        return '';
+                    }
                 },
                 {
                     data: "item_code",
@@ -165,16 +169,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     }
                 },
                 {
-                    data: "created_by"
-                },
-                {
-                    data: "id",
+                    data: "created_by",
                     render: function(data, type, row) {
-                        return `
-                        <div class="btn-group d-flex justify-content-center">
-                            <a href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default"><i class="fa fa-tw fa-edit"></i></a>
-                            <a href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-xs btn-default"><i class="fa fa-tw fa-history"></i></a>
-                        </div>`;
+                        return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`
                     }
                 }
             ],

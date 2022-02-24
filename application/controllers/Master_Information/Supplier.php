@@ -21,9 +21,14 @@ class Supplier extends MY_Controller
         ifPermissions('supplier_list');
         $this->page_data['page']->submenu = 'list';
         $this->page_data['title'] = 'supplier_list';
-        $this->page_data['modals']->title = 'Modals upload supplier';
-        $this->page_data['modals']->link  = 'master_information/supplier/upload';
-
+        $this->page_data['modals'] = (object) array(
+            'id' => 'modal-import',
+            'title' => 'Modals upload supplier',
+            'link' => 'master_information/supplier/upload',
+            'content' => 'upload',
+            'btn' => 'btn-primary',
+            'submit' => 'Save changes',
+        );
         $this->load->view('supplier/list', $this->page_data);
         $this->load->view('includes/modals', $this->page_data);
     }
@@ -243,7 +248,7 @@ class Supplier extends MY_Controller
     {
         if (ifPermissions('purchase_create') or ifPermissions('selling_create')) {
             $search = (object) post('search');
-            $this->db->limit(15);
+            $this->db->limit(3);
             if ($search->value) {
                 $this->db->like('supplier_information.customer_code', $search->value, 'both');
                 $this->db->or_like('supplier_information.store_name', $search->value, 'both');

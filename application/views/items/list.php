@@ -31,7 +31,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <table id="example2" class="table table-sm table-bordered table-hover">
+            <table id="example2" class="table table-sm table-bordered table-hover" style="font-size: 12px;">
               <thead>
                 <tr>
                   <th>No.</th>
@@ -132,8 +132,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-sm btn-warning"><i class="fa fa-tw fa-edit"></i></a>
-                <a href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-sm btn-info"><i class="fa fa-tw fa-history"></i></a>
+                <a href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-tw fa-edit text-primary"></i></a>
+                <a href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History items"><i class="fa fa-tw fa-history text-primary"></i></a>
                 </div>`;
           }
         },

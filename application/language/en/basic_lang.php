@@ -363,7 +363,13 @@ $lang['purchase_list'] = "Purchase list";
 $lang['find_supplier_code'] = "Find supplier code ...";
 $lang['find_store_name'] = "Find store name ...";
 $lang['purchase_create'] = "Purchase create";
+$lang['purchase_edit'] = "Purchase edit";
+$lang['purchase_info'] = "Purchase information";
+$lang['purchase_returns'] = "Purchase returns";
 $lang['purchase_info_create'] = "Add more information data purchase";
+$lang['purchase_info_edit'] = "Edit information data purchase ";
+$lang['purchase_info_info'] = "Information data purchase ";
+$lang['purchase_info_returns'] = "Returns information data purchase ";
 $lang['information_supplier'] = "Supplier Information";
 $lang['information_items'] = "Items Information";
 $lang['find_items'] = "Find items...";
@@ -379,6 +385,8 @@ $lang['payment_type'] = "Type Payment";
 $lang['status_payment'] = "Status Payment";
 $lang['debt'] = "Debt";
 $lang['cash'] = "Cash";
+$lang['payed'] = "Payed";
+$lang['credit'] = "Credit";
 
 /**
  * Activity

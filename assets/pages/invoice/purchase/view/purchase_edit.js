@@ -7,8 +7,19 @@ const data_items = new DataItems();
 
 const main = () => {
     $(document).ready(function () {
-        // Find Supplier // limit.. this overload
-        $(document).on('keyup', 'input#store_name, input#supplier_code', function () {
+
+        data_supplier.user_info_search($('input#supplier_code').val(), function (output) {
+            $('input#supplier_code').val(output[0]['customer_code'])
+            $('input#store_name').val(output[0]['store_name'])
+            $('input#contact_phone').val(`${output[0]['contact_phone']} (${output[0]['owner_name']})`)
+            $('textarea#address').val(`${output[0]['address']}, ${output[0]['village']}, ${output[0]['sub_district']}, ${output[0]['city']}, ${output[0]['province']}, ${output[0]['zip']}`)
+            return false;
+        });
+        $('.currency').each(function (index, field) {
+            $(field).val(currency(currencyToNum($(field).val())));
+        });
+
+        $(document).on('keyup', 'input#store_name, input#supplier_code', function (event) {
             let valueElement = $(this).val();
             let selfElement = $(this);
             function getFieldNo(type) {
@@ -158,6 +169,7 @@ const main = () => {
             sum_sub_total_item(row);
         })
         // get sub total
+        $('input#sub_total').val(currency(sum_sub_total()));
         $(document).on('focus keyup', 'input#sub_total', function (event) {
             switch (event.type) {
                 case 'keyup':
@@ -176,6 +188,7 @@ const main = () => {
             $(this).val(currency(currencyToNum($(this).val())));
         })
         // get grand total
+        $('input#grand_total').val(currency(sum_grand_total()));
         $(document).on('focus keyup', 'input#grand_total', function (event) {
             switch (event.type) {
                 case 'keyup':

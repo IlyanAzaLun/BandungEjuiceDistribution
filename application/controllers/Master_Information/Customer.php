@@ -21,8 +21,15 @@ class Customer extends MY_Controller
         ifPermissions('customer_list');
         $this->page_data['page']->submenu = 'list';
         $this->page_data['title'] = 'customer_list';
-        $this->page_data['modals']->title = 'Modals upload customer';
-        $this->page_data['modals']->link  = 'master_information/customer/upload';
+        $this->page_data['modals'] = (object) array(
+            'id' => 'modal-import',
+            'title' => 'Modals upload customer',
+            'link' => 'master_information/customer/upload',
+            'content' => 'upload',
+            'btn' => 'btn-primary',
+            'submit' => 'Save changes',
+        );
+
 
         $this->load->view('customer/list', $this->page_data);
         $this->load->view('includes/modals', $this->page_data);

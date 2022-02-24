@@ -25,9 +25,15 @@ class Items extends MY_Controller
     {
         ifPermissions('items_list');
         $this->page_data['page']->submenu = 'list';
-        $this->page_data['modals']->title = 'Modals upload items';
-        $this->page_data['modals']->link  = 'items/upload';
         $this->page_data['title'] = 'item_list';
+        $this->page_data['modals'] = (object) array(
+            'id' => 'modal-import',
+            'title' => 'Modals upload items',
+            'link' => 'items/upload',
+            'content' => 'upload',
+            'btn' => 'btn-primary',
+            'submit' => 'Save changes',
+        );
 
         $this->load->view('items/list', $this->page_data);
         $this->load->view('includes/modals', $this->page_data);
@@ -215,14 +221,14 @@ class Items extends MY_Controller
     {
         ifPermissions('items_info');
         $this->page_data['page']->submenu = 'list';
-        $this->page_data['modals']->title = 'Modals upload items';
-        $this->page_data['modals']->link  = 'items/upload';
         $this->page_data['title'] = 'item_list_information';
 
-        $this->page_data['item'] = $this->db->get_where('items', ['item_code' => get('id')])->row();
-
+        $this->page_data['item'] = $this->items_model->getByCodeItem(get('id'));
+        if (!$this->page_data['item']) {
+            $this->load->view('errors/html/error_404');
+            return false;
+        }
         $this->load->view('items/info', $this->page_data);
-        $this->load->view('includes/modals', $this->page_data);
     }
 
     public function delete()
@@ -317,7 +323,7 @@ class Items extends MY_Controller
 
     public function serverside_datatables_data_items_information()
     {
-        ifPermissions('items_list');
+        // ifPermissions('items_list');
         $response = array();
 
         $postData = $this->input->post();
@@ -333,35 +339,61 @@ class Items extends MY_Controller
 
         ## Total number of records without filtering
         $this->db->select('count(*) as allcount');
-        $records = $this->db->get_where('items_history', ['item_code' => post('id')])->result();
+        $this->db->where('item_code', post('id'));
+        $records = $this->db->get('items_history')->result();
         $totalRecords = $records[0]->allcount;
 
         ## Total number of record with filtering
         $this->db->select('count(*) as allcount');
         if ($searchValue != '') {
-            $this->db->like('item_name', $searchValue, 'both');
-            $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->like('history.item_name', $searchValue, 'both');
+            $this->db->or_like('history.item_code', $searchValue, 'both');
+            $this->db->or_like('user.name', $searchValue, 'both');
         }
-        $records = $this->db->get_where('items_history', ['item_code' => post('id')])->result();
+        $this->db->join('users user', 'user.id=history.created_by', 'left');
+        $this->db->where('history.item_code', post('id'));
+        $records = $this->db->get('items_history history')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
-        $this->db->select('*');
+        $this->db->select('user.name
+        , user.id as user_id
+        , history.item_code
+        , history.item_name
+        , history.item_quantity
+        , history.item_order_quantity
+        , history.item_unit
+        , history.item_capital_price
+        , history.item_selling_price
+        , history.item_discount
+        , history.total_price
+        , history.status_type
+        , history.status_transaction
+        , history.invoice_reference
+        , history.id as history_id
+        , history.created_by as history_created_by
+        , history.created_at as history_created_at
+        , history.updated_by as history_updated_by
+        , history.updated_at as history_updated_at');
         if ($searchValue != '') {
-            $this->db->like('item_name', $searchValue, 'both');
-            $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->like('history.item_name', $searchValue, 'both');
+            $this->db->or_like('history.item_code', $searchValue, 'both');
+            $this->db->or_like('user.name', $searchValue, 'both');
         }
-        $this->db->order_by('created_at', 'desc');
-        $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->join('users user', 'user.id=history.created_by', 'left');
+        $this->db->where('history.item_code', post('id'));
+        $this->db->order_by('history.created_at', 'desc');
+        $this->db->order_by("history.$columnName", $columnSortOrder);
         $this->db->limit($rowperpage, $start);
-        $records = $this->db->get_where('items_history', ['item_code' => post('id')])->result();
+        $records = $this->db->get('items_history history')->result();
 
         $data = array();
 
         foreach ($records as $record) {
 
             $data[] = array(
-                "id" => $record->id,
+                "id" => $record->history_id,
+                "user_id" => $record->user_id,
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,
                 "item_quantity" => $record->item_quantity,
@@ -374,10 +406,10 @@ class Items extends MY_Controller
                 "status_type" => $record->status_type,
                 "status_transaction" => $record->status_transaction,
                 "invoice_reference" => $record->invoice_reference,
-                "updated_at" => date(setting('datetime_format'), strtotime($record->updated_at)),
-                "created_by" => $record->created_by,
-                "created_at" => date(setting('datetime_format'), strtotime($record->created_at)),
-                "updated_by" => $record->updated_by,
+                "updated_at" => date(setting('datetime_format'), strtotime($record->history_updated_at)),
+                "created_by" => $record->name,
+                "created_at" => date(setting('datetime_format'), strtotime($record->history_created_at)),
+                "updated_by" => $record->history_updated_by
             );
         }
 

@@ -40,7 +40,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <!-- /.card-header -->
           <div class="card-body">
             <?php echo form_open('invoice/purchase/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
-            <div class="form-group-sm pb-2 row">
+            <div class="form-group row">
               <div class="col-4">
                 <input class="form-control" type="text" id="min" name="min">
               </div>
@@ -50,6 +50,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th>no.</th>
+                  <th><?= lang('created_at') ?></th>
                   <th><?= lang('invoice_code') ?></th>
                   <th><?= lang('supplier_name') ?></th>
                   <th><?= lang('total_price') ?></th>
@@ -59,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
                   <th><?= lang('status_payment') ?></th>
-                  <th><?= lang('created_at') ?></th>
+                  <th><?= lang('note') ?></th>
                   <th><?= lang('created_by') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
@@ -87,6 +88,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    var startdate;
+    var enddate;
     //Date range picker
     $('#min').daterangepicker({
       timePicker: true,
@@ -108,10 +111,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       ajax: {
         "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
         "type": "POST",
-        "data": {
-          "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
-          "startDate": '<?= get('start') ?>',
-          "finalDate": '<?= get('final') ?>'
+        // "data": {
+        //   "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
+        //   "startDate": startdate,
+        //   "finalDate": enddate
+        // }
+        "data": function(d) {
+          d.startDate = startdate;
+          d.finalDate = enddate;
         }
       },
       columns: [{
@@ -121,10 +128,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "invoice_code"
+          data: "created_at"
         },
         {
-          data: "supplier"
+          data: "invoice_code",
+          render: function(data, type, row) {
+            return shorttextfromback(data, 11, true)
+          }
+        },
+        {
+          data: "supplier",
+          render: function(data, type, row) {
+            return `<a href="${location.base}master_information/supplier/edit?id=${row['supplier_code']}">${shorttext(data, 12, true)}</a>`
+          }
         },
         {
           data: "total_price",
@@ -162,6 +178,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "payment_type",
+          visible: false,
           render: function(data, type, row) {
             return data
           }
@@ -173,19 +190,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "created_at"
+          data: "note",
+          render: function(data, type, row) {
+            return shorttext(data, 10, true)
+          }
         },
         {
-          data: "created_by"
+          data: "created_by",
+          render: function(data, type, row) {
+            return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`
+          }
         },
         {
-          data: "id",
+          data: "invoice_code",
           orderable: false,
           render: function(data, type, row) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default"><i class="fa fa-tw fa-edit"></i></a>
-                <a href="<?= url('items') ?>/info?id=${row['id']}" class="btn btn-xs btn-default"><i class="fa fa-tw fa-history"></i></a>
+                <a href="<?= url('invoice/purchase') ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-tw fa-edit text-primary"></i></a>
+                <a href="<?= url('invoice/purchase') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-tw fa-info text-primary"></i></a>
+                <a href="<?= url('invoice/purchase') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-tw fa-history text-primary"></i></a>
                 </div>`;
           }
         },
@@ -205,9 +229,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
-
-    var startdate;
-    var enddate;
     $('#min').on('apply.daterangepicker', function(ev, picker) {
       startdate = picker.startDate.format('YYYY-MM-DD');
       enddate = picker.endDate.format('YYYY-MM-DD');
@@ -233,7 +254,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return false;
           }
         });
-      // table.draw();
+      table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
 
