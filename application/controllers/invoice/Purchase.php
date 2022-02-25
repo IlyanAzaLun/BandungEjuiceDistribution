@@ -185,6 +185,7 @@ class Purchase extends Invoice_controller
 
 	public function returns()
 	{
+		//test
 		ifPermissions('purchase_returns');
 		$this->form_validation->set_rules('supplier_code', lang('supplier_code'), 'required|trim');
 		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
