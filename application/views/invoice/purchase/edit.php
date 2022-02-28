@@ -62,11 +62,12 @@
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
+                                        <th>No.</th>
                                         <th><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
-                                        <th><?= lang('item_quantity') ?></th>
+                                        <th style="display:none"><?= lang('item_quantity') ?></th>
                                         <th><?= lang('item_capital_price') ?></th>
-                                        <th><?= lang('item_selling_price') ?></th>
+                                        <th style="display:none"><?= lang('item_selling_price') ?></th>
                                         <th><?= lang('item_order_quantity') ?></th>
                                         <th><?= lang('discount') ?></th>
                                         <th><?= lang('total_price') ?></th>
@@ -74,37 +75,53 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($order as $key => $value) : ?>
-                                        <tr class="input-<?= $key ?>">
+                                    <?php foreach ($items as $key => $value) : ?>
+                                        <tr class="input-<?= $key ?>" id="main">
+                                            <td class="text-center"><div class="form-control form-control-sm"><?=$key+1?>.</div></td>
                                             <td>
-                                                <input type="hidden" name="order_id[]" id="order_id" value="<?= $value->id ?>">
+                                                <input type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
                                             </td>
                                             <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" required></td>
-                                            <td>
+                                            <td style="display:none">
                                                 <div class=" input-group input-group-sm">
                                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
+                                                    <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
-                                                        <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
                                                     </span>
                                                 </div>
-                                                <input readonly class="form-control form-control-sm" type="hidden" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_order_quantity ?>">
+                                                <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
                                             </td>
-                                            <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->capital_price ?>"></td>
-                                            <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->selling_price ?>"></td>
+                                            <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
+                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td>
-                                                <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_order_quantity ?>">
-                                                <input readonly class="form-control form-control-sm" type="hidden" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_order_quantity ?>">
+                                                <div class=" input-group input-group-sm">
+                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_quantity ?>">
+                                                    <span class="input-group-append">
+                                                        <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
+                                                    </span>
+                                                </div>
+                                                <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
                                             </td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->total_price ?>"></td>
-                                            <?php if (sizeof($order) <= 1) : ?>
-                                                <td><button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button></td>
-                                            <?php else : ?>
-                                                <td><button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button></td>
-                                            <?php endif ?>
+                                            <td>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                                                <?php if (sizeof($items) <= 1) : ?>
+                                                    <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
+                                                <?php else : ?>
+                                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
+                                                <?php endif ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
+                                            <td colspan="8">
+                                                <textarea class="form-control form-control-sm" name="description[]"><?=$value->item_description?></textarea>
+                                            </td>
                                         </tr>
                                     <?php endforeach ?>
                                 </tbody>
@@ -124,7 +141,6 @@
                     <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_payment') ?></h3>
                 </div>
                 <div class="card-body payment">
-
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -162,7 +178,7 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12">
+                        <div class="col-lg-6 col-sm-12" style="display:none">
                             <div class="form-group">
                                 <h6><?= lang('other_cost') ?> :</h6>
                                 <div class="input-group mb-3">
@@ -173,7 +189,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <h6><b><?= lang('grandtotal') ?> :</b></h6>
                                 <div class="input-group mb-3">
@@ -191,6 +207,17 @@
                                     <option value="cash" <?= ($invoice->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
                                     <option value="credit" <?= ($invoice->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="form-group">
+                                <h6><?= lang('date_due') ?></h6>
+                                <div class="input-group mb-3">
+                                <input type="text" id="date_due" name="date_due" class="form-control" value="<?=date("d/m/Y H:i",strtotime($invoice->date_start))?> - <?=date("d/m/Y H:i",strtotime($invoice->date_due))?>">
+                                <dv class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
+                                </dv>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg col-sm-12">
@@ -234,5 +261,15 @@
             })
         })
     })
+    
+    //Date range picker
+    $('#date_due').daterangepicker({
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerIncrement: 30,
+        locale: {
+        format: 'DD/MM/YYYY H:mm'
+        }
+    });
 </script>
 <script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseEdit.js"></script>

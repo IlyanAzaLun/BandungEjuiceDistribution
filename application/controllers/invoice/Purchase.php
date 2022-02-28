@@ -40,6 +40,11 @@ class Purchase extends Invoice_controller
 		} else {
 			// information invoice
 			$this->data['invoice_code'] = $this->purchase_model->get_code_invoice_purchase();
+			$date = preg_split('/[-]/', $this->input->post('date_due'));
+			$this->data['date'] = array(
+				'date_start' => trim($date[0]), 
+				'date_due'	 => trim($date[1])
+			);
 			//information items
 			$items = array();
 			foreach (post('item_code') as $key => $value) {
@@ -54,6 +59,7 @@ class Purchase extends Invoice_controller
 					"item_selling_price" => post('item_selling_price')[$key],
 					"item_discount" => post('item_discount')[$key],
 					"total_price" => post('total_price')[$key],
+					"item_description" => post('description')[$key],
 				);
 			}
 			//information payment
@@ -69,12 +75,14 @@ class Purchase extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'note' => post('note'),
 			);
 			try {
-				$this->create_item_history($items, ['IN', 'EDIT']);
-				$this->create_or_update_order_item($items);
+				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
+				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
@@ -102,7 +110,8 @@ class Purchase extends Invoice_controller
 			$this->page_data['title'] = 'purchase_edit';
 			$this->page_data['page']->submenu = 'edit';
 			$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
-			$this->page_data['order'] = $this->order_purchase_model->get_order_invoice_purchasing_by_code(get('id'));
+			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+
 			$this->page_data['modals'] = (object) array(
 				'id' => 'modal-remove-order',
 				'title' => 'Modals confirmation',
@@ -116,22 +125,28 @@ class Purchase extends Invoice_controller
 		} else {
 			// information invoice
 			$this->data['invoice_code'] = $this->input->get('id');
+			$date = preg_split('/[-]/', $this->input->post('date_due'));
+			$this->data['date'] = array(
+				'date_start' => trim($date[0]), 
+				'date_due'	 => trim($date[1])
+			);
 			//information items
 			$items = array();
 			foreach (post('item_code') as $key => $value) {
-				$items[$key]['order_id'] = post('order_id')[$key];
+				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
 				$items[$key]['item_name'] = post('item_name')[$key];
 				$items[$key]['item_quantity_current'] = post('item_quantity_current')[$key];
-				$items[$key]['item_quantity'] = (post('item_quantity_current')[$key]) ? post('item_quantity_current')[$key] : post('item_quantity')[$key];
+				$items[$key]['item_quantity'] = post('item_quantity')[$key];
 				$items[$key]['item_order_quantity_current'] = post('item_order_quantity_current')[$key];
-				$items[$key]['item_order_quantity'] = post('item_order_quantity')[$key];
+				$items[$key]['item_order_quantity'] =  post('item_order_quantity')[$key];
 				$items[$key]['item_unit'] = post('item_unit')[$key];
 				$items[$key]['item_capital_price'] = post('item_capital_price')[$key];
 				$items[$key]['item_selling_price'] = post('item_selling_price')[$key];
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
+				$items[$key]['item_description'] = post('description')[$key];
 			}
 			//information payment
 			$payment = array(
@@ -146,14 +161,16 @@ class Purchase extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'note' => post('note'),
 				'created_by' => logged('id'),
 			);
 			try {
-				$this->create_item_history($items, ['IN', 'EDIT']);
-				$this->create_or_update_order_item($items);
+				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
-				var_dump($this->update_items($items));
+				$this->create_or_update_list_item_transcation($items);
+				$this->update_items($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -213,7 +230,7 @@ class Purchase extends Invoice_controller
 			//information items
 			$items = array();
 			foreach (post('item_code') as $key => $value) {
-				$items[$key]['order_id'] = post('order_id')[$key];
+				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
 				$items[$key]['item_name'] = post('item_name')[$key];
@@ -244,10 +261,10 @@ class Purchase extends Invoice_controller
 				'created_by' => logged('id'),
 			);
 			try {
-				$this->create_item_history($items, ['IN', 'RETURN']);
+				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_order_item($items);
 				$this->create_or_update_invoice($payment);
-				var_dump($this->update_items($items));
+				$this->update_items($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -271,7 +288,7 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_id'] = $item[$key]->id;
 			$request[$key]['item_code'] = $value['item_code'];
 			$request[$key]['item_name'] = $value['item_name'];
-			if ($value['order_id']) {
+			if ($value['id']) {
 				$request[$key]['item_quantity'] = $value['item_quantity_current'];
 			} else {
 				$request[$key]['item_quantity'] = $item[$key]->quantity;
@@ -282,11 +299,59 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
-			$request[$key]['status_type'] = ($value['order_id']) ? $status_type[1] : $status_type[0];
+			$request[$key]['status_type'] = ($value['id']) ? $status_type[1] : $status_type[0];
 			$request[$key]['status_transaction'] = __CLASS__;
 			$request[$key]['created_by'] = logged('id');
+			$this->items_history_model->create($request[$key]);
 		}
-		return $this->items_history_model->create_batch($request);
+		return $request;
+		// return $this->items_history_model->create_batch($request);
+	}
+
+	public function create_or_update_list_item_transcation($data)
+	{
+		$item = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['invoice_code'] = $this->data['invoice_code'];
+			$request[$key]['item_id'] = $value['item_id'];
+			$request[$key]['item_code'] = $item[$key]->item_code;
+			$request[$key]['item_name'] = $value['item_name'];
+			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
+			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
+			$request[$key]['item_current_quantity'] = $item[$key]->quantity;
+			$request[$key]['item_quantity'] = $value['item_order_quantity'];
+			$request[$key]['item_unit'] = $value['item_unit'];
+			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
+			$request[$key]['total_price'] = setCurrency($value['total_price']);
+			$request[$key]['item_status'] = 'IN';
+			$request[$key]['item_description'] = $value['item_description'];
+			if ($value['id']) {
+				$request[$key]['id'] = $value['id'];
+				$request[$key]['updated_by'] = logged('id');
+				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
+				$data_positif[] = $request[$key];
+				// unset($data_positif[$key]['id']);
+			} else {
+				$request[$key]['created_by'] = logged('id');
+				$data_negatif[$key] = $request[$key];
+				unset($data_negatif[$key]['id']);
+			}
+		}
+		echo "<pre>";
+		var_dump($data_positif);
+		echo "<br> break <br>";
+		var_dump($data_negatif);
+		echo "</pre>";
+		if (@$data_negatif) {
+			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
+				return true;
+			}
+		} else {
+			$this->transaction_item_model->update_batch($data_positif, 'id');
+			return true;
+		}
+		return false;
 	}
 
 	public function create_or_update_order_item($data)
@@ -340,16 +405,24 @@ class Purchase extends Invoice_controller
 		$request['supplier'] = $data['supplier'];
 		$request['payment_type'] = $data['payment_type'];
 		$request['status_payment'] = $data['status_payment'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
 		if ($response) {
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
+			//
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_by'] = logged('id');
+			//	
 			return $this->purchase_model->create($request);
 		}
+		echo "<pre>";
+		var_dump($this->input->post());
+		var_dump($request);
+		echo "</pre>";
 	}
 
 	private function update_items($data)
@@ -359,8 +432,8 @@ class Purchase extends Invoice_controller
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 			$request[$key]['item_code'] = $item[$key]->item_code;
 			$request[$key]['item_name'] = $value['item_name'];
-			if ($value['order_id']) {
-				$request[$key]['quantity'] = $value['item_quantity_current'] + $value['item_order_quantity'];
+			if ($value['id']) {
+				$request[$key]['quantity'] = $item[$key]->quantity + ($value['item_order_quantity'] - $value['item_order_quantity_current']);
 				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
 			} else {
 				$request[$key]['quantity'] = $item[$key]->quantity + $value['item_order_quantity'];
@@ -368,8 +441,10 @@ class Purchase extends Invoice_controller
 			}
 			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
+			$this->items_model->update($item[$key]->id, $request[$key]);
 		}
-		return $this->items_model->update_batch($request, 'item_code');
+		return true;
+		// return $this->items_model->update_batch($request, 'item_code');
 	}
 	
 	public function serverside_datatables_data_purchase()

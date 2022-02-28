@@ -13,7 +13,7 @@ function sum_sub_total() {
     let _total = [];
     let unique_values = [];
     let list_of_value = [];
-    $('tbody>tr').each(function (key, value) {
+    $('tbody>tr#main').each(function (key, value) {
         _total[key] = 0;
         let row = $(this).attr('class');
         let item_code = $(`.${row} td input[data-id='item_code']`).val();

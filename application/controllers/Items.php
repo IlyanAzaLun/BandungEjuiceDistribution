@@ -340,6 +340,7 @@ class Items extends MY_Controller
         ## Total number of records without filtering
         $this->db->select('count(*) as allcount');
         $this->db->where('item_code', post('id'));
+        $this->db->group_by('created_at');
         $records = $this->db->get('items_history')->result();
         $totalRecords = $records[0]->allcount;
 
@@ -352,6 +353,7 @@ class Items extends MY_Controller
         }
         $this->db->join('users user', 'user.id=history.created_by', 'left');
         $this->db->where('history.item_code', post('id'));
+        $this->db->group_by('history.created_at');
         $records = $this->db->get('items_history history')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
@@ -360,8 +362,8 @@ class Items extends MY_Controller
         , user.id as user_id
         , history.item_code
         , history.item_name
-        , history.item_quantity
-        , history.item_order_quantity
+        , history.item_quantity 
+        , SUM(history.item_order_quantity) AS item_order_quantity 
         , history.item_unit
         , history.item_capital_price
         , history.item_selling_price
@@ -385,6 +387,7 @@ class Items extends MY_Controller
         $this->db->order_by('history.created_at', 'desc');
         $this->db->order_by("history.$columnName", $columnSortOrder);
         $this->db->limit($rowperpage, $start);
+        $this->db->group_by('history.created_at');
         $records = $this->db->get('items_history history')->result();
 
         $data = array();

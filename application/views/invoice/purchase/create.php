@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Theme style -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
@@ -88,11 +89,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <table class="table table-sm">
                 <thead>
                   <tr>
+                    <th>No.</th>
                     <th><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
-                    <th><?= lang('item_quantity') ?></th>
+                    <th style="display:none"><?= lang('item_quantity') ?></th>
                     <th><?= lang('item_capital_price') ?></th>
-                    <th><?= lang('item_selling_price') ?></th>
+                    <th style="display:none"><?= lang('item_selling_price') ?></th>
                     <th><?= lang('item_order_quantity') ?></th>
                     <th><?= lang('discount') ?></th>
                     <th><?= lang('total_price') ?></th>
@@ -100,27 +102,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="input-0">
+                  <tr class="input-0" id="main">
+                    <td class="text-center"><div class="form-control form-control-sm">1.</div></td>
                     <td>
                       <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                     </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></td>
-                    <td>
+                    <td style="display:none" >
                       <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
-                        <span class="input-group-append">
+                        <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
+                        <div class="input-group-append">
                           <span class="input-group-text" data-id="item_unit"></span>
-                          <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
-                        </span>
+                        </div>
                       </div>
                     </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                    <td><input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required></td>
+                    <td style="display:none" ><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td>
+                    <div class="input-group input-group-sm">
+                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required>
+                      <div class="input-group-append">
+                        <span class="input-group-text" data-id="item_unit"></span>
+                      </div>
+                    </div>
+                    </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
-                    <td><button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button></td>
+                    <td>
+                      <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                        <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="description input-0" style="display:none">
+                      <td colspan="8">
+                          <textarea class="form-control form-control-sm" name="description[]"></textarea>
+                      </td>
                   </tr>
                 </tbody>
               </table>
@@ -177,18 +197,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
               </div>
             </div>
-            <div class="col-lg-6 col-sm-12">
+            <div class="col-lg-3 col-sm-12" style="display: none">
               <div class="form-group">
                 <h6><?= lang('other_cost') ?> :</h6>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Rp</span>
                   </div>
-                  <input type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
+                  <input readonly type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 col-sm-12">
+            <div class="col-lg-6 col-sm-12">
               <div class="form-group">
                 <h6><b><?= lang('grandtotal') ?> :</b></h6>
                 <div class="input-group mb-3">
@@ -206,6 +226,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <option value="cash"><?= lang('cash') ?></option>
                   <option value="credit"><?= lang('credit') ?></option>
                 </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-12">
+              <div class="form-group">
+                <h6><?= lang('date_due') ?></h6>
+                <div class="input-group mb-3">
+                  <input type="text" id="date_due" name="date_due" class="form-control">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-lg col-sm-12">
@@ -237,6 +268,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
   $('body').addClass('sidebar-collapse');
+  
+  //Date range picker
+  $('#date_due').daterangepicker({
+    timePicker: true,
+    timePicker24Hour: true,
+    timePickerIncrement: 30,
+    locale: {
+      format: 'DD/MM/YYYY H:mm'
+    }
+  });
 </script>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>

@@ -23,7 +23,7 @@ class Order extends MY_Controller
 			'item_selling_price' => $order->selling_price, 
 			'item_discount' => $order->item_discount, 
 			'total_price' => $order->total_price, 
-			'status_type' => 'EDIT', 
+			'status_type' => 'DELETE', 
 			'status_transaction' => 'Purchase', 
 			'invoice_reference' => $order->invoice, 
 			'created_by' => logged('id'), 
@@ -36,6 +36,10 @@ class Order extends MY_Controller
 			'selling_price' => $item->capital_price, 
 			'updated_by' => logged('id'), 
 		);
+		echo "<pre>";
+		var_dump($order);
+		echo "</pre>";
+		die();
 		$this->items_history_model->create($history);
 		$this->items_model->update($item->id, $item_update);
 		$this->order_purchase_model->delete($order->id);
