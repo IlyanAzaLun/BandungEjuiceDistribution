@@ -142,7 +142,7 @@ const main = () => {
                     <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                 </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required ></td>
-                <td>
+                <td style="display:none">
                     <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
                         <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
@@ -153,7 +153,14 @@ const main = () => {
                 </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
                 <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                <td><input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required></td>
+                <td>
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required>
+                        <span class="input-group-append">
+                            <span class="input-group-text" data-id="item_unit"></span>
+                        </span>
+                    </div>
+                </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                 <td>

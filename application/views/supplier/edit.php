@@ -99,7 +99,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="card-footer">
                         <div class="float-right">
                             <button type="submit" class="btn btn-primary float-right"><?= lang('save') ?></button>
-                            <button type="cancel" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
+                            <button type="button" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
                         </div>
                     </div>
                     <?php echo form_close(); ?>

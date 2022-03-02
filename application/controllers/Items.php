@@ -231,6 +231,21 @@ class Items extends MY_Controller
         $this->load->view('items/info', $this->page_data);
     }
 
+    
+    public function info_transaction()
+    {
+        ifPermissions('items_info');
+        $this->page_data['page']->submenu = 'list';
+        $this->page_data['title'] = 'item_list_information_transaction';
+
+        $this->page_data['item'] = $this->items_model->getByCodeItem(get('id'));
+        if (!$this->page_data['item']) {
+            $this->load->view('errors/html/error_404');
+            return false;
+        }
+        $this->load->view('items/transaction', $this->page_data);
+    }
+
     public function delete()
     {
         ifPermissions('items_delete');
@@ -413,6 +428,113 @@ class Items extends MY_Controller
                 "created_by" => $record->name,
                 "created_at" => date(setting('datetime_format'), strtotime($record->history_created_at)),
                 "updated_by" => $record->history_updated_by
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    
+
+    public function serverside_datatables_data_items_transaction()
+    {
+        // ifPermissions('items_list');
+        $response = array();
+
+        $postData = $this->input->post();
+
+        ## Read value
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+
+        ## Total number of records without filtering
+        $this->db->select('count(*) as allcount');
+        $this->db->where('item_code', post('id'));
+        $this->db->group_by('created_at');
+        $records = $this->db->get('invoice_transaction_list_item')->result();
+        $totalRecords = $records[0]->allcount;
+
+        ## Total number of record with filtering
+        $this->db->select('count(*) as allcount');
+        if ($searchValue != '') {
+            $this->db->like('transaction.item_name', $searchValue, 'both');
+            $this->db->or_like('transaction.item_code', $searchValue, 'both');
+            $this->db->or_like('user_created.transaction_created_by', $searchValue, 'both');
+            $this->db->or_like('user_updated.transaction_updated_by', $searchValue, 'both');
+        }
+        $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
+        $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
+        $this->db->where('transaction.item_code', post('id'));
+        $this->db->group_by('transaction.created_at');
+        $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+        $totalRecordwithFilter = $records[0]->allcount;
+
+        ## Fetch records
+        $this->db->select('
+            transaction.id as transaction_id
+            , transaction.invoice_code
+            , transaction.item_id
+            , transaction.item_code
+            , transaction.item_name
+            , transaction.item_capital_price
+            , transaction.item_selling_price
+            , transaction.item_current_quantity
+            , transaction.item_quantity
+            , transaction.item_unit
+            , transaction.item_discount
+            , transaction.total_price
+            , transaction.item_status
+            , transaction.created_at as transaction_created_at
+            , user_created.name as transaction_created_by
+            , transaction.updated_at as transaction_updated_at
+            , user_updated.name as transaction_updated_by
+            , user_created.id as user_id');
+        if ($searchValue != '') {
+            $this->db->like('transaction.item_name', $searchValue, 'both');
+            $this->db->or_like('transaction.item_code', $searchValue, 'both');
+            $this->db->or_like('user_created.transaction_created_by', $searchValue, 'both');
+            $this->db->or_like('user_updated.transaction_updated_by', $searchValue, 'both');
+        }
+        $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
+        $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
+        $this->db->where('transaction.item_code', post('id'));
+        $this->db->order_by('transaction.created_at', 'desc');
+        $this->db->order_by("transaction.$columnName", $columnSortOrder);
+        $this->db->limit($rowperpage, $start);
+        $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+        $data = array();
+
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "id" => $record->transaction_id,
+                "user_id" => $record->user_id,
+                "item_code" => $record->item_code,
+                "item_name" => $record->item_name,
+                "item_quantity" => $record->item_quantity,
+                "item_unit" => $record->item_unit,
+                "item_capital_price" => $record->item_capital_price,
+                "item_selling_price" => $record->item_selling_price,
+                "item_discount" => $record->item_discount,
+                "total_price" => $record->total_price,
+                "status_type" => $record->item_status,
+                "invoice_reference" => $record->invoice_code,
+                "created_by" => $record->transaction_created_by,
+                "created_at" => date(setting('datetime_format'), strtotime($record->transaction_created_at)),
+                "updated_by" => $record->transaction_updated_by,
+                "updated_at" => date(setting('datetime_format'), strtotime($record->transaction_updated_at)),
             );
         }
 

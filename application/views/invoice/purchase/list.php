@@ -209,7 +209,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="btn-group d-flex justify-content-center">
                 <a href="<?= url('invoice/purchase') ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-tw fa-edit text-primary"></i></a>
                 <a href="<?= url('invoice/purchase') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-tw fa-info text-primary"></i></a>
-                <a href="<?= url('invoice/purchase') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-tw fa-history text-primary"></i></a>
+                <a href="<?= url('invoice/purchase') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-tw fa-history text-danger"></i></a>
                 </div>`;
           }
         },
