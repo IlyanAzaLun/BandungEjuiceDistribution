@@ -386,6 +386,7 @@ $lang['information_payment'] = "Payment Information";
 $lang['payment_type'] = "Type Payment";
 $lang['status_payment'] = "Status Payment";
 $lang['date_due'] = "Date due";
+$lang['item_description'] = "Description";
 $lang['debt'] = "Debt";
 $lang['cash'] = "Cash";
 $lang['payed'] = "Payed";

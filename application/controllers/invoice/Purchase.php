@@ -200,89 +200,7 @@ class Purchase extends Invoice_controller
 		$this->load->view('invoice/purchase/form', $this->page_data);
 	}
 
-	public function returns()
-	{
-		//test test
-		ifPermissions('purchase_returns');
-		$this->form_validation->set_rules('supplier_code', lang('supplier_code'), 'required|trim');
-		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
-		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
-		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
-		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
-		$this->page_data['title'] = 'purchase_returns';
-		$this->page_data['page']->submenu = 'returns';
-		$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
-		$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
-		if ($this->form_validation->run() == false) {
-			$this->page_data['modals'] = (object) array(
-				'id' => 'modal-remove-order',
-				'title' => 'Modals confirmation',
-				'link' => 'order/remove_item_from_list_order_transcaction',
-				'content' => 'delete',
-				'btn' => 'btn-danger',
-				'submit' => 'Yes do it',
-			);
-			$this->load->view('invoice/purchase/form', $this->page_data);
-			$this->load->view('includes/modals');
-		} else {
-			// information invoice
-			$this->data['invoice_code'] = $this->input->get('id');
-			//information items
-			$items = array();
-			foreach (post('item_code') as $key => $value) {
-				$items[$key]['id'] = post('id')[$key];
-				$items[$key]['item_id'] = post('item_id')[$key];
-				$items[$key]['item_code'] = post('item_code')[$key];
-				$items[$key]['item_name'] = post('item_name')[$key];
-				$items[$key]['item_quantity_current'] = post('item_quantity_current')[$key];
-				$items[$key]['item_quantity'] = post('item_quantity')[$key];
-				$items[$key]['item_order_quantity_current'] = post('item_order_quantity_current')[$key];
-				$items[$key]['item_order_quantity'] = post('item_order_quantity')[$key];
-				$items[$key]['item_unit'] = post('item_unit')[$key];
-				$items[$key]['item_capital_price'] = post('item_capital_price')[$key];
-				$items[$key]['item_selling_price'] = post('item_selling_price')[$key];
-				$items[$key]['item_discount'] = post('item_discount')[$key];
-				$items[$key]['total_price'] = post('total_price')[$key];
-				$items[$key]['item_description'] = post('description')[$key];
-			}
-			//information payment
-			$payment = array(
-				'supplier' => post('supplier_code'),
-				'store_name' => post('store_name'),
-				'contact_phone' => post('contact_phone'),
-				'address' => post('address'),
-				'total_price' => post('sub_total'),
-				'discounts' => post('discount'),
-				'shipping_cost' => post('shipping_cost'),
-				'other_cost' => post('other_cost'),
-				'grand_total' => post('grand_total'),
-				'payment_type' => post('payment_type'),
-				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
-				'note' => post('note'),
-				'updated_by' => logged('id'),
-			);
-			try {
-				$this->create_item_history($items, ['CREATE', 'RETURNS']);
-				$this->create_or_update_order_item($items);
-				$this->create_or_update_invoice($payment);
-				$this->update_items($items);
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
-				die();
-			}
-			$this->activity_model->add("Create purchasing, #" . $this->data['invoice_code'], (array) $payment);
-			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'New Item Upload Successfully');
-
-			redirect('invoice/purchase/list');
-		}
-	}
-
-	private function create_item_history($data, $status_type)
+	protected function create_item_history($data, $status_type)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
@@ -311,7 +229,7 @@ class Purchase extends Invoice_controller
 		// return $this->items_history_model->create_batch($request);
 	}
 
-	public function create_or_update_list_item_transcation($data)
+	protected function create_or_update_list_item_transcation($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
@@ -352,7 +270,7 @@ class Purchase extends Invoice_controller
 		return false;
 	}
 
-	public function create_or_update_order_item($data)
+	protected function create_or_update_order_item($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
@@ -391,7 +309,7 @@ class Purchase extends Invoice_controller
 		return false;
 	}
 
-	public function create_or_update_invoice($data)
+	protected function create_or_update_invoice($data)
 	{
 		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
 
@@ -419,7 +337,7 @@ class Purchase extends Invoice_controller
 		}
 	}
 
-	private function update_items($data)
+	protected function update_items($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
@@ -537,6 +455,11 @@ class Purchase extends Invoice_controller
 			"aaData" => $data
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+	}
+
+	protected function test()
+	{
+		return 'you\'re dump';
 	}
 }
 

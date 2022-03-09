@@ -45,6 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th><?= lang('item_selling_price') ?></th>
                                     <th><?= lang('item_discount') ?></th>
                                     <th><?= lang('total_price_item') ?></th>
+                                    <th><?= lang('item_description') ?></th>
                                     <th><?= lang('created_by') ?></th>
                                 </tr>
                             </thead>
@@ -63,6 +64,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th><?= lang('item_selling_price') ?></th>
                                     <th><?= lang('item_discount') ?></th>
                                     <th><?= lang('total_price_item') ?></th>
+                                    <th><?= lang('item_description') ?></th>
                                     <th><?= lang('created_by') ?></th>
                                 </tr>
                             </tfoot>
@@ -161,6 +163,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     render: function(data, type, row) {
                         return data ? currency(data) : 0;
                     }
+                },
+                {
+                    data: "item_description",
+                    visible: false
                 },
                 {
                     data: "created_by",

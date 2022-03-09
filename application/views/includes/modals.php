@@ -1,14 +1,32 @@
 <?php function content($data){
   $CI = &get_instance();
-  switch ($data) {
+  switch ($data->content) {
     case 'upload': ?>
-      <input type="file" id='file' name="file">
+      <?php echo form_open_multipart($data->link, ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <div class="modal-body">
+          <?php var_dump($data->link) ?>
+          <input type="file" id='file' name="file">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn <?= $data->btn ?>"><?= $data->submit ?></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      <?php echo form_close(); ?>
 <?php break;
     case 'delete': ?>
-      <input type="text" id='id' name="id">
+      <?php echo form_open_multipart($data->link, ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <div class="modal-body">
+          <?php var_dump($data->link) ?>
+          <input type="text" id='id' name="id">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn <?= $data->btn ?>"><?= $data->submit ?></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      <?php echo form_close(); ?>
 <?php break;
     default:
-      $CI->load->view($data);
+      $CI->load->view($data->content);
       break;
   }
 } ?>
@@ -21,16 +39,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <?php echo form_open_multipart($modals->link, ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
-      <div class="modal-body">
-        <?php var_dump($modals->link) ?>
-        <?php content($modals->content) ?>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn <?= $modals->btn ?>"><?= $modals->submit ?></button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-      <?php echo form_close(); ?>
+      <?php content($modals) ?>
     </div>
   </div>
 </div>

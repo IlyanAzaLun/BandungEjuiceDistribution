@@ -23,7 +23,7 @@ abstract class Invoice_controller extends MY_Controller {
         // ... 
 	}
 
-    public function serverside_datatables_data_tbl_invoice()
+    public function serverside_datatables_data_purchase()
     {
 
         $response = array();

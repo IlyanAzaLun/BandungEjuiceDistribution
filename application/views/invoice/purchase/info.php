@@ -85,9 +85,10 @@
                                             <td>Rp.<?= number_format($value->item_discount) ?></td>
                                             <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
                                         </tr>
-                                        <?php if((strlen($items[0]->item_description)) >= 1):?>
+                                        <?php if((strlen($value->item_description)) >= 1):?>
                                         <tr>
-                                            <td colspan="9"><?= $value->item_description?></td>
+                                            <td></td>
+                                            <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
                                         </tr>
                                         <?php endif ?>
                                     <?php endforeach ?>

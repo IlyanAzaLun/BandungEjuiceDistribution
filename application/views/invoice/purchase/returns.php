@@ -20,7 +20,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('supplier_code') ?></label>
-                                <input type="text" name="supplier_code" id="supplier_code" class="form-control" placeholder="<?= lang('find_supplier_code') ?>" autocomplete="false" value="<?= $invoice->supplier ?>" required>
+                                <input readonly type="text" name="supplier_code" id="supplier_code" class="form-control" placeholder="<?= lang('find_supplier_code') ?>" autocomplete="false" value="<?= $invoice->supplier ?>" required>
                                 <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -28,7 +28,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('store_name') ?></label>
-                                <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
+                                <input readonly type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
                                 <?= form_error('store_name', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -62,12 +62,13 @@
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
+                                        <th>No.</th>
                                         <th><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
-                                        <th><?= lang('item_quantity') ?></th>
+                                        <th style="display:none"><?= lang('item_quantity') ?></th>
                                         <th><?= lang('item_capital_price') ?></th>
                                         <th style="display:none"><?= lang('item_selling_price') ?></th>
-                                        <th><?= lang('item_returns_quantity') ?></th>
+                                        <th><?= lang('item_order_quantity') ?></th>
                                         <th><?= lang('discount') ?></th>
                                         <th><?= lang('total_price') ?></th>
                                         <th><?= lang('option') ?></th>
@@ -75,14 +76,34 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($items as $key => $value) : ?>
-                                        <tr class="input-<?= $key ?>" id="main">
+                                        <tr class="input-<?= $key ?>">
+                                            <td><?= $key+1 ?>.</td>
+                                            <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
+                                            <td><?= $value->item_name ?></td>
+                                            <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
+                                            <td>Rp.<?= number_format($value->item_capital_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
+                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td>Rp.<?= number_format($value->item_discount) ?></td>
+                                            <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
+                                            <td><button type="button" class="btn btn-block btn-danger" id="update" data-id="<?=$value->id?>"><i class="fa fa-tw fa-pencil-alt"></i></button></td>
+                                        </tr>
+                                        <?php if((strlen($value->item_description)) >= 1):?>
+                                        <tr class="input-<?= $key ?>">
+                                            <td></td>
+                                            <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
+                                        </tr>
+                                        <?php endif ?>
+
+                                        <tr class="input-<?= $key ?>" id="main" style="display:none">
+                                            <td><?= $key+1 ?>.</td>
                                             <td>
-                                                <input type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
+                                                <input disabled type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
                                             </td>
                                             <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" required></td>
-                                            <td>
+                                            <td style="display:none">
                                                 <div class=" input-group input-group-sm">
                                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
                                                     <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
@@ -96,7 +117,7 @@
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
-                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= (int)$value->item_quantity ?>" required>
+                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" max="<?= (int)$value->item_quantity ?>" value="0" required>
                                                     <input readonly class="form-control form-control-sm" type="number" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" value="<?= (int)$value->item_quantity ?>" required>
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
@@ -108,15 +129,11 @@
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
-                                                <?php if (sizeof($items) <= 1) : ?>
-                                                    <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
-                                                <?php else : ?>
-                                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
-                                                <?php endif ?>
+                                                    <button type="button" class="btn btn-block btn-primary" id="is_safty"><i class="fa fa-tw fa-circle-notch"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
+                                        <tr class="description input-<?=$key?>" style="display:none">
                                             <td colspan="8">
                                                 <textarea class="form-control form-control-sm" name="description[]"><?=$value->item_description?></textarea>
                                             </td>
@@ -124,9 +141,6 @@
                                     <?php endforeach ?>
                                 </tbody>
                             </table>
-                            <div class="float-left ml-1">
-                                <button type="button" class="btn btn-sm btn btn-info" id="add_more"><?= lang('add_more') ?></button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -223,7 +237,7 @@
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-                        <button type="cancel" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
+                        <button type="button" class="btn btn-default mr-2" onclick="window.history.back();"><?= lang('cancel') ?></button>
                     </div>
                 </div>
             </div>
@@ -240,14 +254,4 @@
 </script>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.remove').on('click', function(){
-            let id = $(this).data('id');
-            $('#modal-remove-order').on('shown.bs.modal', function(){
-                $(this).find('input#id').val(id);
-            })
-        })
-    })
-</script>
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseEdit.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseReturns.js"></script>
