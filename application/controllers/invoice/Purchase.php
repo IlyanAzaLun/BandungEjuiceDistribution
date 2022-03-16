@@ -42,8 +42,8 @@ class Purchase extends Invoice_controller
 			$this->data['invoice_code'] = $this->purchase_model->get_code_invoice_purchase();
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
-				'date_start' => trim($date[0]), 
-				'date_due'	 => trim($date[1])
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
 			);
 			//information items
 			$items = array();
@@ -127,8 +127,8 @@ class Purchase extends Invoice_controller
 			$this->data['invoice_code'] = $this->input->get('id');
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
-				'date_start' => trim($date[0]), 
-				'date_due'	 => trim($date[1])
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
 			);
 			//information items
 			$items = array();
@@ -147,6 +147,18 @@ class Purchase extends Invoice_controller
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
+				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
+					unset($items[$key]);
+				}
+			}
+			$items = array_values($items);
+
+			if(sizeof($items) < 1){
+				$this->session->set_flashdata('alert-type', 'warning');
+				$this->session->set_flashdata('alert', lang('returns_failed'));
+
+				redirect('invoice/purchase/edit?id='.get('id'));
+				die();
 			}
 			//information payment
 			$payment = array(
@@ -398,12 +410,40 @@ class Purchase extends Invoice_controller
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
+		
+		## get all code invoice
+		$this->db->select('purchasing.invoice_code');
+		if ($searchValue != '') {
+			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
+			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
+			$this->db->or_like('purchasing.note', $searchValue, 'both');
+			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+		}
+		if ($dateStart != '') {
+			$this->db->where("purchasing.created_at >=", $dateStart);
+			$this->db->where("purchasing.created_at <=", $dateFinal);
+			// $this->db->where("purchasing.created_at BETWEEN $dateStart AND $dateFinal", null, FALSE);
+		}
+		$records = $this->db->get('invoice_purchasing purchasing')->result();
+		$invoices_code = $records;
+
 		## Fetch records
-		$this->db->select('*, 
+		$this->db->select('
 		purchasing.id as purchasing_id, 
+		SUBSTRING(purchasing.invoice_code, 5) as invoice_code_reference,
+		purchasing.invoice_code as invoice_code, 
 		purchasing.created_at as purchasing_create_at, 
+		purchasing.total_price as total_price, 
+		purchasing.discounts as discounts, 
+		purchasing.other_cost as other_cost, 
+		purchasing.payment_type as payment_type, 
+		purchasing.status_payment as status_payment, 
+		purchasing.grand_total as grand_total, 
 		purchasing.note as purchase_note, 
+		purchasing.created_at as created_at, 
+		purchasing.created_by as created_by, 
 		supplier.customer_code as supplier_code, 
+		supplier.store_name as store_name, 
 		user.id as user_id, 
 		user.name as user_purchasing_create_by');
 		if ($searchValue != '') {
@@ -419,7 +459,6 @@ class Purchase extends Invoice_controller
 			$this->db->where("purchasing.created_at <=", $dateFinal);
 			// $this->db->where("purchasing.created_at BETWEEN $dateStart AND $dateFinal", null, FALSE);
 		}
-		$this->db->order_by('purchasing.created_at', 'desc');
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
@@ -430,6 +469,7 @@ class Purchase extends Invoice_controller
 
 			$data[] = array(
 				'id' => $record->purchasing_id,
+				'invoice_code_reference' => $record->invoice_code_reference,
 				'invoice_code' => $record->invoice_code,
 				'supplier_code' => $record->supplier_code,
 				'supplier' => $record->store_name,
@@ -452,14 +492,10 @@ class Purchase extends Invoice_controller
 			"draw" => intval($draw),
 			"iTotalRecords" => $totalRecords,
 			"iTotalDisplayRecords" => $totalRecordwithFilter,
-			"aaData" => $data
+			"aaData" => $data,
+			"invoices_code" => $invoices_code
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
-	}
-
-	protected function test()
-	{
-		return 'you\'re dump';
 	}
 }
 

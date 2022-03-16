@@ -1,6 +1,6 @@
 import DataSupplier from "../data/DataSupplier.js";
 import DataItems from "../data/DataItems.js";
-import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./purchase_create-calcualtion.js";
+import { sum_sub_total_item, sum_sub_total_item_returns, sum_sub_total, sum_grand_total } from "./purchase_create-calcualtion.js";
 
 const data_supplier = new DataSupplier();
 const data_items = new DataItems();
@@ -36,13 +36,16 @@ const main = () => {
         // field and item is sefty
         $(document).on('click', 'button#is_safty', function () {
             let row = $(this).parents('tr').attr('class');
+            let main_row = $(`#main.${row}`);
+            main_row.find('input[data-id="item_order_quantity"]').val(0);
+            main_row.find('input[data-id="total_price"]').val(main_row.find('input[data-id="total_price_current"]').val());
             $(`.${row}`).toggle();
             $(`.description.${row}`).hide();
         })
         // get sub total items
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
-            sum_sub_total_item(row);
+            sum_sub_total_item_returns(row);
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));

@@ -391,6 +391,10 @@ $lang['debt'] = "Debt";
 $lang['cash'] = "Cash";
 $lang['payed'] = "Payed";
 $lang['credit'] = "Credit";
+$lang['returns_failed'] = "Return failed, change the quantity of the returned item";
+$lang['invoice_code_reference'] = "Invoice code reference";
+
+$lang['purchase_payment'] = "Purchase to pay";
 
 /**
  * Activity

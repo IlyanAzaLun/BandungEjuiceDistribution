@@ -27,27 +27,20 @@ class Purchase_returns extends Purchase
 		$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 		$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 		if ($this->form_validation->run() == false) {
-			$this->page_data['modals'] = (object) array(
-				'id' => 'modal-remove-order',
-				'title' => 'Modals confirmation',
-				'link' => 'order/remove_item_from_list_order_transcaction',
-				'content' => 'delete',
-				'btn' => 'btn-danger',
-				'submit' => 'Yes do it',
-			);
 			$this->load->view('invoice/purchase/form', $this->page_data);
-			$this->load->view('includes/modals');
 		} else {
+			$this->data['invoice_code'] = str_replace('INV','RET',$this->input->get('id'));
 			// information invoice
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
 				'date_start' => trim($date[0]), 
 				'date_due'	 => trim($date[1])
 			);
-			$this->data['invoice_code'] = str_replace('INV','RET',$this->input->get('id'));
 			//information items
 			$items = array();
+			$item = array();
 			foreach (post('item_code') as $key => $value) {
+				array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
@@ -62,10 +55,19 @@ class Purchase_returns extends Purchase
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
-
+				// BUG HERE, jika lebih dari 2, item pertama tidak retur maka item berikutnya didak di temukan.
 				if($items[$key]['item_order_quantity'] == "0"){
 					unset($items[$key]);
 				}
+			}
+			$items = array_values($items);
+
+			if(sizeof($items) < 1){
+				$this->session->set_flashdata('alert-type', 'warning');
+				$this->session->set_flashdata('alert', lang('returns_failed'));
+
+				redirect('invoice/purchase/returns?id='.get('id'));
+				die();
 			}
 			//information payment
 			$payment = array(
@@ -88,8 +90,7 @@ class Purchase_returns extends Purchase
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
 				$this->create_or_update_list_item_transcation($items);
-				var_dump($this->update_items($items));
-				die();
+				$this->update_items($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -144,6 +145,29 @@ class Purchase_returns extends Purchase
 		}
 		return false;
 	}
+
+	protected function update_items($data)
+	{
+		$item = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['item_code'] = $item[$key]->item_code;
+			$request[$key]['item_name'] = $value['item_name'];
+			if ($value['id']) {
+				$request[$key]['quantity'] = $item[$key]->quantity - ($value['item_order_quantity'] - $value['item_order_quantity_current']);
+				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
+			} else {
+				$request[$key]['quantity'] = $item[$key]->quantity - $value['item_order_quantity'];
+				$request[$key]['capital_price'] = (setCurrency($value['item_capital_price']) > $item[$key]->capital_price) ? setCurrency($value['item_capital_price']) : $item[$key]->capital_price;
+			}
+			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
+			$request[$key]['updated_by'] = logged('id');
+			$this->items_model->update($item[$key]->id, $request[$key]);
+		}
+		return true;
+		// return $this->items_model->update_batch($request, 'item_code');
+	}
+	
 }
 
 /* End of file Purchasing.php */

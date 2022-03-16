@@ -9,6 +9,18 @@ function sum_sub_total_item(row) {
     )
 }
 
+function sum_sub_total_item_returns(row) {
+    let item_capital_price = $(`.${row} td input[data-id='item_capital_price']`).val();
+    let item_selling_price = $(`.${row} td input[data-id='item_selling_price']`).val();
+    let item_order_quantity = $(`.${row} td input[data-id='item_order_quantity']`).val();
+    let item_discount = $(`.${row} td input[data-id='discount']`).val();
+    let total_price_current = $(`.${row} td input[data-id='total_price_current']`).val();
+    let total_price = $(`.${row} td input[data-id='total_price']`);
+    total_price.val(
+        currency(currencyToNum(total_price_current) - ((currencyToNum(item_capital_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount)))
+    )
+}
+
 function sum_sub_total() {
     let _total = [];
     let unique_values = [];
@@ -75,4 +87,4 @@ function sum_grand_total() {
     return grand_total;
 }
 
-export { sum_sub_total_item, sum_sub_total, sum_grand_total };
+export { sum_sub_total_item, sum_sub_total_item_returns, sum_sub_total, sum_grand_total };

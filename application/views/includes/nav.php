@@ -212,6 +212,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <p> <?php echo lang('purchase_create') ?> </p>
         </a>
       </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_payment') ?> </p>
+        </a>
+      </li>
     </ul>
   </li>
 <?php endif ?>

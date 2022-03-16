@@ -10,7 +10,11 @@ class DataSupplier {
                 },
                 'length': 10
             },
+            beforeSend: function () {
+                // $('.loading').show()
+            },
             success: function (result) {
+                // $('.loading').hide()
                 handle(result);
             }
         })

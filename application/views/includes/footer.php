@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
 
   });
-
+/* disabeld right click
 document.onkeydown = function(e) {
   if(event.keyCode == 123) {
     return false;
@@ -143,6 +143,7 @@ document.onkeydown = function(e) {
     return false;
   }
 }
+*/
   location.base = '<?= url() ?>'
 </script>
 </body>

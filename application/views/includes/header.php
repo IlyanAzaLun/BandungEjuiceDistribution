@@ -70,9 +70,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo $url->assets ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 </head>
-<body oncontextmenu="return false;" class="hold-transition sidebar-mini pace-primary <?php echo isset($page->body_classes) ? $page->body_classes : 'layout-fixed' ?>">
+<body oncontextmenu="return true//false;" class="hold-transition sidebar-mini pace-primary <?php echo isset($page->body_classes) ? $page->body_classes : 'layout-fixed' ?>">
 <div class="wrapper">
-
+<div class="loading"></div>
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
 

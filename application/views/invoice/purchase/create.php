@@ -5,7 +5,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
-
 <?php include viewPath('includes/header'); ?>
 
 <!-- Content Header (Page header) -->

@@ -49,7 +49,6 @@ const main = () => {
                         return false;
                     }
                 })
-
                 $.ui.autocomplete.prototype._renderItem = function (ul, item) {
                     let fieldNo = getFieldNo(selfElement.attr('id'));
                     return $("<li>").attr("id", item[fieldNo]).append(item[fieldNo]).appendTo(ul);

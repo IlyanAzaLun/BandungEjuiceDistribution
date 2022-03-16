@@ -248,7 +248,7 @@ class Supplier extends MY_Controller
     {
         if (ifPermissions('purchase_create') or ifPermissions('selling_create')) {
             $search = (object) post('search');
-            $this->db->limit(3);
+            $this->db->limit(5);
             if ($search->value) {
                 $this->db->like('supplier_information.customer_code', $search->value, 'both');
                 $this->db->or_like('supplier_information.store_name', $search->value, 'both');
