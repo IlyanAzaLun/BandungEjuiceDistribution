@@ -56,6 +56,5 @@ $route['translate_uri_dashes'] = FALSE;
 $route['items/add/component'] = 'Items/component';
 $route['items/add/getItemCode'] = 'Items/getItemCode';
 
-$route['invoice/purchase/returns'] = 'invoice/Purchase_returns';
 // [AdminLTE]
 // $route['adminlte/(:any)'] = 'adminlte/main/$1';

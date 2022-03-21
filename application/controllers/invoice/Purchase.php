@@ -60,6 +60,7 @@ class Purchase extends Invoice_controller
 					"item_discount" => post('item_discount')[$key],
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
+					"customer_code" => post('supplier_code'),
 				);
 			}
 			//information payment
@@ -147,19 +148,13 @@ class Purchase extends Invoice_controller
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
+				$items[$key]['customer_code'] = post('supplier_code');
 				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
 					unset($items[$key]);
 				}
 			}
 			$items = array_values($items);
 
-			if(sizeof($items) < 1){
-				$this->session->set_flashdata('alert-type', 'warning');
-				$this->session->set_flashdata('alert', lang('returns_failed'));
-
-				redirect('invoice/purchase/edit?id='.get('id'));
-				die();
-			}
 			//information payment
 			$payment = array(
 				'supplier' => post('supplier_code'),
@@ -259,6 +254,7 @@ class Purchase extends Invoice_controller
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['item_status'] = 'IN';
 			$request[$key]['item_description'] = $value['item_description'];
+			$request[$key]['customer_code'] = $value['customer_code'];
 			if ($value['id']) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
@@ -441,6 +437,7 @@ class Purchase extends Invoice_controller
 		purchasing.grand_total as grand_total, 
 		purchasing.note as purchase_note, 
 		purchasing.created_at as created_at, 
+		purchasing.updated_at as updated_at, 
 		purchasing.created_by as created_by, 
 		supplier.customer_code as supplier_code, 
 		supplier.store_name as store_name, 
@@ -451,6 +448,7 @@ class Purchase extends Invoice_controller
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
 			$this->db->or_like('purchasing.note', $searchValue, 'both');
 			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+			$this->db->or_like('supplier.store_name', $searchValue, 'both');
 		}
 		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
 		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
@@ -472,7 +470,7 @@ class Purchase extends Invoice_controller
 				'invoice_code_reference' => $record->invoice_code_reference,
 				'invoice_code' => $record->invoice_code,
 				'supplier_code' => $record->supplier_code,
-				'supplier' => $record->store_name,
+				'store_name' => $record->store_name,
 				'total_price' => $record->total_price,
 				'discounts' => $record->discounts,
 				'shipping_cost' => $record->shipping_cost,
@@ -480,10 +478,11 @@ class Purchase extends Invoice_controller
 				'payment_type' => lang($record->payment_type),
 				'status_payment' => lang($record->status_payment),
 				'grand_total' => $record->grand_total,
-				'note' => $record->purchase_note,
-				'created_at' => $record->purchasing_create_at,
+				'purchase_note' => $record->purchase_note,
+				'created_at' => $record->created_at,
+				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,
-				'created_by' => $record->user_purchasing_create_by,
+				'user_purchasing_create_by' => $record->user_purchasing_create_by,
 			);
 		}
 

@@ -34,7 +34,7 @@ const main = () => {
                         sub_district, city, province, zip, contact_phone, contact_mail,
                     ]
                 );
-                $('input#store_name, input#supplier_code').autocomplete({
+                $(`input#${selfElement.attr('id')}`).autocomplete({
                     source: result,
                     focus: function (event, ui) {
                         $('input#supplier_code').val(ui.item[1])
@@ -48,10 +48,10 @@ const main = () => {
                         $('textarea#address').val(`${ui.item[4]}, ${ui.item[5]}, ${ui.item[6]}, ${ui.item[7]}, ${ui.item[8]}, ${ui.item[9]}`)
                         return false;
                     }
-                })
-                $.ui.autocomplete.prototype._renderItem = function (ul, item) {
+                }).data("ui-autocomplete")._renderItem = function (ul, item) {
                     let fieldNo = getFieldNo(selfElement.attr('id'));
-                    return $("<li>").attr("id", item[fieldNo]).append(item[fieldNo]).appendTo(ul);
+                    return $('<li>').data("item.autocomplete", item)
+                        .append(`<div>${item[fieldNo]}</div>`).appendTo(ul)
                 }
             })
         })
@@ -110,7 +110,8 @@ const main = () => {
                 })
                 $.ui.autocomplete.prototype._renderItem = function (ul, item) {
                     let fieldNo = getFieldNo(selfElement.data('id'));
-                    return $("<li>").attr("data-value", item[fieldNo]).append(item[fieldNo]).appendTo(ul);
+                    return $('<li>').data("item.autocomplete", item)
+                        .append(`<div>${item[fieldNo]}</div>`).appendTo(ul)
                 }
             })
         });

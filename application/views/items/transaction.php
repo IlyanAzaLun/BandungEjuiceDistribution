@@ -36,16 +36,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <tr>
                                     <th>No.</th>
                                     <th><?= lang('created_at') ?></th>
+                                    <th><?= lang('invoice_code_reference') ?></th>
                                     <th><?= lang('invoice_reference') ?></th>
                                     <th><?= lang('item_code') ?></th>
                                     <th><?= lang('item_name') ?></th>
-                                    <th><?= lang('item_quantity') ?></th>
+                                    <th><?= lang('item_quantity_in') ?></th>
+                                    <th><?= lang('item_quantity_out') ?></th>
                                     <th><?= lang('status_transaction') ?></th>
                                     <th><?= lang('item_capital_price') ?></th>
                                     <th><?= lang('item_selling_price') ?></th>
                                     <th><?= lang('item_discount') ?></th>
-                                    <th><?= lang('total_price_item') ?></th>
+                                    <th><?= lang('total_price') ?></th>
                                     <th><?= lang('item_description') ?></th>
+                                    <th><?= lang('customer') ?></th>
                                     <th><?= lang('created_by') ?></th>
                                 </tr>
                             </thead>
@@ -55,16 +58,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <tr>
                                     <th>No.</th>
                                     <th><?= lang('created_at') ?></th>
+                                    <th><?= lang('invoice_code_reference') ?></th>
                                     <th><?= lang('invoice_reference') ?></th>
                                     <th><?= lang('item_code') ?></th>
                                     <th><?= lang('item_name') ?></th>
-                                    <th><?= lang('item_quantity') ?></th>
+                                    <th><?= lang('item_quantity_in') ?></th>
+                                    <th><?= lang('item_quantity_out') ?></th>
                                     <th><?= lang('status_transaction') ?></th>
                                     <th><?= lang('item_capital_price') ?></th>
                                     <th><?= lang('item_selling_price') ?></th>
                                     <th><?= lang('item_discount') ?></th>
-                                    <th><?= lang('total_price_item') ?></th>
+                                    <th><?= lang('total_price') ?></th>
                                     <th><?= lang('item_description') ?></th>
+                                    <th><?= lang('customer') ?></th>
                                     <th><?= lang('created_by') ?></th>
                                 </tr>
                             </tfoot>
@@ -87,7 +93,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
     $(function() {
-        $("#example2").DataTable({
+        var table = $("#example2").DataTable({
 
             dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
                 <'row'<'col-12'tr>>
@@ -96,6 +102,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             serverSide: true,
             responsive: true,
             autoWidth: false,
+            order: [[ 1, "desc" ]],
             ajax: {
                 "url": "<?php echo url('items/serverside_datatables_data_items_transaction') ?>",
                 "type": "POST",
@@ -105,13 +112,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 }
             },
             columns: [{
-                    data: "id"
+                    data: "transaction_id"
                 },
                 {
-                    data: "created_at"
+                    data: "transaction_created_at"
                 },
                 {
-                    data: "invoice_reference",
+                    data: "invoice_code_reference",
+                    visible: false,
+                },
+                {
+                    data: "invoice_code",
                     render: function(data, type, row) {
                         if (data) {
                             return `<a href="${location.base}invoice/purchase/info?id=${data}">${data}</a>`;
@@ -128,13 +139,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     visible: false,
                 },
                 {
-                    data: "item_quantity",
+                    data: "item_in",
                     render: function(data, type, row) {
-                        return `${data} ${row['item_unit']}`
+                        let result = `${data} ${row['item_unit']}`
+                        return `${(data)?result: ''}`
                     }
                 },
                 {
-                    data: "status_type"
+                    data: "item_out",
+                    render: function(data, type, row) {
+                        let result = `${data} ${row['item_unit']}`
+                        return `${(data)?result: ''}`
+                    }
+                },
+                {
+                    data: "item_status"
                 },
                 {
                     data: "item_capital_price",
@@ -169,7 +188,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     visible: false
                 },
                 {
-                    data: "created_by",
+                    data: "customer_code",
+                    render: function(data, type, row){
+                        if(row['supplier_name']){
+                            return row['supplier_name'];
+                        }else if(row['customer_name']){
+                            return row['supplier_name'];
+                        }else{
+                            return data;
+                        }
+                    }
+                },
+                {
+                    data: "transaction_created_by",
                     render: function(data, type, row) {
                         return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`
                     }

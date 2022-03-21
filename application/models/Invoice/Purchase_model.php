@@ -19,7 +19,7 @@ class Purchase_model extends MY_Model
 
     public function get_code_invoice_purchase()
     {
-        $now = date('my');
+        $now = date('ymd');
         $this->db->like('invoice_code', "INV/PURCHASE/$now/", 'after');
         $this->db->order_by('id', 'DESC');
         $data = $this->db->get($this->table)->num_rows();

@@ -49,11 +49,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
             <?php echo form_close(); ?>
-            <table id="example2" class="table table-bordered table-striped table-hover table-sm" style="font-size: 12px;">
+            <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
                   <th>no.</th>
                   <th><?= lang('created_at') ?></th>
+                  <th><?= lang('updated_at') ?></th>
                   <th><?= lang('invoice_code_reference') ?></th>
                   <th><?= lang('invoice_code') ?></th>
                   <th><?= lang('supplier_name') ?></th>
@@ -97,12 +98,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     //Date range picker
     $('#min').daterangepicker({
       timePicker: true,
+      timePicker24Hour: true,
       timePickerIncrement: 30,
       locale: {
-        format: 'MM/DD/YYYY hh:mm A'
+        format: 'DD/MM/YYYY H:mm'
       }
     });
-    var groupColumn = 2;
+    var groupColumn = 3;
+    $('.ui-buttonset').draggable();
     var table = $("#example2").DataTable({
 
       dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
@@ -112,18 +115,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 2, "desc" ]],
+      order: [[ 3, "desc" ]],
       drawCallback: function ( settings ) {
           var api = this.api();
           var rows = api.rows( {page:'current'} ).nodes();
-          var last=null;
-
+          var last = null;
+          let regex = /RET/;
+          api.rows( {page:'current'} ).data().each(function(index, i){
+            if(index['invoice_code'].match(regex) != null){
+              $(rows).eq(i).addClass('bg-danger');
+              $(rows).eq(i-1).find('a#return').remove();
+            }
+          })
           api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
               if ( last !== group ) {
                   $(rows).eq( i ).before(
-                      `<tr class="group"><td colspan="15">${group}</td></tr>`
+                      `<tr class="group"><td class="group" colspan="15"><a href="javascript:void(0)">${group}</a></td></tr>`
                   );
-
                   last = group;
               }
           } );
@@ -151,6 +159,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "created_at"
         },
         {
+          data: "updated_at"
+        },
+        {
           data: "invoice_code_reference",
           visible: false,
         },
@@ -166,7 +177,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "supplier",
+          data: "store_name",
           orderable: false,
           render: function(data, type, row) {
             return `<a href="${location.base}master_information/supplier/edit?id=${row['supplier_code']}">${shorttext(data, 12, true)}</a>`
@@ -222,18 +233,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "note",
+          data: "purchase_note",
           orderable: false,
           render: function(data, type, row) {
-            // return shorttext(data, 10, true)
-            return data
+            return shorttext(data, 10, true)
+            // return data
           }
         },
         {
-          data: "created_by",
+          data: "user_purchasing_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`
+            // return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`
+            return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`
           }
         },
         {
@@ -244,12 +256,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let regex = /RET/;
             if(data.match(regex) == null){
               html += `
-                <a href="<?= url('invoice/purchase') ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-tw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/purchase') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-tw fa-info text-primary"></i></a>
-                <a href="<?= url('invoice/purchase') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-tw fa-history text-danger"></i></a>`;
+                <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" id="return" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-tw fa-edit text-primary"></i></a>
+                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-tw fa-info text-primary"></i></a>
+                <a href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" id="return" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-tw fa-history text-danger"></i></a>`;
             }else{
               html += `
-                <a href="<?= url('invoice/purchase') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-tw fa-history text-danger"></i></a>`;
+                <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-tw fa-edit text-primary"></i></a>
+                <a href="<?= url('invoice/purchases') ?>/returns/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing returns"><i class="fa fa-tw fa-info text-primary"></i></a>
+                <a href="<?= url('invoice/purchases') ?>/returns/cancel?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing returns"><i class="fa fa-tw fa-ban text-danger"></i></a>`;
             }
             return `
                 <div class="btn-group d-flex justify-content-center">
@@ -273,14 +287,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
-    $('#example2 tbody').on( 'click', 'tr.group', function () {
-        var currentOrder = table.order()[0];
+    $('#example2 tbody').on( 'click', 'td:not(.group)', function(){
+        table.search(table.cell( this ).data()).draw();
+        $('input[type="search"]').focus()
+    })
+    $('#example2 tbody').on( 'click', 'td.group', function () {
+        table.search($(this).text()).draw();
+        $('input[type="search"]').focus()
+        /*
         if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
             table.order( [ groupColumn, 'desc' ] ).draw();
         }
         else {
             table.order( [ groupColumn, 'asc' ] ).draw();
         }
+        */
     } );
     $('#min').on('apply.daterangepicker', function(ev, picker) {
       startdate = picker.startDate.format('YYYY-MM-DD');

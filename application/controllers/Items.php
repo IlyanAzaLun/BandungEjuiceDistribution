@@ -484,36 +484,43 @@ class Items extends MY_Controller
         ## Fetch records
         $this->db->select('
             transaction.id as transaction_id
-            , transaction.invoice_code
-            , transaction.item_id
-            , transaction.item_code
-            , transaction.item_name
-            , transaction.item_capital_price
-            , transaction.item_selling_price
-            , transaction.item_current_quantity
+            , transaction.invoice_code as invoice_code
+            , SUBSTRING(transaction.invoice_code, 5) as invoice_code_reference
+            , transaction.item_id as item_id
+            , transaction.item_code as item_code
+            , transaction.item_name as item_name
+            , transaction.item_capital_price as item_capital_price
+            , transaction.item_selling_price as item_selling_price
+            , transaction.item_current_quantity as item_current_quantity
             , SUM(transaction.item_quantity) as item_quantity
-            , transaction.item_unit
-            , transaction.item_discount
-            , transaction.total_price
-            , transaction.item_status
-            , transaction.item_description
+            , IF(transaction.item_status = "IN",  SUM(transaction.item_quantity), NULL) as item_in
+            , IF(transaction.item_status = "OUT", SUM(transaction.item_quantity), NULL) as item_out
+            , transaction.item_unit as item_unit
+            , transaction.item_discount as item_discount
+            , transaction.total_price as total_price
+            , transaction.item_status as item_status
+            , transaction.customer_code as customer_code
+            , supplier.store_name as supplier_name
+            , customer.store_name as customer_name          
+            , transaction.item_description as item_description
             , transaction.created_at as transaction_created_at
             , user_created.name as transaction_created_by
             , transaction.updated_at as transaction_updated_at
             , user_updated.name as transaction_updated_by
             , user_created.id as user_id');
         if ($searchValue != '') {
-            $this->db->like('transaction.item_name', $searchValue, 'both');
-            $this->db->or_like('transaction.item_code', $searchValue, 'both');
-            $this->db->or_like('user_created.transaction_created_by', $searchValue, 'both');
-            $this->db->or_like('user_updated.transaction_updated_by', $searchValue, 'both');
+            $this->db->like('item_name', $searchValue, 'both');
+            $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->or_like('transaction_created_by', $searchValue, 'both');
+            $this->db->or_like('transaction_updated_by', $searchValue, 'both');
         }
         $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
         $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
-        $this->db->where('transaction.item_code', post('id'));
-        $this->db->order_by('transaction.created_at', 'desc');
-        $this->db->order_by("transaction.$columnName", $columnSortOrder);
-        $this->db->group_by('transaction.invoice_code');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = transaction.customer_code', 'left');
+        $this->db->join('customer_information customer', 'customer.customer_code = transaction.customer_code', 'left');
+        $this->db->where('item_code', post('id'));
+		$this->db->order_by($columnName, $columnSortOrder);
+        $this->db->group_by('invoice_code');
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('invoice_transaction_list_item transaction')->result();
         $data = array();
@@ -521,23 +528,29 @@ class Items extends MY_Controller
         foreach ($records as $record) {
 
             $data[] = array(
-                "id" => $record->transaction_id,
+                "transaction_id" => $record->transaction_id,
                 "user_id" => $record->user_id,
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,
                 "item_quantity" => $record->item_quantity,
+                "item_in" => $record->item_in,
+                "item_out" => $record->item_out,
                 "item_unit" => $record->item_unit,
                 "item_capital_price" => $record->item_capital_price,
                 "item_selling_price" => $record->item_selling_price,
                 "item_discount" => $record->item_discount,
                 "total_price" => $record->total_price,
-                "status_type" => $record->item_status,
+                "item_status" => $record->item_status,
                 "item_description" => $record->item_description,
-                "invoice_reference" => $record->invoice_code,
-                "created_by" => $record->transaction_created_by,
-                "created_at" => date(setting('datetime_format'), strtotime($record->transaction_created_at)),
-                "updated_by" => $record->transaction_updated_by,
-                "updated_at" => date(setting('datetime_format'), strtotime($record->transaction_updated_at)),
+                "customer_code" => $record->customer_code,
+                "supplier_name" => $record->supplier_name,
+                "customer_name" => $record->customer_name,
+                "invoice_code" => $record->invoice_code,
+                "invoice_code_reference" => $record->invoice_code_reference,
+                "transaction_created_by" => $record->transaction_created_by,
+                "transaction_created_at" => date(setting('datetime_format'), strtotime($record->transaction_created_at)),
+                "transaction_updated_by" => $record->transaction_updated_by,
+                "transaction_updated_at" => date(setting('datetime_format'), strtotime($record->transaction_updated_at)),
             );
         }
 

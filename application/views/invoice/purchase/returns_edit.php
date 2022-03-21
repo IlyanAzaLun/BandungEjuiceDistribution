@@ -1,19 +1,52 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<!-- Theme style -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
+
+<?php include viewPath('includes/header'); ?>
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1><?php echo lang($title) ?></h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
+                    <li class="breadcrumb-item active"><?php echo lang('invoice') ?></li>
+                    <li class="breadcrumb-item active"><?php echo lang('purchase') ?></li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
 <!-- Main content -->
 <section class="content">
     <?php
-        $__return_invoice_code = str_replace('INV','RET',$this->input->get('id'));
-        $_data_invoice_return = $this->transaction_item_model->get_transaction_item_by_code_invoice($__return_invoice_code);
-        $_data_item_invoice_return = $this->transaction_item_model->get_transaction_item_by_code_invoice($__return_invoice_code);
+        $__invoice_code = str_replace('RET','INV',$this->input->get('id'));
+        $_data_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
+        $_data_item_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
     ?>
+    <pre>
+    <?php
+        $items_code = array_column($_data_item_invoice, 'item_code');
+        $items_code_return = array_column($items, 'item_code');
+        $intersect = array_intersect($items_code, $items_code_return);
+        $i = 0;
+    ?>
+    </pre>
     <!-- Default card -->
-
     <div class="row">
         <div class="col-12">
             <div class="callout callout-info">
                 <h5><i class="fas fa-info"></i> Note:</h5>
                 <?= lang('purchase_info_returns') ?><b><?= get('id') ?></b>
             </div>
-            <?php echo form_open_multipart('invoice/purchases/returns?id=' . get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('invoice/purchases/returns/edit?id=' . get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <!-- Information customer START -->
             <div class="card">
                 <div class="card-header with-border">
@@ -72,14 +105,83 @@
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
                                         <th><?= lang('item_capital_price') ?></th>
                                         <th style="display:none"><?= lang('item_selling_price') ?></th>
-                                        <th><?= lang('item_order_quantity') ?></th>
+                                        <th><?= lang('item_order_quantity_returns') ?></th>
                                         <th><?= lang('discount') ?></th>
                                         <th><?= lang('total_price') ?></th>
                                         <th><?= lang('option') ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($items as $key => $value) : ?>
+                                    <?php foreach ($_data_item_invoice as $key => $value) : ?>
+                                        <?php if ($value->item_code == $intersect[$key]):?>
+                                            <tr class="input-<?= $key ?>">
+                                                <td><?= $key+1 ?>.</td>
+                                                <td><a href="<?=url('items/info_transaction?id='.$items[$i]->item_code)?>"><?= $items[$i]->item_code ?></a></td>
+                                                <td><?= $items[$i]->item_name ?></td>
+                                                <td style="display:none"><?= $this->items_model->getByCodeItem($items[$i]->item_code, 'quantity') ?> <?= $items[$i]->item_unit ?></td>
+                                                <td>Rp.<?= number_format($items[$i]->item_capital_price) ?></td>
+                                                <td style="display:none">Rp.<?= number_format($items[$i]->item_selling_price) ?></td>
+                                                <td><?= $items[$i]->item_quantity ?>  <?= $items[$i]->item_unit ?></td>
+                                                <td>Rp.<?= number_format($items[$i]->item_discount) ?></td>
+                                                <td>Rp.<b><?= number_format($items[$i]->total_price) ?></b></td>
+                                                <td><button type="button" class="btn btn-block btn-danger" id="update" data-id="<?=$items[$i]->id?>"><i class="fa fa-tw fa-pencil-alt"></i></button></td>
+                                            </tr>
+                                            <?php if((strlen($items[$i]->item_description)) >= 1):?>
+                                            <tr class="input-<?= $key ?>">
+                                                <td></td>
+                                                <td colspan="8"><b style="font-size: 14px;"><?= $items[$i]->item_description?></b></td>
+                                            </tr>
+                                            <?php endif ?>
+
+                                            <tr class="input-<?= $key ?>" id="main" style="display:none">
+                                            <td><?= $key+1 ?>.</td>
+                                            <td>
+                                                <input readonly type="hidden" name="id[]" id="id" value="<?= $items[$i]->id ?>">
+                                                <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($items[$i]->item_code, 'id') ?>">
+                                                <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $items[$i]->item_code ?>" required>
+                                            </td>
+                                            <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $items[$i]->item_name ?>" required></td>
+                                            <td style="display:none">
+                                                <div class=" input-group input-group-sm">
+                                                    <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($items[$i]->item_code, 'quantity') ?>">
+                                                    <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $items[$i]->item_unit ?>">
+                                                    <span class="input-group-append">
+                                                        <span class="input-group-text" data-id="item_unit"><?= $items[$i]->item_unit ?></span>
+                                                    </span>
+                                                </div>
+                                                <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($items[$i]->item_code, 'quantity')?>">
+                                            </td>
+                                            <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $items[$i]->item_capital_price ?>"></td>
+                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $items[$i]->item_selling_price ?>"></td>
+                                            <td>
+                                                <div class=" input-group input-group-sm">
+                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" max="<?=  (int)$value->item_quantity - (int)$items[$i]->item_quantity ?>" value="0" required>
+                                                    <input readonly class="form-control form-control-sm" type="number" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" value="<?= (int)$items[$i]->item_quantity ?>" required>
+                                                    <span class="input-group-append">
+                                                        <span class="input-group-text" data-id="item_unit"><?= $items[$i]->item_unit ?></span>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$items[$i]->item_discount ?>"></td>
+                                            <td>
+                                                <input class="form-control form-control-sm currency" type="text" name="total_price_current[]" data-id="total_price_current" min="0" required value="<?= $items[$i]->total_price ?>" readonly>
+                                                <input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $items[$i]->total_price ?>">
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                                                    <button type="button" class="btn btn-block btn-primary" id="is_safty"><i class="fa fa-tw fa-circle-notch"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="description input-<?=$key?>" style="display:none">
+                                            <td colspan="8">
+                                                <textarea class="form-control form-control-sm" name="description[]"><?=$items[$i]->item_description?></textarea>
+                                            </td>
+                                        </tr>
+                                        <?php $i++; ?>
+                                        <?php else:?>
+
                                         <tr class="input-<?= $key ?>">
                                             <td><?= $key+1 ?>.</td>
                                             <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
@@ -98,11 +200,10 @@
                                             <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
                                         </tr>
                                         <?php endif ?>
-
                                         <tr class="input-<?= $key ?>" id="main" style="display:none">
                                             <td><?= $key+1 ?>.</td>
                                             <td>
-                                                <input disabled type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
+                                                <input readonly type="hidden" name="id[]" id="id" value="">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
                                             </td>
@@ -145,6 +246,7 @@
                                                 <textarea class="form-control form-control-sm" name="description[]"><?=$value->item_description?></textarea>
                                             </td>
                                         </tr>
+                                        <?php endif?>
                                     <?php endforeach ?>
                                 </tbody>
                             </table>

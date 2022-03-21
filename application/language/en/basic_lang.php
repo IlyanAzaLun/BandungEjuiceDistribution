@@ -39,6 +39,7 @@ $lang['leave_without_logout'] = "Do you want to leave this page without logout?"
  * Error Pages
  */
 $lang['not_allowed_403'] = "You are not allowed to access this page.";
+$lang['error_worng_information'] = "Error, worng information.";
 $lang['sorry_not_allowed_msg'] = "Sorry, you cannot access this section/webpage.
 Meanwhile, you may <a href='" . url('/') . "'>return to dashboard</a> or try using the search form.";
 
@@ -285,20 +286,22 @@ $lang['is_inactive'] = "Inactive";
 $lang['item_discount'] = "Discount";
 $lang['status_transaction'] = "Status transaction";
 $lang['invoice_reference'] = "Invoice reference";
+$lang['item_quantity_in'] = "Item In";
+$lang['item_quantity_out'] = "Item Out";
 
 /*
  * Customer
  */
-$lang['customer'] = "customer";
-$lang['customer_list'] = "List customer";
-$lang['customer_add'] = "Add customer";
-$lang['customer_update'] = "Update customer";
-$lang['customer_code'] = "Customer code";
-$lang['store_name'] = "Store name";
-$lang['address_destination'] = "Address destination";
-$lang['select_store_name'] = "Select store name";
-$lang['customer_owner'] = "Owner name";
-$lang['category_customer'] = "Customer category";
+$lang['customer'] = "Customer";
+$lang['customer_list'] = "List Customer";
+$lang['customer_add'] = "Add Customer";
+$lang['customer_update'] = "Update Customer";
+$lang['customer_code'] = "Customer Code";
+$lang['store_name'] = "Store Name";
+$lang['address_destination'] = "Address Destination";
+$lang['select_store_name'] = "Select Store Name";
+$lang['customer_owner'] = "Owner Name";
+$lang['category_customer'] = "Customer Category";
 $lang['customer_info_add'] = "Add more information data customers";
 $lang['customer_info_edit'] = "Edit information data customer";
 $lang['select_category_customer'] = "Select category customer";
@@ -374,7 +377,8 @@ $lang['purchase_info_returns'] = "Returns information data purchase ";
 $lang['information_supplier'] = "Supplier Information";
 $lang['information_items'] = "Items Information";
 $lang['find_items'] = "Find items...";
-$lang['item_order_quantity'] = "Item order quantity";
+$lang['item_order_quantity'] = "Item Order Quantity";
+$lang['item_order_quantity'] = "Item Order Quantity Returns";
 $lang['item_returns_quantity'] = "Item returns quantity";
 $lang['subtotal'] = "Sub total";
 $lang['total_price'] = "Total item price";
