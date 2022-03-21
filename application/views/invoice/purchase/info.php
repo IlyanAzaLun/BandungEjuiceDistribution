@@ -6,6 +6,9 @@
     <div class="row">
         <div class="col-12">
             <div class="callout callout-info">
+                <div class="float-right">
+                    <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><i class="fa fa-ban"></i></button>
+                </div>
                 <h5><i class="fas fa-info"></i> Note:</h5>
                 <?= lang('purchase_info_info') ?><b><?= get('id') ?></b>
             </div>

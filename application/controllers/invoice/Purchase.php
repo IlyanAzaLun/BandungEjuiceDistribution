@@ -204,7 +204,30 @@ class Purchase extends Invoice_controller
 		$this->page_data['page']->submenu = 'info';
 		$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 		$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+		
+		$this->page_data['modals'] = (object) array(
+			'id' => 'exampleModal',
+			'title' => 'Modals confirmation',
+			'link' => 'invoice/purchase/cancel?id='.get('id'),
+			'content' => 'delete',
+			'btn' => 'btn-danger',
+			'submit' => 'Yes do it',
+		);
+
 		$this->load->view('invoice/purchase/form', $this->page_data);
+		$this->load->view('includes/modals');
+	}
+
+	public function cancel()
+	{
+		echo "<pre>";
+		// var_dump($this->purchase_model->get_invoice_purchasing_by_code(get('id')));
+		if(preg_match('/INV/', get('id'))){
+			var_dump($this->transaction_item_model->get_transaction_item_by_code_invoice(str_replace('INV','RET',$this->input->get('id'))));
+		}
+		echo '<hr>';
+		var_dump($this->transaction_item_model->get_transaction_item_by_code_invoice(get('id')));
+		echo "</pre>";
 	}
 
 	protected function create_item_history($data, $status_type)

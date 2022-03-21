@@ -185,13 +185,10 @@ class Returns extends Purchase
 				'note' => post('note'),
 			);
 			try {
-				echo '<pre>';
-				var_dump($this->create_item_history($items, ['RETURNS', 'RETURNS']));
-				// $this->create_or_update_invoice($payment);
-				// $this->create_or_update_list_item_transcation($items);
-				// $this->update_items($items);
-				echo '</pre>';
-				die();
+				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
+				$this->create_or_update_invoice($payment);
+				$this->create_or_update_list_item_transcation($items);
+				$this->update_items($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -230,19 +227,21 @@ class Returns extends Purchase
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
 			$request[$key]['item_current_quantity'] = $item[$key]->quantity;
-			$request[$key]['item_quantity'] = $value['item_order_quantity'];
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['item_status'] = 'OUT';
 			$request[$key]['item_description'] = $value['item_description'];
+			$request[$key]['customer_code'] = $value['customer_code'];
 			if ($value['id']) {
 				$request[$key]['id'] = $value['id'];
+				$request[$key]['item_quantity'] = $value['item_order_quantity']+$value['item_order_quantity_current'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				$data_positif[] = $request[$key];
 				// unset($data_positif[$key]['id']);
 			} else {
+				$request[$key]['item_quantity'] = $value['item_order_quantity'];
 				$request[$key]['created_by'] = logged('id');
 				$data_negatif[$key] = $request[$key];
 				unset($data_negatif[$key]['id']);

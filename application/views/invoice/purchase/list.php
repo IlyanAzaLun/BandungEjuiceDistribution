@@ -127,6 +127,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               $(rows).eq(i-1).find('a#return').remove();
             }
           })
+          api.rows().every(function(rowId, tableLoop, rowLoop){
+            console.log()
+          })
           api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
               if ( last !== group ) {
                   $(rows).eq( i ).before(
@@ -262,8 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }else{
               html += `
                 <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-tw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/returns/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing returns"><i class="fa fa-tw fa-info text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/returns/cancel?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing returns"><i class="fa fa-tw fa-ban text-danger"></i></a>`;
+                <a href="<?= url('invoice/purchase') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing returns"><i class="fa fa-tw fa-info text-primary"></i></a>`;
             }
             return `
                 <div class="btn-group d-flex justify-content-center">
@@ -287,21 +289,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
-    $('#example2 tbody').on( 'click', 'td:not(.group)', function(){
+    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
+        console.log($(this))
     })
     $('#example2 tbody').on( 'click', 'td.group', function () {
         table.search($(this).text()).draw();
         $('input[type="search"]').focus()
-        /*
-        if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
-            table.order( [ groupColumn, 'desc' ] ).draw();
-        }
-        else {
-            table.order( [ groupColumn, 'asc' ] ).draw();
-        }
-        */
     } );
     $('#min').on('apply.daterangepicker', function(ev, picker) {
       startdate = picker.startDate.format('YYYY-MM-DD');

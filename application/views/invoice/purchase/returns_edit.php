@@ -189,7 +189,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
                                             <td>Rp.<?= number_format($value->item_capital_price) ?></td>
                                             <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
-                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td><?=0 //$value->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td>Rp.<?= number_format($value->item_discount) ?></td>
                                             <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
                                             <td><button type="button" class="btn btn-block btn-danger" id="update" data-id="<?=$value->id?>"><i class="fa fa-tw fa-pencil-alt"></i></button></td>
