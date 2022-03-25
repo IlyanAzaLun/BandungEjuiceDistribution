@@ -361,8 +361,10 @@ $lang['is_open'] = "Is Open";
  * Invoice
  * purchase
  */
+$lang['menu_invoice'] = "Menus Invoice";
 $lang['invoice_code'] = "Invoice code";
 
+$lang['page_purchase'] = "Page Purchase";
 $lang['purchase_list'] = "Purchase list";
 $lang['find_supplier_code'] = "Find supplier code ...";
 $lang['find_store_name'] = "Find store name ...";
@@ -399,8 +401,25 @@ $lang['payed'] = "Payed";
 $lang['credit'] = "Credit";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
 $lang['invoice_code_reference'] = "Invoice code reference";
-
 $lang['purchase_payment'] = "Purchase to pay";
+
+/*
+ * Invoice
+ * Order
+ */
+$lang['order_list'] = "Order List";
+$lang['order_create'] = "Order Create";
+
+/*
+ * Invoice
+ * Sale
+ */
+$lang['page_sale'] = "Page Sale";
+
+$lang['sale_list'] = "Selling List";
+$lang['sale_create'] = "Selling Create";
+$lang['sale_edit'] = "Selling Edit";
+$lang['sale_payment'] = "Selling to pay";
 
 /**
  * Activity

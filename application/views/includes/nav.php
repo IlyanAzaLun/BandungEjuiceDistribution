@@ -188,13 +188,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <!-- end Supplier -->
 
   <!-- Invoice -->
-  <li class="nav-header"><strong> <?php echo lang('menus') . ' ' . lang('invoice') ?> </strong> &nbsp;
+  <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
     <?php if (hasPermissions('purchase_list')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
       <i class="nav-icon fas fa-shopping-cart"></i>
       <p>
-        <?php echo lang('pages') . ' ' . lang('purchase') ?>
+        <?php echo lang('page_purchase') ?>
         <i class="right fas fa-angle-left"></i>
       </p>
     </a>
@@ -219,8 +219,51 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </li>
     </ul>
   </li>
-<?php endif ?>
+    <?php endif ?>
 <!-- end Invoice -->
+    <?php if (hasPermissions('sale_list')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Sale') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Sale') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-shopping-bag"></i>
+      <p>
+        <?php echo lang('page_sale') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/order/list') ?>" class="nav-link <?php echo ($page->submenu == 'order_list') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('order_list') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/order/create') ?>" class="nav-link <?php echo ($page->submenu == 'order_create') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('order_create') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/sale/list') ?>" class="nav-link <?php echo ($page->submenu == 'sale_list') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('sale_list') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/sale/create') ?>" class="nav-link <?php echo ($page->submenu == 'sale_create') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('sale_create') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('sale_payment') ?> </p>
+        </a>
+      </li>
+    </ul>
+  </li>
+    <?php endif ?>
 
 <li class="nav-header"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>
