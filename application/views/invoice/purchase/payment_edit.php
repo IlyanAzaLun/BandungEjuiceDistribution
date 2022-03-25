@@ -1,6 +1,38 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+$__invoice_code = str_replace('RET','INV',$this->input->get('id'));
+$_data_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
+$_data_item_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
+$items_code = array_column($_data_item_invoice, 'item_code');
+$items_code_return = array_column($items, 'item_code');
+$intersect = array_intersect($items_code, $items_code_return);
+$i = 0; ?>
+<!-- Theme style -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
+<?php include viewPath('includes/header'); ?>
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1><?php echo lang($title) ?></h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
+          <li class="breadcrumb-item active"><?php echo lang('invoice') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('purchase') ?></li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
 <!-- Main content -->
 <section class="content">
-
     <!-- Default card -->
 
     <div class="row">
@@ -51,7 +83,7 @@
             </div>
             <!-- Information customer END -->
             <!-- Information Items START -->
-            <div class="card">
+            <div class="card" style="display:none">
                 <div class="card-header with-border">
                     <h3 class="card-title"><i class="fa fa-fw fa-dice-two"></i><?php echo lang('information_items') ?></h3>
                 </div>
@@ -73,25 +105,46 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($items as $key => $value) : ?>
-                                        <tr class="input-<?= $key ?>">
-                                            <td><?= $key+1 ?>.</td>
-                                            <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
-                                            <td><?= $value->item_name ?></td>
-                                            <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
-                                            <td>Rp.<?= number_format($value->item_capital_price) ?></td>
-                                            <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
-                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
-                                            <td>Rp.<?= number_format($value->item_discount) ?></td>
-                                            <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
-                                        </tr>
-                                        <?php if((strlen($value->item_description)) >= 1):?>
-                                        <tr>
-                                            <td></td>
-                                            <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
-                                        </tr>
-                                        <?php endif ?>
-                                    <?php endforeach ?>
+                                <?php foreach ($_data_item_invoice as $key => $value) : ?>
+                                    <?php if ($value->item_code == $intersect[$key]):?>
+                                      <tr class="input-<?= $key ?>">
+                                          <td><?= $key+1 ?>.</td>
+                                          <td><a href="<?=url('items/info_transaction?id='.$items[$i]->item_code)?>"><?= $items[$i]->item_code ?></a></td>
+                                          <td><?= $items[$i]->item_name ?></td>
+                                          <td style="display:none"><?= $this->items_model->getByCodeItem($items[$i]->item_code, 'quantity') ?> <?= $items[$i]->item_unit ?></td>
+                                          <td>Rp.<?= number_format($items[$i]->item_capital_price) ?></td>
+                                          <td style="display:none">Rp.<?= number_format($items[$i]->item_selling_price) ?></td>
+                                          <td><?= $value->item_quantity - $items[$i]->item_quantity ?>  <?= $items[$i]->item_unit ?></td>
+                                          <td>Rp.<?= number_format($items[$i]->item_discount) ?></td>
+                                          <td>Rp.<b><?= number_format($items[$i]->total_price) ?></b></td>
+                                      </tr>
+                                      <?php if((strlen($items[$i]->item_description)) >= 1):?>
+                                      <tr class="input-<?= $key ?>">
+                                          <td></td>
+                                          <td colspan="8"><b style="font-size: 14px;"><?= $items[$i]->item_description?></b></td>
+                                      </tr>
+                                      <?php endif ?>
+                                    <?php $i++; ?>  
+                                    <?php else: ?>
+                                      <tr class="input-<?= $key ?>">
+                                          <td><?= $key+1 ?>.</td>
+                                          <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
+                                          <td><?= $value->item_name ?></td>
+                                          <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
+                                          <td>Rp.<?= number_format($value->item_capital_price) ?></td>
+                                          <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
+                                          <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                          <td>Rp.<?= number_format($value->item_discount) ?></td>
+                                          <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
+                                      </tr>
+                                      <?php if((strlen($value->item_description)) >= 1):?>
+                                      <tr class="input-<?= $key ?>">
+                                          <td></td>
+                                          <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
+                                      </tr>
+                                      <?php endif ?>
+                                    <?php endif ?>
+                                  <?php endforeach ?>
                                 </tbody>
                             </table>
                         </div>
@@ -168,7 +221,7 @@
                         <div class="col-lg-2 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('payment_type') ?></h6>
-                                <input readonly type="text" class="form-control" value="<?= lang($invoice->payment_type) ?>" required>
+                                <input readonly type="text" class="form-control bg-success" value="<?= lang($invoice->payment_type) ?>" required>
                             </div>
                         </div>
                         <div class="col-lg col-sm-12">
@@ -177,13 +230,6 @@
                                 <textarea readonly class="form-control"><?= $invoice->note ?></textarea>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <!-- /.card-body -->
-                <!-- /card-footer -->
-                <div class="card-footer">
-                    <div class="float-right">
-                        <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -200,3 +246,4 @@
     $('body').addClass('sidebar-collapse');
 </script>
 <script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseEdit.js"></script>
+<!-- /.content -->

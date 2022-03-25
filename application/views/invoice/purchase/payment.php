@@ -65,6 +65,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
                   <th><?= lang('status_payment') ?></th>
+                  <th><?= lang('date_due_start') ?></th>
+                  <th><?= lang('date_due_end') ?></th>
                   <th><?= lang('note') ?></th>
                   <th><?= lang('created_by') ?></th>
                   <th><?= lang('option') ?></th>
@@ -93,6 +95,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    $('body').addClass('sidebar-collapse');
     var startdate;
     var enddate;
     //Date range picker
@@ -117,35 +120,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       responsive: true,
       autoWidth: false,
       order: [[ 3, "desc" ]],
+      createdRow: function( row, data, dataIndex ) {
+        let d = new Date();
+        let month = d.getMonth()+1;
+        let day = d.getDate();
+        let date_current = d.getFullYear() + '-' +
+            ((''+month).length<2 ? '0' : '') + month + '-' +
+            ((''+day).length<2 ? '0' : '') + day;
+        if ( date_current >= data['date_due'].split(' ')[0] && data['status_payment']=='Credit') {
+          $(row).addClass('bg-danger')
+      }},
       rowCallback: function(row, data, index){
-        if(data['is_cancelled'] == true){
-          $(row).addClass('bg-danger');
-        }
-      },
+        if(data['status_payment']=='Credit'){
+          $(row).find('td:eq(10)').addClass('bg-danger');
+        }else if(data['status_payment']=='Payed'){
+          $(row).find('td:eq(10)').addClass('bg-success');
+      }},
       drawCallback: function ( settings ) {
-          var api = this.api();
-          var rows = api.rows( {page:'current'} ).nodes();
-          var last = null;
-          let regex = /RET/;
-          api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['invoice_code'].match(regex) != null){
-              $(rows).eq(i).addClass('bg-lightblue color-palette');
+        var api = this.api();
+        var rows = api.rows( {page:'current'} ).nodes();
+        var last = null;
+        api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+            if ( last !== group ) {
+                $(rows).eq( i ).before(
+                    `<tr class="group"><td class="group" colspan="15"><span class="text-info">${group}</span></td></tr>`
+                );
+                last = group;
             }
-          })
-          api.rows().every(function(rowId, tableLoop, rowLoop){
-            console.log()
-          })
-          api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-              if ( last !== group ) {
-                  $(rows).eq( i ).before(
-                      `<tr class="group"><td class="group" colspan="15"><span class="text-info">${group}</span></td></tr>`
-                  );
-                  last = group;
-              }
-          } );
+          });
       },
       ajax: {
-        "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
+        "url": "<?php echo url('invoice/purchases/payment/serverside_datatables_data_purchase_payment') ?>",
         "type": "POST",
         // "data": {
         //   "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
@@ -175,6 +180,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "invoice_code",
+          visible: false,
           render: function(data, type, row) {
             let html = '';
             let regex = /RET/;
@@ -195,28 +201,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "total_price",
-          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
         },
         {
           data: "discounts",
-          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
         },
         {
           data: "shipping_cost",
-          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
         },
         {
           data: "other_cost",
-          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
@@ -230,7 +232,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "payment_type",
           orderable: false,
-          visible: false,
           render: function(data, type, row) {
             return data
           }
@@ -238,12 +239,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "status_payment",
           orderable: false,
-          render: function(data, type, row) {
+          render: function(data, type, row, meta) {
             return data
           }
         },
         {
+          data: "date_start",
+          orderable: false,
+          visible: false,
+          render: function(data, type, row, meta) {
+            return data
+          }
+        },
+        {
+          data: "date_due",
+          orderable: false,
+          render: function(data, type, row, meta) {
+            let end_date_due = data.split(' ')[0];
+            return end_date_due;
+          }
+        },
+        {
           data: "purchase_note",
+          visible: false,
           orderable: false,
           render: function(data, type, row) {
             return shorttext(data, 10, true)
@@ -265,23 +283,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             let html = ``;
             let regex = /RET/;
-            if(data.match(regex) == null){
-              html += `
-                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>`;
-              if(row['have_a_child'] == null){
-                html += `
-                <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
+            html += `
+                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>
                 <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                `;
-              }
-            }else{
-              html += `
-                <a href="<?= url('invoice/purchase') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information return purchasing returns"><i class="fa fa-fw fa-info text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                `;
-            }
+            `;
             return `
                 <div class="btn-group d-flex justify-content-center">
                 ${html}

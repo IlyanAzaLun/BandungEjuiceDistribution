@@ -111,6 +111,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     "id": "<?= $item->item_code ?>"
                 }
             },
+            rowCallback: function(row, data, index){
+                if(data['is_cancelled'] == true){
+                    $(row).addClass('bg-danger');
+                    $(row).find('a').addClass('text-light');
+                }
+            },
             columns: [{
                     data: "transaction_id"
                 },

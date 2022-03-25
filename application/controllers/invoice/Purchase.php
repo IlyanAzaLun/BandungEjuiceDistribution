@@ -91,9 +91,9 @@ class Purchase extends Invoice_controller
 				echo "</pre>";
 				die();
 			}
-			$this->activity_model->add("Create purchasing, #" . $this->data['invoice_code'], (array) $payment);
+			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'New Item Upload Successfully');
+			$this->session->set_flashdata('alert', 'New Purchase Successfully');
 
 			redirect('invoice/purchase/list');
 		}
@@ -184,9 +184,9 @@ class Purchase extends Invoice_controller
 				echo "</pre>";
 				die();
 			}
-			$this->activity_model->add("Create purchasing, #" . $this->data['invoice_code'], (array) $payment);
+			$this->activity_model->add("Edit Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'New Item Upload Successfully');
+			$this->session->set_flashdata('alert', 'Edit Purchase Successfully');
 
 			redirect('invoice/purchase/list');
 		}
@@ -217,22 +217,94 @@ class Purchase extends Invoice_controller
 		$this->load->view('invoice/purchase/form', $this->page_data);
 		$this->load->view('includes/modals');
 	}
-
+	
 	public function cancel()
 	{
 		echo "<pre>";
-		// var_dump($this->purchase_model->get_invoice_purchasing_by_code(get('id')));
+		$items = array();
+		$payment = (array) $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
+		$this->data['invoice_code'] = get('id');
 		if(preg_match('/INV/', get('id'))){
-			var_dump($this->transaction_item_model->get_transaction_item_by_code_invoice(str_replace('INV','RET',$this->input->get('id'))));
+			$purchase_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+			$purchase_return_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(str_replace('INV','RET',$this->input->get('id')));
+			$items_code = array_column($purchase_, 'item_code');
+			$items_index = array_column($purchase_, 'index_list');
+			$items_code_return = array_column($purchase_return_, 'item_code');
+			$items_index_return = array_column($purchase_return_, 'index_list');
+			$intersect_code_item = array_intersect($items_code, $items_code_return);
+			$intersect_index_item = array_intersect($items_index, $items_index_return);
+			$i = 0;
+			foreach ($purchase_ as $key => $value){
+				$items[$key]['id'] = $value->id;
+				$items[$key]['item_id'] = $value->item_id;
+				$items[$key]['invoice_code'] = $value->invoice_code;
+				$items[$key]['index_list'] = $value->index_list;
+				$items[$key]['item_code'] = $value->item_code;
+				$items[$key]['item_name'] = $value->item_name;
+				$items[$key]['item_quantity_current'] = $this->items_model->getByCodeItem($value->item_code, 'quantity');
+				$items[$key]['item_unit'] = $value->item_unit;
+				$items[$key]['item_capital_price'] = $value->item_capital_price;
+				$items[$key]['item_selling_price'] = $value->item_selling_price;
+				$items[$key]['item_discount'] = $value->item_discount;
+				$items[$key]['total_price'] = $value->total_price;
+				$items[$key]['item_description'] = $value->item_description;
+				$items[$key]['customer_code'] = $value->customer_code;
+				$items[$key]['is_cancelled'] = 1;
+				if($intersect_code_item[$key] == $value->item_code && $intersect_index_item[$key] == $value->index_list){
+					$items[$key]['item_order_quantity'] = ($value->item_quantity - $purchase_return_[$i]->item_quantity) * -1;
+					$i++;
+				}else{
+					$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
+				}
+			}
+			//DIKURANGI
+		}else{
+			$purchase_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+			foreach ($purchase_ as $key => $value) {
+				$items[$key]['id'] = $value->id;
+				$items[$key]['item_id'] = $value->item_id;
+				$items[$key]['invoice_code'] = $value->invoice_code;
+				$items[$key]['index_list'] = $value->index_list;
+				$items[$key]['item_code'] = $value->item_code;
+				$items[$key]['item_name'] = $value->item_name;
+				$items[$key]['item_quantity_current'] = $this->items_model->getByCodeItem($value->item_code, 'quantity');
+				$items[$key]['item_unit'] = $value->item_unit;
+				$items[$key]['item_capital_price'] = $value->item_capital_price;
+				$items[$key]['item_selling_price'] = $value->item_selling_price;
+				$items[$key]['item_discount'] = $value->item_discount;
+				$items[$key]['total_price'] = $value->total_price;
+				$items[$key]['item_description'] = $value->item_description;
+				$items[$key]['customer_code'] = $value->customer_code;
+				$items[$key]['is_cancelled'] = 1;
+				$items[$key]['item_order_quantity'] = ($value->item_quantity);
+			}
+			//DITAMBAH
 		}
-		echo '<hr>';
-		var_dump($this->transaction_item_model->get_transaction_item_by_code_invoice(get('id')));
-		echo "</pre>";
+		$payment['is_cancelled'] = 1;
+		try {
+			$this->create_item_history( $items, ['CANCELED', 'CANCELED']);
+			$this->create_or_update_invoice($payment);
+			$this->create_or_update_list_item_transcation($items);
+			$this->update_items($items);
+		} catch (\Throwable $th) {
+			echo "<pre>";
+			var_dump($th);
+			echo "</pre>";
+			die();
+		}
+
+		$this->activity_model->add("Cancel purchasing, #" . $this->data['invoice_code'], (array) $payment);
+		$this->session->set_flashdata('alert-type', 'success');
+		$this->session->set_flashdata('alert', 'Cancel Purchase Successfully');
+
+		redirect('invoice/purchase/list');
 	}
 
 	protected function create_item_history($data, $status_type)
 	{
 		$item = array();
+		$data = json_encode($data, true);
+		$data = json_decode($data, true);
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 			$request[$key]['invoice_reference'] = $this->data['invoice_code'];
@@ -244,7 +316,7 @@ class Purchase extends Invoice_controller
 			} else {
 				$request[$key]['item_quantity'] = $item[$key]->quantity;
 			}
-			$request[$key]['item_order_quantity'] = $value['item_order_quantity'];
+			$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
@@ -256,7 +328,7 @@ class Purchase extends Invoice_controller
 			$this->items_history_model->create($request[$key]);
 		}
 		return $request;
-		// return $this->items_history_model->create_batch($request);
+		// // return $this->items_history_model->create_batch($request); // NOT USED HERE...  DIFFERENT CONDITION TO USE HERE...
 	}
 
 	protected function create_or_update_list_item_transcation($data)
@@ -264,6 +336,7 @@ class Purchase extends Invoice_controller
 		$item = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['index_list'] = $key;
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
@@ -271,17 +344,22 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
 			$request[$key]['item_current_quantity'] = $item[$key]->quantity;
-			$request[$key]['item_quantity'] = $value['item_order_quantity'];
+			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
-			$request[$key]['item_status'] = 'IN';
+			if ($value['item_order_quantity'] <= 0) {
+				$request[$key]['item_status'] = 'OUT';
+			}else{
+				$request[$key]['item_status'] = 'IN';
+			}
 			$request[$key]['item_description'] = $value['item_description'];
 			$request[$key]['customer_code'] = $value['customer_code'];
 			if ($value['id']) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
+				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$data_positif[] = $request[$key];
 				// unset($data_positif[$key]['id']);
 			} else {
@@ -356,6 +434,7 @@ class Purchase extends Invoice_controller
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
 		if ($response) {
+			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
@@ -366,6 +445,7 @@ class Purchase extends Invoice_controller
 			//	
 			return $this->purchase_model->create($request);
 		}
+		return $request;
 	}
 
 	protected function update_items($data)
@@ -451,6 +531,7 @@ class Purchase extends Invoice_controller
 		purchasing.id as purchasing_id, 
 		SUBSTRING(purchasing.invoice_code, 5) as invoice_code_reference,
 		purchasing.invoice_code as invoice_code, 
+		purchasing.have_a_child as have_a_child, 
 		purchasing.created_at as purchasing_create_at, 
 		purchasing.total_price as total_price, 
 		purchasing.discounts as discounts, 
@@ -462,6 +543,7 @@ class Purchase extends Invoice_controller
 		purchasing.created_at as created_at, 
 		purchasing.updated_at as updated_at, 
 		purchasing.created_by as created_by, 
+		purchasing.is_cancelled as is_cancelled, 
 		supplier.customer_code as supplier_code, 
 		supplier.store_name as store_name, 
 		user.id as user_id, 
@@ -492,6 +574,7 @@ class Purchase extends Invoice_controller
 				'id' => $record->purchasing_id,
 				'invoice_code_reference' => $record->invoice_code_reference,
 				'invoice_code' => $record->invoice_code,
+				'have_a_child' => $record->have_a_child,
 				'supplier_code' => $record->supplier_code,
 				'store_name' => $record->store_name,
 				'total_price' => $record->total_price,
@@ -505,6 +588,7 @@ class Purchase extends Invoice_controller
 				'created_at' => $record->created_at,
 				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,
+				'is_cancelled' => $record->is_cancelled,
 				'user_purchasing_create_by' => $record->user_purchasing_create_by,
 			);
 		}

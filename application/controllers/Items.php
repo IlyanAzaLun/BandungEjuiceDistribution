@@ -507,7 +507,8 @@ class Items extends MY_Controller
             , user_created.name as transaction_created_by
             , transaction.updated_at as transaction_updated_at
             , user_updated.name as transaction_updated_by
-            , user_created.id as user_id');
+            , user_created.id as user_id
+            , transaction.is_cancelled as is_cancelled');
         if ($searchValue != '') {
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('item_code', $searchValue, 'both');
@@ -551,6 +552,7 @@ class Items extends MY_Controller
                 "transaction_created_at" => date(setting('datetime_format'), strtotime($record->transaction_created_at)),
                 "transaction_updated_by" => $record->transaction_updated_by,
                 "transaction_updated_at" => date(setting('datetime_format'), strtotime($record->transaction_updated_at)),
+                "is_cancelled" => $record->is_cancelled,
             );
         }
 

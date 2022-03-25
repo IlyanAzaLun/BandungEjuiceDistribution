@@ -32,7 +32,8 @@ class Returns extends Purchase
 		if ($this->form_validation->run() == false) {
 			$this->load->view('invoice/purchase/form', $this->page_data);
 		} else {
-			$this->data['invoice_code'] = str_replace('INV','RET',$this->input->get('id'));
+			$this->data['invoice_code_parents'] = $this->input->get('id');
+			$this->data['invoice_code'] = str_replace('INV','RET', $this->data['invoice_code_parents']);
 			// information invoice
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
@@ -45,6 +46,7 @@ class Returns extends Purchase
 			foreach (post('item_code') as $key => $value) {
 				array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
+				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
 				$items[$key]['item_name'] = post('item_name')[$key];
@@ -99,9 +101,9 @@ class Returns extends Purchase
 				echo "</pre>";
 				die();
 			}
-			$this->activity_model->add("Create purchasing, #" . $this->data['invoice_code'], (array) $payment);
+			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'New Item Upload Successfully');
+			$this->session->set_flashdata('alert', 'New Return Purchasing Successfully');
 
 			redirect('invoice/purchase/list');
 		}
@@ -127,8 +129,9 @@ class Returns extends Purchase
 		}
 		if ($this->form_validation->run() == false) {
 			$this->load->view('invoice/purchase/returns_edit', $this->page_data);
-		} else {
-			$this->data['invoice_code'] = str_replace('INV','RET',$this->input->get('id'));
+		} else {			
+			$this->data['invoice_code'] = $this->input->get('id');
+			$this->data['invoice_code_parents'] = str_replace('RET','INV', $this->data['invoice_code']);
 			// information invoice
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
@@ -141,6 +144,7 @@ class Returns extends Purchase
 			foreach (post('item_code') as $key => $value) {
 				array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
+				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
 				$items[$key]['item_name'] = post('item_name')[$key];
@@ -195,9 +199,9 @@ class Returns extends Purchase
 				echo "</pre>";
 				die();
 			}
-			$this->activity_model->add("Create purchasing, #" . $this->data['invoice_code'], (array) $payment);
+			$this->activity_model->add("Create Returns Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'New Item Upload Successfully');
+			$this->session->set_flashdata('alert', 'New Returns Purchasing Successfully');
 
 			redirect('invoice/purchase/list');
 		}
@@ -215,11 +219,41 @@ class Returns extends Purchase
 		echo __FUNCTION__;
 	}
 
+	protected function create_or_update_invoice($data)
+	{
+		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
+
+		$request['total_price'] = setCurrency($data['total_price']);
+		$request['discounts'] = setCurrency($data['discounts']);
+		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
+		$request['other_cost'] = setCurrency($data['other_cost']);
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		$request['supplier'] = $data['supplier'];
+		$request['payment_type'] = $data['payment_type'];
+		$request['status_payment'] = $data['status_payment'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['note'] = $data['note'];
+		if ($response) {
+			$request['updated_by'] = logged('id');
+			$request['updated_at'] = date('Y-m-d H:i:s');
+			//
+			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+		} else {
+			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['created_by'] = logged('id');
+			//	
+			$this->purchase_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
+			return $this->purchase_model->create($request);
+		}
+	}
+
 	protected function create_or_update_list_item_transcation($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['index_list'] = (int)$value['index_list'];
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
@@ -248,11 +282,11 @@ class Returns extends Purchase
 			}
 		}
 		if (@$data_negatif) {
-			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
+			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, ['item_code', 'index_list'])) {
 				return true;
 			}
 		} else {
-			$this->transaction_item_model->update_batch($data_positif, 'id');
+			$this->transaction_item_model->update_batch($data_positif, ['item_code', 'index_list']);
 			return true;
 		}
 		return false;

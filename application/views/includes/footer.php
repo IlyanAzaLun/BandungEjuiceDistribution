@@ -6,7 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
 <!-- ./wrapper -->
 
-<footer class="main-footer">
+<footer class="main-footer bg-dark">
   <div class="float-right d-none d-sm-block">
     Made with <i class="fa fa-heart" style="color: red;"></i> for Developers
     &nbsp; &nbsp; &nbsp; &nbsp;

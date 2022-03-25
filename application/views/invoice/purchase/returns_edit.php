@@ -1,5 +1,15 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed'); ?>
+defined('BASEPATH') or exit('No direct script access allowed');
+$__invoice_code = str_replace('RET','INV',$this->input->get('id'));
+$_data_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
+$_data_item_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
+$items_code = array_column($_data_item_invoice, 'item_code');
+$items_index = array_column($_data_item_invoice, 'index_list');
+$items_code_return = array_column($items, 'item_code');
+$items_index_return = array_column($items, 'index_list');
+$intersect_code_item = array_intersect($items_code, $items_code_return);
+$intersect_index_list = array_intersect($items_index, $items_index_return);
+$i = 0; ?>
 <!-- Theme style -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
@@ -26,19 +36,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </section>
 <!-- Main content -->
 <section class="content">
-    <?php
-        $__invoice_code = str_replace('RET','INV',$this->input->get('id'));
-        $_data_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
-        $_data_item_invoice = $this->transaction_item_model->get_transaction_item_by_code_invoice($__invoice_code);
-    ?>
-    <pre>
-    <?php
-        $items_code = array_column($_data_item_invoice, 'item_code');
-        $items_code_return = array_column($items, 'item_code');
-        $intersect = array_intersect($items_code, $items_code_return);
-        $i = 0;
-    ?>
-    </pre>
     <!-- Default card -->
     <div class="row">
         <div class="col-12">
@@ -113,7 +110,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($_data_item_invoice as $key => $value) : ?>
-                                        <?php if ($value->item_code == $intersect[$key]):?>
+                                        <?php if ($value->item_code == $intersect_code_item[$key] && $value->index_list == $intersect_index_list[$key]):?>
                                             <tr class="input-<?= $key ?>">
                                                 <td><?= $key+1 ?>.</td>
                                                 <td><a href="<?=url('items/info_transaction?id='.$items[$i]->item_code)?>"><?= $items[$i]->item_code ?></a></td>
@@ -137,6 +134,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <td><?= $key+1 ?>.</td>
                                             <td>
                                                 <input readonly type="hidden" name="id[]" id="id" value="<?= $items[$i]->id ?>">
+                                                <input type="number" name="index_list[]" id="index_list" value="<?= $value->index_list ?>">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($items[$i]->item_code, 'id') ?>">
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $items[$i]->item_code ?>" required>
                                             </td>
@@ -204,6 +202,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <td><?= $key+1 ?>.</td>
                                             <td>
                                                 <input readonly type="hidden" name="id[]" id="id" value="">
+                                                <input type="number" name="index_list[]" id="index_list" value="<?= $value->index_list ?>">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
                                             </td>
