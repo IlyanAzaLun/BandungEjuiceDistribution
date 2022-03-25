@@ -181,11 +181,13 @@
                 </div>
                 <!-- /.card-body -->
                 <!-- /card-footer -->
+                <?php if(!$invoice->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
                     </div>
                 </div>
+                <?php endif?>
                 <!-- /.card-body -->
             </div>
             <!-- Information payment END -->

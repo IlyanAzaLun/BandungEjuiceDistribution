@@ -117,11 +117,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       responsive: true,
       autoWidth: false,
       order: [[ 3, "desc" ]],
-      rowCallback: function(row, data, index){
-        if(data['is_cancelled'] == true){
-          $(row).addClass('bg-danger');
-        }
-      },
+      // rowCallback: function(row, data, index){
+      //   if(data['is_cancelled'] == true){
+      //     $(row).addClass('bg-danger');
+      //   }
+      // },
       drawCallback: function ( settings ) {
           var api = this.api();
           var rows = api.rows( {page:'current'} ).nodes();
@@ -131,9 +131,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if(index['invoice_code'].match(regex) != null){
               $(rows).eq(i).addClass('bg-lightblue color-palette');
             }
-          })
-          api.rows().every(function(rowId, tableLoop, rowLoop){
-            console.log()
+            if(index['is_cancelled'] == true){
+              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
+            }
           })
           api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
               if ( last !== group ) {
@@ -268,7 +268,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if(data.match(regex) == null){
               html += `
                 <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>`;
-              if(row['have_a_child'] == null){
+              if(row['have_a_child'] == null && row['is_cancelled'] == false){
                 html += `
                 <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
                 <a href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
@@ -277,10 +277,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               }
             }else{
               html += `
-                <a href="<?= url('invoice/purchase') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information return purchasing returns"><i class="fa fa-fw fa-info text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                `;
+                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>`;
+              if(row['is_cancelled'] == false){
+                html += `
+                  <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
+                  `;
+              }
             }
             return `
                 <div class="btn-group d-flex justify-content-center">
