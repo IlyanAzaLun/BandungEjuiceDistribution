@@ -568,7 +568,7 @@ class Items extends MY_Controller
 
     public function data_items()
     {
-        if (ifPermissions('purchase_create') or ifPermissions('selling_create')) {
+        if (ifPermissions('items_list')) {
             $search = (object) post('search');
             $this->db->limit(15);
             if ($search->value) {

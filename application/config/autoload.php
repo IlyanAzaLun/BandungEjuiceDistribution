@@ -146,7 +146,8 @@ $autoload['model'] = array(
 	'supplier_model',
 	'address_model',
 	'invoice/purchase_model',
-	'order/order_purchase_model',
 	'transaction_item_model',
 	'expedition_model',
+	'order/order_model',
+	'order/order_list_item_model',
 );

@@ -17,8 +17,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
-          <li class="breadcrumb-item active"><?php echo lang('invoice') ?></li>
-          <li class="breadcrumb-item active"><?php echo lang('purchase') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('page_sale') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('order') ?></li>
         </ol>
       </div>
     </div>
@@ -33,9 +33,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <div class="col-12">
       <div class="callout callout-info">
         <h5><i class="fas fa-info"></i> Note:</h5>
-        <?= lang('purchase_info_create') ?>
+        <?= lang('order_info_create') ?>
       </div>
-      <?php echo form_open_multipart('invoice/purchase/create', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+      <?php echo form_open_multipart('invoice/order/create', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information customer START -->
       <div class="card">
         <div class="card-header with-border">
@@ -46,8 +46,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="supplier_code" id="supplier_code" class="form-control" placeholder="<?= lang('find_supplier_code') ?>" autocomplete="false" required>
-                <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
+                <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
 
@@ -281,4 +281,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseCreate.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderCreate.js"></script>

@@ -30,6 +30,17 @@ class Order extends Invoice_controller
 		ifPermissions('order_create');
 		$this->page_data['title'] = 'order_create';
 		$this->page_data['page']->submenu = 'order_create';
-		$this->load->view('invoice/order/create', $this->page_data);
+		$this->form_validation->set_rules('customer_code', lang('customer_code'), 'required|trim');
+		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
+		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
+		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
+		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->load->view('invoice/order/create', $this->page_data);
+		}else{
+			echo '<pre>';
+			var_dump($this->input->post());
+			echo '</pre>';
+		}
 	}
 }

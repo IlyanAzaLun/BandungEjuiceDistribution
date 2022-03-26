@@ -15,7 +15,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
-          <li class="breadcrumb-item active"><?php echo lang('invoice') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('page_purchase') ?></li>
           <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>
       </div>

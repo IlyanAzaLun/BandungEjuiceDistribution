@@ -24,7 +24,7 @@ $i = 0; ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
-          <li class="breadcrumb-item active"><?php echo lang('invoice') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('page_purchase') ?></li>
           <li class="breadcrumb-item active"><?php echo lang('purchase') ?></li>
         </ol>
       </div>
