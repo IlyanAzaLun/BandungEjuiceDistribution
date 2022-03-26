@@ -186,6 +186,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </li>
   <?php endif ?>
   <!-- end Supplier -->
+  <!-- Expedition -->
+  <?php if (hasPermissions('expedition_list')) : ?>
+    <!-- <li class="nav-header"><strong>  <?php echo lang('menus_expedition')?> </strong> &nbsp; -->
+    <li class="nav-item has-treeview <?php echo ($page->menu == 'expedition') ? 'menu-open' : '' ?>">
+      <a href="#" class="nav-link  <?php echo ($page->menu == 'expedition') ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-database"></i>
+        <p>
+          <?php echo lang('pages_expedition') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/expedition/list') ?>" class="nav-link <?php echo ($page->submenu == 'expedition_list') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('expedition_list') ?> </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/expedition/add') ?>" class="nav-link <?php echo ($page->submenu == 'expedition_add') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('expedition_add') ?> </p>
+          </a>
+        </li>
+      </ul>
+    </li>
+  <?php endif ?>
+  <!-- end Expedition -->
 
   <!-- Invoice -->
   <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;

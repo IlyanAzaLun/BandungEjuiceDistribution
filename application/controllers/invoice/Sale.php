@@ -21,7 +21,7 @@ class Sale extends Invoice_controller
 	{
 		ifPermissions('sale_list');
 		$this->page_data['title'] = 'sale_list';
-		$this->page_data['page']->submenu = 'list';
+		$this->page_data['page']->submenu = 'sale_list';
 		$this->load->view('invoice/sale/list', $this->page_data);
 	}
 }

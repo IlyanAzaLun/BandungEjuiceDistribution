@@ -239,6 +239,27 @@ class Customer extends MY_Controller
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+
+    public function data_customer()
+    {
+        if (ifPermissions('order_create')) {
+            $search = (object) post('search');
+            $this->db->limit(5);
+            if ($search->value) {
+                $this->db->like('customer_information.customer_code', $search->value, 'both');
+                $this->db->or_like('customer_information.store_name', $search->value, 'both');
+                $this->db->or_like('customer_information.owner_name', $search->value, 'both');
+                $this->db->or_like('address_information.address', $search->value, 'both');
+                $this->db->or_like('address_information.village', $search->value, 'both');
+                $this->db->or_like('address_information.sub_district', $search->value, 'both');
+                $this->db->or_like('address_information.city', $search->value, 'both');
+                $this->db->or_like('address_information.province', $search->value, 'both');
+            }
+            $this->db->join('address_information', 'address_information.customer_code=customer_information.customer_code', 'left');
+            $response = $this->db->get('customer_information')->result();
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        };
+    }
 }
 
 /* End of file Activity_logs.php */

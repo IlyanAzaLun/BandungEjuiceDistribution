@@ -379,44 +379,46 @@ class Purchase extends Invoice_controller
 		return false;
 	}
 
-	protected function create_or_update_order_item($data)
-	{
-		$item = array();
-		foreach ($data as $key => $value) {
-			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
-			$request[$key]['invoice'] = $this->data['invoice_code'];
-			$request[$key]['id'] = $value['order_id'];
-			$request[$key]['item_id'] = $value['item_id'];
-			$request[$key]['item_code'] = $item[$key]->item_code;
-			$request[$key]['item_name'] = $value['item_name'];
-			$request[$key]['item_order_quantity'] = $value['item_order_quantity'];
-			$request[$key]['item_unit'] = $value['item_unit'];
-			$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
-			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
-			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
-			$request[$key]['total_price'] = setCurrency($value['total_price']);
-			if ($value['order_id']) {
-				$request[$key]['updated_by'] = logged('id');
-				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
-				$data_positif[] = $request[$key];
-				unset($data_positif[$key]['order_id']);
-			} else {
-				$request[$key]['created_by'] = logged('id');
-				$data_negatif[$key] = $request[$key];
-				unset($data_negatif[$key]['id']);
-				unset($data_negatif[$key]['order_id']);
-			}
-		}
-		if (@$data_negatif) {
-			if ($this->order_purchase_model->create_batch($data_negatif) && $this->order_purchase_model->update_batch($data_positif, 'id')) {
-				return true;
-			}
-		} else {
-			$this->order_purchase_model->update_batch($data_positif, 'id');
-			return true;
-		}
-		return false;
-	}
+	// IS NOT USED ?
+	//
+	// protected function create_or_update_order_item($data)
+	// {
+	// 	$item = array();
+	// 	foreach ($data as $key => $value) {
+	// 		array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+	// 		$request[$key]['invoice'] = $this->data['invoice_code'];
+	// 		$request[$key]['id'] = $value['order_id'];
+	// 		$request[$key]['item_id'] = $value['item_id'];
+	// 		$request[$key]['item_code'] = $item[$key]->item_code;
+	// 		$request[$key]['item_name'] = $value['item_name'];
+	// 		$request[$key]['item_order_quantity'] = $value['item_order_quantity'];
+	// 		$request[$key]['item_unit'] = $value['item_unit'];
+	// 		$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
+	// 		$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
+	// 		$request[$key]['item_discount'] = setCurrency($value['item_discount']);
+	// 		$request[$key]['total_price'] = setCurrency($value['total_price']);
+	// 		if ($value['order_id']) {
+	// 			$request[$key]['updated_by'] = logged('id');
+	// 			$request[$key]['updated_at'] = date('Y-m-d H:i:s');
+	// 			$data_positif[] = $request[$key];
+	// 			unset($data_positif[$key]['order_id']);
+	// 		} else {
+	// 			$request[$key]['created_by'] = logged('id');
+	// 			$data_negatif[$key] = $request[$key];
+	// 			unset($data_negatif[$key]['id']);
+	// 			unset($data_negatif[$key]['order_id']);
+	// 		}
+	// 	}
+	// 	if (@$data_negatif) {
+	// 		if ($this->order_purchase_model->create_batch($data_negatif) && $this->order_purchase_model->update_batch($data_positif, 'id')) {
+	// 			return true;
+	// 		}
+	// 	} else {
+	// 		$this->order_purchase_model->update_batch($data_positif, 'id');
+	// 		return true;
+	// 	}
+	// 	return false;
+	// }
 
 	protected function create_or_update_invoice($data)
 	{

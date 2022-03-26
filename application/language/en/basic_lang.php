@@ -338,6 +338,26 @@ $lang['supplier_category_other'] = "Other";
 $lang['supplier_type'] = "supplier type";
 $lang['supplier_category_other'] = "Other";
 
+
+/*
+ * Expedition
+ */
+$lang['expedition'] = "Expedition";
+$lang['pages_expedition'] = "Pages Expedition";
+
+$lang['expedition_list'] = "List Expedition";
+$lang['expedition_add'] = "Add Expedition";
+$lang['expedition_edit'] = "Edit Expedition";
+$lang['expedition_code'] = "Expedition code";
+$lang['expedition_name'] = "Expedition name";
+$lang['expedition_services'] = "Expedition services";
+$lang['expedition_info_add'] = "Add more information data Expeditions";
+$lang['expedition_info_edit'] = "Edit information data Expedition";
+$lang['select_category_expedition'] = "Select category Expedition";
+$lang['ground_shipping'] = "Ground Shipping";
+$lang['air_shipping'] = "Air Shipping";
+$lang['shipping_services'] = "Shipping services";
+
 /*
  * Address
  */
@@ -378,6 +398,7 @@ $lang['purchase_info_edit'] = "Edit information data purchase ";
 $lang['purchase_info_info'] = "Information data purchase ";
 $lang['purchase_info_returns'] = "Returns information data purchase ";
 $lang['information_supplier'] = "Supplier Information";
+$lang['information_customer'] = "Customer Information";
 $lang['information_items'] = "Items Information";
 $lang['find_items'] = "Find items...";
 $lang['item_order_quantity'] = "Item Order Quantity";
@@ -392,6 +413,7 @@ $lang['grandtotal'] = "Grand total";
 $lang['information_payment'] = "Payment Information";
 $lang['payment_type'] = "Type Payment";
 $lang['status_payment'] = "Status Payment";
+$lang['date_due'] = "Date due";
 $lang['date_due_start'] = "Date due start";
 $lang['date_due_end'] = "Date due end";
 $lang['item_description'] = "Description";
@@ -407,6 +429,7 @@ $lang['purchase_payment'] = "Purchase to pay";
  * Invoice
  * Order
  */
+$lang['order'] = "Order";
 $lang['order_list'] = "Order List";
 $lang['order_create'] = "Order Create";
 
