@@ -38,7 +38,7 @@ class Order extends Invoice_controller
 		if ($this->form_validation->run() == false) {
 			$this->load->view('invoice/order/create', $this->page_data);
 		}else{
-			$this->data['invoice_code'] = $this->order_model->get_code_order_sale();
+			$this->data['order_code'] = $this->order_model->get_code_order_sale();
 			foreach (post('item_code') as $key => $value) {
 				$items[] = array(
 					"item_id" => post('item_id')[$key],
@@ -73,11 +73,17 @@ class Order extends Invoice_controller
 				'note' => post('note'),
 			);
 			echo '<pre>';
-			var_dump($this->input->post());
-			// var_dump($this->create_or_update_list_item_order_sale($items));
+			var_dump($this->create_or_update_list_item_order_sale($items));
 			echo '<hr>';
 			var_dump($this->create_or_update_order($payment));
 			echo '</pre>';
+
+		
+			$this->activity_model->add("Create Order, #" . $this->data['order_code'], (array) $payment);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Cancel Purchase Successfully');
+
+			redirect('invoice/purchase/list');
 		}
 	}
 
@@ -87,18 +93,17 @@ class Order extends Invoice_controller
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 			$request[$key]['index_list'] = $key;
-			$request[$key]['invoice_code'] = $this->data['invoice_code'];
+			$request[$key]['order_code'] = $this->data['order_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
 			$request[$key]['item_name'] = $value['item_name'];
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
-			$request[$key]['item_current_quantity'] = $item[$key]->quantity;
-			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
+			$request[$key]['item_quantity'] = $item[$key]->quantity;
+			$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
-			$request[$key]['total_price'] = setCurrency($value['total_price']);
-			$request[$key]['item_status'] = 'OUT';
+			$request[$key]['item_total_price'] = setCurrency($value['total_price']);
 			$request[$key]['item_description'] = $value['item_description'];
 			$request[$key]['customer_code'] = $value['customer_code'];
 			if ($value['id']) {
@@ -113,9 +118,6 @@ class Order extends Invoice_controller
 				unset($data_negatif[$key]['id']);
 			}
 		}
-		
-		return $request;
-		die();
 
 		if (@$data_negatif) {
 			if ($this->order_list_item_model->create_batch($data_negatif) && $this->order_list_item_model->update_batch($data_positif, 'id')) {
@@ -130,7 +132,7 @@ class Order extends Invoice_controller
 
 	protected function create_or_update_order($data)
 	{
-		$response = $this->order_model->get_order_selling_by_code($this->data['invoice_code']);
+		$response = $this->order_model->get_order_selling_by_code($this->data['order_code']);
 
 		$request['total_price'] = setCurrency($data['total_price']);
 		$request['discounts'] = setCurrency($data['discounts']);
@@ -139,20 +141,127 @@ class Order extends Invoice_controller
 		$request['grand_total'] = setCurrency($data['grand_total']);
 		$request['customer'] = $data['customer'];
 		$request['payment_type'] = $data['payment_type'];
-		$request['status_payment'] = $data['status_payment'];
 		$request['note'] = $data['note'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
-			// return $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+			return $this->order_model->update_by_code($this->data['order_code'], $request);
 		} else {
-			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['order_code'] = $this->data['order_code'];
 			$request['created_by'] = logged('id');
 			//	
-			// return $this->purchase_model->create($request);
+			return $this->order_model->create($request);
 		}
 		return $request;
+	}
+	
+	public function serverside_datatables_data_order()
+	{
+		ifPermissions('order_list');
+		$response = array();
+
+		$postData = $this->input->post();
+
+		## Read value
+		$draw = $postData['draw'];
+		$start = $postData['start'];
+		$rowperpage = $postData['length']; // Rows display per page
+		$columnIndex = $postData['order'][0]['column']; // Column index
+		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+		$searchValue = $postData['search']['value']; // Search value
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
+
+		## Total number of records without filtering
+		$this->db->select('count(*) as allcount');
+		$records = $this->db->get('order_sale')->result();
+		$totalRecords = $records[0]->allcount;
+
+		## Total number of record with filtering
+		$this->db->select('count(*) as allcount');
+		if ($searchValue != '') {
+			$this->db->like('order.order_code', $searchValue, 'both');
+			$this->db->or_like('order.customer', $searchValue, 'both');
+			$this->db->or_like('order.note', $searchValue, 'both');
+			$this->db->or_like('order.created_at', $searchValue, 'both');
+		}
+		if ($dateStart != '') {
+			$this->db->where("order.created_at >=", $dateStart);
+			$this->db->where("order.created_at <=", $dateFinal);
+		}
+		$records = $this->db->get('order_sale order')->result();
+		$totalRecordwithFilter = $records[0]->allcount;
+
+		## Fetch records
+		$this->db->select('
+		order.id as id, 
+		order.order_code as order_code, 
+		order.total_price as total_price, 
+		order.discounts as discounts, 
+		order.shipping_cost as shipping_cost, 
+		order.other_cost as other_cost, 
+		order.payment_type as payment_type, 
+		order.grand_total as grand_total, 
+		order.note as note, 
+		order.created_at as created_at, 
+		order.updated_at as updated_at, 
+		order.created_by as created_by, 
+		order.is_cancelled as is_cancelled, 
+		customer.customer_code as customer_code, 
+		customer.store_name as store_name, 
+		user.id as user_id, 
+		user.name as user_order_create_by');
+		if ($searchValue != '') {
+			$this->db->like('order.order_code', $searchValue, 'both');
+			$this->db->or_like('order.customer', $searchValue, 'both');
+			$this->db->or_like('order.note', $searchValue, 'both');
+			$this->db->or_like('order.created_at', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
+		}
+		$this->db->join('users user', 'user.id = order.created_by', 'left');
+		$this->db->join('customer_information customer', 'customer.customer_code = order.customer', 'left');
+		if ($dateStart != '') {
+			$this->db->where("order.created_at >=", $dateStart);
+			$this->db->where("order.created_at <=", $dateFinal);
+		}
+		$this->db->order_by($columnName, $columnSortOrder);
+		$this->db->limit($rowperpage, $start);
+		$records = $this->db->get('order_sale order')->result();
+
+		$data = array();
+
+		foreach ($records as $record) {
+
+			$data[] = array(
+				'id' => $record->id,
+				'order_code' => $record->order_code,
+				'customer_code' => $record->customer_code,
+				'store_name' => $record->store_name,
+				'total_price' => $record->total_price,
+				'discounts' => $record->discounts,
+				'shipping_cost' => $record->shipping_cost,
+				'other_cost' => $record->other_cost,
+				'payment_type' => lang($record->payment_type),
+				'grand_total' => $record->grand_total,
+				'note' => $record->note,
+				'created_at' => $record->created_at,
+				'updated_at' => $record->updated_at,
+				'user_id' => $record->user_id,
+				'is_cancelled' => $record->is_cancelled,
+				'user_order_create_by' => $record->user_order_create_by,
+			);
+		}
+
+		## Response
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $totalRecords,
+			"iTotalDisplayRecords" => $totalRecordwithFilter,
+			"aaData" => $data,
+		);
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}
 }

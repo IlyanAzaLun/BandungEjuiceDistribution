@@ -67,16 +67,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th>no.</th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
-                  <th><?= lang('invoice_code_reference') ?></th>
-                  <th><?= lang('invoice_code') ?></th>
-                  <th><?= lang('supplier_name') ?></th>
+                  <th><?= lang('order_code') ?></th>
+                  <th><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
                   <th><?= lang('shipping_cost') ?></th>
                   <th><?= lang('other_cost') ?></th>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
-                  <th><?= lang('status_payment') ?></th>
                   <th><?= lang('note') ?></th>
                   <th><?= lang('created_by') ?></th>
                   <th><?= lang('option') ?></th>
@@ -129,48 +127,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       responsive: true,
       autoWidth: false,
       order: [[ 3, "desc" ]],
-      // rowCallback: function(row, data, index){
-      //   if(data['is_cancelled'] == true){
-      //     $(row).addClass('bg-danger');
-      //   }
-      // },
-      drawCallback: function ( settings ) {
-          var api = this.api();
-          var rows = api.rows( {page:'current'} ).nodes();
-          var last = null;
-          let regex = /RET/;
-          api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['invoice_code'].match(regex) != null){
-              $(rows).eq(i).addClass('bg-lightblue color-palette');
-            }
-            if(index['is_cancelled'] == true){
-              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
-            }
-          })
-          api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-              if ( last !== group ) {
-                  $(rows).eq( i ).before(
-                      `<tr class="group"><td class="group" colspan="15"><span class="text-info">${group}</span></td></tr>`
-                  );
-                  last = group;
-              }
-          } );
-      },
       ajax: {
-        "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
+        "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
         "type": "POST",
-        // "data": {
-        //   "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
-        //   "startDate": startdate,
-        //   "finalDate": enddate
-        // }
         "data": function(d) {
           d.startDate = startdate;
           d.finalDate = enddate;
         }
       },
       columns: [{
-          data: "invoice_code",
+          data: "order_code",
           render: function(data, type, row) {
             return row['id']
           }
@@ -182,27 +148,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "updated_at"
         },
         {
-          data: "invoice_code_reference",
-          visible: false,
-        },
-        {
-          data: "invoice_code",
-          render: function(data, type, row) {
-            let html = '';
-            let regex = /RET/;
-            if(data.match(regex) != null){
-              html += '<span class="float-right"><a class="btn btn-xs btn-default disabled" data-toggle="tooltip" data-placement="top" title="Is Returns"><i class="fa fa-fw fa-undo text-primary"></i></a></span>';
-              //<span class="badge badge-danger">RETURNS</span>
-            }
-            return `${data} ${html}`;
-          }
+          data: "order_code"
         },
         {
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/supplier/edit?id=${row['supplier_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a href="${location.base}master_information/supplier/edit?id=${row['supplier_code']}">${shorttext(data, 12, true)}</a>`
+            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
         {
@@ -248,14 +201,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "status_payment",
-          orderable: false,
-          render: function(data, type, row) {
-            return data
-          }
-        },
-        {
-          data: "purchase_note",
+          data: "note",
           orderable: false,
           render: function(data, type, row) {
             return shorttext(data, 10, true)
@@ -263,7 +209,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "user_purchasing_create_by",
+          data: "user_order_create_by",
           orderable: false,
           render: function(data, type, row) {
             return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
@@ -272,34 +218,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "invoice_code",
+          data: "order_code",
           orderable: false,
           render: function(data, type, row, meta) {
-            let html = ``;
-            let regex = /RET/;
-            if(data.match(regex) == null){
-              html += `
-                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>`;
-              if(row['have_a_child'] == null && row['is_cancelled'] == false){
-                html += `
-                <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                `;
-              }
-            }else{
-              html += `
-                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>`;
-              if(row['is_cancelled'] == false){
-                html += `
-                  <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                  `;
-              }
-            }
             return `
                 <div class="btn-group d-flex justify-content-center">
-                ${html}
+                <a href="<?= url('invoice/order')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>
+                <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                <a href="<?= url('invoice/orders') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
+                <a href="<?= url('invoice/orders') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
                 </div>`;
           }
         },

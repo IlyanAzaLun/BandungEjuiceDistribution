@@ -432,6 +432,7 @@ $lang['purchase_payment'] = "Purchase to pay";
 $lang['order'] = "Order";
 $lang['order_list'] = "Order List";
 $lang['order_create'] = "Order Create";
+$lang['order_code'] = "Order Code";
 
 $lang['order_info_create'] = "Add more information data order";
 $lang['order_info_edit'] = "Edit information data order ";
