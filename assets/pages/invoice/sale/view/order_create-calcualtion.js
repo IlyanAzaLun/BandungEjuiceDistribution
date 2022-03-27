@@ -5,7 +5,7 @@ function sum_sub_total_item(row) {
     let item_discount = $(`.${row} td input[data-id='discount']`).val();
     let total_price = $(`.${row} td input[data-id='total_price']`);
     total_price.val(
-        currency((currencyToNum(item_capital_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount))
+        currency((currencyToNum(item_selling_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount))
     )
 }
 
@@ -17,7 +17,7 @@ function sum_sub_total_item_returns(row) {
     let total_price_current = $(`.${row} td input[data-id='total_price_current']`).val();
     let total_price = $(`.${row} td input[data-id='total_price']`);
     total_price.val(
-        currency(currencyToNum(total_price_current) - ((currencyToNum(item_capital_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount)))
+        currency(currencyToNum(total_price_current) - ((currencyToNum(item_selling_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount)))
     )
 }
 
@@ -45,12 +45,6 @@ function sum_sub_total() {
             'total_price': total_price,
         })
     });
-    /*
-    let result = list_of_value.reduce((list_of_value, value) => list_of_value.set(
-        value.item_code,
-        (list_of_value.get(value.item_code) || 0) + Number(value.item_order_quantity),
-    ), new Map);
-    */
     list_of_value = list_of_value.reduce((index, value) => {
         let key = index.findIndex((event) => event.item_code == value.item_code);
         if (key == -1) {
