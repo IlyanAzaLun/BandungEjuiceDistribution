@@ -116,7 +116,7 @@ class Purchase extends Invoice_controller
 			$this->page_data['modals'] = (object) array(
 				'id' => 'modal-remove-order',
 				'title' => 'Modals confirmation',
-				'link' => 'order/remove_item_from_list_order_transcaction',
+				'link' => 'invoice/purchases/items/remove_item_from_list_order_transcaction',
 				'content' => 'delete',
 				'btn' => 'btn-danger',
 				'submit' => 'Yes do it',

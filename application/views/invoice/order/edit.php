@@ -33,9 +33,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <div class="col-12">
       <div class="callout callout-info">
         <h5><i class="fas fa-info"></i> Note:</h5>
-        <?= lang('order_info_create') ?>
+        <?= lang('order_info_edit') ?>
       </div>
-      <?php echo form_open_multipart('invoice/order/create', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+      <?php echo form_open_multipart('invoice/order/edit?id='.get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information customer START -->
       <div class="card">
         <div class="card-header with-border">
@@ -46,7 +46,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
+                <input type="text" name="order_code" id="order_code" class="form-control" value="<?=$invoice->order_code?>" autocomplete="false" readonly required>
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" value="<?=$invoice->customer?>" autocomplete="false" required>
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
@@ -97,53 +98,69 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th><?= lang('item_order_quantity') ?></th>
                     <th><?= lang('discount') ?></th>
                     <th><?= lang('total_price') ?></th>
+                    <th><?= lang('status_available') ?></th>
                     <th><?= lang('option') ?></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="input-0" id="main">
-                    <td class="text-center"><div class="form-control form-control-sm">1.</div></td>
-                    <td>
-                      <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
-                      <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
-                    </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></td>
-                    <td style="display:none" >
-                      <div class="input-group input-group-sm">
-                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
-                        <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
-                        <div class="input-group-append">
-                          <span class="input-group-text" data-id="item_unit"></span>
-                        </div>
-                      </div>
-                    </td>
-                    <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                    <td>
-                    <div class="input-group input-group-sm">
-                      <span class="input-group-prepend">
-                          <span class="input-group-text" data-id="item_quantity"></span>
-                      </span>
-                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required>
-                      <div class="input-group-append">
-                        <span class="input-group-text" data-id="item_unit"></span>
-                      </div>
-                    </div>
-                    </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
-                    <td>
-                      <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
-                        <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr class="description input-0" style="display:none">
-                      <td colspan="8">
-                          <textarea class="form-control form-control-sm" name="description[]"></textarea>
-                      </td>
-                  </tr>
+                    <?php foreach ($items as $key => $value) : ?>
+                        <tr class="input-<?= $key ?>" id="main">
+                            <td class="text-center"><div class="form-control form-control-sm"><?=$key+1?>.</div></td>
+                            <td>
+                                <input type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
+                                <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
+                                <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" readonly required>
+                            </td>
+                            <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" readonly required></td>
+                            <td style="display:none">
+                                <div class=" input-group input-group-sm">
+                                    <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
+                                    <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
+                                    <span class="input-group-append">
+                                        <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
+                                    </span>
+                                </div>
+                                <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
+                            </td>
+                            <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>" readonly></td>
+                            <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
+                            <td>
+                                <div class=" input-group input-group-sm">
+                                    <span class="input-group-prepend">
+                                        <span class="input-group-text" data-id="item_quantity"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?></span>
+                                    </span>
+                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_order_quantity ?>">
+                                    <span class="input-group-append">
+                                        <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
+                                    </span>
+                                </div>
+                                <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
+                            </td>
+                            <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
+                            <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->item_total_price ?>"></td>
+                            <td class="text-center">
+                              <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn bg-secondary" disabled id="status_availabel" ><i class="fas fa-tw fa-times"></i></button>
+                                <button type="button" class="btn btn-block bg-secondary" disabled id="status_availabel" ><i class="fas fa-tw fa-check"></i></button>
+                              </div>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                                <?php if (sizeof($items) <= 1) : ?>
+                                    <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
+                                <?php else : ?>
+                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
+                                <?php endif ?>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
+                            <td colspan="8">
+                                <textarea class="form-control form-control-sm" name="description[]"><?=$value->item_description?></textarea>
+                            </td>
+                        </tr>
+                    <?php endforeach ?>
                 </tbody>
               </table>
               <div class="float-left ml-1">
@@ -170,7 +187,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="input-group-prepend">
                     <span class="input-group-text">Rp</span>
                   </div>
-                  <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
+                  <input type="text" name="sub_total" id="sub_total" class="form-control currency" value="<?=$invoice->total_price?>" min="1" required>
                 </div>
               </div>
               <div class="row">
@@ -181,7 +198,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="discount" id="discount" class="form-control" value="0" required>
+                      <input type="text" name="discount" id="discount" class="form-control currency" value="<?=$invoice->discounts?>" required>
                     </div>
                   </div>
                 </div>
@@ -192,7 +209,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" value="0" required>
+                      <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" value="<?=$invoice->shipping_cost?>" required>
                     </div>
                   </div>
                 </div>
@@ -203,7 +220,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text"><b>Rp</b></span>
                       </div>
-                      <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required>
+                      <input type="text" name="grand_total" id="grand_total" class="form-control currency" value="<?=$invoice->grand_total?>" min="1" required>
                     </div>
                   </div>
                 </div>
@@ -226,14 +243,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="input-group-prepend">
                     <span class="input-group-text">Rp</span>
                   </div>
-                  <input readonly type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
+                  <input readonly type="text" name="other_cost" id="other_cost" class="form-control" value="<?=$invoice->other_cost?>" required>
                 </div>
               </div>
             </div>
             <div class="col-lg col-sm-12">
               <div class="form-group">
                 <label for="note"><?= lang('note') ?></label>
-                <textarea name="note" id="note" class="form-control"></textarea>
+                <textarea name="note" id="note" class="form-control"><?=$invoice->note?></textarea>
               </div>
             </div>
           </div>
@@ -273,4 +290,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderCreate.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderEdit.js"></script>

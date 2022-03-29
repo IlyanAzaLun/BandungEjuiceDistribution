@@ -216,7 +216,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <!-- end Expedition -->
 
   <!-- Invoice -->
-  <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
+    <!-- Purchase -->
+    <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
     <?php if (hasPermissions('purchase_list')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
@@ -248,7 +249,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </ul>
   </li>
     <?php endif ?>
-<!-- end Invoice -->
+    <!-- END Purchase -->
+    <!-- Sale -->
     <?php if (hasPermissions('sale_list')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Sale') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Sale') ? 'active' : '' ?>">
@@ -292,6 +294,80 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </ul>
   </li>
     <?php endif ?>
+    <!-- end Sale -->
+  <!-- end Invoice -->
+
+  
+    <!-- Validation -->
+    <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
+    <!-- Warehouse -->
+    <?php if (hasPermissions('purchase_list')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-shopping-cart"></i>
+      <p>
+        <?php echo lang('page_purchase') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_list') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/create') ?>" class="nav-link <?php echo ($page->submenu == 'create') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_create') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_payment') ?> </p>
+        </a>
+      </li>
+    </ul>
+  </li>
+    <?php endif ?>
+    <!-- END Warehouse -->
+    <!-- Shipping -->
+    <?php if (hasPermissions('purchase_list')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-shopping-cart"></i>
+      <p>
+        <?php echo lang('page_purchase') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_list') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/create') ?>" class="nav-link <?php echo ($page->submenu == 'create') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_create') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_payment') ?> </p>
+        </a>
+      </li>
+    </ul>
+  </li>
+    <?php endif ?>
+    <!-- END Shipping -->
+    <!-- END validation -->
+
 
 <li class="nav-header"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>

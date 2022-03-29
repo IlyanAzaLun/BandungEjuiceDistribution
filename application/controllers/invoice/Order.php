@@ -72,18 +72,97 @@ class Order extends Invoice_controller
 				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'note' => post('note'),
 			);
+			$this->create_or_update_list_item_order_sale($items);
+			$this->create_or_update_order($payment);
+		
+			$this->activity_model->add("Create Order, #" . $this->data['order_code'], (array) $payment);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Create Order Successfully');
+
+			redirect('invoice/order/list');
+		}
+	}
+
+	public function info()
+	{
+		# code...
+	}
+
+	public function edit()
+	{
+		ifPermissions('order_edit');
+		$this->form_validation->set_rules('customer_code', lang('customer_code'), 'required|trim');
+		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
+		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
+		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
+		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->page_data['title'] = 'order_edit';
+			$this->page_data['page']->submenu = 'order_edit';
+			$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
+			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+			$this->page_data['modals'] = (object) array(
+				'id' => 'modal-remove-order',
+				'title' => 'Modals confirmation',
+				'link' => 'invoice/purchase/items/remove_item_from_list_order_transcaction',
+				'content' => 'delete',
+				'btn' => 'btn-danger',
+				'submit' => 'Yes do it',
+			);
+			$this->load->view('invoice/order/edit', $this->page_data);
+			$this->load->view('includes/modals');
+		} else {
+			$this->data['order_code'] = $this->input->get('id');
+			$items = array();
+			foreach (post('item_code') as $key => $value) {
+				$items[$key]['id'] = post('id')[$key];
+				$items[$key]['item_id'] = post('item_id')[$key];
+				$items[$key]['item_code'] = post('item_code')[$key];
+				$items[$key]['item_name'] = post('item_name')[$key];
+				$items[$key]['item_quantity_current'] = post('item_quantity_current')[$key];
+				$items[$key]['item_quantity'] = post('item_quantity')[$key];
+				$items[$key]['item_order_quantity_current'] = post('item_order_quantity_current')[$key];
+				$items[$key]['item_order_quantity'] =  post('item_order_quantity')[$key];
+				$items[$key]['item_unit'] = post('item_unit')[$key];
+				$items[$key]['item_capital_price'] = post('item_capital_price')[$key];
+				$items[$key]['item_selling_price'] = post('item_selling_price')[$key];
+				$items[$key]['item_discount'] = post('item_discount')[$key];
+				$items[$key]['total_price'] = post('total_price')[$key];
+				$items[$key]['item_description'] = post('description')[$key];
+				$items[$key]['customer_code'] = post('supplier_code');
+				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
+					unset($items[$key]);
+				}
+			}
+			$items = array_values($items);
+			//information payment
+			$payment = array(
+				'customer' => post('customer_code'),
+				'store_name' => post('store_name'),
+				'contact_phone' => post('contact_phone'),
+				'address' => post('address'),
+				'total_price' => post('sub_total'),
+				'discounts' => post('discount'),
+				'shipping_cost' => post('shipping_cost'),
+				'other_cost' => post('other_cost'),
+				'grand_total' => post('grand_total'),
+				'payment_type' => post('payment_type'),
+				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'note' => post('note'),
+				'created_by' => logged('id'),
+			);
 			echo '<pre>';
 			var_dump($this->create_or_update_list_item_order_sale($items));
 			echo '<hr>';
 			var_dump($this->create_or_update_order($payment));
 			echo '</pre>';
-
 		
-			$this->activity_model->add("Create Order, #" . $this->data['order_code'], (array) $payment);
+			$this->activity_model->add("Update Order, #" . $this->data['order_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'Cancel Purchase Successfully');
-
-			redirect('invoice/purchase/list');
+			$this->session->set_flashdata('alert', 'Update Order Successfully');
+			redirect('invoice/order/edit?id='.get('id'));
 		}
 	}
 
@@ -118,7 +197,6 @@ class Order extends Invoice_controller
 				unset($data_negatif[$key]['id']);
 			}
 		}
-
 		if (@$data_negatif) {
 			if ($this->order_list_item_model->create_batch($data_negatif) && $this->order_list_item_model->update_batch($data_positif, 'id')) {
 				return true;

@@ -2,13 +2,24 @@ import DataCustomer from "../data/DataCustomer.js";
 import DataItems from "../data/DataItems.js";
 import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./order_create-calcualtion.js";
 
-const data_customer = new DataCustomer();
+const data_custommer = new DataCustomer();
 const data_items = new DataItems();
 
 const main = () => {
     $(document).ready(function () {
-        // Find customer // limit.. this overload
-        $(document).on('keyup', 'input#store_name, input#customer_code', function () {
+
+        data_custommer.user_info_search($('input#customer_code').val(), function (output) {
+            $('input#customer_code').val(output[0]['customer_code'])
+            $('input#store_name').val(output[0]['store_name'])
+            $('input#contact_phone').val(`${output[0]['contact_phone']} (${output[0]['owner_name']})`)
+            $('textarea#address').val(`${output[0]['address']}, ${output[0]['village']}, ${output[0]['sub_district']}, ${output[0]['city']}, ${output[0]['province']}, ${output[0]['zip']}`)
+            return false;
+        });
+        $('.currency').each(function (index, field) {
+            $(field).val(currency(currencyToNum($(field).val())));
+        });
+
+        $(document).on('keyup', 'input#store_name, input#customer_code', function (event) {
             let valueElement = $(this).val();
             let selfElement = $(this);
             function getFieldNo(type) {
@@ -25,7 +36,7 @@ const main = () => {
                 }
                 return fieldNo;
             }
-            data_customer.user_info_search(valueElement, function (data) {
+            data_custommer.user_info_search(valueElement, function (data) {
                 let result = data.map(({
                     customer_id, customer_code, store_name, owner_name, address, village,
                     sub_district, city, province, zip, contact_phone, contact_mail,
@@ -34,7 +45,7 @@ const main = () => {
                         sub_district, city, province, zip, contact_phone, contact_mail,
                     ]
                 );
-                $(`input#${selfElement.attr('id')}`).autocomplete({
+                $('input#store_name, input#customer_code').autocomplete({
                     source: result,
                     focus: function (event, ui) {
                         $('input#customer_code').val(ui.item[1])
@@ -143,7 +154,7 @@ const main = () => {
                         </span>
                     </div>
                 </td>
-                <td><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td>
                     <div class="input-group input-group-sm">
@@ -158,6 +169,7 @@ const main = () => {
                 </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
+                <td></td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
@@ -166,11 +178,9 @@ const main = () => {
                 </td>
             </tr>
             <tr class="description input-${input_id}" style="display:none">
-                <td colspan="9">
-                    <div class="input-group input-group-sm">
-                        <textarea class="form-control form-control-sm" name="description[]"></textarea>
-                    </td>
-                </div>
+                <td colspan="8">
+                    <textarea class="form-control form-control-sm" name="description[]"></textarea>
+                </td>
             </tr>`;
             $('tbody').append(html)
         })
@@ -190,6 +200,7 @@ const main = () => {
             sum_sub_total_item(row);
         })
         // get sub total
+        $('input#sub_total').val(currency(sum_sub_total()));
         $(document).on('focus keyup', 'input#sub_total', function (event) {
             switch (event.type) {
                 case 'keyup':
@@ -208,6 +219,7 @@ const main = () => {
             $(this).val(currency(currencyToNum($(this).val())));
         })
         // get grand total
+        $('input#grand_total').val(currency(sum_grand_total()));
         $(document).on('focus keyup', 'input#grand_total', function (event) {
             switch (event.type) {
                 case 'keyup':

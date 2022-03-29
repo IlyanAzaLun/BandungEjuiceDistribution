@@ -59,11 +59,10 @@ const main = () => {
                         $('textarea#address').val(`${ui.item[4]}, ${ui.item[5]}, ${ui.item[6]}, ${ui.item[7]}, ${ui.item[8]}, ${ui.item[9]}`)
                         return false;
                     }
-                })
-
-                $.ui.autocomplete.prototype._renderItem = function (ul, item) {
+                }).data("ui-autocomplete")._renderItem = function (ul, item) {
                     let fieldNo = getFieldNo(selfElement.attr('id'));
-                    return $("<li>").attr("id", item[fieldNo]).append(item[fieldNo]).appendTo(ul);
+                    return $('<li>').data("item.autocomplete", item)
+                        .append(`<div>${item[fieldNo]}</div>`).appendTo(ul)
                 }
             })
         })
@@ -101,6 +100,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
                         $(`.${parentElement}`).find('input[data-id="item_order_quantity"]')
+                        $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
@@ -113,6 +113,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
                         $(`.${parentElement}`).find('input[data-id="item_order_quantity"]')
+                        $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
@@ -122,7 +123,8 @@ const main = () => {
                 })
                 $.ui.autocomplete.prototype._renderItem = function (ul, item) {
                     let fieldNo = getFieldNo(selfElement.data('id'));
-                    return $("<li>").attr("data-value", item[fieldNo]).append(item[fieldNo]).appendTo(ul);
+                    return $('<li>').data("item.autocomplete", item)
+                        .append(`<div>${item[fieldNo]}</div>`).appendTo(ul)
                 }
             })
         });
@@ -155,6 +157,9 @@ const main = () => {
                 <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td>
                     <div class="input-group input-group-sm">
+                        <span class="input-group-prepend">
+                            <span class="input-group-text" data-id="item_quantity"></span>
+                        </span>
                         <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required>
                         <span class="input-group-append">
                             <span class="input-group-text" data-id="item_unit"></span>

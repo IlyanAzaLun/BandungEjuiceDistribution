@@ -156,7 +156,6 @@ class Customer extends MY_Controller
     // SERVER SIDE
     public function serverside_datatables_data_customer()
     {
-
         $response = array();
 
         $postData = $this->input->post();
