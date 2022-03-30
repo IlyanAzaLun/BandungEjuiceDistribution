@@ -7,12 +7,21 @@ class Warehouse extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->page_data['page']->title = 'Activity Logs';
-		$this->page_data['page']->menu = 'activity_logs';
+		$this->page_data['page']->title = 'Warehouse Validation';
+		$this->page_data['page']->menu = 'Warehouse';
 	}
 
     public function index()
     {
-        # code...
+        $this->list();
     }
+
+	public function list()
+	{
+		// ifPermissions('warehouse_order_list');
+		var_dump(!hasPermissions('warehouse_order_list'));
+		// $this->page_data['title'] = 'order_list';
+		// $this->page_data['page']->submenu = 'order_list';
+		// $this->load->view('validation/warehouse/list', $this->page_data);
+	}
 }

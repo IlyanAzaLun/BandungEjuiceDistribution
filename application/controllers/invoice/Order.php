@@ -101,6 +101,14 @@ class Order extends Invoice_controller
 			$this->page_data['page']->submenu = 'order_edit';
 			$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
 			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+			if(!hasPermissions('permissions_list')){
+				if($this->page_data['invoice']->created_by != logged('id')){
+					$this->session->set_flashdata('alert-type', 'danger');
+					$this->session->set_flashdata('alert', 'Worng Information');
+					redirect('invoice/order/list');
+					die();
+				}
+			}
 			$this->page_data['modals'] = (object) array(
 				'id' => 'modal-remove-order',
 				'title' => 'Modals confirmation',
@@ -238,6 +246,8 @@ class Order extends Invoice_controller
 	public function serverside_datatables_data_order()
 	{
 		ifPermissions('order_list');
+		try {
+			//code...
 		$response = array();
 
 		$postData = $this->input->post();
@@ -252,6 +262,8 @@ class Order extends Invoice_controller
 		$searchValue = $postData['search']['value']; // Search value
 		$dateStart = $postData['startDate'];
 		$dateFinal = $postData['finalDate'];
+		$logged = logged('id');
+		$haspermission = hasPermissions('permissions_list');
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
@@ -305,6 +317,9 @@ class Order extends Invoice_controller
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
 		}
+		if(!$haspermission){
+			$this->db->where("order.created_by", $logged);
+		}
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('order_sale order')->result();
@@ -341,5 +356,12 @@ class Order extends Invoice_controller
 			"aaData" => $data,
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+		
+		} catch (\Throwable $th) {
+			//throw $th;
+			echo '<pre>';
+			var_dump($th);
+			echo '</pre>';
+		}
 	}
 }

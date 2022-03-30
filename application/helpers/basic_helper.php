@@ -352,8 +352,6 @@ if (!function_exists('getEmailShortCodes')) {
 }
 
 
-
-
 /**
  * Redirects with error if user doesnt have the permission to passed key/module
  *
