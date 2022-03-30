@@ -263,7 +263,7 @@ class Order extends Invoice_controller
 		$dateStart = $postData['startDate'];
 		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
-		$haspermission = hasPermissions('permissions_list');
+		$haspermission = hasPermissions('warehouse_order_list');
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');

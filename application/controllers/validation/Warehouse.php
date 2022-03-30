@@ -18,10 +18,9 @@ class Warehouse extends MY_Controller
 
 	public function list()
 	{
-		// ifPermissions('warehouse_order_list');
-		var_dump(!hasPermissions('warehouse_order_list'));
-		// $this->page_data['title'] = 'order_list';
-		// $this->page_data['page']->submenu = 'order_list';
-		// $this->load->view('validation/warehouse/list', $this->page_data);
+		ifPermissions('warehouse_order_list');
+		$this->page_data['title'] = 'order_list';
+		$this->page_data['page']->submenu = 'order_list';
+		$this->load->view('validation/warehouse/list', $this->page_data);
 	}
 }

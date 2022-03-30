@@ -145,7 +145,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "created_at"
         },
         {
-          data: "updated_at"
+          data: "updated_at",
+          visible: false,
         },
         {
           data: "order_code"
@@ -188,6 +189,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "grand_total",
+          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
@@ -223,9 +225,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('invoice/order')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>
                 <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
                 </div>`;
           }
         },
