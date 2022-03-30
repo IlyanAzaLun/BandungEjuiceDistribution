@@ -24,4 +24,12 @@ class Sale extends Invoice_controller
 		$this->page_data['page']->submenu = 'sale_list';
 		$this->load->view('invoice/sale/list', $this->page_data);
 	}
+
+	public function create()
+	{
+		ifPermissions('sale_create');
+		$this->page_data['title'] = 'sale_create';
+		$this->page_data['page']->submenu = 'sale_create';
+		$this->load->view('invoice/sale/create', $this->page_data);
+	}
 }

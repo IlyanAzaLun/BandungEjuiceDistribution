@@ -204,7 +204,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 10, true)
+            return shorttext(data, 100, true)
             // return data
           }
         },
@@ -223,7 +223,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('invoice/order')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>
                 <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
                 <a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
                 </div>`;
