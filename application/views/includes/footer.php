@@ -111,6 +111,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     $("input[data-bootstrap-switch]").each(function() {
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
+      // $(this).prop('checked') ? $(this).val(1) : $(this).val(0);
     });
 
     $.validator.setDefaults({

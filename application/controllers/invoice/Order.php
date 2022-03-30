@@ -101,7 +101,7 @@ class Order extends Invoice_controller
 			$this->page_data['page']->submenu = 'order_edit';
 			$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
 			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
-			if(!hasPermissions('permissions_list')){
+			if(!hasPermissions('warehouse_order_list')){
 				if($this->page_data['invoice']->created_by != logged('id')){
 					$this->session->set_flashdata('alert-type', 'danger');
 					$this->session->set_flashdata('alert', 'Worng Information');
@@ -112,7 +112,7 @@ class Order extends Invoice_controller
 			$this->page_data['modals'] = (object) array(
 				'id' => 'modal-remove-order',
 				'title' => 'Modals confirmation',
-				'link' => 'invoice/purchase/items/remove_item_from_list_order_transcaction',
+				'link' => 'invoice/purchases/items/remove_item_from_list_sale_order',
 				'content' => 'delete',
 				'btn' => 'btn-danger',
 				'submit' => 'Yes do it',

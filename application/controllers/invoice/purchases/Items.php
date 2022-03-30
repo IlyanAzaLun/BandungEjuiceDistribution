@@ -42,4 +42,11 @@ class Items extends MY_Controller
 		$this->transaction_item_model->delete($order->id);
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}
+
+	public function remove_item_from_list_sale_order()
+	{
+		$order = $this->order_list_item_model->getById(post('id'));
+		$this->order_list_item_model->delete($order->id);
+		header('Location: ' . $_SERVER['HTTP_REFERER']);
+	}
 }
