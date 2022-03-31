@@ -135,6 +135,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           d.finalDate = enddate;
         }
       },
+      drawCallback: function ( settings ) {
+        var api = this.api();
+        var rows = api.rows( {page:'current'} ).nodes();
+        api.rows( {page:'current'} ).data().each(function(index, i){
+          if(index['is_created'] == true){
+            $(rows).eq(i).remove();
+          }
+        })
+      },
       columns: [{
           data: "order_code",
           render: function(data, type, row) {

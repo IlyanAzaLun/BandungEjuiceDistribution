@@ -281,13 +281,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </li>
       <li class="nav-item">
         <a href="<?php echo url('invoice/sale/create') ?>" class="nav-link <?php echo ($page->submenu == 'sale_create') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
+          <i class="far fa-times-circle nav-icon"></i>
           <p> <?php echo lang('sale_create') ?> </p>
         </a>
       </li>
       <li class="nav-item">
         <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
+          <i class="far fa-times-circle nav-icon"></i>
           <p> <?php echo lang('sale_payment') ?> </p>
         </a>
       </li>

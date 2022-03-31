@@ -199,7 +199,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         if(row['supplier_name']){
                             return row['supplier_name'];
                         }else if(row['customer_name']){
-                            return row['supplier_name'];
+                            return row['customer_name'];
                         }else{
                             return data;
                         }

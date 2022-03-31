@@ -303,6 +303,7 @@ class Order extends Invoice_controller
 		order.created_by as created_by, 
 		order.is_confirmed as is_confirmed,
 		order.is_cancelled as is_cancelled, 
+		order.is_created as is_created, 
 		customer.customer_code as customer_code, 
 		customer.store_name as store_name, 
 		user.id as user_id, 
@@ -348,6 +349,7 @@ class Order extends Invoice_controller
 				'user_id' => $record->user_id,
 				'is_confirmed' => $record->is_confirmed,
 				'is_cancelled' => $record->is_cancelled,
+				'is_created' => $record->is_created,
 				'user_order_create_by' => $record->user_order_create_by,
 			);
 		}

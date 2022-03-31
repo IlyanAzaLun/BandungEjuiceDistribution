@@ -245,7 +245,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <a href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <button class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check"></i></button>
+                  <button class="btn btn-xs btn-danger confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-times"></i></button>
                 </div>`;
           }
         },
