@@ -160,6 +160,7 @@ class Order extends Invoice_controller
 				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'note' => post('note'),
 				'created_by' => logged('id'),
+				'is_confirmed' => 0,
 			);
 			echo '<pre>';
 			var_dump($this->create_or_update_list_item_order_sale($items));
@@ -230,6 +231,7 @@ class Order extends Invoice_controller
 		$request['note'] = $data['note'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['is_confirmed'] = $data['is_confirmed'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
@@ -299,6 +301,7 @@ class Order extends Invoice_controller
 		order.created_at as created_at, 
 		order.updated_at as updated_at, 
 		order.created_by as created_by, 
+		order.is_confirmed as is_confirmed,
 		order.is_cancelled as is_cancelled, 
 		customer.customer_code as customer_code, 
 		customer.store_name as store_name, 
@@ -343,6 +346,7 @@ class Order extends Invoice_controller
 				'created_at' => $record->created_at,
 				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,
+				'is_confirmed' => $record->is_confirmed,
 				'is_cancelled' => $record->is_cancelled,
 				'user_order_create_by' => $record->user_order_create_by,
 			);
@@ -362,6 +366,23 @@ class Order extends Invoice_controller
 			echo '<pre>';
 			var_dump($th);
 			echo '</pre>';
+		}
+	}
+
+	public function is_confirmation()
+	{
+		ifPermissions('warehouse_order_list');
+		$request = array('is_confirmed' => 1 );
+		$this->db->where('order_code', post('id'));
+		$result = $this->db->update('order_sale', $request);
+		if($result){
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Successfully');
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
+		}else{
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Failed');
+			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}
 	}
 }

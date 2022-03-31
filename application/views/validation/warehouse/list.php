@@ -135,6 +135,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           d.finalDate = enddate;
         }
       },
+      fnInitComplete: function(oSettings, json){
+        $('.confirmation').on('click', function(){
+            let id = $(this).data('id');
+            $('#modal-confirmation-order').on('shown.bs.modal', function(){
+                $(this).find('input#id').val(id);
+            })
+        })
+      },      
+      drawCallback: function ( settings ) {
+        console.log()
+        var api = this.api();
+        var rows = api.rows( {page:'current'} ).nodes();
+        api.rows( {page:'current'} ).data().each(function(index, i){
+            if(index['is_confirmed'] == true){
+              $(rows).eq(i).remove();
+              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
+            }
+          })
+      },
       columns: [{
           data: "order_code",
           render: function(data, type, row) {
@@ -225,7 +244,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <button class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check"></i></button>
                 </div>`;
           }
         },
@@ -282,6 +302,5 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
-
   });
 </script>

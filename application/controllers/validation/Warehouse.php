@@ -21,7 +21,16 @@ class Warehouse extends MY_Controller
 		ifPermissions('warehouse_order_list');
 		$this->page_data['title'] = 'order_list';
 		$this->page_data['page']->submenu = 'order_list';
+		$this->page_data['modals'] = (object) array(
+			'id' => 'modal-confirmation-order',
+			'title' => 'Modals confirmation',
+			'link' => 'invoice/order/is_confirmation',
+			'content' => 'delete',
+			'btn' => 'btn-primary',
+			'submit' => 'Yes do it',
+		);
 		$this->load->view('validation/warehouse/list', $this->page_data);
+		$this->load->view('includes/modals', $this->page_data);
 	}
 
 	public function available()
@@ -89,6 +98,23 @@ class Warehouse extends MY_Controller
 			$this->session->set_flashdata('alert', 'Update Order Successfully');
 			redirect('validation/warehouse/list');
 		}
+	}
+
+	public function report()
+	{
+		ifPermissions('warehouse_order_list');
+		$this->page_data['title'] = 'order_report';
+		$this->page_data['page']->submenu = 'order_report';
+		$this->page_data['modals'] = (object) array(
+			'id' => 'modal-confirmation-order',
+			'title' => 'Modals confirmation',
+			'link' => 'invoice/order/is_confirmation',
+			'content' => 'delete',
+			'btn' => 'btn-primary',
+			'submit' => 'Yes do it',
+		);
+		$this->load->view('validation/warehouse/report', $this->page_data);
+		$this->load->view('includes/modals', $this->page_data);
 	}
 	
 

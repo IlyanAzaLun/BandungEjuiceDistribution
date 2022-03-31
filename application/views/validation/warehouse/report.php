@@ -135,6 +135,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           d.finalDate = enddate;
         }
       },
+      fnInitComplete: function(oSettings, json){
+        $('.confirmation').on('click', function(){
+            let id = $(this).data('id');
+            $('#modal-confirmation-order').on('shown.bs.modal', function(){
+                $(this).find('input#id').val(id);
+            })
+        })
+      },      
+      drawCallback: function ( settings ) {
+        console.log()
+        var api = this.api();
+        var rows = api.rows( {page:'current'} ).nodes();
+        api.rows( {page:'current'} ).data().each(function(index, i){
+            if(index['is_confirmed'] == false){
+              $(rows).eq(i).remove();
+              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
+            }
+          })
+      },
       columns: [{
           data: "order_code",
           render: function(data, type, row) {
@@ -145,7 +164,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "created_at"
         },
         {
-          data: "updated_at"
+          data: "updated_at",
+          visible: false,
         },
         {
           data: "order_code"
@@ -188,6 +208,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "grand_total",
+          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
@@ -204,7 +225,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 100, true)
+            return shorttext(data, 10, true)
             // return data
           }
         },
@@ -221,14 +242,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "order_code",
           orderable: false,
           render: function(data, type, row, meta) {
-            let html = ``;
-            if(row['is_confirmed'] == 1){
-              html = `<a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>`;
-            }
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  ${html}
+                  <a href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <button class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check"></i></button>
                 </div>`;
           }
         },
@@ -285,6 +302,5 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
-
   });
 </script>
