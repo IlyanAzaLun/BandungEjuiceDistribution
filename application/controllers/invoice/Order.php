@@ -29,7 +29,7 @@ class Order extends Invoice_controller
 	{
 		ifPermissions('order_create');
 		$this->page_data['title'] = 'order_create';
-		$this->page_data['page']->submenu = 'order_create';
+		$this->page_data['page']->submenu = 'order_list';
 		$this->form_validation->set_rules('customer_code', lang('customer_code'), 'required|trim');
 		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
 		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');

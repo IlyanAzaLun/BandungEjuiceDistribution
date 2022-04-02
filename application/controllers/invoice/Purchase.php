@@ -21,7 +21,7 @@ class Purchase extends Invoice_controller
 	{
 		ifPermissions('purchase_list');
 		$this->page_data['title'] = 'purchase_list';
-		$this->page_data['page']->submenu = 'list';
+		$this->page_data['page']->submenu = 'list_purchase';
 		$this->load->view('invoice/purchase/list', $this->page_data);
 	}
 
@@ -35,7 +35,7 @@ class Purchase extends Invoice_controller
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
 			$this->page_data['title'] = 'purchase_create';
-			$this->page_data['page']->submenu = 'create';
+			$this->page_data['page']->submenu = 'list_purchase';
 			$this->load->view('invoice/purchase/create', $this->page_data);
 		} else {
 			// information invoice
@@ -109,7 +109,7 @@ class Purchase extends Invoice_controller
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
 			$this->page_data['title'] = 'purchase_edit';
-			$this->page_data['page']->submenu = 'edit';
+			$this->page_data['page']->submenu = 'list_purchase';
 			$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 

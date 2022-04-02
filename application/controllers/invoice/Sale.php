@@ -38,7 +38,7 @@ class Sale extends Invoice_controller
 			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->page_data['title'] = 'sale_create';
-			$this->page_data['page']->submenu = 'sale_create';
+			$this->page_data['page']->submenu = 'sale_list';
 			$this->load->view('invoice/sale/form', $this->page_data);
 		}else{
 			echo '<pre>';

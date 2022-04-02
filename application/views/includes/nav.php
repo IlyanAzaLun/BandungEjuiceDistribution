@@ -229,19 +229,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="<?php echo url('invoice/purchase/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+        <a href="<?php echo url('invoice/purchase/list') ?>" class="nav-link <?php echo ($page->submenu == 'list_purchase') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('purchase_list') ?> </p>
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo url('invoice/purchase/create') ?>" class="nav-link <?php echo ($page->submenu == 'create') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('purchase_create') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment') ? 'active' : '' ?>">
+        <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment_purchase') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('purchase_payment') ?> </p>
         </a>
@@ -268,21 +262,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo url('invoice/order/create') ?>" class="nav-link <?php echo ($page->submenu == 'order_create') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('order_create') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
         <a href="<?php echo url('invoice/sale/list') ?>" class="nav-link <?php echo ($page->submenu == 'sale_list') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('sale_list') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/sale/create') ?>" class="nav-link <?php echo ($page->submenu == 'sale_create') ? 'active' : '' ?>">
-          <i class="far fa-times-circle nav-icon"></i>
-          <p> <?php echo lang('sale_create') ?> </p>
         </a>
       </li>
       <li class="nav-item">
