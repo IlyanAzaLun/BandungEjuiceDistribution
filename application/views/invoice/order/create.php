@@ -135,6 +135,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                        <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
                       </div>
                     </td>
@@ -259,7 +260,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
   $('body').addClass('sidebar-collapse');
-  
   //Date range picker
   $('#date_due').daterangepicker({
     timePicker: true,

@@ -1,5 +1,5 @@
 <?php function content($data){
-  $CI = &get_instance();
+  // $CI = &get_instance();
   switch ($data->content) {
     case 'upload': ?>
       <?php echo form_open_multipart($data->link, ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
@@ -26,12 +26,13 @@
       <?php echo form_close(); ?>
 <?php break;
     default:
-      $CI->load->view($data->content);
+      // $CI->load->view($data->content);
+      include viewPath($data->content);
       break;
   }
 } ?>
 <div class="modal fade" id="<?= $modals->id ?>" tabindex="-1" role="dialog" aria-labelledby="<?= $modals->id ?>Title" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog <?=$modals->size?>" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="<?= $modals->id ?>Title"><?= $modals->title ?></h5>

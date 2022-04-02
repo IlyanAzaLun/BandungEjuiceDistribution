@@ -140,6 +140,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required readonly value="<?= $value->item_total_price ?>"></td>
                             <td class="text-center">
                               <div class="btn-group" role="group" aria-label="Basic example">
+                              <button type="button" class="btn btn-default" id="detail" data-id="<?=$value?>" data-toggle="modal" data-target="#modal-detail-order" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></button>
                                 <button type="button" class="btn bg-<?=($value->status_available == null ?'secondary':($value->status_available == 0?'danger':'secondary'))?>" disabled id="status_availabel" ><i class="fas fa-tw fa-times"></i></button>
                                 <button type="button" class="btn btn-block bg-<?=($value->status_available)?'success':'secondary'?>" disabled id="status_availabel" ><i class="fas fa-tw fa-check"></i></button>
                               </div>
@@ -150,7 +151,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <?php if (sizeof($items) <= 1) : ?>
                                     <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                 <?php else : ?>
-                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
+                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->item_code?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
                                 <?php endif ?>
                                 </div>
                             </td>

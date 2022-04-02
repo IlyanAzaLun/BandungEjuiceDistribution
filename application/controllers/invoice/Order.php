@@ -247,7 +247,6 @@ class Order extends Invoice_controller
 	
 	public function serverside_datatables_data_order()
 	{
-		ifPermissions('order_list');
 		try {
 			//code...
 		$response = array();

@@ -108,7 +108,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 "type": "POST",
                 "data": {
                     "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
-                    "id": "<?= $item->item_code ?>"
+                    "id": "<?= $item->item_code ?>",
+                    "customer": "<?= $this->input->get('customer') ?>",
                 }
             },
             rowCallback: function(row, data, index){
@@ -197,9 +198,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     data: "customer_code",
                     render: function(data, type, row){
                         if(row['supplier_name']){
-                            return row['supplier_name'];
+                            return `${row['supplier_name']}`;
                         }else if(row['customer_name']){
-                            return row['customer_name'];
+                            return `${row['customer_name']}`;
                         }else{
                             return data;
                         }

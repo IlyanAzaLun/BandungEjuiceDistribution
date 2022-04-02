@@ -446,124 +446,140 @@ class Items extends MY_Controller
     public function serverside_datatables_data_items_transaction()
     {
         // ifPermissions('items_list');
-        $response = array();
+        try {
+            $response = array();
 
-        $postData = $this->input->post();
+            $postData = $this->input->post();
 
-        ## Read value
-        $draw = $postData['draw'];
-        $start = $postData['start'];
-        $rowperpage = $postData['length']; // Rows display per page
-        $columnIndex = $postData['order'][0]['column']; // Column index
-        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
-        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
-        $searchValue = $postData['search']['value']; // Search value
+            ## Read value
+            $item_code = $postData['id'];
+            $customer = $postData['customer'];
+            $draw = $postData['draw'];
+            $start = $postData['start'];
+            $rowperpage = $postData['length']; // Rows display per page
+            $columnIndex = $postData['order'][0]['column']; // Column index
+            $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+            $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+            $searchValue = $postData['search']['value']; // Search value
 
-        ## Total number of records without filtering
-        $this->db->select('count(*) as allcount');
-        $this->db->where('item_code', post('id'));
-        $this->db->group_by('created_at');
-        $records = $this->db->get('invoice_transaction_list_item')->result();
-        $totalRecords = $records[0]->allcount;
+            ## Total number of records without filtering
+            $this->db->select('count(*) as allcount');
+            $this->db->where('item_code', post('id'));
+            $this->db->group_by('created_at');
+            $records = $this->db->get('invoice_transaction_list_item')->result();
+            $totalRecords = $records[0]->allcount;
 
-        ## Total number of record with filtering
-        $this->db->select('count(*) as allcount');
-        if ($searchValue != '') {
-            $this->db->like('transaction.item_name', $searchValue, 'both');
-            $this->db->or_like('transaction.item_code', $searchValue, 'both');
-            $this->db->or_like('user_created.transaction_created_by', $searchValue, 'both');
-            $this->db->or_like('user_updated.transaction_updated_by', $searchValue, 'both');
-        }
-        $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
-        $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
-        $this->db->where('transaction.item_code', post('id'));
-        $this->db->group_by('transaction.invoice_code');
-        $records = $this->db->get('invoice_transaction_list_item transaction')->result();
-        $totalRecordwithFilter = $records[0]->allcount;
+            ## Total number of record with filtering
+            $this->db->select('count(*) as allcount');
+            if ($searchValue != '') {
+                $this->db->like('transaction.item_name', $searchValue, 'both');
+                $this->db->or_like('transaction.item_code', $searchValue, 'both');
+                $this->db->or_like('user_created.name', $searchValue, 'both');
+                $this->db->or_like('user_updated.name', $searchValue, 'both');
+            }
+            $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
+            $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
+            $this->db->where('item_code', $item_code);
+            if ($customer) {
+                $this->db->where('transaction.customer_code', $customer);
+            }
+            $this->db->group_by('transaction.invoice_code');
+            $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+            $totalRecordwithFilter = $records[0]->allcount;
 
-        ## Fetch records
-        $this->db->select('
-            transaction.id as transaction_id
-            , transaction.invoice_code as invoice_code
-            , SUBSTRING(transaction.invoice_code, 5) as invoice_code_reference
-            , transaction.item_id as item_id
-            , transaction.item_code as item_code
-            , transaction.item_name as item_name
-            , transaction.item_capital_price as item_capital_price
-            , transaction.item_selling_price as item_selling_price
-            , transaction.item_current_quantity as item_current_quantity
-            , SUM(transaction.item_quantity) as item_quantity
-            , IF(transaction.item_status = "IN",  SUM(transaction.item_quantity), NULL) as item_in
-            , IF(transaction.item_status = "OUT", SUM(transaction.item_quantity), NULL) as item_out
-            , transaction.item_unit as item_unit
-            , transaction.item_discount as item_discount
-            , transaction.total_price as total_price
-            , transaction.item_status as item_status
-            , transaction.customer_code as customer_code
-            , supplier.store_name as supplier_name
-            , customer.store_name as customer_name          
-            , transaction.item_description as item_description
-            , transaction.created_at as transaction_created_at
-            , user_created.name as transaction_created_by
-            , transaction.updated_at as transaction_updated_at
-            , user_updated.name as transaction_updated_by
-            , user_created.id as user_id
-            , transaction.is_cancelled as is_cancelled');
-        if ($searchValue != '') {
-            $this->db->like('item_name', $searchValue, 'both');
-            $this->db->or_like('item_code', $searchValue, 'both');
-            $this->db->or_like('transaction_created_by', $searchValue, 'both');
-            $this->db->or_like('transaction_updated_by', $searchValue, 'both');
-        }
-        $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
-        $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
-        $this->db->join('supplier_information supplier', 'supplier.customer_code = transaction.customer_code', 'left');
-        $this->db->join('customer_information customer', 'customer.customer_code = transaction.customer_code', 'left');
-        $this->db->where('item_code', post('id'));
-		$this->db->order_by($columnName, $columnSortOrder);
-        $this->db->group_by('invoice_code');
-        $this->db->limit($rowperpage, $start);
-        $records = $this->db->get('invoice_transaction_list_item transaction')->result();
-        $data = array();
+            ## Fetch records
+            $this->db->select('
+                transaction.id as transaction_id
+                , transaction.invoice_code as invoice_code
+                , SUBSTRING(transaction.invoice_code, 5) as invoice_code_reference
+                , transaction.item_id as item_id
+                , transaction.item_code as item_code
+                , transaction.item_name as item_name
+                , transaction.item_capital_price as item_capital_price
+                , transaction.item_selling_price as item_selling_price
+                , transaction.item_current_quantity as item_current_quantity
+                , SUM(transaction.item_quantity) as item_quantity
+                , IF(transaction.item_status = "IN",  SUM(transaction.item_quantity), NULL) as item_in
+                , IF(transaction.item_status = "OUT", SUM(transaction.item_quantity), NULL) as item_out
+                , transaction.item_unit as item_unit
+                , transaction.item_discount as item_discount
+                , transaction.total_price as total_price
+                , transaction.item_status as item_status
+                , transaction.customer_code as customer_code
+                , supplier.store_name as supplier_name
+                , customer.store_name as customer_name          
+                , transaction.item_description as item_description
+                , transaction.created_at as transaction_created_at
+                , user_created.name as transaction_created_by
+                , transaction.updated_at as transaction_updated_at
+                , user_updated.name as transaction_updated_by
+                , user_created.id as user_id
+                , transaction.is_cancelled as is_cancelled');
+            if ($searchValue != '') {
+                $this->db->like('item_name', $searchValue, 'both');
+                $this->db->or_like('item_code', $searchValue, 'both');
+                $this->db->or_like('user_created.name', $searchValue, 'both');
+                $this->db->or_like('user_updated.name', $searchValue, 'both');
+            }
+            $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
+            $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
+            $this->db->join('supplier_information supplier', 'supplier.customer_code = transaction.customer_code', 'left');
+            $this->db->join('customer_information customer', 'customer.customer_code = transaction.customer_code', 'left');
+            $this->db->where('item_code', $item_code);
+            if ($customer) {
+                $this->db->where('transaction.customer_code', $customer);
+            }
+            $this->db->order_by($columnName, $columnSortOrder);
+            $this->db->group_by('invoice_code');
+            $this->db->limit($rowperpage, $start);
+            $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+            $data = array();
 
-        foreach ($records as $record) {
+            foreach ($records as $record) {
 
-            $data[] = array(
-                "transaction_id" => $record->transaction_id,
-                "user_id" => $record->user_id,
-                "item_code" => $record->item_code,
-                "item_name" => $record->item_name,
-                "item_quantity" => $record->item_quantity,
-                "item_in" => $record->item_in,
-                "item_out" => $record->item_out,
-                "item_unit" => $record->item_unit,
-                "item_capital_price" => $record->item_capital_price,
-                "item_selling_price" => $record->item_selling_price,
-                "item_discount" => $record->item_discount,
-                "total_price" => $record->total_price,
-                "item_status" => $record->item_status,
-                "item_description" => $record->item_description,
-                "customer_code" => $record->customer_code,
-                "supplier_name" => $record->supplier_name,
-                "customer_name" => $record->customer_name,
-                "invoice_code" => $record->invoice_code,
-                "invoice_code_reference" => $record->invoice_code_reference,
-                "transaction_created_by" => $record->transaction_created_by,
-                "transaction_created_at" => date(setting('datetime_format'), strtotime($record->transaction_created_at)),
-                "transaction_updated_by" => $record->transaction_updated_by,
-                "transaction_updated_at" => date(setting('datetime_format'), strtotime($record->transaction_updated_at)),
-                "is_cancelled" => $record->is_cancelled,
+                $data[] = array(
+                    "transaction_id" => $record->transaction_id,
+                    "user_id" => $record->user_id,
+                    "item_code" => $record->item_code,
+                    "item_name" => $record->item_name,
+                    "item_quantity" => $record->item_quantity,
+                    "item_in" => $record->item_in,
+                    "item_out" => $record->item_out,
+                    "item_unit" => $record->item_unit,
+                    "item_capital_price" => $record->item_capital_price,
+                    "item_selling_price" => $record->item_selling_price,
+                    "item_discount" => $record->item_discount,
+                    "total_price" => $record->total_price,
+                    "item_status" => $record->item_status,
+                    "item_description" => $record->item_description,
+                    "customer_code" => $record->customer_code,
+                    "supplier_name" => $record->supplier_name,
+                    "customer_name" => $record->customer_name,
+                    "invoice_code" => $record->invoice_code,
+                    "invoice_code_reference" => $record->invoice_code_reference,
+                    "transaction_created_by" => $record->transaction_created_by,
+                    "transaction_created_at" => date(setting('datetime_format'), strtotime($record->transaction_created_at)),
+                    "transaction_updated_by" => $record->transaction_updated_by,
+                    "transaction_updated_at" => date(setting('datetime_format'), strtotime($record->transaction_updated_at)),
+                    "is_cancelled" => $record->is_cancelled,
+                );
+            }
+
+            ## Response
+            $response = array(
+                "draw" => intval($draw),
+                "iTotalRecords" => $totalRecords,
+                "iTotalDisplayRecords" => $totalRecordwithFilter,
+                "aaData" => $data,
             );
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        } catch (\Throwable $th) {
+            echo '<pre>';
+            var_dump($th);
+            echo '<hr>';
+            var_dump($this->db->last_query());
+            echo '</pre>';
         }
-
-        ## Response
-        $response = array(
-            "draw" => intval($draw),
-            "iTotalRecords" => $totalRecords,
-            "iTotalDisplayRecords" => $totalRecordwithFilter,
-            "aaData" => $data
-        );
-        $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
     public function data_items()

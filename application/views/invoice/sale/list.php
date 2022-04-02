@@ -67,7 +67,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th>no.</th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
-                  <th><?= lang('order_code') ?></th>
+                  <th><?= lang('invoice_code') ?></th>
                   <th><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
@@ -126,9 +126,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 3, "desc" ]],
+      order: [[ 1, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
+        "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -145,7 +145,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         })
       },
       columns: [{
-          data: "order_code",
+          data: "invoice_code",
           render: function(data, type, row) {
             return row['id']
           }
@@ -157,7 +157,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "updated_at"
         },
         {
-          data: "order_code"
+          data: "invoice_code"
         },
         {
           data: "store_name",
@@ -218,7 +218,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "user_order_create_by",
+          data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
             return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
@@ -227,17 +227,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "order_code",
+          data: "invoice_code",
           orderable: false,
           render: function(data, type, row, meta) {
-            let html = ``;
-            if(row['is_confirmed'] == 1){
-              html = `<a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>`;
-            }
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  ${html}
+                  <a href="<?= url('invoice/sale')   ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('invoice/sale') ?>/cancel?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-ban text-danger"></i></a>
                 </div>`;
           }
         },

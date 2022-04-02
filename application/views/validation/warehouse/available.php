@@ -145,7 +145,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                               </div>
                             </td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-fw fa-ellipsis-h"></i></button>
                                 <?php if (sizeof($items) <= 1) : ?>
                                     <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-fw fa-times"></i></button>

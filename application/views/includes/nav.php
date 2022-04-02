@@ -304,7 +304,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php if (hasPermissions('warehouse_order_list')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Warehouse') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Warehouse') ? 'active' : '' ?>">
-      <i class="nav-icon fas fa-warehouse"></i>
+      <i class="nav-icon fas fa-clipboard-check"></i>
       <p>
         <?php echo lang('page_order') ?>
         <i class="right fas fa-angle-left"></i>
@@ -328,32 +328,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php endif ?>
     <!-- END Warehouse -->
     <!-- Shipping -->
-    <?php if (hasPermissions('shipping_transaction_list')) : ?>
-  <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
-    <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
-      <i class="nav-icon fas fa-truck"></i>
+    <?php if (hasPermissions('shipper_transaction_list')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Shipper') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Shipper') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-dolly-flatbed"></i>
       <p>
-        <?php echo lang('page_purchase') ?>
+        <?php echo lang('page_shipping') ?>
         <i class="right fas fa-angle-left"></i>
       </p>
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="<?php echo url('invoice/purchase/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+        <a href="<?php echo url('validation/shipper/list') ?>" class="nav-link <?php echo ($page->submenu == 'list_shipper') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('purchase_list') ?> </p>
+          <p> <?php echo lang('shipping_list') ?> </p>
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo url('invoice/purchase/create') ?>" class="nav-link <?php echo ($page->submenu == 'create') ? 'active' : '' ?>">
+        <a href="<?php echo url('validation/shipper/report') ?>" class="nav-link <?php echo ($page->submenu == 'report_shipper') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('purchase_create') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('purchase_payment') ?> </p>
+          <p> <?php echo lang('shipping_report') ?> </p>
         </a>
       </li>
     </ul>

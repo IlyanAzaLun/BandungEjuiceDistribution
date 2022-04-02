@@ -432,7 +432,7 @@ $lang['purchase_payment'] = "Purchase to pay";
 $lang['order'] = "Order";
 $lang['page_order'] = "Page Orders";
 $lang['order_list'] = "Order List";
-$lang['order_report'] = "Order Report";
+$lang['order_report'] = "Report Order";
 $lang['order_create'] = "Order Create";
 $lang['order_edit'] = "Order Edit";
 $lang['order_code'] = "Order Code";
@@ -471,6 +471,10 @@ $lang['sale_payment'] = "Selling to pay";
  * Validation
  * Shipping
  */
+$lang['page_shipping'] = "Page Shipping";
+$lang['shipping_list'] = "Shipping List";
+$lang['shipping_report'] = "Report Shipping";
+
 
 /**
  * Activity

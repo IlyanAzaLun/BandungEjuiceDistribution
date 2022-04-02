@@ -241,7 +241,7 @@ class Customer extends MY_Controller
 
     public function data_customer()
     {
-        if (ifPermissions('order_create')) {
+        if (ifPermissions('order_create') || ifPermissions('warehouse_order_validation_available')) {
             $search = (object) post('search');
             $this->db->limit(5);
             if ($search->value) {
