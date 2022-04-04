@@ -92,7 +92,7 @@ class Sale extends Invoice_controller
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->create_or_update_list_item_transcation($items);
-				$this->update_items($items);
+				// $this->update_items($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -122,7 +122,16 @@ class Sale extends Invoice_controller
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->page_data['title'] = 'sale_edit';
 			$this->page_data['page']->submenu = 'sale_list';
+			$this->page_data['modals'] = (object) array(
+				'id' => 'modal-remove-order',
+				'title' => 'Modals confirmation',
+				'link' => 'invoice/sales/items/remove_item_from_list_order_transcaction',
+				'content' => 'delete',
+				'btn' => 'btn-danger',
+				'submit' => 'Yes do it',
+			);
 			$this->load->view('invoice/sale/edit', $this->page_data);
+			$this->load->view('includes/modals');
 		}else{
 			$this->data['invoice_code'] = $this->input->get('id');
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
@@ -172,11 +181,20 @@ class Sale extends Invoice_controller
 				'note' => post('note'),
 				'reference_order' => get('id'),
 			);
-			
-			$this->create_item_history($items, ['CREATE', 'UPDATE']);
-			$this->create_or_update_invoice($payment);
-			$this->create_or_update_list_item_transcation($items);
-			$this->update_items($items);
+			try {
+				$this->create_item_history($items, ['CREATE', 'UPDATE']);
+				$this->create_or_update_invoice($payment);
+				$this->create_or_update_list_item_transcation($items);
+				$this->update_items($items);
+				
+				$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'Edit Sale Invoice Successfully');
+
+				redirect('invoice/sale/list');
+			} catch (\Throwable $th) {
+				var_dump( $th );
+			}
 		}
 	}
 
@@ -189,13 +207,12 @@ class Sale extends Invoice_controller
 	{
 		echo '<pre>';
 		try {
-		
 			$this->order_model->update_by_code($invoice_sale->reference_order, array('is_created' => 0)); // change status is_created
 			$this->sale_model->update_by_code(get('id'), array('is_cancelled' => 1)); // change status is_cancelled
 			$invoice_sale = $this->sale_model->get_invoice_selling_by_code(get('id'));
-			$list_items = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id')); 
+			$list_items = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			echo '<hr>';
-			var_dump($invoice_sale);
+			var_dump($list_items);
 		} catch (\Throwable $th) {
 			var_dump($th);
 		}
@@ -329,7 +346,7 @@ class Sale extends Invoice_controller
 			}
 			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
-			$this->items_model->update($item[$key]->id, $request[$key]);
+			// $this->items_model->update($item[$key]->id, $request[$key]);
 		}
 		return $request;
 		// return $this->items_model->update_batch($request, 'item_code');

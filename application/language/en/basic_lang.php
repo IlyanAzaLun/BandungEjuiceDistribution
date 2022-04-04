@@ -452,6 +452,8 @@ $lang['sale_list'] = "Selling List";
 $lang['sale_create'] = "Selling Create";
 $lang['sale_edit'] = "Selling Edit";
 $lang['sale_payment'] = "Selling to pay";
+$lang['sale_returns'] = "Sale Returns";
+$lang['returns'] = "Returns";
 
 
 /*
@@ -464,7 +466,6 @@ $lang['order_list_item_available'] = "List Order Item";
 $lang['sale_list'] = "Selling List";
 $lang['sale_create'] = "Selling Create";
 $lang['sale_edit'] = "Selling Edit";
-$lang['sale_payment'] = "Selling to pay";
 
  
 /*

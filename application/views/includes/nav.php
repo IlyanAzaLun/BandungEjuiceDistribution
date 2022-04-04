@@ -267,7 +267,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <p> <?php echo lang('sale_list') ?> </p>
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" style="display: none">
         <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
           <i class="far fa-times-circle nav-icon"></i>
           <p> <?php echo lang('sale_payment') ?> </p>

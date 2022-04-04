@@ -74,6 +74,7 @@ class Order extends Invoice_controller
 			);
 			$this->create_or_update_list_item_order_sale($items);
 			$this->create_or_update_order($payment);
+			$this->update_items($items);
 		
 			$this->activity_model->add("Create Order, #" . $this->data['order_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
@@ -243,6 +244,28 @@ class Order extends Invoice_controller
 			return $this->order_model->create($request);
 		}
 		return $request;
+	}
+	
+	protected function update_items($data)
+	{
+		$item = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['item_code'] = $item[$key]->item_code;
+			$request[$key]['item_name'] = $value['item_name'];
+			if ($value['id']) {
+				$request[$key]['quantity'] = $item[$key]->quantity - ($value['item_order_quantity'] - $value['item_order_quantity_current']);
+				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
+			} else {
+				$request[$key]['quantity'] = $item[$key]->quantity - $value['item_order_quantity'];
+				$request[$key]['capital_price'] = (setCurrency($value['item_capital_price']) > $item[$key]->capital_price) ? setCurrency($value['item_capital_price']) : $item[$key]->capital_price;
+			}
+			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
+			$request[$key]['updated_by'] = logged('id');
+			$this->items_model->update($item[$key]->id, $request[$key]);
+		}
+		return $request;
+		// return $this->items_model->update_batch($request, 'item_code');
 	}
 	
 	public function serverside_datatables_data_order()
