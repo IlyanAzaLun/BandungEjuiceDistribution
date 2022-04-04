@@ -140,7 +140,9 @@ class Sale extends Invoice_controller
 					"item_code" => post('item_code')[$key],
 					"item_name" => post('item_name')[$key],
 					"item_quantity" => post('item_quantity')[$key],
+					"item_quantity_current" => post('item_quantity_current')[$key],
 					"item_order_quantity" => post('item_order_quantity')[$key],
+					"item_order_quantity_current" => post('item_order_quantity_current')[$key],
 					"item_unit" => post('item_unit')[$key],
 					"item_capital_price" => post('item_capital_price')[$key],
 					"item_selling_price" => post('item_selling_price')[$key],
@@ -170,12 +172,11 @@ class Sale extends Invoice_controller
 				'note' => post('note'),
 				'reference_order' => get('id'),
 			);
-
-			echo '<pre>';
-			var_dump($items);
-			echo '<hr>';
-			var_dump($payment);
-			echo '</pre>';
+			
+			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->create_or_update_list_item_transcation($items);
+			$this->update_items($items);
 		}
 	}
 
@@ -235,7 +236,6 @@ class Sale extends Invoice_controller
 	protected function create_or_update_invoice($data)
 	{
 		$response = $this->sale_model->get_invoice_selling_by_code($this->data['invoice_code']);
-
 		$request['total_price'] = setCurrency($data['total_price']);
 		$request['discounts'] = setCurrency($data['discounts']);
 		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
@@ -331,7 +331,7 @@ class Sale extends Invoice_controller
 			$request[$key]['updated_by'] = logged('id');
 			$this->items_model->update($item[$key]->id, $request[$key]);
 		}
-		return true;
+		return $request;
 		// return $this->items_model->update_batch($request, 'item_code');
 	}
 
