@@ -31,8 +31,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <div class="card-header">
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
             <div class="card-tools pull-right">
-              <?php if (hasPermissions('order_create')) : ?>
-                <a href="<?php echo url('invoice/order/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('order_create') ?></a>
+              <?php if (hasPermissions('sale_create')) : ?>
+                <a href="<?php echo url('invoice/sale/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('sale_create') ?></a>
               <?php endif ?>
             </div>
 
@@ -55,7 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
               </div>
               <div class="col-2">
-              <?php if (hasPermissions('order_create')) : ?>
+              <?php if (hasPermissions('sale_create')) : ?>
                 <!-- EMPTY -->
               <?php endif ?>
               </div>

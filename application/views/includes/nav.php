@@ -337,9 +337,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php endif ?>
     <!-- END Shipping -->
     <!-- END validation -->
-
-
-<li class="nav-header"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
+<li class="nav-header text-danger"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>
 </li>
 <li class="nav-item has-treeview">
@@ -390,7 +388,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   </a>
 </li>
 
-<li class="nav-header"><strong> AdminLTE 3 Pages</strong></li>
+<li class="nav-header text-danger"><strong> AdminLTE 3 Pages</strong></li>
 <!-- Add icons to the links using the .nav-icon class
         with font-awesome or any other icon font library -->
 <li class="nav-item has-treeview">
@@ -636,7 +634,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </li>
   </ul>
 </li>
-<li class="nav-header"><?php echo lang('examples') ?></li>
+<li class="nav-header text-danger"><?php echo lang('examples') ?></li>
 <li class="nav-item">
   <a href="<?php echo url('adminlte/main/calendar'); ?>" class="nav-link">
     <i class="nav-icon far fa-calendar-alt"></i>
@@ -825,14 +823,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </li>
   </ul>
 </li>
-<li class="nav-header"><?php echo lang('MISCELLANEOUS') ?></li>
+<li class="nav-header text-danger"><?php echo lang('MISCELLANEOUS') ?></li>
 <li class="nav-item">
   <a href="https://adminlte.io/docs/3.0" class="nav-link">
     <i class="nav-icon fas fa-file"></i>
     <p><?php echo lang('documentation') ?></p>
   </a>
 </li>
-<li class="nav-header"><?php echo lang('multi_level_example') ?></li>
+<li class="nav-header text-danger"><?php echo lang('multi_level_example') ?></li>
 <li class="nav-item">
   <a href="#" class="nav-link">
     <i class="fas fa-circle nav-icon"></i>
@@ -897,7 +895,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <p><?php echo lang('level') ?> 1</p>
   </a>
 </li>
-<li class="nav-header"><?php echo lang('labels') ?></li>
+<li class="nav-header text-danger"><?php echo lang('labels') ?></li>
 <li class="nav-item">
   <a href="#" class="nav-link">
     <i class="nav-icon far fa-circle text-danger"></i>
@@ -916,5 +914,4 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <p><?php echo lang('informational') ?></p>
   </a>
 </li>
-
 </ul>

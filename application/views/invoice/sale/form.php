@@ -86,4 +86,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </script>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderEdit.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainSaleCreate.js"></script>

@@ -39,7 +39,7 @@ class Payment extends MY_Controller
 		ifPermissions('purchase_payment_list');
 		$this->form_validation->set_rules('supplier_code', lang('supplier_code'), 'required|trim');
 		$this->page_data['title'] = 'purchase_returns';
-		$this->page_data['page']->submenu = 'payment';
+		$this->page_data['page']->submenu = 'payment_purchase';
 		if ($this->form_validation->run() == false) {
 			$this->load->view('invoice/purchase/payment', $this->page_data);
 		} else {

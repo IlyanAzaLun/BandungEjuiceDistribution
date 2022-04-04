@@ -109,8 +109,74 @@ class Sale extends Invoice_controller
 	}
 
 	public function edit()
-	{
-		# code...
+	{	
+		ifPermissions('sale_create');
+		$this->form_validation->set_rules('customer_code', lang('customer_code'), 'required|trim');
+		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
+		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
+		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
+		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
+			$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['title'] = 'sale_edit';
+			$this->page_data['page']->submenu = 'sale_list';
+			$this->load->view('invoice/sale/edit', $this->page_data);
+		}else{
+			$this->data['invoice_code'] = $this->input->get('id');
+			$date = preg_split('/[-]/', $this->input->post('date_due'));
+			$this->data['date'] = array(
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
+			);
+			//information items
+			$items = array();
+			foreach (post('item_code') as $key => $value) {
+				$items[] = array(
+					"id" => post('id')[$key],
+					"index_list" => post('index_list')[$key],
+					"item_id" => post('item_id')[$key],
+					"item_code" => post('item_code')[$key],
+					"item_name" => post('item_name')[$key],
+					"item_quantity" => post('item_quantity')[$key],
+					"item_order_quantity" => post('item_order_quantity')[$key],
+					"item_unit" => post('item_unit')[$key],
+					"item_capital_price" => post('item_capital_price')[$key],
+					"item_selling_price" => post('item_selling_price')[$key],
+					"item_discount" => post('item_discount')[$key],
+					"total_price" => post('total_price')[$key],
+					"item_description" => post('description')[$key],
+					"customer_code" => post('customer_code'),
+				);
+			}
+			//information payment
+			$payment = array(
+				'customer' => post('customer_code'),
+				'store_name' => post('store_name'),
+				'contact_phone' => post('contact_phone'),
+				'address' => post('address'),
+				'total_price' => post('sub_total'),
+				'discounts' => post('discount'),
+				'shipping_cost' => post('shipping_cost'),
+				'other_cost' => post('other_cost'),
+				'grand_total' => post('grand_total'),
+				'expedition_name' => post('expedition_name'),
+				'services_expedition' => post('services_expedition'),
+				'payment_type' => post('payment_type'),
+				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'note' => post('note'),
+				'reference_order' => get('id'),
+			);
+
+			echo '<pre>';
+			var_dump($items);
+			echo '<hr>';
+			var_dump($payment);
+			echo '</pre>';
+		}
 	}
 
 	/** 
@@ -230,7 +296,6 @@ class Sale extends Invoice_controller
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$data_positif[] = $request[$key];
-				// unset($data_positif[$key]['id']);
 			} else {
 				$request[$key]['created_by'] = logged('id');
 				$data_negatif[$key] = $request[$key];

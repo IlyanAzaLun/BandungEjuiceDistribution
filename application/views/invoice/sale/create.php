@@ -54,8 +54,8 @@
                     <th><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
-                    <th><?= lang('item_capital_price') ?></th>
-                    <th style="display:none"><?= lang('item_selling_price') ?></th>
+                    <th style="display:none"><?= lang('item_capital_price') ?></th>
+                    <th><?= lang('item_selling_price') ?></th>
                     <th><?= lang('item_order_quantity') ?></th>
                     <th><?= lang('discount') ?></th>
                     <th><?= lang('total_price') ?></th>
@@ -79,10 +79,13 @@
                         </div>
                       </div>
                     </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td style="display:none" ><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td>
                     <div class="input-group input-group-sm">
+                      <span class="input-group-prepend">
+                          <span class="input-group-text" data-id="item_quantity"></span>
+                      </span>
                       <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required>
                       <div class="input-group-append">
                         <span class="input-group-text" data-id="item_unit"></span>
@@ -94,6 +97,7 @@
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                        <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
                       </div>
                     </td>
@@ -132,8 +136,9 @@
                   <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
                 </div>
               </div>
+
               <div class="row">
-                <div class="col-lg-6 col-sm-12">
+                <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('discount') ?> :</h6>
                     <div class="input-group mb-3">
@@ -144,7 +149,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-6 col-sm-12">
+                <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('shipping_cost') ?> :</h6>
                     <div class="input-group mb-3">
@@ -155,8 +160,29 @@
                     </div>
                   </div>
                 </div>
+                <!--  -->
+                <div class="col-lg-3 col-sm-12">
+                    <div class="form-group">
+                        <h6><?= lang('expedition_name') ?></h6>
+                        <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                            <option selected disabled><?=lang('option')?></option>
+                            <?php foreach ($expedition as $key => $value):?>
+                                <option value="<?= $value->expedition_name ?>" data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-12">
+                    <div class="form-group">
+                        <h6><?= lang('expedition_services') ?></h6>
+                        <select class="custom-select" name="services_expedition" id="services_expedition" required>
+                        </select>
+                    </div>
+                </div>
+                <!--  -->
 
               </div>
+
             </div>
             <div class="col-lg-3 col-sm-12" style="display: none">
               <div class="form-group">
