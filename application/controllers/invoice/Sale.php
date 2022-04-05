@@ -86,8 +86,8 @@ class Sale extends Invoice_controller
 				'note' => post('note'),
 				'reference_order' => get('id'),
 			);
-			// change order statsu is_created
 			try {
+				// CREATE
 				$this->order_model->update_by_code(get('id'), array('is_created' => 1));
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
@@ -182,10 +182,11 @@ class Sale extends Invoice_controller
 				'reference_order' => get('id'),
 			);
 			try {
+				// EDIT
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->create_or_update_list_item_transcation($items);
-				$this->update_items($items);
+				// $this->update_items($items);
 				
 				$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
@@ -346,7 +347,7 @@ class Sale extends Invoice_controller
 			}
 			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
-			// $this->items_model->update($item[$key]->id, $request[$key]);
+			$this->items_model->update($item[$key]->id, $request[$key]);
 		}
 		return $request;
 		// return $this->items_model->update_batch($request, 'item_code');

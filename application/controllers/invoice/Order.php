@@ -72,8 +72,9 @@ class Order extends Invoice_controller
 				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'note' => post('note'),
 			);
-			$this->create_or_update_list_item_order_sale($items);
+			// CREATE
 			$this->create_or_update_order($payment);
+			$this->create_or_update_list_item_order_sale($items);
 			$this->update_items($items);
 		
 			$this->activity_model->add("Create Order, #" . $this->data['order_code'], (array) $payment);
@@ -99,7 +100,7 @@ class Order extends Invoice_controller
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
 			$this->page_data['title'] = 'order_edit';
-			$this->page_data['page']->submenu = 'order_edit';
+			$this->page_data['page']->submenu = 'order_list';
 			$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
 			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
 			if(!hasPermissions('warehouse_order_list')){
@@ -128,10 +129,10 @@ class Order extends Invoice_controller
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
 				$items[$key]['item_name'] = post('item_name')[$key];
-				$items[$key]['item_quantity_current'] = post('item_quantity_current')[$key];
 				$items[$key]['item_quantity'] = post('item_quantity')[$key];
-				$items[$key]['item_order_quantity_current'] = post('item_order_quantity_current')[$key];
+				$items[$key]['item_quantity_current'] = post('item_quantity_current')[$key];
 				$items[$key]['item_order_quantity'] =  post('item_order_quantity')[$key];
+				$items[$key]['item_order_quantity_current'] = post('item_order_quantity_current')[$key];
 				$items[$key]['item_unit'] = post('item_unit')[$key];
 				$items[$key]['item_capital_price'] = post('item_capital_price')[$key];
 				$items[$key]['item_selling_price'] = post('item_selling_price')[$key];
@@ -163,10 +164,12 @@ class Order extends Invoice_controller
 				'created_by' => logged('id'),
 				'is_confirmed' => 0,
 			);
+			// EDIT
 			echo '<pre>';
-			var_dump($this->create_or_update_list_item_order_sale($items));
 			echo '<hr>';
-			var_dump($this->create_or_update_order($payment));
+			$this->create_or_update_order($payment);
+			$this->create_or_update_list_item_order_sale($items);
+			$this->update_items($items);
 			echo '</pre>';
 		
 			$this->activity_model->add("Update Order, #" . $this->data['order_code'], (array) $payment);
@@ -188,8 +191,6 @@ class Order extends Invoice_controller
 			$request[$key]['item_name'] = $value['item_name'];
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
-			$request[$key]['item_quantity'] = $item[$key]->quantity;
-			$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['item_total_price'] = setCurrency($value['total_price']);
@@ -197,11 +198,15 @@ class Order extends Invoice_controller
 			$request[$key]['customer_code'] = $value['customer_code'];
 			if ($value['id']) {
 				$request[$key]['id'] = $value['id'];
+				$request[$key]['item_quantity'] = $item[$key]->quantity + $value['item_order_quantity_current'];
+				$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$data_positif[] = $request[$key];
 			} else {
+				$request[$key]['item_quantity'] = $item[$key]->quantity;
+				$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 				$request[$key]['created_by'] = logged('id');
 				$data_negatif[$key] = $request[$key];
 				unset($data_negatif[$key]['id']);
@@ -255,11 +260,10 @@ class Order extends Invoice_controller
 			$request[$key]['item_name'] = $value['item_name'];
 			if ($value['id']) {
 				$request[$key]['quantity'] = $item[$key]->quantity - ($value['item_order_quantity'] - $value['item_order_quantity_current']);
-				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
 			} else {
 				$request[$key]['quantity'] = $item[$key]->quantity - $value['item_order_quantity'];
-				$request[$key]['capital_price'] = (setCurrency($value['item_capital_price']) > $item[$key]->capital_price) ? setCurrency($value['item_capital_price']) : $item[$key]->capital_price;
 			}
+			$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
 			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
 			$this->items_model->update($item[$key]->id, $request[$key]);

@@ -147,6 +147,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
+                                                    <!-- 
                                                     <span class="input-group-prepend">
                                                         <span class="input-group-text"><i class="fa fa-recycle"></i></span>
                                                     </span>
@@ -154,6 +155,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <span class="input-group-prepend">
                                                         <span class="input-group-text"><i class="fa fa-recycle"></i></span>
                                                     </span>
+                                                     -->
                                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" max="<?= (int)$value->item_quantity ?>" value="0" required>
                                                     <input readonly class="form-control form-control-sm" type="number" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" value="<?= (int)$value->item_quantity ?>" required>
                                                     <span class="input-group-append">
