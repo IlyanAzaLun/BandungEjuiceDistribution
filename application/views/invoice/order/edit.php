@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="order_code" id="order_code" class="form-control" value="<?=$invoice->order_code?>" autocomplete="false" readonly required>
+                <input type="hidden" name="order_code" id="order_code" class="form-control" value="<?=$invoice->order_code?>" autocomplete="false" readonly required>
                 <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" value="<?=$invoice->customer?>" autocomplete="false" required>
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
@@ -89,17 +89,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th>No.</th>
-                    <th><?= lang('item_code') ?></th>
+                    <th width="2%">No.</th>
+                    <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
-                    <th><?= lang('item_quantity') ?></th>
+                    <th style="display: none"><?= lang('item_quantity') ?></th>
                     <th style="display: none"><?= lang('item_capital_price') ?></th>
-                    <th><?= lang('item_selling_price') ?></th>
-                    <th><?= lang('item_order_quantity') ?></th>
-                    <th><?= lang('discount') ?></th>
-                    <th><?= lang('total_price') ?></th>
-                    <th><?= lang('status_available') ?></th>
-                    <th><?= lang('option') ?></th>
+                    <th width="10%"><?= lang('item_selling_price') ?></th>
+                    <th width="10%"><?= lang('item_order_quantity') ?></th>
+                    <th width="7%"><?= lang('discount') ?></th>
+                    <th width="10%"><?= lang('total_price') ?></th>
+                    <th width="10%"><?= lang('status_available') ?></th>
+                    <th width="10%"><?= lang('option') ?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -112,7 +112,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" readonly required>
                             </td>
                             <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" readonly required></td>
-                            <td>
+                            <td style="display: none">
                                 <div class=" input-group input-group-sm">
                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
                                     <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
@@ -134,20 +134,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                     </span>
                                 </div>
-                                <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_order_quantity ?>">
+                                <input style="display: none" readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_order_quantity ?>">
                             </td>
                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
                             <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required readonly value="<?= $value->item_total_price ?>"></td>
                             <td class="text-center">
-                              <div class="btn-group" role="group" aria-label="Basic example">
-                              <button type="button" class="btn btn-default" id="detail" data-id="<?=$value?>" data-toggle="modal" data-target="#modal-detail-order" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></button>
+                              <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                 <button type="button" class="btn bg-<?=($value->status_available == null ?'secondary':($value->status_available == 0?'danger':'secondary'))?>" disabled id="status_availabel" ><i class="fas fa-tw fa-times"></i></button>
-                                <button type="button" class="btn btn-block bg-<?=($value->status_available)?'success':'secondary'?>" disabled id="status_availabel" ><i class="fas fa-tw fa-check"></i></button>
+                                <button type="button" class="btn bg-<?=($value->status_available)?'success':'secondary'?>" disabled id="status_availabel" ><i class="fas fa-tw fa-check"></i></button>
                               </div>
                             </td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
+                                <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                                    <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                                 <?php if (sizeof($items) <= 1) : ?>
                                     <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                 <?php else : ?>

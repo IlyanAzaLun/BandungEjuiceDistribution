@@ -50,16 +50,16 @@
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th>No.</th>
-                    <th><?= lang('item_code') ?></th>
+                    <th width="2%">No.</th>
+                    <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
-                    <th><?= lang('item_selling_price') ?></th>
-                    <th><?= lang('item_order_quantity') ?></th>
-                    <th><?= lang('discount') ?></th>
-                    <th><?= lang('total_price') ?></th>
-                    <th><?= lang('option') ?></th>
+                    <th width="10%"><?= lang('item_selling_price') ?></th>
+                    <th width="10%"><?= lang('item_order_quantity') ?></th>
+                    <th width="10%"><?= lang('discount') ?></th>
+                    <th width="10%"><?= lang('total_price') ?></th>
+                    <th width="10%"><?= lang('option') ?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -95,7 +95,7 @@
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
                     <td>
-                      <div class="btn-group" role="group" aria-label="Basic example">
+                      <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>

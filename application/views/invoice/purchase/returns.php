@@ -66,16 +66,16 @@
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
-                                        <th><?= lang('item_code') ?></th>
+                                        <th width="2%">No.</th>
+                                        <th width="7%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
-                                        <th><?= lang('item_capital_price') ?></th>
+                                        <th width="7%"><?= lang('item_capital_price') ?></th>
                                         <th style="display:none"><?= lang('item_selling_price') ?></th>
-                                        <th><?= lang('item_order_quantity') ?></th>
-                                        <th><?= lang('discount') ?></th>
-                                        <th><?= lang('total_price') ?></th>
-                                        <th><?= lang('option') ?></th>
+                                        <th width="15%"><?= lang('item_order_quantity') ?></th>
+                                        <th width="7%"><?= lang('discount') ?></th>
+                                        <th width="15%"><?= lang('total_price') ?></th>
+                                        <th width="7%"><?= lang('option') ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -103,7 +103,7 @@
                                             <td><?= $key+1 ?>.</td>
                                             <td>
                                                 <input disabled type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
-                                                <input type="number" name="index_list[]" id="index_list" value="<?= $value->index_list ?>">
+                                                <input type="hidden" name="index_list[]" id="index_list" value="<?= $value->index_list ?>">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
                                             </td>
@@ -131,11 +131,11 @@
                                             </td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
                                             <td>
-                                                <input class="form-control form-control-sm currency" type="text" name="total_price_current[]" data-id="total_price_current" min="0" required value="<?= $value->total_price ?>" readonly>
+                                                <input class="form-control form-control-sm currency" type="hidden" name="total_price_current[]" data-id="total_price_current" min="0" required value="<?= $value->total_price ?>" readonly>
                                                 <input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->total_price ?>">
                                             </td>
                                             <td>
-                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                                                     <button type="button" class="btn btn-block btn-primary" id="is_safty"><i class="fa fa-tw fa-circle-notch"></i></button>
                                                 </div>

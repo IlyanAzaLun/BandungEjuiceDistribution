@@ -91,8 +91,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
-                                        <th><?= lang('item_code') ?></th>
+                                        <th width="2%">No.</th>
+                                        <th width="10%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
                                         <th width="10%"><?= lang('item_capital_price') ?></th>
@@ -147,15 +147,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
-                                                    <!-- 
-                                                    <span class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="fa fa-recycle"></i></span>
-                                                    </span>
-                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" max="<?= (int)$value->item_quantity ?>" value="0" required>
-                                                    <span class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="fa fa-recycle"></i></span>
-                                                    </span>
-                                                     -->
                                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" max="<?= (int)$value->item_quantity ?>" value="0" required>
                                                     <input readonly class="form-control form-control-sm" type="number" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" value="<?= (int)$value->item_quantity ?>" required>
                                                     <span class="input-group-append">
@@ -165,7 +156,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
                                             <td>
-                                                <input class="form-control form-control-sm currency" type="text" name="total_price_current[]" data-id="total_price_current" min="0" required value="<?= $value->total_price ?>" readonly>
+                                                <input class="form-control form-control-sm currency" type="hidden" name="total_price_current[]" data-id="total_price_current" min="0" required value="<?= $value->total_price ?>" readonly>
                                                 <input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->total_price ?>">
                                             </td>
                                             <td>

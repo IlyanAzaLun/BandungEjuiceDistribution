@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       autoWidth: false,
       order: [[ 3, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
+        "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -155,7 +155,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           })
       },
       columns: [{
-          data: "order_code",
+          data: "invoice_code",
           render: function(data, type, row) {
             return row['id']
           }
@@ -164,11 +164,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "created_at"
         },
         {
-          data: "updated_at",
-          visible: false,
+          data: "updated_at"
         },
         {
-          data: "order_code"
+          data: "invoice_code"
         },
         {
           data: "store_name",
@@ -208,7 +207,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "grand_total",
-          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
@@ -225,12 +223,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 10, true)
+            return shorttext(data, 100, true)
             // return data
           }
         },
         {
-          data: "user_order_create_by",
+          data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
             return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
@@ -239,13 +237,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "order_code",
+          data: "invoice_code",
           orderable: false,
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <button disabled class="btn btn-xs btn-danger confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-times"></i></button>
+                  <a href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
                 </div>`;
           }
         },

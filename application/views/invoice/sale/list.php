@@ -229,6 +229,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "invoice_code",
           orderable: false,
+          visible: <?=(hasPermissions('purchase_list')==true)?1:0?>,
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">

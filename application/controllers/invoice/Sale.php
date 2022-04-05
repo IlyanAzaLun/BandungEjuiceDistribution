@@ -159,6 +159,9 @@ class Sale extends Invoice_controller
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => post('customer_code'),
+					if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
+						unset($items[$key]);
+					}
 				);
 			}
 			//information payment
@@ -186,7 +189,7 @@ class Sale extends Invoice_controller
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->create_or_update_list_item_transcation($items);
-				// $this->update_items($items);
+				$this->update_items($items);
 				
 				$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
