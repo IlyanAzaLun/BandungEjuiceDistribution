@@ -116,7 +116,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 3, "desc" ]],
+      order: [[ 1, "desc" ]],
       // rowCallback: function(row, data, index){
       //   if(data['is_cancelled'] == true){
       //     $(row).addClass('bg-danger');

@@ -319,6 +319,7 @@ class Items extends MY_Controller
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,
                 "item_quantity" => $record->quantity,
+                "item_broken" => $record->broken,
                 "item_unit" => $record->unit,
                 "item_capital_price" => $record->capital_price,
                 "item_selling_price" => $record->selling_price,

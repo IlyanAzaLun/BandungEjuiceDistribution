@@ -51,5 +51,24 @@ class Shipper extends MY_Controller
 		$this->load->view('validation/shipper/list', $this->page_data);
 		$this->load->view('includes/modals', $this->page_data);
 	}
+
+	public function destination()
+	{		
+		$data['customer'] = $this->customer_model->get_information_customer(get('id'));
+	
+		$this->load->library('pdf');
+	
+		$this->pdf->setPaper('A4', 'potrait');
+		$this->pdf->filename = "laporan-petanikode.pdf";
+		$this->pdf->load_view('validation/shipper/destination', $data);
+		// $dompdf = new Dompdf\Dompdf();
+		// $options = $dompdf->getOptions();
+		// $options->setDefaultFont('Courier');
+		// $html = 'helllo';
+		// $dompdf->setPaper('A4', 'landscape');
+        // $dompdf->loadHtml($html);
+		// $dompdf->render();
+        // $dompdf->stream("welcome.pdf", array('Attachment' => 0));
+	}
 	
 }

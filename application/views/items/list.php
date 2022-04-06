@@ -38,6 +38,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
                   <th><?= lang('item_quantity') ?></th>
+                  <th><?= lang('broken') ?></th>
+                  <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
                   <th><?= lang('option') ?></th>
@@ -51,6 +53,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
                   <th><?= lang('item_quantity') ?></th>
+                  <th><?= lang('broken') ?></th>
+                  <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
                   <th><?= lang('option') ?></th>
@@ -108,8 +112,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
+          data: 'item_quantity',
           render: function(data, type, row) {
-            return `${row['item_quantity']} (${row['item_unit']})`;
+            return `${row['item_quantity']}`;
+          }
+        },
+        {
+          data: 'item_broken',
+          render: function(data, type, row) {
+            return `${data}`;
+          }
+        },
+        {
+          data: 'item_unit',
+          render: function(data, type, row) {
+            return `${data}`;
           }
         },
         {

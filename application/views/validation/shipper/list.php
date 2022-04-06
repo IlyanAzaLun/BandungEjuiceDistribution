@@ -64,10 +64,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
-                  <th>no.</th>
-                  <th><?= lang('created_at') ?></th>
-                  <th><?= lang('updated_at') ?></th>
-                  <th><?= lang('order_code') ?></th>
+                  <th width="2%">no.</th>
+                  <th width="10%"><?= lang('created_at') ?></th>
+                  <th width="10%"><?= lang('updated_at') ?></th>
+                  <th width="10%"><?= lang('order_code') ?></th>
                   <th><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
@@ -75,8 +75,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('other_cost') ?></th>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
-                  <th><?= lang('note') ?></th>
-                  <th><?= lang('created_by') ?></th>
+                  <th width="20%"><?= lang('note') ?></th>
+                  <th width="15%"><?= lang('created_by') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </thead>
@@ -152,6 +152,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               $(rows).eq(i).remove();
               $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
             }
+            if(index['invoice_code'].match(/RET/) != null){
+              $(rows).eq(i).remove();
+            }
           })
       },
       columns: [{
@@ -173,7 +176,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${data} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
@@ -207,6 +210,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "grand_total",
+          visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
@@ -237,13 +241,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "invoice_code",
+          data: "customer_code",
           orderable: false,
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
+                  <a href="<?= url('validation/shipper') ?>/destination?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa-search text-primary"></i></a>
                 </div>`;
           }
         },

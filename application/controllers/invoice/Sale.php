@@ -159,11 +159,12 @@ class Sale extends Invoice_controller
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => post('customer_code'),
-					if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
-						unset($items[$key]);
-					}
 				);
+				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
+					unset($items[$key]);
+				}
 			}
+			$items = array_values($items);
 			//information payment
 			$payment = array(
 				'customer' => post('customer_code'),
@@ -398,7 +399,9 @@ class Sale extends Invoice_controller
 		## Fetch records
 		$this->db->select('
 		sale.id as id, 
+		SUBSTRING(sale.invoice_code, 5) as invoice_code_reference, 
 		sale.invoice_code as invoice_code, 
+		sale.have_a_child as have_a_child, 
 		sale.total_price as total_price, 
 		sale.discounts as discounts, 
 		sale.shipping_cost as shipping_cost, 
@@ -444,7 +447,9 @@ class Sale extends Invoice_controller
 
 			$data[] = array(
 				'id' => $record->id,
+				'invoice_code_reference' => $record->invoice_code_reference,
 				'invoice_code' => $record->invoice_code,
+				'have_a_child' => $record->have_a_child,
 				'customer_code' => $record->customer_code,
 				'store_name' => $record->store_name,
 				'total_price' => $record->total_price,

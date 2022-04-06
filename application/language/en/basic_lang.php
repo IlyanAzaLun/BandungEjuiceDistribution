@@ -265,6 +265,8 @@ $lang['status_active'] = "This data will not be displayed if the status is turne
  * Items
  */
 $lang['item'] = "item";
+$lang['unit'] = "Unit";
+$lang['broken'] = "Broken";
 $lang['item_list'] = "List item";
 $lang['item_list_information'] = "List item information";
 $lang['item_list_information_transaction'] = "Transaction item information";

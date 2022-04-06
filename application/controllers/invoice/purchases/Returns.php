@@ -282,11 +282,11 @@ class Returns extends Purchase
 			}
 		}
 		if (@$data_negatif) {
-			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, ['item_code', 'index_list'])) {
+			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
 		} else {
-			$this->transaction_item_model->update_batch($data_positif, ['item_code', 'index_list']);
+			$this->transaction_item_model->update_batch($data_positif, 'id');
 			return true;
 		}
 		return false;

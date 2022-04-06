@@ -31,7 +31,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $_data_item_invoice_return = $this->transaction_item_model->get_transaction_item_by_code_invoice($__return_invoice_code);
     ?>
     <!-- Default card -->
-
     <div class="row">
         <div class="col-12">
             <div class="callout callout-info">
@@ -42,15 +41,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <!-- Information customer START -->
             <div class="card">
                 <div class="card-header with-border">
-                    <h3 class="card-title"><i class="fa fa-fw fa-dice-one"></i><?php echo lang('information_supplier') ?></h3>
+                    <h3 class="card-title"><i class="fa fa-fw fa-dice-one"></i><?php echo lang('information_customer') ?></h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label for="store_name"><?= lang('supplier_code') ?></label>
-                                <input readonly type="text" name="supplier_code" id="supplier_code" class="form-control" placeholder="<?= lang('find_supplier_code') ?>" autocomplete="false" value="<?= $invoice->supplier ?>" required>
-                                <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
+                                <label for="store_name"><?= lang('customer_code') ?></label>
+                                <input readonly type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice->customer ?>" required>
+                                <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
 
@@ -92,15 +91,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <thead>
                                     <tr>
                                         <th width="2%">No.</th>
-                                        <th width="10%"><?= lang('item_code') ?></th>
+                                        <th width="8%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
                                         <th width="10%"><?= lang('item_capital_price') ?></th>
                                         <th style="display:none"><?= lang('item_selling_price') ?></th>
                                         <th width="15%"><?= lang('item_order_quantity') ?></th>
                                         <th width="8%"><?= lang('discount') ?></th>
-                                        <th width="8%"><?= lang('total_price') ?></th>
-                                        <th width="8%"><?= lang('option') ?></th>
+                                        <th width="10%"><?= lang('total_price') ?></th>
+                                        <th width="12%"><?= lang('option') ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -163,6 +162,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item sale"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                                                     <button type="button" class="btn btn-primary" id="is_safty"><i class="fa fa-tw fa-circle-notch"></i></button>
+                                                    <!--  -->
+                                                    <input type="hidden" name="status_return[<?=$key?>]" value="0">
+                                                    <input type="checkbox" name="status_return[<?=$key?>]" data-bootstrap-switch data-off-color="danger" data-off-text="<i class='fa fa-fw fa-trash'>" data-on-color="success" data-on-text="<i class='fa fa-fw fa-recycle'></i>" value="1">
+                                                    <!--  -->
                                                 </div>
                                             </td>
                                         </tr>

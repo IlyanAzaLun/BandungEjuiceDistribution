@@ -30,12 +30,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
-            <div class="card-tools pull-right">
-              <?php if (hasPermissions('sale_create')) : ?>
-                <a href="<?php echo url('invoice/sale/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('sale_create') ?></a>
-              <?php endif ?>
-            </div>
-
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -67,6 +61,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th>no.</th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
+                  <th><?= lang('invoice_code_reference') ?></th>
                   <th><?= lang('invoice_code') ?></th>
                   <th><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
@@ -138,11 +133,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       drawCallback: function ( settings ) {
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
+        var last = null;
+        let regex = /RET/;
         api.rows( {page:'current'} ).data().each(function(index, i){
-          if(index['is_created'] == false){
-            $(rows).eq(i).remove();
+          if(index['invoice_code'].match(regex) != null){
+            $(rows).eq(i).addClass('bg-lightblue color-palette');
+          }
+          if(index['is_cancelled'] == true){
+            $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
           }
         })
+        api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+            if ( last !== group ) {
+                $(rows).eq( i ).before(
+                    `<tr class="group"><td class="group" colspan="15"><span class="text-info">${group}</span></td></tr>`
+                );
+                last = group;
+            }
+        } );
       },
       columns: [{
           data: "invoice_code",
@@ -157,8 +165,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "updated_at"
         },
         {
-          data: "invoice_code"
+          visible: false,
+          data: "invoice_code_reference"
         },
+        {
+          data: "invoice_code",
+          render: function(data, type, row){
+            let html = '';
+            let regex = /RET/;
+            if(data.match(regex) != null){
+              html += '<span class="float-right"><a class="btn btn-xs btn-default disabled" data-toggle="tooltip" data-placement="top" title="Is Returns"><i class="fa fa-fw fa-undo text-primary"></i></a></span>';
+              //<span class="badge badge-danger">RETURNS</span>
+            }
+            return `${data} ${html}`;
+          }},
         {
           data: "store_name",
           orderable: false,
@@ -231,10 +251,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           visible: <?=(hasPermissions('purchase_list')==true)?1:0?>,
           render: function(data, type, row, meta) {
+            let html = ``;
+            let regex = /RET/;
+            if(data.match(regex) == null){
+              html += ``;
+              if(row['have_a_child'] == null && row['is_cancelled'] == false){
+                html += `
+                <a href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                <a href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
+                `;
+              }
+            }else{
+              html += ``;
+              if(row['is_cancelled'] == false){
+                html += `
+                  <a href="<?= url('invoice/sales/returns') ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  `;
+              }
+            }
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
+                ${html}
                 </div>`;
           }
         },

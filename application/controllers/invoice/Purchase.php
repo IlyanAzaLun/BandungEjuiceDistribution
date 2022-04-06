@@ -109,7 +109,7 @@ class Purchase extends Invoice_controller
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
 			$this->page_data['title'] = 'purchase_edit';
-			$this->page_data['page']->submenu = 'list_purchase';
+			$this->page_data['page']->submenu = 'edit';
 			$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 
@@ -521,7 +521,6 @@ class Purchase extends Invoice_controller
 		if ($dateStart != '') {
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
-			// $this->db->where("purchasing.created_at BETWEEN $dateStart AND $dateFinal", null, FALSE);
 		}
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
