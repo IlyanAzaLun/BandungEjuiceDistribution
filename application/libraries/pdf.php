@@ -12,6 +12,7 @@
  * @link        https://github.com/ardianta/codeigniter-dompdf
  */
 use Dompdf\Dompdf;
+use Dompdf\Options;
 class Pdf extends Dompdf{
     /**
      * PDF filename
@@ -19,8 +20,8 @@ class Pdf extends Dompdf{
      */
     public $filename;
     public function __construct(){
-        parent::__construct();
-        $this->filename = "laporan.pdf";
+    parent::__construct();
+    $this->filename = "Report.pdf";
     }
     /**
      * Get an instance of CodeIgniter
@@ -42,10 +43,10 @@ class Pdf extends Dompdf{
      */
     public function load_view($view, $data = array()){
         $html = $this->ci()->load->view($view, $data, TRUE);
-        $this->load_html($html);
+        $this->load_html(utf8_decode($html));
         // Render the PDF
         $this->render();
-            // Output the generated PDF to Browser
-               $this->stream($this->filename, array("Attachment" => false));
+        // Output the generated PDF to Browser
+        $this->stream($this->filename, array("Attachment" => false));
     }
 }

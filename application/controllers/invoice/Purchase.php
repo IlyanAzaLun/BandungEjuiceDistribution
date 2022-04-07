@@ -250,8 +250,14 @@ class Purchase extends Invoice_controller
 				$items[$key]['item_description'] = $value->item_description;
 				$items[$key]['customer_code'] = $value->customer_code;
 				$items[$key]['is_cancelled'] = 1;
+
+				
 				if($intersect_code_item[$key] == $value->item_code && $intersect_index_item[$key] == $value->index_list){
-					$items[$key]['item_order_quantity'] = ($value->item_quantity - $purchase_return_[$i]->item_quantity) * -1;
+					if($purchase_return_[$i]->is_cancelled){
+						$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
+					}else{
+						$items[$key]['item_order_quantity'] = ($value->item_quantity - $purchase_return_[$i]->item_quantity) * -1;
+					}
 					$i++;
 				}else{
 					$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;

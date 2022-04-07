@@ -53,13 +53,19 @@ class Shipper extends MY_Controller
 	}
 
 	public function destination()
-	{		
-		$data['customer'] = $this->customer_model->get_information_customer(get('id'));
+	{	
+		$customer = $this->customer_model->get_information_customer(get('id'));
+		$data['customer'] = $customer;
 	
 		$this->load->library('pdf');
 	
-		$this->pdf->setPaper('A4', 'potrait');
-		$this->pdf->filename = "laporan-petanikode.pdf";
+        $options = $this->pdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $this->pdf->setOptions($options);
+
+
+		$this->pdf->setPaper('A5', 'landscape');
+		$this->pdf->filename = "$customer->store_name.pdf";
 		$this->pdf->load_view('validation/shipper/destination', $data);
 		// $dompdf = new Dompdf\Dompdf();
 		// $options = $dompdf->getOptions();

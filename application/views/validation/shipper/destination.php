@@ -1,1 +1,2 @@
+<img src="https://external-preview.redd.it/6l63BffeDoLRZw5EiCuApqXRMrViJK5RhHjnD1eEQ0M.jpg?auto=webp&s=34697fb3fc0b37b6d78c4859f99472bf5ac2b50e" alt="" width="100px">
 <pre><?php print_r($customer); ?></pre>
