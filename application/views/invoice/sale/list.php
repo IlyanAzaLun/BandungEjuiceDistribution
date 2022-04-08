@@ -121,7 +121,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 1, "desc" ]],
+      order: [[ 3, "desc" ]],
       ajax: {
         "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
         "type": "POST",

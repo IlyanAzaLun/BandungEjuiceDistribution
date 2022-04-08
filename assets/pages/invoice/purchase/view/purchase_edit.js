@@ -118,6 +118,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
+                        $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}&customer=${$('input#supplier_code').val()}`)
                         return false
                     }
                 })
@@ -171,6 +172,7 @@ const main = () => {
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                        <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" id="remove" class="btn btn-block btn-danger"><i class="fa fa-tw fa-times"></i></button>
                     </div>
                 </td>

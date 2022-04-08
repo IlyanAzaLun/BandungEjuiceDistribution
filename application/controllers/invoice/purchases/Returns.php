@@ -60,6 +60,7 @@ class Returns extends Purchase
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
+				$items[$key]['customer_code'] = post('supplier_code');
 				if($items[$key]['item_order_quantity'] == "0"){
 					unset($items[$key]);
 				}
@@ -93,8 +94,8 @@ class Returns extends Purchase
 			try {
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
+				$this->create_or_update_list_item_transcation($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -158,12 +159,12 @@ class Returns extends Purchase
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
+				$items[$key]['customer_code'] = post('supplier_code');
 				if($items[$key]['item_order_quantity'] == "0"){
 					unset($items[$key]);
 				}
 			}
 			$items = array_values($items);
-
 			if(sizeof($items) < 1){
 				$this->session->set_flashdata('alert-type', 'warning');
 				$this->session->set_flashdata('alert', lang('returns_failed'));
@@ -191,8 +192,8 @@ class Returns extends Purchase
 			try {
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
+				$this->create_or_update_list_item_transcation($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);

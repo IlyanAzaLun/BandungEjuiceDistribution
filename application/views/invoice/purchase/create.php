@@ -132,6 +132,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td>
                       <div class="btn-group" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                        <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
                       </div>
                     </td>
@@ -207,7 +208,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 col-sm-12">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <h6><b><?= lang('grandtotal') ?> :</b></h6>
                 <div class="input-group mb-3">
@@ -218,7 +219,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
               </div>
             </div>
-            <div class="col-lg-2 col-sm-12">
+            <div class="col-lg-1 col-sm-12">
               <div class="form-group">
                 <h6><?= lang('payment_type') ?></h6>
                 <select class="custom-select" name="payment_type">
@@ -227,15 +228,40 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </select>
               </div>
             </div>
-            <div class="col-lg-4 col-sm-12">
-              <div class="form-group">
-                <h6><?= lang('date_due') ?></h6>
-                <div class="input-group mb-3">
-                  <input type="text" id="date_due" name="date_due" class="form-control">
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
+            <div class="col-lg-7 col-sm-12">
+              <div class="row">
+                
+                <div class="col-lg-4 col-sm-12">
+                  <!-- Date -->
+                  <div class="form-group">
+                    <h6><?=lang('date')?></h6>
+                      <div class="input-group">
+                        <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at"/>
+                        <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
                   </div>
                 </div>
+
+                <div class="col-lg-6 col-sm-12">
+                  <div class="form-group">
+                    <h6><?= lang('date_due') ?></h6>
+                    <div class="input-group mb-3">
+                      <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
+                      <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-sm-12">
+                  <h6><?=lang('number_of_day')?></h6>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="numberdays" disabled>
+                  </div>
+                </div>
+
               </div>
             </div>
             <div class="col-lg col-sm-12">
@@ -267,14 +293,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
   $('body').addClass('sidebar-collapse');
-  
-  //Date range picker
+
+  function cb(start, end) {
+      $('#date_due span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+  }
   $('#date_due').daterangepicker({
+    
+    startDate: moment(),
     timePicker: true,
     timePicker24Hour: true,
-    timePickerIncrement: 30,
+    timePickerSeconds: true,
+    opens: "center",
+    drops: "up",
     locale: {
-      format: 'DD/MM/YYYY H:mm'
+      format: 'DD/MM/YYYY H:mm:s'
+    },
+    ranges: {
+        'Today': [moment(), moment()],
+        'Tomorow': [moment(), moment().add(1, 'days')],
+        'Next 7 Days': [moment(), moment().add(6, 'days')],
+        'Next 14 Days': [moment(), moment().add(13, 'days')],
+        'Next 30 Days': [moment(), moment().add(29, 'days')],
+        'This Month': [moment().startOf('month'), moment().endOf('month')],
+        'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
+    },
+  }, cb).on('apply.daterangepicker', function(ev, picker) {
+      $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
+  });
+  
+  //Date range picker
+  $('#created_at').daterangepicker({
+    startDate: moment(),
+    singleDatePicker: true,
+    timePicker: true,
+    timePicker24Hour: true,
+    timePickerSeconds: true,
+    opens: "center",
+    drops: "up",
+    locale: {
+      format: 'DD/MM/YYYY H:mm:s'
     }
   });
 </script>

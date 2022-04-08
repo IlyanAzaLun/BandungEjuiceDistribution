@@ -61,6 +61,7 @@ class Returns extends Sale
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
 				$items[$key]['status_return'] = post('status_return')[$key];
+				$items[$key]['customer_code'] = post('customer_code');
 				if($items[$key]['item_order_quantity'] == "0"){
 					unset($items[$key]);
 				}
@@ -96,8 +97,8 @@ class Returns extends Sale
 				// CREATE
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
+				$this->create_or_update_list_item_transcation($items);
 				echo '</pre>';
 			} catch (\Throwable $th) {
 				echo "<pre>";
@@ -163,6 +164,7 @@ class Returns extends Sale
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
 				$items[$key]['status_return'] = post('status_return')[$key];
+				$items[$key]['customer_code'] = post('customer_code');
 				if($items[$key]['item_order_quantity'] == "0"){
 					unset($items[$key]);
 				}
@@ -198,8 +200,8 @@ class Returns extends Sale
 				echo '<pre>';
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
+				$this->create_or_update_list_item_transcation($items);
 				// echo '<hr>';
 				// var_dump($this->db->get_compiled_insert());
 				// echo '<hr>';

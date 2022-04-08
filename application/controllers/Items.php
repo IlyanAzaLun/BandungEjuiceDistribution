@@ -425,9 +425,9 @@ class Items extends MY_Controller
                 "status_type" => $record->status_type,
                 "status_transaction" => $record->status_transaction,
                 "invoice_reference" => $record->invoice_reference,
-                "updated_at" => date(setting('datetime_format'), strtotime($record->history_updated_at)),
+                "updated_at" => $record->history_updated_at,
                 "created_by" => $record->name,
-                "created_at" => date(setting('datetime_format'), strtotime($record->history_created_at)),
+                "created_at" => $record->history_created_at,
                 "updated_by" => $record->history_updated_by
             );
         }
@@ -513,6 +513,7 @@ class Items extends MY_Controller
                 , transaction.created_at as transaction_created_at
                 , user_created.name as transaction_created_by
                 , transaction.updated_at as transaction_updated_at
+                , IF(transaction.updated_at, transaction.updated_at, transaction.created_at) as transaction_date_at
                 , user_updated.name as transaction_updated_by
                 , user_created.id as user_id
                 , transaction.is_cancelled as is_cancelled');
@@ -531,7 +532,7 @@ class Items extends MY_Controller
                 $this->db->where('transaction.customer_code', $customer);
             }
             $this->db->order_by($columnName, $columnSortOrder);
-            $this->db->group_by('invoice_code');
+            // $this->db->group_by('invoice_code');
             $this->db->limit($rowperpage, $start);
             $records = $this->db->get('invoice_transaction_list_item transaction')->result();
             $data = array();
@@ -543,6 +544,7 @@ class Items extends MY_Controller
                     "user_id" => $record->user_id,
                     "item_code" => $record->item_code,
                     "item_name" => $record->item_name,
+                    "item_current_quantity" => $record->item_current_quantity,
                     "item_quantity" => $record->item_quantity,
                     "item_in" => $record->item_in,
                     "item_out" => $record->item_out,
@@ -559,9 +561,10 @@ class Items extends MY_Controller
                     "invoice_code" => $record->invoice_code,
                     "invoice_code_reference" => $record->invoice_code_reference,
                     "transaction_created_by" => $record->transaction_created_by,
-                    "transaction_created_at" => date(setting('datetime_format'), strtotime($record->transaction_created_at)),
+                    "transaction_created_at" => $record->transaction_created_at,
                     "transaction_updated_by" => $record->transaction_updated_by,
-                    "transaction_updated_at" => date(setting('datetime_format'), strtotime($record->transaction_updated_at)),
+                    "transaction_updated_at" => $record->transaction_updated_at,
+                    "transaction_date_at" => $record->transaction_date_at,
                     "is_cancelled" => $record->is_cancelled,
                 );
             }

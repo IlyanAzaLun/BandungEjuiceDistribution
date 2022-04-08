@@ -189,8 +189,8 @@ class Sale extends Invoice_controller
 				// EDIT
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
+				$this->create_or_update_list_item_transcation($items);
 				
 				$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
@@ -236,9 +236,9 @@ class Sale extends Invoice_controller
 			$request[$key]['item_code'] = $value['item_code'];
 			$request[$key]['item_name'] = $value['item_name'];
 			if ($value['id']) {
-				$request[$key]['item_quantity'] = $value['item_quantity_current'];
-			} else {
 				$request[$key]['item_quantity'] = $item[$key]->quantity;
+			} else {
+				$request[$key]['item_quantity'] = $item[$key]->quantity + $value['item_order_quantity'];
 			}
 			$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];

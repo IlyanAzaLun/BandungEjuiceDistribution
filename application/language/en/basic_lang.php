@@ -259,6 +259,9 @@ $lang['created_by'] = "Created by";
 $lang['created_at'] = "Created at";
 $lang['updated_by'] = "Updated by";
 $lang['updated_at'] = "Updated at";
+$lang['date'] = "Date";
+$lang['day'] = "Days";
+$lang['number_of_day'] = "Number of days";
 $lang['status_active'] = "This data will not be displayed if the status is turned off";
 
 /*

@@ -76,15 +76,16 @@ class Purchase extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
 			try {
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
+				$this->create_or_update_list_item_transcation($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -168,16 +169,17 @@ class Purchase extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'created_by' => logged('id'),
 			);
 			try {
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
 				$this->update_items($items);
+				$this->create_or_update_list_item_transcation($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -290,8 +292,8 @@ class Purchase extends Invoice_controller
 		try {
 			$this->create_item_history( $items, ['CANCELED', 'CANCELED']);
 			$this->create_or_update_invoice($payment);
-			$this->create_or_update_list_item_transcation($items);
 			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
 		} catch (\Throwable $th) {
 			echo "<pre>";
 			var_dump($th);
@@ -317,11 +319,7 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_id'] = $item[$key]->id;
 			$request[$key]['item_code'] = $value['item_code'];
 			$request[$key]['item_name'] = $value['item_name'];
-			if ($value['id']) {
-				$request[$key]['item_quantity'] = $value['item_quantity_current'];
-			} else {
-				$request[$key]['item_quantity'] = $item[$key]->quantity;
-			}
+			$request[$key]['item_quantity'] = $item[$key]->quantity;
 			$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
@@ -404,10 +402,12 @@ class Purchase extends Invoice_controller
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
+			$request['created_at'] = $data['created_at'];
 			//
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['created_at'] = $data['created_at'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->purchase_model->create($request);

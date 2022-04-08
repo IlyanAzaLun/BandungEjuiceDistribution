@@ -118,18 +118,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                                     </span>
                                                 </div>
-                                                <input class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
+                                                <input class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_quantity ?>">
                                             </td>
                                             <td style="display: none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
-                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity')?>" required value="<?= (int)$value->item_quantity ?>">
+                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_quantity?>" required value="<?= (int)$value->item_quantity ?>">
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                                     </span>
                                                 </div>
-                                                <input style="display:none" class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>">
+                                                <input style="display: none" class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>">
                                             </td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->total_price ?>"></td>

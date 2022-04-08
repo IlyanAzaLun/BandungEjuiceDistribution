@@ -110,6 +110,7 @@
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                                                    <a target="_blank" href='<?=url("items/info_transaction?id=$value->item_code&customer=$invoice->supplier")?>' class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                                                 <?php if (sizeof($items) <= 1) : ?>
                                                     <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                                 <?php else : ?>
@@ -134,6 +135,7 @@
                 </div>
                 <!-- /.card-body -->
             </div>
+            <pre><?php var_dump()?></pre>
             <!-- Information Items END -->
             <!-- Information payment START -->
             <div class="card">
@@ -142,7 +144,7 @@
                 </div>
                 <div class="card-body payment">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-lg-6 col-12">
                             <div class="form-group">
                                 <h6><?= lang('subtotal') ?> :</h6>
                                 <div class="input-group mb-3">
@@ -152,6 +154,8 @@
                                     <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $invoice->total_price ?>" min="1" required>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
                             <div class="row">
                                 <div class="col-lg-6 col-sm-12">
                                     <div class="form-group">
@@ -175,7 +179,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12" style="display:none">
@@ -200,23 +203,39 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-12">
-                            <div class="form-group">
-                                <h6><?= lang('payment_type') ?></h6>
-                                <select class="custom-select" name="payment_type">
-                                    <option value="cash" <?= ($invoice->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
-                                    <option value="credit" <?= ($invoice->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-sm-12">
-                            <div class="form-group">
-                                <h6><?= lang('date_due') ?></h6>
-                                <div class="input-group mb-3">
-                                <input type="text" id="date_due" name="date_due" class="form-control" value="<?=date("d/m/Y H:i",strtotime($invoice->date_start))?> - <?=date("d/m/Y H:i",strtotime($invoice->date_due))?>">
-                                <dv class="input-group-append">
-                                    <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
-                                </dv>
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="row">
+                                <div class="col-lg-2 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('payment_type') ?></h6>
+                                        <select class="custom-select" name="payment_type">
+                                            <option value="cash" <?= ($invoice->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
+                                            <option value="credit" <?= ($invoice->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <!-- Date -->
+                                    <div class="form-group">
+                                        <h6><?=lang('date')?></h6>
+                                        <div class="input-group">
+                                            <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($invoice->created_at))?>">
+                                            <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('date_due') ?></h6>
+                                        <div class="input-group mb-3">
+                                        <input type="text" id="date_due" name="date_due" class="form-control" value="<?=date("d/m/Y H:i:s",strtotime($invoice->date_start))?> - <?=date("d/m/Y H:i:s",strtotime($invoice->date_due))?>">
+                                        <dv class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
+                                        </dv>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -263,12 +282,40 @@
     })
     
     //Date range picker
-    $('#date_due').daterangepicker({
+    function cb(start, end) {
+      $('#date_due span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+    $('#date_due').daterangepicker({        
         timePicker: true,
         timePicker24Hour: true,
-        timePickerIncrement: 30,
+        timePickerSeconds: true,
+        opens: "center",
+        drops: "up",
         locale: {
-        format: 'DD/MM/YYYY H:mm'
+        format: 'DD/MM/YYYY H:mm:ss'
+        },
+        ranges: {
+            'Today': [moment(), moment()],
+            'Tomorow': [moment(), moment().add(1, 'days')],
+            'Next 7 Days': [moment(), moment().add(6, 'days')],
+            'Next 14 Days': [moment(), moment().add(13, 'days')],
+            'Next 30 Days': [moment(), moment().add(29, 'days')],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
+        },
+    }, cb).on('apply.daterangepicker', function(ev, picker) {
+        $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
+    });
+    //Date range picker
+    $('#created_at').daterangepicker({
+        singleDatePicker: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        opens: "center",
+        drops: "up",
+        locale: {
+        format: 'DD/MM/YYYY H:mm:ss'
         }
     });
 </script>
