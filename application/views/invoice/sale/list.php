@@ -121,6 +121,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
+      aLengthMenu: [
+        [5, 50, 100, 200, <?=$this->db->get('invoice_selling')->num_rows()?>],
+        [5, 50, 100, 200, "All"]
+      ],
       order: [[ 3, "desc" ]],
       ajax: {
         "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",

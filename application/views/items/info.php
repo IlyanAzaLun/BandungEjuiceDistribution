@@ -98,6 +98,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             serverSide: true,
             responsive: true,
             autoWidth: false,
+            lengthChange: true,
+            lengthMenu: [
+                [10, 25, 50, 100, 200, <?=$this->db->get('items_history')->num_rows()?>], 
+                [10, 25, 50, 100, 200, "All"]
+            ],
             ajax: {
                 "url": "<?php echo url('items/serverside_datatables_data_items_information') ?>",
                 "type": "POST",

@@ -88,13 +88,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       processing: true,
       serverSide: true,
       responsive: true,
-      autoWidth: false,
+      autoWidth: false,        
+			lengthChange: true,
+      lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('items')?>], [10, 25, 50, 100, 200, "All"]],
       ajax: {
         "url": "<?php echo url('items/serverside_datatables_data_items') ?>",
         "type": "POST",
-        "data": {
-          "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content')
-        }
       },
       columns: [{
           data: "id"
@@ -107,8 +106,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "item_name",
           render: function(data, type, row) {
             let html = `<span class="float-right badge badge-danger">
-                                <?= lang('is_inactive') ?>
-                              </span>`;
+                          <?= lang('is_inactive') ?>
+                        </span>`;
             return `${data} ${(row['is_active']=="0")?html:''}`
           }
         },

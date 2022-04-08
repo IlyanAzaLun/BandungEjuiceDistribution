@@ -75,13 +75,43 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     })
     
     //Date range picker
+    function cb(start, end) {
+      $('#date_due span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
     $('#date_due').daterangepicker({
+        startDate: moment(),
         timePicker: true,
         timePicker24Hour: true,
-        timePickerIncrement: 30,
+        timePickerSeconds: true,
+        opens: "center",
+        drops: "up",
         locale: {
-        format: 'DD/MM/YYYY H:mm'
-        }
+            format: 'DD/MM/YYYY H:mm:s'
+        },
+        ranges: {
+            'Today': [moment(), moment()],
+            'Tomorow': [moment(), moment().add(1, 'days')],
+            'Next 7 Days': [moment(), moment().add(6, 'days')],
+            'Next 14 Days': [moment(), moment().add(13, 'days')],
+            'Next 30 Days': [moment(), moment().add(29, 'days')],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
+        },
+    }, cb).on('apply.daterangepicker', function(ev, picker) {
+        $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
+    });
+
+    //Date range picker
+    $('#created_at').daterangepicker({
+        singleDatePicker: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        opens: "center",
+        drops: "up",
+        locale: {
+            format: 'DD/MM/YYYY H:mm:s'
+    }
     });
 </script>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>

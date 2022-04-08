@@ -162,17 +162,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
           <div class="row">
             <div class="col-12">
-              <div class="form-group">
-                <h6><?= lang('subtotal') ?> :</h6>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Rp</span>
-                  </div>
-                  <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
-                </div>
-              </div>
               <div class="row">
-                <div class="col-lg-6 col-sm-12">
+                <div class="col-lg-6 col-12">
+                  <div class="form-group">
+                    <h6><?= lang('subtotal') ?> :</h6>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Rp</span>
+                      </div>
+                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('discount') ?> :</h6>
                     <div class="input-group mb-3">
@@ -183,7 +186,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-6 col-sm-12">
+                <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('shipping_cost') ?> :</h6>
                     <div class="input-group mb-3">
@@ -194,45 +197,41 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-
               </div>
-            </div>
-            <div class="col-lg-3 col-sm-12" style="display: none">
-              <div class="form-group">
-                <h6><?= lang('other_cost') ?> :</h6>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Rp</span>
-                  </div>
-                  <input readonly type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-sm-12">
-              <div class="form-group">
-                <h6><b><?= lang('grandtotal') ?> :</b></h6>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><b>Rp</b></span>
-                  </div>
-                  <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-1 col-sm-12">
-              <div class="form-group">
-                <h6><?= lang('payment_type') ?></h6>
-                <select class="custom-select" name="payment_type">
-                  <option value="cash"><?= lang('cash') ?></option>
-                  <option value="credit"><?= lang('credit') ?></option>
-                </select>
-              </div>
-            </div>
-            <div class="col-lg-7 col-sm-12">
               <div class="row">
+                <div class="col-lg-3 col-sm-12" style="display: none">
+                  <div class="form-group">
+                    <h6><?= lang('other_cost') ?> :</h6>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Rp</span>
+                      </div>
+                      <input readonly type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                  <div class="form-group">
+                    <h6><b><?= lang('grandtotal') ?> :</b></h6>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><b>Rp</b></span>
+                      </div>
+                      <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-1 col-sm-12">
+                  <div class="form-group">
+                    <h6><?= lang('payment_type') ?></h6>
+                    <select class="custom-select" name="payment_type">
+                      <option value="cash"><?= lang('cash') ?></option>
+                      <option value="credit"><?= lang('credit') ?></option>
+                    </select>
+                  </div>
+                </div>
                 
-                <div class="col-lg-4 col-sm-12">
-                  <!-- Date -->
+                <div class="col-lg-2 col-sm-12">
                   <div class="form-group">
                     <h6><?=lang('date')?></h6>
                       <div class="input-group">
@@ -242,9 +241,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                       </div>
                   </div>
-                </div>
-
-                <div class="col-lg-6 col-sm-12">
+                </div>            
+                <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('date_due') ?></h6>
                     <div class="input-group mb-3">
@@ -255,19 +253,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-2 col-sm-12">
+              </div>
+              <div class="row">
+                <div class="col-lg-11 col-sm-12">
+                  <div class="form-group">
+                    <label for="note"><?= lang('note') ?></label>
+                    <textarea name="note" id="note" class="form-control"></textarea>
+                  </div>
+                </div>
+                <div class="col-lg-1 col-sm-12">
                   <h6><?=lang('number_of_day')?></h6>
                   <div class="input-group">
                     <input type="text" class="form-control" id="numberdays" disabled>
                   </div>
                 </div>
-
-              </div>
-            </div>
-            <div class="col-lg col-sm-12">
-              <div class="form-group">
-                <label for="note"><?= lang('note') ?></label>
-                <textarea name="note" id="note" class="form-control"></textarea>
               </div>
             </div>
           </div>

@@ -110,6 +110,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             serverSide: true,
             responsive: true,
             autoWidth: false,
+            lengthChange: true,
+            lengthMenu: [
+                [10, 25, 50, 100, 200, <?=$this->db->get('invoice_transaction_list_item')->num_rows()?>], 
+                [10, 25, 50, 100, 200, "All"]
+            ],
             order: [[ 2, "desc" ]],
             ajax: {
                 "url": "<?php echo url('items/serverside_datatables_data_items_transaction') ?>",

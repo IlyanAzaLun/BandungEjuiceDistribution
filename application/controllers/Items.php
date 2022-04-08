@@ -356,7 +356,6 @@ class Items extends MY_Controller
         ## Total number of records without filtering
         $this->db->select('count(*) as allcount');
         $this->db->where('item_code', post('id'));
-        $this->db->group_by('created_at');
         $records = $this->db->get('items_history')->result();
         $totalRecords = $records[0]->allcount;
 
@@ -369,7 +368,6 @@ class Items extends MY_Controller
         }
         $this->db->join('users user', 'user.id=history.created_by', 'left');
         $this->db->where('history.item_code', post('id'));
-        $this->db->group_by('history.created_at');
         $records = $this->db->get('items_history history')->result();
         $totalRecordwithFilter = $records[0]->allcount;
 
@@ -465,8 +463,10 @@ class Items extends MY_Controller
 
             ## Total number of records without filtering
             $this->db->select('count(*) as allcount');
-            $this->db->where('item_code', post('id'));
-            $this->db->group_by('created_at');
+            $this->db->where('item_code', $item_code);
+            if ($customer) {
+                $this->db->where('transaction.customer_code', $customer);
+            }
             $records = $this->db->get('invoice_transaction_list_item')->result();
             $totalRecords = $records[0]->allcount;
 
@@ -484,7 +484,6 @@ class Items extends MY_Controller
             if ($customer) {
                 $this->db->where('transaction.customer_code', $customer);
             }
-            $this->db->group_by('transaction.invoice_code');
             $records = $this->db->get('invoice_transaction_list_item transaction')->result();
             $totalRecordwithFilter = $records[0]->allcount;
 
@@ -532,7 +531,7 @@ class Items extends MY_Controller
                 $this->db->where('transaction.customer_code', $customer);
             }
             $this->db->order_by($columnName, $columnSortOrder);
-            // $this->db->group_by('invoice_code');
+            $this->db->group_by('invoice_code');
             $this->db->limit($rowperpage, $start);
             $records = $this->db->get('invoice_transaction_list_item transaction')->result();
             $data = array();

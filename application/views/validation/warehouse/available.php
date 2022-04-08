@@ -170,7 +170,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       </div>
       <!-- Information Items END -->
       <!-- Information payment START -->
-      <div class="card">
+      <div class="card" style="display:none;">
         <div class="card-header with-border">
           <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_payment') ?></h3>
         </div>

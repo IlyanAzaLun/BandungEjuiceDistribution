@@ -117,16 +117,18 @@
                 <div class="card-body payment">
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-group">
-                                <h6><?= lang('subtotal') ?> :</h6>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $order->total_price ?>" min="1" required>
-                                </div>
-                            </div>
                             <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('subtotal') ?> :</h6>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Rp</span>
+                                            </div>
+                                            <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $order->total_price ?>" min="1" required>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-lg-3 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('discount') ?> :</h6>
@@ -146,6 +148,21 @@
                                                 <span class="input-group-text">Rp</span>
                                             </div>
                                             <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" value="<?= $order->shipping_cost ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><b><?= lang('grandtotal') ?> :</b></h6>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><b>Rp</b></span>
+                                            </div>
+                                            <input type="text" readonly name="grand_total" id="grand_total" class="form-control currency" value="<?= $order->grand_total ?>" min="1" required>
                                         </div>
                                     </div>
                                 </div>
@@ -169,49 +186,60 @@
                                     </div>
                                 </div>
                                 <!--  -->
-
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12" style="display:none">
-                            <div class="form-group">
-                                <h6><?= lang('other_cost') ?> :</h6>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
+                        <div class="col-12">
+                            <div class="row">
+                                <!--  -->
+                                <div class="col-lg-6 col-sm-12" style="display:none">
+                                    <div class="form-group">
+                                        <h6><?= lang('other_cost') ?> :</h6>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Rp</span>
+                                            </div>
+                                            <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= $order->other_cost ?>" required>
+                                        </div>
                                     </div>
-                                    <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= $order->other_cost ?>" required>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12">
-                            <div class="form-group">
-                                <h6><b><?= lang('grandtotal') ?> :</b></h6>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><b>Rp</b></span>
+                                <div class="col-lg-2 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('payment_type') ?></h6>
+                                        <select class="custom-select" name="payment_type">
+                                            <option value="cash" <?= ($order->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
+                                            <option value="credit" <?= ($order->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                        </select>
                                     </div>
-                                    <input type="text" readonly name="grand_total" id="grand_total" class="form-control currency" value="<?= $order->grand_total ?>" min="1" required>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-sm-12">
-                            <div class="form-group">
-                                <h6><?= lang('payment_type') ?></h6>
-                                <select class="custom-select" name="payment_type">
-                                    <option value="cash" <?= ($order->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
-                                    <option value="credit" <?= ($order->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-sm-12">
-                            <div class="form-group">
-                                <h6><?= lang('date_due') ?></h6>
-                                <div class="input-group mb-3">
-                                <input type="text" id="date_due" name="date_due" class="form-control">
-                                <dv class="input-group-append">
-                                    <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
-                                </dv>
+                                <div class="col-lg-2 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?=lang('date')?></h6>
+                                        <div class="input-group">
+                                            <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($order->created_at))?>">
+                                            <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('date_due') ?></h6>
+                                        <div class="input-group mb-3">
+                                        <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
+                                        <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-sm-12">
+                                    <h6><?=lang('number_of_day')?></h6>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="numberdays" disabled>
+                                    </div>
+                                </div>
+                                <!--  -->
                             </div>
                         </div>
                         <div class="col-lg col-sm-12">

@@ -147,7 +147,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <td>
                                 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
-                                    <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
+                                    <a target="_blank" href='<?=url("items/info_transaction?id=$value->item_code&customer=$invoice->customer")?>' class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                                 <?php if (sizeof($items) <= 1) : ?>
                                     <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                 <?php else : ?>
@@ -182,16 +182,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
           <div class="row">
             <div class="col-12">
-              <div class="form-group">
-                <h6><?= lang('subtotal') ?> :</h6>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Rp</span>
-                  </div>
-                  <input type="text" name="sub_total" id="sub_total" class="form-control currency" value="<?=$invoice->total_price?>" min="1" required>
-                </div>
-              </div>
               <div class="row">
+                <div class="col-lg-6 col-12">
+                  <div class="form-group">
+                    <h6><?= lang('subtotal') ?> :</h6>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Rp</span>
+                      </div>
+                      <input type="text" name="sub_total" id="sub_total" class="form-control currency" value="<?=$invoice->total_price?>" min="1" required>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('discount') ?> :</h6>
@@ -214,7 +216,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 col-sm-12">
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
                     <h6><b><?= lang('grandtotal') ?> :</b></h6>
                     <div class="input-group mb-3">
@@ -225,7 +229,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 col-sm-12">
+                <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('payment_type') ?></h6>
                     <select class="custom-select" name="payment_type">

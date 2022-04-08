@@ -165,16 +165,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
           <div class="row">
             <div class="col-12">
-              <div class="form-group">
-                <h6><?= lang('subtotal') ?> :</h6>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Rp</span>
-                  </div>
-                  <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
-                </div>
-              </div>
               <div class="row">
+                <div class="col-lg-6 col-12">
+                  <div class="form-group">
+                    <h6><?= lang('subtotal') ?> :</h6>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Rp</span>
+                      </div>
+                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('discount') ?> :</h6>
@@ -197,7 +199,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 col-sm-12">
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
                     <h6><b><?= lang('grandtotal') ?> :</b></h6>
                     <div class="input-group mb-3">
@@ -208,7 +212,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-3 col-sm-12">
+                <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('payment_type') ?></h6>
                     <select class="custom-select" name="payment_type">

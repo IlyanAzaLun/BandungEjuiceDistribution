@@ -116,12 +116,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
+      aLengthMenu: [
+        [5, 50, 100, 200, <?=$this->db->get('invoice_purchasing')->num_rows()?>],
+        [5, 50, 100, 200, "All"]
+      ],
       order: [[ 3, "desc" ]],
-      // rowCallback: function(row, data, index){
-      //   if(data['is_cancelled'] == true){
-      //     $(row).addClass('bg-danger');
-      //   }
-      // },
       drawCallback: function ( settings ) {
           var api = this.api();
           var rows = api.rows( {page:'current'} ).nodes();
