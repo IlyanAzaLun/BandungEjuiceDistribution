@@ -321,7 +321,7 @@ $lang['customer_category_other'] = "Other";
 /*
  * Supplier
  */
-$lang['supplier'] = "supplier";
+$lang['supplier'] = "Supplier";
 $lang['supplier_list'] = "List supplier";
 $lang['supplier_add'] = "Add supplier";
 $lang['supplier_update'] = "Update supplier";

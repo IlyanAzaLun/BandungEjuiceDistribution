@@ -77,9 +77,9 @@ const main = () => {
             let selfElement = $(this);
             data_items.item_info_search(valueElement, function (data) {
                 let result = data.map(({
-                    item_code, item_name, quantity, unit, capital_price, selling_price, id
+                    item_code, item_name, quantity, unit, capital_price, selling_price, id, note
                 }) => [
-                        item_code, item_name, quantity, unit, capital_price, selling_price, id
+                        item_code, item_name, quantity, unit, capital_price, selling_price, id, note
                     ]
                 );
                 $('input[data-id="item_code"], input[data-id="item_name"]').autocomplete({
@@ -87,11 +87,12 @@ const main = () => {
                     focus: function (event, ui) {
                         $(`.${parentElement}`).find('input[data-id="item_id"]').val(ui.item[6])
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
-                        $(`.${parentElement}`).find('input[data-id="item_name"]').val(ui.item[1])
+                        $(`.${parentElement}`).find('input[data-id="item_name"]').val(`${ui.item[1]} ${ui.item[7]}`)
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
                         $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', ui.item[2])
                         $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
+                        $(`.${parentElement}`).find('input[data-id="note"]').val(`${ui.item[7].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
@@ -157,6 +158,7 @@ const main = () => {
                         </span>
                     </div>
                 </td>
+                <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                 <td>

@@ -94,7 +94,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
                     <th width="10%"><?= lang('item_selling_price') ?></th>
-                    <th width="10%"><?= lang('item_order_quantity') ?></th>
+                    <th width="12%"><?= lang('item_order_quantity') ?></th>
+                    <th width="10%"><?= lang('note') ?></th>
                     <th width="7%"><?= lang('discount') ?></th>
                     <th width="10%"><?= lang('total_price') ?></th>
                     <th width="10%"><?= lang('option') ?></th>
@@ -130,6 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </div>
                     </td>
+                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
                     <td>
@@ -141,7 +143,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </td>
                   </tr>
                   <tr class="description input-0" style="display:none">
-                      <td colspan="8">
+                      <td colspan="9">
                           <textarea class="form-control form-control-sm" name="description[]"></textarea>
                       </td>
                   </tr>

@@ -243,6 +243,8 @@ class Items extends MY_Controller
             $this->load->view('errors/html/error_404');
             return false;
         }
+        $this->page_data['customer'] = $this->customer_model->get();
+        $this->page_data['supplier'] = $this->supplier_model->get();
         $this->load->view('items/transaction', $this->page_data);
     }
 
@@ -451,8 +453,6 @@ class Items extends MY_Controller
             $postData = $this->input->post();
 
             ## Read value
-            $item_code = $postData['id'];
-            $customer = $postData['customer'];
             $draw = $postData['draw'];
             $start = $postData['start'];
             $rowperpage = $postData['length']; // Rows display per page
@@ -460,12 +460,19 @@ class Items extends MY_Controller
             $columnName = $postData['columns'][$columnIndex]['data']; // Column name
             $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
             $searchValue = $postData['search']['value']; // Search value
+            $item_code = $postData['id'];
+            $dateStart = $postData['startDate'];
+            $dateFinal = $postData['finalDate'];    
+            $getCustomer = $postData['getCustomer'];
+            $customer = $postData['DCustomer'];
+            $supplier = $postData['DSupplier'];
 
             ## Total number of records without filtering
             $this->db->select('count(*) as allcount');
             $this->db->where('item_code', $item_code);
-            if ($customer) {
-                $this->db->where('transaction.customer_code', $customer);
+            if ($customer || $supplier) {
+                $this->db->where('customer_code', $customer);
+                $this->db->or_where('customer_code', $supplier);
             }
             $records = $this->db->get('invoice_transaction_list_item')->result();
             $totalRecords = $records[0]->allcount;
@@ -475,14 +482,18 @@ class Items extends MY_Controller
             if ($searchValue != '') {
                 $this->db->like('transaction.item_name', $searchValue, 'both');
                 $this->db->or_like('transaction.item_code', $searchValue, 'both');
-                $this->db->or_like('user_created.name', $searchValue, 'both');
-                $this->db->or_like('user_updated.name', $searchValue, 'both');
+                $this->db->or_like('transaction.customer_code', $searchValue, 'both');
             }
             $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
             $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
             $this->db->where('item_code', $item_code);
-            if ($customer) {
+            if ($dateStart != '') {
+                $this->db->where("transaction.created_at >=", $dateStart);
+                $this->db->where("transaction.created_at <=", $dateFinal);
+            }
+            if ($customer || $supplier) {
                 $this->db->where('transaction.customer_code', $customer);
+                $this->db->or_where('transaction.customer_code', $supplier);
             }
             $records = $this->db->get('invoice_transaction_list_item transaction')->result();
             $totalRecordwithFilter = $records[0]->allcount;
@@ -516,25 +527,32 @@ class Items extends MY_Controller
                 , user_updated.name as transaction_updated_by
                 , user_created.id as user_id
                 , transaction.is_cancelled as is_cancelled');
-            if ($searchValue != '') {
-                $this->db->like('item_name', $searchValue, 'both');
-                $this->db->or_like('item_code', $searchValue, 'both');
-                $this->db->or_like('user_created.name', $searchValue, 'both');
-                $this->db->or_like('user_updated.name', $searchValue, 'both');
-            }
             $this->db->join('users user_created', 'user_created.id=transaction.created_by', 'left');
             $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
             $this->db->join('supplier_information supplier', 'supplier.customer_code = transaction.customer_code', 'left');
             $this->db->join('customer_information customer', 'customer.customer_code = transaction.customer_code', 'left');
-            $this->db->where('item_code', $item_code);
-            if ($customer) {
-                $this->db->where('transaction.customer_code', $customer);
+            if ($searchValue != '') {
+                $this->db->like('item_name', $searchValue, 'both');
+                $this->db->or_like('item_code', $searchValue, 'both');
+                $this->db->or_like('transaction.customer_code', $searchValue, 'both');
             }
+            if ($customer || $supplier) {
+                $this->db->where("(transaction.customer_code = '$customer' OR transaction.customer_code = '$supplier')");
+            }
+            if($dateStart != '') {
+                $this->db->where("((transaction.created_at >= '$dateStart' AND transaction.created_at <= '$dateFinal') OR (transaction.updated_at >= '$dateStart' AND transaction.updated_at <= '$dateFinal'))");
+            }
+            $this->db->where('item_code', $item_code);
             $this->db->order_by($columnName, $columnSortOrder);
             $this->db->group_by('invoice_code');
             $this->db->limit($rowperpage, $start);
             $records = $this->db->get('invoice_transaction_list_item transaction')->result();
             $data = array();
+            
+            // echo '<pre>';
+            // var_dump($this->db->last_query());
+            // echo '</pre>';
+            // die();
 
             foreach ($records as $record) {
 
