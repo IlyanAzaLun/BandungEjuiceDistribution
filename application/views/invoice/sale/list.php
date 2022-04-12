@@ -112,9 +112,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     var groupColumn = 3;
     $('.ui-buttonset').draggable();
     var table = $("#example2").DataTable({
-
       dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
-            <'row'<'col-12'tr>>
+            <'row'R<'col-12'tr>>
             <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
       processing: true,
       colReorder: true,
@@ -275,6 +274,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }
             return `
                 <div class="btn-group d-flex justify-content-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" style="">
+                      <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                      <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                      <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                    </div>
+                  </div>
                 ${html}
                 </div>`;
           }
@@ -295,7 +303,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
-    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
+    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
         console.log($(this))
@@ -332,6 +340,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
-
+    new $.fn.dataTable.ColReorder(table);
   });
 </script>

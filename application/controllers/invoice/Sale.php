@@ -37,6 +37,7 @@ class Sale extends Invoice_controller
 			$this->page_data['order'] = $this->order_model->get_order_selling_by_code(get('id'));
 			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['bank'] = $this->account_bank_model->get();
 			$this->page_data['title'] = 'sale_create';
 			$this->page_data['page']->submenu = 'sale_list';
 			$this->load->view('invoice/sale/form', $this->page_data);
@@ -69,6 +70,7 @@ class Sale extends Invoice_controller
 			//information payment
 			$payment = array(
 				'customer' => post('customer_code'),
+				'transaction_destination' => post('transaction_destination'),
 				'store_name' => post('store_name'),
 				'contact_phone' => post('contact_phone'),
 				'address' => post('address'),
@@ -81,18 +83,22 @@ class Sale extends Invoice_controller
 				'services_expedition' => post('services_expedition'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'reference_order' => get('id'),
 			);
+			var_dump($payment);
+			echo '</pre>';
+			// die();
 			try {
 				// CREATE
 				$this->order_model->update_by_code(get('id'), array('is_created' => 1));
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->create_or_update_list_item_transcation($items);
-				// $this->update_items($items);
+				// $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -120,6 +126,7 @@ class Sale extends Invoice_controller
 			$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
 			$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['bank'] = $this->account_bank_model->get();
 			$this->page_data['title'] = 'sale_edit';
 			$this->page_data['page']->submenu = 'sale_list';
 			$this->page_data['modals'] = (object) array(
@@ -168,6 +175,7 @@ class Sale extends Invoice_controller
 			//information payment
 			$payment = array(
 				'customer' => post('customer_code'),
+				'transaction_destination' => post('transaction_destination'),
 				'store_name' => post('store_name'),
 				'contact_phone' => post('contact_phone'),
 				'address' => post('address'),
@@ -180,8 +188,9 @@ class Sale extends Invoice_controller
 				'services_expedition' => post('services_expedition'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'reference_order' => get('id'),
 			);
@@ -201,6 +210,46 @@ class Sale extends Invoice_controller
 				var_dump( $th );
 			}
 		}
+	}
+
+	public function info()
+	{
+		ifPermissions('sale_create');
+		$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
+		$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+		$this->page_data['expedition'] = $this->expedition_model->get();
+		$this->page_data['bank'] = $this->account_bank_model->get();
+		$this->page_data['title'] = 'sale_edit';
+		$this->page_data['page']->submenu = 'sale_list';
+		$this->page_data['modals'] = (object) array(
+			'id' => 'modal-remove-order',
+			'title' => 'Modals confirmation',
+			'link' => 'invoice/sales/items/remove_item_from_list_order_transcaction',
+			'content' => 'delete',
+			'btn' => 'btn-danger',
+			'submit' => 'Yes do it',
+		);
+		$this->load->view('invoice/sale/info', $this->page_data);
+	}
+
+	public function print_PDF()
+	{
+		$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
+		$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+		$this->page_data['bank'] = $this->account_bank_model->get();
+		$this->page_data['customer'] = $this->customer_model->get_information_customer($this->page_data['invoice_sale']->customer);
+	
+		$this->load->library('pdf');
+	
+        $options = $this->pdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $this->pdf->setOptions($options);
+
+
+		$this->pdf->setPaper('A4', 'potrait');
+		$this->pdf->filename = "$customer->store_name.pdf";
+		$this->pdf->load_view('invoice/sale/print_PDF', $this->page_data);
+	
 	}
 
 	/** 
@@ -258,6 +307,7 @@ class Sale extends Invoice_controller
 	protected function create_or_update_invoice($data)
 	{
 		$response = $this->sale_model->get_invoice_selling_by_code($this->data['invoice_code']);
+		$request['transaction_destination'] = $data['transaction_destination'];
 		$request['total_price'] = setCurrency($data['total_price']);
 		$request['discounts'] = setCurrency($data['discounts']);
 		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
@@ -273,6 +323,7 @@ class Sale extends Invoice_controller
 		$request['note'] = $data['note'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['created_at'] = $data['created_at'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
@@ -280,6 +331,7 @@ class Sale extends Invoice_controller
 		} else {
 			$request['reference_order'] = $data['reference_order'];
 			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['created_at'] = $data['created_at'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->sale_model->create($request);

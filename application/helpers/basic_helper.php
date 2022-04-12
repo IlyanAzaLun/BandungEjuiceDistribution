@@ -1247,3 +1247,17 @@ if (!function_exists('setCurrency')) {
 		return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 	}
 }
+
+/**
+ * return currency
+ *
+ * @return string
+ * 
+ */
+if (!function_exists('getCurrentcy')) {
+
+	function getCurrentcy($value)
+	{
+		return number_format($value,2,',','.');
+	}
+}

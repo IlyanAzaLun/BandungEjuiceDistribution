@@ -149,9 +149,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-tw fa-edit text-primary"></i></a>
-                <a href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History items"><i class="fa fa-tw fa-history text-primary"></i></a>
-                <a href="<?= url('items') ?>/info_transaction?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History transaction items"><i class="fa fa-tw fa-layer-group text-primary"></i></a>
+                <a target="_blank" href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-tw fa-edit text-primary"></i></a>
+                <a target="_blank" href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History items"><i class="fa fa-tw fa-history text-primary"></i></a>
+                <a target="_blank" href="<?= url('items') ?>/info_transaction?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History transaction items"><i class="fa fa-tw fa-layer-group text-primary"></i></a>
                 </div>`;
           }
         },

@@ -46,7 +46,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="order_code" id="order_code" class="form-control" value="<?=$invoice->order_code?>" autocomplete="false" readonly required>
+                <input type="hidden" name="order_code" id="order_code" class="form-control" value="<?=$invoice->order_code?>" autocomplete="false" readonly required>
                 <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" value="<?=$invoice->customer?>" autocomplete="false" readonly required>
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
@@ -89,17 +89,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th>No.</th>
-                    <th><?= lang('item_code') ?></th>
+                    <th width="2%">No.</th>
+                    <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
                     <th style="display:none"><?= lang('item_selling_price') ?></th>
-                    <th><?= lang('item_order_quantity') ?></th>
+                    <th width="15%"><?= lang('item_order_quantity') ?></th>
                     <th style="display:none"><?= lang('discount') ?></th>
                     <th style="display:none"><?= lang('total_price') ?></th>
-                    <th class="text-center"><?= lang('status_available') ?></th>
-                    <th><?= lang('option') ?></th>
+                    <th width="10%" class="text-center"><?= lang('status_available') ?></th>
+                    <th width="10%"><?= lang('option') ?></th>
                   </tr>
                 </thead>
                 <tbody>

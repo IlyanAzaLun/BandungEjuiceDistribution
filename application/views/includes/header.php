@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
+  <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/datatables-colreorder/css/colReorder.bootstrap4.min.css">
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- pace-progress -->

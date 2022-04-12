@@ -383,6 +383,18 @@ $lang['address_info_edit'] = "Edit information data address";
 $lang['is_open'] = "Is Open";
 
 /*
+ * Address
+ */
+$lang['pages_account_bank'] = "Account Bank";
+$lang['account_bank_list'] = "List Account";
+$lang['account_bank_add'] = "Add New Account";
+$lang['info_add'] = "Add more information";
+$lang['bank_name'] = "Bank Name";
+$lang['no_account'] = "No Account Bank";
+$lang['own_by'] = "Own By";
+$lang['select_account'] = "Select Account Bank";
+
+/*
  * Invoice
  * purchase
  */
@@ -426,6 +438,7 @@ $lang['debt'] = "Debt";
 $lang['cash'] = "Cash";
 $lang['payed'] = "Payed";
 $lang['credit'] = "Credit";
+$lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
 $lang['invoice_code_reference'] = "Invoice code reference";
 $lang['purchase_payment'] = "Purchase to pay";

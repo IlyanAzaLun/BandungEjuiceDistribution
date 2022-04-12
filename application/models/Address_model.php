@@ -9,6 +9,12 @@ class Address_model extends MY_Model {
 	{
 		parent::__construct();
 	}
+
+	public function getByCustomerCode($data)
+	{
+		$this->db->where('customer_code', $data);
+		return $this->db->get($this->table)->row();
+	}
 }
 
 /* End of file Items_model.php */

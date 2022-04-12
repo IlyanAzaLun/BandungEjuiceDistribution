@@ -215,6 +215,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <?php endif ?>
   <!-- end Expedition -->
 
+  <!-- Account Bank -->
+  <?php if (hasPermissions('account_bank_list')) : ?>
+    <!-- <li class="nav-header"><strong>  <?php echo lang('menus_account_bank')?> </strong> &nbsp; -->
+    <li class="nav-item has-treeview <?php echo ($page->menu == 'account_bank') ? 'menu-open' : '' ?>">
+      <a href="#" class="nav-link  <?php echo ($page->menu == 'account_bank') ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-database"></i>
+        <p>
+          <?php echo lang('pages_account_bank') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/account_bank/list') ?>" class="nav-link <?php echo ($page->submenu == 'account_bank_list') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('account_bank_list') ?> </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/account_bank/create') ?>" class="nav-link <?php echo ($page->submenu == 'account_bank_add') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('account_bank_add') ?> </p>
+          </a>
+        </li>
+      </ul>
+    </li>
+  <?php endif ?>
+  <!-- end Account Bank -->
+
   <!-- Invoice -->
     <!-- Purchase -->
     <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
@@ -238,6 +267,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment_purchase') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('purchase_payment') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchases/returns/list') ?>" class="nav-link <?php echo ($page->submenu == 'list_purchase_returns') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('purchase_list_returns') ?> </p>
         </a>
       </li>
     </ul>
@@ -265,6 +300,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <a href="<?php echo url('invoice/sale/list') ?>" class="nav-link <?php echo ($page->submenu == 'sale_list') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('sale_list') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/sales/returns/list') ?>" class="nav-link <?php echo ($page->submenu == 'sales_returns_list') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('sale_returns_list') ?> </p>
         </a>
       </li>
       <li class="nav-item" style="display: none;">

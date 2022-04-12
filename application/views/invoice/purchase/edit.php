@@ -62,16 +62,16 @@
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
-                                        <th><?= lang('item_code') ?></th>
+                                        <th width="2%">No.</th>
+                                        <th width="10%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
-                                        <th><?= lang('item_capital_price') ?></th>
+                                        <th width="15%"><?= lang('item_order_quantity') ?></th>
+                                        <th width="10%"><?= lang('item_capital_price') ?></th>
                                         <th style="display:none"><?= lang('item_selling_price') ?></th>
-                                        <th><?= lang('item_order_quantity') ?></th>
-                                        <th><?= lang('discount') ?></th>
-                                        <th><?= lang('total_price') ?></th>
-                                        <th><?= lang('option') ?></th>
+                                        <th width="10%"><?= lang('discount') ?></th>
+                                        <th width="10%"><?= lang('total_price') ?></th>
+                                        <th width="7%"><?= lang('option') ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -94,8 +94,6 @@
                                                 </div>
                                                 <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
                                             </td>
-                                            <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
-                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
                                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_quantity ?>">
@@ -105,6 +103,8 @@
                                                 </div>
                                                 <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
                                             </td>
+                                            <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
+                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->total_price ?>"></td>
                                             <td>

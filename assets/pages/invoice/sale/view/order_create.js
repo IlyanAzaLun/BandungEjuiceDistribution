@@ -136,6 +136,7 @@ const main = () => {
                     <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                 </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required ></td>
+                <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                 <td style="display:none">
                     <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
@@ -145,8 +146,6 @@ const main = () => {
                         </span>
                     </div>
                 </td>
-                <td style="display:none;"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td>
                     <div class="input-group input-group-sm">
                         <span class="input-group-prepend">
@@ -158,7 +157,8 @@ const main = () => {
                         </span>
                     </div>
                 </td>
-                <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
+                <td style="display:none;"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                 <td>
@@ -189,7 +189,7 @@ const main = () => {
             $(`tr.${row}`).remove();
         })
         // get sub total items
-        $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="discount"]', function () {
+        $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_selling_price"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item(row);
         })

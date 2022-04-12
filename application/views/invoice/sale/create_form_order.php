@@ -54,9 +54,9 @@
                                         <th width="10%"><?= lang('item_code') ?></th>
                                         <th ><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
+                                        <th width="12%"><?= lang('item_order_quantity') ?></th>
                                         <th style="display:none"><?= lang('item_capital_price') ?></th>
                                         <th width="10%"><?= lang('item_selling_price') ?></th>
-                                        <th width="10%"><?= lang('item_order_quantity') ?></th>
                                         <th width="10%"><?= lang('discount') ?></th>
                                         <th width="10%"><?= lang('total_price') ?></th>
                                     </tr>
@@ -81,8 +81,6 @@
                                                 </div>
                                                 <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
                                             </td>
-                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required readonly value="<?= $value->item_capital_price ?>"></td>
-                                            <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required readonly value="<?= $value->item_selling_price ?>"></td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
                                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_order_quantity ?>" readonly>
@@ -92,6 +90,8 @@
                                                 </div>
                                                 <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
                                             </td>
+                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required readonly value="<?= $value->item_capital_price ?>"></td>
+                                            <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required readonly value="<?= $value->item_selling_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" readonly required value="<?= (int)$value->item_discount ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" readonly required value="<?= $value->item_total_price ?>"></td>
                                         </tr>
@@ -171,7 +171,7 @@
                                     <div class="form-group">
                                         <h6><?= lang('expedition_name') ?></h6>
                                         <select class="custom-select" name="expedition_name" id="expedition_name" required>
-                                            <option selected disabled><?=lang('option')?></option>
+                                            <option value="" selected disabled><?=lang('option')?></option>
                                             <?php foreach ($expedition as $key => $value):?>
                                                 <option value="<?= $value->expedition_name ?>" data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
                                             <?php endforeach ?>
@@ -202,41 +202,63 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-2 col-sm-12">
-                                    <div class="form-group">
-                                        <h6><?= lang('payment_type') ?></h6>
-                                        <select class="custom-select" name="payment_type">
-                                            <option value="cash" <?= ($order->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
-                                            <option value="credit" <?= ($order->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2 col-sm-12">
-                                    <div class="form-group">
-                                        <h6><?=lang('date')?></h6>
-                                        <div class="input-group">
-                                            <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($order->created_at))?>">
-                                            <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-2 col-sm-12">
+                                            <div class="form-group">
+                                                <h6><?= lang('payment_type') ?></h6>
+                                                <select class="custom-select" name="payment_type">
+                                                    <option value="cash" <?= ($order->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
+                                                    <option value="credit" <?= ($order->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                                    <option value="online" <?= ($order->payment_type == 'online') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-12">
+                                            <div class="form-group">
+                                                <h6><?=lang('bank_name')?></h6>
+                                                <div class="input-group">
+                                                    <select name="transaction_destination" id="destination" class="custom-select" required>
+                                                        <option value="" disabled selected><?=lang('select_account')?></option>
+                                                        <?php foreach ($bank as $key => $value):?>
+                                                        <option value="<?=$value->id?>"><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
+                                                        <?php endforeach?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-sm-12">
+                                            <div class="form-group">
+                                                <h6><?=lang('date')?></h6>
+                                                <div class="input-group">
+                                                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($order->created_at))?>">
+                                                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-sm-12">
-                                    <div class="form-group">
-                                        <h6><?= lang('date_due') ?></h6>
-                                        <div class="input-group mb-3">
-                                        <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
-                                        <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-7 col-sm-12">
+                                            <div class="form-group">
+                                                <h6><?= lang('date_due') ?></h6>
+                                                <div class="input-group mb-3">
+                                                <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
+                                                <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div class="col-lg-5 col-sm-12">
+                                            <h6><?=lang('number_of_day')?></h6>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="numberdays" disabled>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2 col-sm-12">
-                                    <h6><?=lang('number_of_day')?></h6>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="numberdays" disabled>
                                     </div>
                                 </div>
                                 <!--  -->

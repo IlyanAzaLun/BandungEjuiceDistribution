@@ -65,9 +65,9 @@
                                         <th><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
+                                        <th><?= lang('item_order_quantity') ?></th>
                                         <th><?= lang('item_capital_price') ?></th>
                                         <th style="display:none"><?= lang('item_selling_price') ?></th>
-                                        <th><?= lang('item_order_quantity') ?></th>
                                         <th><?= lang('discount') ?></th>
                                         <th><?= lang('total_price') ?></th>
                                     </tr>
@@ -79,9 +79,9 @@
                                             <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
                                             <td><?= $value->item_name ?></td>
                                             <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
+                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td>Rp.<?= number_format($value->item_capital_price) ?></td>
                                             <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
-                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td>Rp.<?= number_format($value->item_discount) ?></td>
                                             <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
                                         </tr>

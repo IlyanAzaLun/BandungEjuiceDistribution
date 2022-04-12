@@ -151,4 +151,5 @@ $autoload['model'] = array(
 	'expedition_model',
 	'order/order_model',
 	'order/order_list_item_model',
+	'account_bank_model',
 );

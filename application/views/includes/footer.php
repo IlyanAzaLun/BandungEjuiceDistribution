@@ -56,7 +56,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script src="<?php echo $url->assets ?>plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables-buttons/js/buttons.flash.min.js"></script>
 <script src="<?php echo $url->assets ?>plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-
+<script src="<?php echo $url->assets ?>plugins/datatables-colreorder/js/dataTables.colReorder.min.js"></script>
+<script src="<?php echo $url->assets ?>plugins/datatables-colreorder/js/colReorder.bootstrap4.min.js"></script>
 <!-- jquery-validation -->
 <script src="<?php echo $url->assets ?>plugins/jszip/jszip.min.js"></script>
 

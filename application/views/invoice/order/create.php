@@ -92,10 +92,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
+                    <th width="10%"><?= lang('note') ?></th>
+                    <th width="12%"><?= lang('item_order_quantity') ?></th>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
                     <th width="10%"><?= lang('item_selling_price') ?></th>
-                    <th width="12%"><?= lang('item_order_quantity') ?></th>
-                    <th width="10%"><?= lang('note') ?></th>
                     <th width="7%"><?= lang('discount') ?></th>
                     <th width="10%"><?= lang('total_price') ?></th>
                     <th width="10%"><?= lang('option') ?></th>
@@ -109,6 +109,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                     </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></td>
+                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                     <td style="display:none" >
                       <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
@@ -118,8 +119,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                       </div>
                     </td>
-                    <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td>
                     <div class="input-group input-group-sm">
                       <span class="input-group-prepend">
@@ -130,8 +129,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <span class="input-group-text" data-id="item_unit"></span>
                       </div>
                     </div>
+                    <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     </td>
-                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
                     <td>
@@ -214,12 +214,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
+                
                 <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('payment_type') ?></h6>
                     <select class="custom-select" name="payment_type">
                       <option value="cash"><?= lang('cash') ?></option>
                       <option value="credit"><?= lang('credit') ?></option>
+                      <option value="online"><?= lang('online') ?></option>
                     </select>
                   </div>
                 </div>

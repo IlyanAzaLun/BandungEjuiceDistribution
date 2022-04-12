@@ -54,9 +54,9 @@
                     <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
+                    <th width="10%"><?= lang('item_order_quantity') ?></th>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
                     <th width="10%"><?= lang('item_selling_price') ?></th>
-                    <th width="10%"><?= lang('item_order_quantity') ?></th>
                     <th width="10%"><?= lang('discount') ?></th>
                     <th width="10%"><?= lang('total_price') ?></th>
                     <th width="10%"><?= lang('option') ?></th>
@@ -79,8 +79,6 @@
                         </div>
                       </div>
                     </td>
-                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td>
                     <div class="input-group input-group-sm">
                       <span class="input-group-prepend">
@@ -92,6 +90,8 @@
                       </div>
                     </div>
                     </td>
+                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
                     <td>
