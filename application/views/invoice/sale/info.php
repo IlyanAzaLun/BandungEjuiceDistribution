@@ -1,12 +1,12 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed'); ?>
+defined('BASEPATH') or exit('No direct script access allowed'); 
+$i = 0; ?>
 <!-- Theme style -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
 
 <?php include viewPath('includes/header'); ?>
-
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
@@ -45,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('customer_code') ?></label>
-                                <input disabled type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice_sale->customer ?>" required>
+                                <input disabled type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $customer->customer_code ?>" required>
                                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -100,7 +100,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($list_item_sale as $key => $value) : ?>
+                                    <?php foreach ($_data_item_invoice_parent as $key => $value):?>
+                                        <?php if($value->item_code == $intersect_codex_item[$key] && $value->index_list == $intersect_index_item[$key]):?>
+                                        <!-- <pre>Item INDEX TOTAL:<?=$value->index_list?> | Item CODE TOTALN:<?=$value->item_code?> | Item Quantity TOTAL:<?=$value->item_quantity - $_data_item_invoice_child_[$i]->item_quantity?></pre> -->
+
                                         <tr class="input-<?= $key ?>" id="main">
                                             <td class="text-center"><input type="text" disabled class="form-control form-control-sm" value="<?=$key+1?>"></td>
                                             <td>
@@ -123,7 +126,48 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
-                                                    <input disabled class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_quantity?>" required value="<?= (int)$value->item_quantity ?>">
+                                                    <input disabled class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_quantity?>" required value="<?=$value->item_quantity - $_data_item_invoice_child_[$i]->item_quantity?>">
+                                                    <span class="input-group-append">
+                                                        <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
+                                                    </span>
+                                                </div>
+                                                <input style="display: none" class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= $_data_item_invoice_child_[$i]->item_quantity ?>">
+                                            </td>
+                                            <td style="display: none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $_data_item_invoice_child_[$i]->item_capital_price ?>"></td>
+                                            <td><input disabled class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $_data_item_invoice_child_[$i]->item_selling_price ?>"></td>
+                                            <td><input disabled class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= $_data_item_invoice_child_[$i]->item_discount ?>"></td>
+                                            <td><input disabled class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= $_data_item_invoice_child_[$i]->total_price ?>"></td>
+                                        </tr>
+                                        <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
+                                            <td colspan="8">
+                                                <textarea class="form-control form-control-sm" name="description[]"><?=$value->item_description?></textarea>
+                                            </td>
+                                        </tr>
+                                        <?php $i++;?>
+                                        <?php else:?>
+                                        <tr class="input-<?= $key ?>" id="main">
+                                            <td class="text-center"><input type="text" disabled class="form-control form-control-sm" value="<?=$key+1?>"></td>
+                                            <td>
+                                                <input type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
+                                                <input type="hidden" name="index_list[]" id="index_list" value="<?= $value->index_list ?>">
+                                                <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
+                                                <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required readonly>
+                                            </td>
+                                            <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" required readonly></td>
+                                            <td><input class="form-control form-control-sm" type="text" data-id="note" value="<?= $this->items_model->getByCodeItem($value->item_code, 'note') ?>" readonly></td>
+                                            <td style="display: none">
+                                                <div class=" input-group input-group-sm">
+                                                    <input class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
+                                                    <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
+                                                    <span class="input-group-append">
+                                                        <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
+                                                    </span>
+                                                </div>
+                                                <input class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_quantity ?>">
+                                            </td>
+                                            <td>
+                                                <div class=" input-group input-group-sm">
+                                                    <input disabled class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_quantity?>" required value="<?= $value->item_quantity?>">
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                                     </span>
@@ -140,7 +184,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <textarea class="form-control form-control-sm" name="description[]"><?=$value->item_description?></textarea>
                                             </td>
                                         </tr>
-                                    <?php endforeach ?>
+                                        <!-- <pre>Item INDEX ORDER:<?=$value->index_list?> | Item CODE ORDER:<?=$value->item_code?> | Item Quantity ORDER:<?=$value->item_quantity?></pre> -->
+                                        <?php endif;?>
+                                    <?php endforeach;?>
                                 </tbody>
                             </table>
                         </div>
@@ -165,7 +211,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $invoice_sale->total_price ?>" min="1" required>
+                                            <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $invoice_information_transaction->total_price ?>" min="1" required>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +222,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input type="text" name="discount" id="discount" class="form-control currency" value="<?= $invoice_sale->discounts ?>" required readonly>
+                                            <input type="text" name="discount" id="discount" class="form-control currency" value="<?= $invoice_information_transaction->discounts ?>" required readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +233,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" value="<?= $invoice_sale->shipping_cost ?>" required readonly>
+                                            <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" value="<?= $invoice_information_transaction->shipping_cost ?>" required readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -200,7 +246,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp</span>
                                     </div>
-                                    <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= $invoice_sale->other_cost ?>" required readonly>
+                                    <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= $invoice_information_transaction->other_cost ?>" required readonly>
                                 </div>
                             </div>
                         </div>
@@ -211,7 +257,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><b>Rp</b></span>
                                     </div>
-                                    <input type="text" readonly name="grand_total" id="grand_total" class="form-control currency" value="<?= $invoice_sale->grand_total ?>" min="1" required readonly>
+                                    <input type="text" readonly name="grand_total" id="grand_total" class="form-control currency" value="<?= $invoice_information_transaction->grand_total ?>" min="1" required readonly>
                                 </div>
                             </div>
                         </div>
@@ -221,9 +267,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <h6><?= lang('expedition_name') ?></h6>
                                 <select class="custom-select" name="expedition_name" id="expedition_name" required disabled>
                                     <option selected disabled><?=lang('option')?></option>
-                                    <?php foreach ($expedition as $key => $value):?>
-                                        <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice_sale->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
-                                    <?php endforeach ?>
+                                        <option value="<?= $invoice_information_transaction->expedition ?>" selected data-services="<?= $invoice_information_transaction->services_expedition ?>"><?= $invoice_information_transaction->expedition ?></option>
                                 </select>
                             </div>
                         </div>
@@ -231,7 +275,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="form-group">
                                 <h6><?= lang('expedition_services') ?></h6>
                                 <select class="custom-select" name="services_expedition" id="services_expedition" required disabled>
-                                    <option value="<?=$invoice_sale->services_expedition?>"><?=$invoice_sale->services_expedition?></option>
+                                    <option value="<?=$invoice_information_transaction->services_expedition?>" selected><?=$invoice_information_transaction->services_expedition?></option>
                                 </select>
                             </div>
                         </div>
@@ -242,21 +286,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="form-group">
                                         <h6><?= lang('payment_type') ?></h6>
                                         <select class="custom-select" name="payment_type" disabled>
-                                            <option value="cash" <?= ($invoice_sale->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
-                                            <option value="credit" <?= ($invoice_sale->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                            <option value="cash" <?= ($invoice_information_transaction->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
+                                            <option value="credit" <?= ($invoice_information_transaction->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
                                         </select>
                                     </div>
                                 </div>
-                                
                                 <div class="col-lg-3 col-sm-12">
                                     <div class="form-group">
                                         <h6><?=lang('bank_name')?></h6>
                                         <div class="input-group">
                                             <select name="transaction_destination" id="destination" class="custom-select" required disabled>
-                                                <option value="" disabled selected><?=lang('select_account')?></option>
-                                                <?php foreach ($bank as $key => $value):?>
-                                                <option value="<?=$value->id?>"<?=($value->id==$invoice_sale->transaction_destination)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
-                                                <?php endforeach?>
+                                                <option value="<?=$bank->id?>"><?=$bank->name?>/<?=$bank->no_account?>/<?=$bank->own_by?></option>
                                             </select>
                                         </div>
                                     </div>
@@ -266,7 +306,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="form-group">
                                         <h6><?=lang('date')?></h6>
                                         <div class="input-group">
-                                            <input disabled type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($invoice_sale->created_at))?>">
+                                            <input disabled type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($invoice_information_transaction->created_at))?>">
                                             <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
@@ -277,7 +317,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="form-group">
                                         <h6><?= lang('date_due') ?></h6>
                                         <div class="input-group mb-3">
-                                        <input disabled type="text" id="date_due" name="date_due" class="form-control" value="<?=date("d/m/Y H:i",strtotime($invoice_sale->date_start))?> - <?=date("d/m/Y H:i",strtotime($invoice_sale->date_due))?>">
+                                        <input disabled type="text" id="date_due" name="date_due" class="form-control" value="<?=date("d/m/Y H:i",strtotime($invoice_information_transaction->date_start))?> - <?=date("d/m/Y H:i",strtotime($invoice_information_transaction->date_due))?>">
                                         <dv class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
                                         </dv>
@@ -295,13 +335,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
                 <!-- /.card-body -->
-            </div>
-            <!-- Information payment END -->
-            <div class="card">
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-default mr-2"><?= lang('PDF') ?></button>
-                        <button type="button" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
+                        <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
                     </div>
                 </div>
             </div>

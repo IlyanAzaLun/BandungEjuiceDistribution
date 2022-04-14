@@ -509,9 +509,9 @@ class Items extends MY_Controller
                 , transaction.item_capital_price as item_capital_price
                 , transaction.item_selling_price as item_selling_price
                 , transaction.item_current_quantity as item_current_quantity
-                , transaction.item_quantity as item_quantity
-                , IF(transaction.item_status = "IN",  transaction.item_quantity, NULL) as item_in
-                , IF(transaction.item_status = "OUT", transaction.item_quantity, NULL) as item_out
+                , SUM(transaction.item_quantity) as item_quantity
+                , IF(transaction.item_status = "IN",  SUM(transaction.item_quantity), NULL) as item_in
+                , IF(transaction.item_status = "OUT", SUM(transaction.item_quantity), NULL) as item_out
                 , transaction.item_unit as item_unit
                 , transaction.item_discount as item_discount
                 , transaction.total_price as total_price
@@ -544,7 +544,7 @@ class Items extends MY_Controller
             }
             $this->db->where('item_code', $item_code);
             $this->db->order_by($columnName, $columnSortOrder);
-            // $this->db->group_by('invoice_code');
+            $this->db->group_by('invoice_code');
             $this->db->limit($rowperpage, $start);
             $records = $this->db->get('invoice_transaction_list_item transaction')->result();
             $data = array();

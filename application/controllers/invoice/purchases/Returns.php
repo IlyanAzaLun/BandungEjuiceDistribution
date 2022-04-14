@@ -37,8 +37,8 @@ class Returns extends Purchase
 			// information invoice
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
-				'date_start' => trim($date[0]), 
-				'date_due'	 => trim($date[1])
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
 			);
 			//information items
 			$items = array();
@@ -87,8 +87,10 @@ class Returns extends Purchase
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
+
 				'note' => post('note'),
 			);
 			try {
@@ -108,6 +110,14 @@ class Returns extends Purchase
 
 			redirect('invoice/purchase/list');
 		}
+	}
+	
+	public function list()
+	{
+		ifPermissions('purchase_return_list');
+		$this->page_data['title'] = 'returns';
+		$this->page_data['page']->submenu = 'list_purchase_returns';
+		$this->load->view('invoice/purchase/returns_list', $this->page_data);
 	}
 
 	public function edit()
@@ -185,8 +195,9 @@ class Returns extends Purchase
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
 			try {
@@ -235,6 +246,7 @@ class Returns extends Purchase
 		$request['date_start'] = $data['date_start'];
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
+		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
@@ -247,6 +259,7 @@ class Returns extends Purchase
 			$this->purchase_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
 			return $this->purchase_model->create($request);
 		}
+		return $request;
 	}
 
 	protected function create_or_update_list_item_transcation($data)

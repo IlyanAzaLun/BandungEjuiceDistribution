@@ -263,8 +263,6 @@ class Order extends Invoice_controller
 			} else {
 				$request[$key]['quantity'] = $item[$key]->quantity - $value['item_order_quantity'];
 			}
-			$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
-			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
 			$this->items_model->update($item[$key]->id, $request[$key]);
 		}

@@ -17,6 +17,14 @@ class Supplier_model extends MY_Model
         $data = $this->db->get('supplier_information')->row();
         return sprintf('SP-%06s', (int)$data->id + 1);
     }
+
+	public function get_information_supplier($code)
+	{
+		$this->db->where('supplier.customer_code', $code);
+		$this->db->join('address_information address', 'supplier.customer_code=address.customer_code', 'left');
+		$this->db->where('address.is_active', '1');
+		return $this->db->get($this->table.' supplier')->row();
+	}
 }
 
 /* End of file Items_model.php */

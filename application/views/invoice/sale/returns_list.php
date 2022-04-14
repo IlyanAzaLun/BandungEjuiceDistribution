@@ -136,7 +136,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       drawCallback: function ( settings ) {
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
-        let regex = /RET/;
+        let regex = /INV/;
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['invoice_code'].match(regex) != null){
             $(rows).eq(i).remove();
@@ -162,13 +162,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "invoice_code",
           render: function(data, type, row){
-            let html = '';
-            let regex = /RET/;
-            if(data.match(regex) != null){
-              html += '<span class="float-right"><a class="btn btn-xs btn-default disabled" data-toggle="tooltip" data-placement="top" title="Is Returns"><i class="fa fa-fw fa-undo text-primary"></i></a></span>';
-              //<span class="badge badge-danger">RETURNS</span>
-            }
-            return `${data} ${html}`;
+            return `${data}`;
           }},
         {
           data: "store_name",
@@ -243,36 +237,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           visible: <?=(hasPermissions('purchase_list')==true)?1:0?>,
           render: function(data, type, row, meta) {
             let html = ``;
-            let drop = ``;
-              html += ``;
-              drop += ``;
-              if(row['have_a_child'] == null && row['is_cancelled'] == false){
-                html += `
-                  <a href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
-                  `;
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
-              }else{
-                html += `
-                  <a href="<?= url('invoice/sales/returns') ?>/edit?id=${row['have_a_child']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  `;
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
-              }
+            let regex = /INV/;
+            if(row['is_cancelled'] == false){
+            html += `
+                <a href="<?= url('invoice/sales/returns') ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                `;
+            }
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                     </button>
                     <div class="dropdown-menu" style="">
-                    ${drop}
+                      <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                      <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                      <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                     </div>
                   </div>
                 ${html}

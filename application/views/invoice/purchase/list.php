@@ -129,28 +129,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           api.rows( {page:'current'} ).data().each(function(index, i){
             if(index['invoice_code'].match(regex) != null){
               $(rows).eq(i).addClass('bg-lightblue color-palette');
+              $(rows).eq(i).remove();
             }
             if(index['is_cancelled'] == true){
               $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
             }
           })
-          api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-              if ( last !== group ) {
-                  $(rows).eq( i ).before(
-                      `<tr class="group"><td class="group" colspan="15"><span class="text-info">${group}</span></td></tr>`
-                  );
-                  last = group;
-              }
-          } );
       },
       ajax: {
         "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
         "type": "POST",
-        // "data": {
-        //   "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
-        //   "startDate": startdate,
-        //   "finalDate": enddate
-        // }
         "data": function(d) {
           d.startDate = startdate;
           d.finalDate = enddate;
@@ -175,13 +163,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "invoice_code",
           render: function(data, type, row) {
-            let html = '';
-            let regex = /RET/;
-            if(data.match(regex) != null){
-              html += '<span class="float-right"><a class="btn btn-xs btn-default disabled" data-toggle="tooltip" data-placement="top" title="Is Returns"><i class="fa fa-fw fa-undo text-primary"></i></a></span>';
-              //<span class="badge badge-danger">RETURNS</span>
-            }
-            return `${data} ${html}`;
+            return `${data}`;
           }
         },
         {
@@ -246,7 +228,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           render: function(data, type, row) {
             return shorttext(data, 10, true)
-            // return data
           }
         },
         {
@@ -263,29 +244,38 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           render: function(data, type, row, meta) {
             let html = ``;
-            let regex = /RET/;
-            if(data.match(regex) == null){
-              html += `
-                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>`;
+            let drop = ``;
               if(row['have_a_child'] == null && row['is_cancelled'] == false){
                 html += `
-                <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
-                <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                `;
-              }
-            }else{
-              html += `
-                <a href="<?= url('invoice/purchase')  ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-info text-primary"></i></a>`;
-              if(row['is_cancelled'] == false){
-                html += `
-                  <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
                   <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
                   `;
+                drop += `
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                  `;
+              }else{
+                html += `
+                  <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${row['have_a_child']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
+                  `;
+                drop += `
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                  `;
               }
-            }
             return `
                 <div class="btn-group d-flex justify-content-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" style="">
+                      ${drop}
+                    </div>
+                  </div>
                 ${html}
                 </div>`;
           }
@@ -306,7 +296,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
-    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
+    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
         console.log($(this))
@@ -316,15 +306,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $('input[type="search"]').focus()
     } );
     $('#min').on('apply.daterangepicker', function(ev, picker) {
-      startdate = picker.startDate.format('YYYY-MM-DD');
-      enddate = picker.endDate.format('YYYY-MM-DD');
+      startdate = picker.startDate.format('YYYY-MM-DD HH:mm');
+      enddate = picker.endDate.format('YYYY-MM-DD HH:mm');
       $.fn.dataTableExt.afnFiltering.push(
         function(oSettings, aData, iDataIndex) {
           if (startdate != undefined) {
             var coldate = aData[3].split("/");
             var d = new Date(coldate[2], coldate[1] - 1, coldate[1]);
             var date = moment(d.toISOString());
-            date = date.format("YYYY-MM-DD");
+            date = date.format("YYYY-MM-DD HH:mm");
             dateMin = startdate.replace(/-/g, "");
             dateMax = enddate.replace(/-/g, "");
             date = date.replace(/-/g, "");

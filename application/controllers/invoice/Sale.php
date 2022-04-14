@@ -212,33 +212,52 @@ class Sale extends Invoice_controller
 		}
 	}
 
+	private function data_sales()
+	{
+		$_invoice_parent_code = str_replace('RET','INV',$this->input->get('id'), $is_replace);
+		$_invoice_child__code = str_replace('INV','RET',$this->input->get('id'));
+		$this->page_data['_data_item_invoice_parent'] = $this->transaction_item_model->get_transaction_item_by_code_invoice($_invoice_parent_code);
+		$this->page_data['_data_item_invoice_child_'] = $this->transaction_item_model->get_transaction_item_by_code_invoice($_invoice_child__code);
+
+		$parent_items_codex = array_column($this->page_data['_data_item_invoice_parent'], 'item_code');
+		$parent_items_index = array_column($this->page_data['_data_item_invoice_parent'], 'index_list');
+		$childs_items_codex = array_column($this->page_data['_data_item_invoice_child_'], 'item_code');
+		$childs_items_index = array_column($this->page_data['_data_item_invoice_child_'], 'index_list');
+
+		$this->page_data['intersect_codex_item'] = array_intersect($parent_items_codex, $childs_items_codex);
+		$this->page_data['intersect_index_item'] = array_intersect($parent_items_index, $childs_items_index);
+		
+		$this->page_data['invoice_information_transaction'] = $is_replace? 
+			$this->sale_model->get_invoice_selling_by_code($_invoice_child__code):
+			$this->sale_model->get_invoice_selling_by_code($_invoice_parent_code);
+		$this->page_data['customer'] = $this->customer_model->get_information_customer($this->page_data['invoice_information_transaction']->customer);
+		$this->page_data['bank'] = $this->account_bank_model->getById($this->page_data['invoice_information_transaction']->transaction_destination);
+
+	
+	}
+
 	public function info()
 	{
 		ifPermissions('sale_create');
-		$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
-		$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
-		$this->page_data['expedition'] = $this->expedition_model->get();
-		$this->page_data['bank'] = $this->account_bank_model->get();
+		$this->data_sales();
 		$this->page_data['title'] = 'sale_edit';
 		$this->page_data['page']->submenu = 'sale_list';
 		$this->page_data['modals'] = (object) array(
-			'id' => 'modal-remove-order',
+			'id' => 'exampleModal',
 			'title' => 'Modals confirmation',
-			'link' => 'invoice/sales/items/remove_item_from_list_order_transcaction',
+			'link' => 'invoice/sale/cancel?id='.get('id'),
 			'content' => 'delete',
 			'btn' => 'btn-danger',
 			'submit' => 'Yes do it',
 		);
 		$this->load->view('invoice/sale/info', $this->page_data);
+		$this->load->view('includes/modals');
 	}
 
 	public function print_PDF()
 	{
-		$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
-		$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
-		$this->page_data['bank'] = $this->account_bank_model->get();
-		$this->page_data['customer'] = $this->customer_model->get_information_customer($this->page_data['invoice_sale']->customer);
-	
+		$this->data_sales();
+
 		$this->load->library('pdf');
 	
         $options = $this->pdf->getOptions();
@@ -259,18 +278,20 @@ class Sale extends Invoice_controller
 	**/
 	public function cancel()
 	{
-		echo '<pre>';
-		try {
-			$this->order_model->update_by_code($invoice_sale->reference_order, array('is_created' => 0)); // change status is_created
-			$this->sale_model->update_by_code(get('id'), array('is_cancelled' => 1)); // change status is_cancelled
-			$invoice_sale = $this->sale_model->get_invoice_selling_by_code(get('id'));
-			$list_items = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
-			echo '<hr>';
-			var_dump($list_items);
-		} catch (\Throwable $th) {
-			var_dump($th);
-		}
-		echo '</pre>';
+		// try {
+			$get = $this->input->get();
+		// 	$invoice_sale = $this->sale_model->get_invoice_selling_by_code($get['id']);
+		// 	$this->order_model->update_by_code($invoice_sale->reference_order, array('is_created' => 0)); // change status is_created
+		// 	$this->sale_model->update($invoice_sale->id, array('is_cancelled'=>0)); // change status is_cancelled
+		// 	$invoice_sale = $this->sale_model->get_invoice_selling_by_code($get['id']);
+		// 	$list_items = $this->transaction_item_model->get_transaction_item_by_code_invoice($get['id']);
+		// 	var_dump($invoice_sale);
+		// 	echo '<hr>';
+		// 	var_dump($this->db->last_query());
+		// } catch (\Throwable $th) {
+		// 	var_dump($th);
+		// }
+		// echo '</pre>';
 	}
 	
 	protected function create_item_history($data, $status_type)
@@ -396,10 +417,8 @@ class Sale extends Invoice_controller
 			$request[$key]['item_name'] = $value['item_name'];
 			if ($value['id']) {
 				$request[$key]['quantity'] = $item[$key]->quantity - ($value['item_order_quantity'] - $value['item_order_quantity_current']);
-				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
 			} else {
 				$request[$key]['quantity'] = $item[$key]->quantity - $value['item_order_quantity'];
-				$request[$key]['capital_price'] = (setCurrency($value['item_capital_price']) > $item[$key]->capital_price) ? setCurrency($value['item_capital_price']) : $item[$key]->capital_price;
 			}
 			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
@@ -444,6 +463,8 @@ class Sale extends Invoice_controller
 		if ($dateStart != '') {
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("sale.created_at", date("Y-m-d"), 'after');
 		}
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;

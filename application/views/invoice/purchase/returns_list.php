@@ -15,7 +15,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
-          <li class="breadcrumb-item active"><?php echo lang('page_sale') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('page_purchase') ?></li>
           <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>
       </div>
@@ -30,28 +30,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
+            <div class="card-tools pull-right">
+              <?php if (hasPermissions('purchase_create')) : ?>
+                <a href="<?php echo url('invoice/purchase/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('purchase_create') ?></a>
+              <?php endif ?>
+            </div>
+
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <?php echo form_open('invoice/order/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
+            <?php echo form_open('invoice/purchase/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
             <div class="row">
-              <div class="col-10">
-                <div class="row">
-                  <div class="col-4">
-                    <div class="input-group">
-                      <input class="form-control" type="text" id="min" name="min">
-                      <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-8"></div>
+              <div class="input-group col-4">
+                <input class="form-control" type="text" id="min" name="min">
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                 </div>
-              </div>
-              <div class="col-2">
-              <?php if (hasPermissions('sale_create')) : ?>
-                <!-- EMPTY -->
-              <?php endif ?>
               </div>
             </div>
             <?php echo form_close(); ?>
@@ -63,13 +57,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('updated_at') ?></th>
                   <th><?= lang('invoice_code_reference') ?></th>
                   <th><?= lang('invoice_code') ?></th>
-                  <th><?= lang('store_name') ?></th>
+                  <th><?= lang('supplier_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
                   <th><?= lang('shipping_cost') ?></th>
                   <th><?= lang('other_cost') ?></th>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
+                  <th><?= lang('status_payment') ?></th>
                   <th><?= lang('note') ?></th>
                   <th><?= lang('created_by') ?></th>
                   <th><?= lang('option') ?></th>
@@ -112,8 +107,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     var groupColumn = 3;
     $('.ui-buttonset').draggable();
     var table = $("#example2").DataTable({
+
       dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
-            <'row'R<'col-12'tr>>
+            <'row'<'col-12'tr>>
             <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
       processing: true,
       colReorder: true,
@@ -121,27 +117,32 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       responsive: true,
       autoWidth: false,
       aLengthMenu: [
-        [5, 50, 100, 200, <?=$this->db->get('invoice_selling')->num_rows()?>],
+        [5, 50, 100, 200, <?=$this->db->get('invoice_purchasing')->num_rows()?>],
         [5, 50, 100, 200, "All"]
       ],
       order: [[ 3, "desc" ]],
+      drawCallback: function ( settings ) {
+          var api = this.api();
+          var rows = api.rows( {page:'current'} ).nodes();
+          var last = null;
+          let regex = /INV/;
+          api.rows( {page:'current'} ).data().each(function(index, i){
+            if(index['invoice_code'].match(regex) != null){
+              $(rows).eq(i).addClass('bg-lightblue color-palette');
+              $(rows).eq(i).remove();
+            }
+            if(index['is_cancelled'] == true){
+              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
+            }
+          })
+      },
       ajax: {
-        "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
+        "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
           d.finalDate = enddate;
         }
-      },
-      drawCallback: function ( settings ) {
-        var api = this.api();
-        var rows = api.rows( {page:'current'} ).nodes();
-        let regex = /RET/;
-        api.rows( {page:'current'} ).data().each(function(index, i){
-          if(index['invoice_code'].match(regex) != null){
-            $(rows).eq(i).remove();
-          }
-        })
       },
       columns: [{
           data: "invoice_code",
@@ -156,26 +157,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "updated_at"
         },
         {
+          data: "invoice_code_reference",
           visible: false,
-          data: "invoice_code_reference"
         },
         {
           data: "invoice_code",
-          render: function(data, type, row){
-            let html = '';
-            let regex = /RET/;
-            if(data.match(regex) != null){
-              html += '<span class="float-right"><a class="btn btn-xs btn-default disabled" data-toggle="tooltip" data-placement="top" title="Is Returns"><i class="fa fa-fw fa-undo text-primary"></i></a></span>';
-              //<span class="badge badge-danger">RETURNS</span>
-            }
-            return `${data} ${html}`;
-          }},
+        },
         {
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
+            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/supplier/edit?id=${row['supplier_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a href="${location.base}master_information/supplier/edit?id=${row['supplier_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
         {
@@ -221,15 +214,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "note",
+          data: "status_payment",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 100, true)
+            return data
+          }
+        },
+        {
+          data: "purchase_note",
+          orderable: false,
+          render: function(data, type, row) {
+            return shorttext(data, 10, true)
             // return data
           }
         },
         {
-          data: "user_sale_create_by",
+          data: "user_purchasing_create_by",
           orderable: false,
           render: function(data, type, row) {
             return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
@@ -240,39 +240,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "invoice_code",
           orderable: false,
-          visible: <?=(hasPermissions('purchase_list')==true)?1:0?>,
           render: function(data, type, row, meta) {
-            let html = ``;
-            let drop = ``;
-              html += ``;
-              drop += ``;
-              if(row['have_a_child'] == null && row['is_cancelled'] == false){
-                html += `
-                  <a href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
+            let html = `
+                  <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
                   `;
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+            let drop = `
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                   `;
-              }else{
-                html += `
-                  <a href="<?= url('invoice/sales/returns') ?>/edit?id=${row['have_a_child']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  `;
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
-              }
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                     </button>
                     <div class="dropdown-menu" style="">
-                    ${drop}
+                      ${drop}
                     </div>
                   </div>
                 ${html}
@@ -332,6 +316,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
-    new $.fn.dataTable.ColReorder(table);
+
   });
 </script>

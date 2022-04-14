@@ -1,8 +1,32 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); 
+$i = 0; ?>
+<!-- Theme style -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
+
+<?php include viewPath('includes/header'); ?>
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1><?php echo lang($title) ?></h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
+                    <li class="breadcrumb-item active"><?php echo lang('page_purchase') ?></li>
+                    <li class="breadcrumb-item active"><?php echo lang('purchase') ?></li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
 <!-- Main content -->
 <section class="content">
-
     <!-- Default card -->
-
     <div class="row">
         <div class="col-12">
             <div class="callout callout-info">
@@ -19,7 +43,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('supplier_code') ?></label>
-                                <div type="text" name="supplier_code" id="supplier_code" class="form-control" readonly><?= $invoice->supplier ?></div>
+                                <div type="text" name="supplier_code" id="supplier_code" class="form-control" readonly><?= $invoice_informaiton_transaction->supplier ?></div>
                                 <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -73,24 +97,47 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($items as $key => $value) : ?>
+                                    <?php foreach ($_data_item_invoice_parent as $key => $value) : ?>
+                                        <?php if($value->item_code == $intersect_codex_item[$key] && $value->index_list == $intersect_index_item[$key]):?>
                                         <tr class="input-<?= $key ?>">
                                             <td><?= $key+1 ?>.</td>
                                             <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
                                             <td><?= $value->item_name ?></td>
                                             <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
-                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
-                                            <td>Rp.<?= number_format($value->item_capital_price) ?></td>
-                                            <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
-                                            <td>Rp.<?= number_format($value->item_discount) ?></td>
-                                            <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
+                                            <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_capital_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format($_data_item_invoice_child_[$i]->item_selling_price) ?></td>
+                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_discount) ?></td>
+                                            <td>Rp.<b><?= number_format($_data_item_invoice_child_[$i]->total_price) ?></b></td>
                                         </tr>
-                                        <?php if((strlen($value->item_description)) >= 1):?>
+                                        <?php if((strlen($_data_item_invoice_child_[$i]->item_description)) >= 1):?>
                                         <tr>
                                             <td></td>
                                             <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
                                         </tr>
-                                        <?php endif ?>
+                                        <?php endif;?>
+                                        <!-- <pre>Item INDEX RETUR:<?=$_data_item_invoice_child_[$i]->index_list?> | Item CODE PURCH:<?=$_data_item_invoice_child_[$i]->item_code?> | Item Quantity PURCH:<?=$_data_item_invoice_child_[$i]->item_quantity?></pre> -->
+                                        <?php $i++;?>
+                                        <?php else:?>
+                                            <tr class="input-<?= $key ?>">
+                                                <td><?= $key+1 ?>.</td>
+                                                <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
+                                                <td><?= $value->item_name ?></td>
+                                                <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
+                                                <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                                <td>Rp.<?= number_format($value->item_capital_price) ?></td>
+                                                <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
+                                                <td>Rp.<?= number_format($value->item_discount) ?></td>
+                                                <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
+                                            </tr>
+                                            <?php if((strlen($value->item_description)) >= 1):?>
+                                            <tr>
+                                                <td></td>
+                                                <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
+                                            </tr>
+                                            <?php endif;?>
+                                        <!-- <pre>Item INDEX PURCH:<?=$value->index_list?> | Item CODE ORDER:<?=$value->item_code?> | Item Quantity ORDER:<?=$value->item_quantity?></pre> -->
+                                        <?php endif;?>
                                     <?php endforeach ?>
                                 </tbody>
                             </table>
@@ -114,7 +161,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp</span>
                                     </div>
-                                    <input readonly type="text" readonly class="form-control currency" value="<?= number_format($invoice->total_price) ?>" min="1" required>
+                                    <input readonly type="text" readonly class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->total_price) ?>" min="1" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -125,7 +172,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice->discounts) ?>" required>
+                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->discounts) ?>" required>
                                         </div>
                                     </div>
                                 </div>
@@ -136,11 +183,10 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice->shipping_cost) ?>" required>
+                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->shipping_cost) ?>" required>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12">
@@ -150,7 +196,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp</span>
                                     </div>
-                                    <input readonly type="text" class="form-control currency" value="<?= number_format($invoice->other_cost) ?>" required>
+                                    <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->other_cost) ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -161,27 +207,27 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><b>Rp</b></span>
                                     </div>
-                                    <input type="text" readonly class="form-control currency" value="<?= number_format($invoice->grand_total) ?>" min="1" required>
+                                    <input type="text" readonly class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->grand_total) ?>" min="1" required>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-2 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('payment_type') ?></h6>
-                                <input readonly type="text" class="form-control" value="<?= lang($invoice->payment_type) ?>" required>
+                                <input readonly type="text" class="form-control" value="<?= lang($invoice_informaiton_transaction->payment_type) ?>" required>
                             </div>
                         </div>
                         <div class="col-lg col-sm-12">
                             <div class="form-group">
                                 <label for="note"><?= lang('note') ?></label>
-                                <textarea readonly class="form-control"><?= $invoice->note ?></textarea>
+                                <textarea readonly class="form-control"><?= $invoice_informaiton_transaction->note ?></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.card-body -->
                 <!-- /card-footer -->
-                <?php if(!$invoice->is_cancelled):?>
+                <?php if(!$invoice_informaiton_transaction->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>

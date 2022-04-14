@@ -192,20 +192,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_payment') ?></h3>
                 </div>
                 <div class="card-body payment">
-
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-group">
-                                <h6><?= lang('subtotal') ?> :</h6>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $invoice->total_price ?>" min="1" required>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('subtotal') ?> :</h6>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Rp</span>
+                                            </div>
+                                            <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $invoice->total_price ?>" min="1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('discount') ?> :</h6>
                                         <div class="input-group mb-3">
@@ -216,7 +217,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-sm-12">
+                                <div class="col-lg-3 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('shipping_cost') ?> :</h6>
                                         <div class="input-group mb-3">
@@ -227,10 +228,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12">
+                        <div class="col-lg-6 col-sm-12" style="display:none">
                             <div class="form-group">
                                 <h6><?= lang('other_cost') ?> :</h6>
                                 <div class="input-group mb-3">
@@ -241,7 +241,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <h6><b><?= lang('grandtotal') ?> :</b></h6>
                                 <div class="input-group mb-3">
@@ -252,19 +252,81 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-12">
+                        <!--  -->
+                        <div class="col-lg-3 col-sm-12">
                             <div class="form-group">
-                                <h6><?= lang('payment_type') ?></h6>
-                                <select class="custom-select" name="payment_type">
-                                    <option value="cash" <?= ($invoice->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
-                                    <option value="credit" <?= ($invoice->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                <h6><?= lang('expedition_name') ?></h6>
+                                <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                                    <option selected disabled><?=lang('option')?></option>
+                                    <?php foreach ($expedition as $key => $value):?>
+                                        <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
+                                    <?php endforeach ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="form-group">
-                                <label for="note"><?= lang('note') ?></label>
-                                <textarea name="note" id="note" class="form-control"><?= $invoice->note ?></textarea>
+                                <h6><?= lang('expedition_services') ?></h6>
+                                <select class="custom-select" name="services_expedition" id="services_expedition" required>
+                                    <option value="<?=$invoice->services_expedition?>"><?=$invoice->services_expedition?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--  -->
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-lg-1 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('payment_type') ?></h6>
+                                        <select class="custom-select" name="payment_type">
+                                            <option value="cash" <?= ($invoice->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
+                                            <option value="credit" <?= ($invoice->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-3 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?=lang('bank_name')?></h6>
+                                        <div class="input-group">
+                                            <select name="transaction_destination" id="destination" class="custom-select" required>
+                                                <option value="" disabled selected><?=lang('select_account')?></option>
+                                                <?php foreach ($bank as $key => $value):?>
+                                                <option value="<?=$value->id?>"<?=($value->id==$invoice->transaction_destination)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
+                                                <?php endforeach?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-2 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?=lang('date')?></h6>
+                                        <div class="input-group">
+                                            <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($invoice->created_at))?>">
+                                            <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('date_due') ?></h6>
+                                        <div class="input-group mb-3">
+                                        <input type="text" id="date_due" name="date_due" class="form-control" value="<?=date("d/m/Y H:i",strtotime($invoice->date_start))?> - <?=date("d/m/Y H:i",strtotime($invoice->date_due))?>">
+                                        <dv class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
+                                        </dv>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg col-sm-12">
+                                    <div class="form-group">
+                                        <label for="note"><?= lang('note') ?></label>
+                                        <textarea name="note" id="note" class="form-control"><?= $order->note ?></textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -290,6 +352,46 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
     $('body').addClass('sidebar-collapse');
+    function cb(start, end) {
+        $('#date_due span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+    $('#date_due').daterangepicker({
+        
+        startDate: moment(),
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        opens: "center",
+        drops: "up",
+        locale: {
+        format: 'DD/MM/YYYY H:mm:s'
+        },
+        ranges: {
+            'Today': [moment(), moment()],
+            'Tomorow': [moment(), moment().add(1, 'days')],
+            'Next 7 Days': [moment(), moment().add(6, 'days')],
+            'Next 14 Days': [moment(), moment().add(13, 'days')],
+            'Next 30 Days': [moment(), moment().add(29, 'days')],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
+        },
+    }, cb).on('apply.daterangepicker', function(ev, picker) {
+        $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
+    });
+    
+    //Date range picker
+    $('#created_at').daterangepicker({
+        startDate: moment(),
+        singleDatePicker: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        opens: "center",
+        drops: "up",
+        locale: {
+        format: 'DD/MM/YYYY H:mm:s'
+        }
+    });
 </script>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>

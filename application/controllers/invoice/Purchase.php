@@ -194,19 +194,34 @@ class Purchase extends Invoice_controller
 		}
 	}
 
+	private function data_purchase()
+	{
+		$_invoice_parent_code = str_replace('RET','INV',$this->input->get('id'), $is_replace);
+		$_invoice_child__code = str_replace('INV','RET',$this->input->get('id'));
+		$this->page_data['_data_item_invoice_parent'] = $this->transaction_item_model->get_transaction_item_by_code_invoice($_invoice_parent_code);
+		$this->page_data['_data_item_invoice_child_'] = $this->transaction_item_model->get_transaction_item_by_code_invoice($_invoice_child__code);
+
+		$parent_items_codex = array_column($this->page_data['_data_item_invoice_parent'], 'item_code');
+		$parent_items_index = array_column($this->page_data['_data_item_invoice_parent'], 'index_list');
+		$childs_items_codex = array_column($this->page_data['_data_item_invoice_child_'], 'item_code');
+		$childs_items_index = array_column($this->page_data['_data_item_invoice_child_'], 'index_list');
+
+		$this->page_data['intersect_codex_item'] = array_intersect($parent_items_codex, $childs_items_codex);
+		$this->page_data['intersect_index_item'] = array_intersect($parent_items_index, $childs_items_index);
+		
+		$this->page_data['invoice_informaiton_transaction'] = $is_replace? 
+			$this->purchase_model->get_invoice_purchasing_by_code($_invoice_child__code):
+			$this->purchase_model->get_invoice_purchasing_by_code($_invoice_parent_code);
+		$this->page_data['supplier'] = $this->supplier_model->get_information_supplier($this->page_data['invoice_informaiton_transaction']->supplier);
+	
+	}
+
 	public function info()
 	{
 		ifPermissions('purchase_info');
-		$this->form_validation->set_rules('supplier_code', lang('supplier_code'), 'required|trim');
-		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
-		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
-		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
-		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
+		$this->data_purchase();
 		$this->page_data['title'] = 'purchase_info';
 		$this->page_data['page']->submenu = 'info';
-		$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
-		$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
-		
 		$this->page_data['modals'] = (object) array(
 			'id' => 'exampleModal',
 			'title' => 'Modals confirmation',
@@ -216,8 +231,23 @@ class Purchase extends Invoice_controller
 			'submit' => 'Yes do it',
 		);
 
-		$this->load->view('invoice/purchase/form', $this->page_data);
+		$this->load->view('invoice/purchase/info', $this->page_data);
 		$this->load->view('includes/modals');
+	}
+
+	public function print_PDF()
+	{
+		$this->data_purchase();
+		$this->load->library('pdf');
+	
+        $options = $this->pdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $this->pdf->setOptions($options);
+
+		$this->pdf->setPaper('A4', 'potrait');
+		$this->pdf->filename = "$supplier->store_name.pdf";
+		$this->pdf->load_view('invoice/purchase/print_PDF', $this->page_data);
+	
 	}
 	
 	public function cancel()
@@ -476,23 +506,6 @@ class Purchase extends Invoice_controller
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
-		
-		## get all code invoice
-		$this->db->select('purchasing.invoice_code');
-		if ($searchValue != '') {
-			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
-			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
-			$this->db->or_like('purchasing.note', $searchValue, 'both');
-			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
-		}
-		if ($dateStart != '') {
-			$this->db->where("purchasing.created_at >=", $dateStart);
-			$this->db->where("purchasing.created_at <=", $dateFinal);
-			// $this->db->where("purchasing.created_at BETWEEN $dateStart AND $dateFinal", null, FALSE);
-		}
-		$records = $this->db->get('invoice_purchasing purchasing')->result();
-		$invoices_code = $records;
-
 		## Fetch records
 		$this->db->select('
 		purchasing.id as purchasing_id, 
@@ -527,6 +540,8 @@ class Purchase extends Invoice_controller
 		if ($dateStart != '') {
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("purchasing.created_at", date("Y-m-d"), 'after');
 		}
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);

@@ -272,7 +272,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
       <li class="nav-item">
         <a href="<?php echo url('invoice/purchases/returns/list') ?>" class="nav-link <?php echo ($page->submenu == 'list_purchase_returns') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('purchase_list_returns') ?> </p>
+          <p> <?php echo lang('purchase_return_list') ?> </p>
         </a>
       </li>
     </ul>
@@ -303,9 +303,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo url('invoice/sales/returns/list') ?>" class="nav-link <?php echo ($page->submenu == 'sales_returns_list') ? 'active' : '' ?>">
+        <a href="<?php echo url('invoice/sales/returns/list') ?>" class="nav-link <?php echo ($page->submenu == 'sale_return_list') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('sale_returns_list') ?> </p>
+          <p> <?php echo lang('sale_return_list') ?> </p>
         </a>
       </li>
       <li class="nav-item" style="display: none;">

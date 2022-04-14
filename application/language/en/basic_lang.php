@@ -442,6 +442,8 @@ $lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
 $lang['invoice_code_reference'] = "Invoice code reference";
 $lang['purchase_payment'] = "Purchase to pay";
+$lang['purchase_return_list'] = "Purchase Returns List";
+
 
 /*
  * Invoice
@@ -471,6 +473,7 @@ $lang['sale_create'] = "Selling Create";
 $lang['sale_edit'] = "Selling Edit";
 $lang['sale_payment'] = "Selling to pay";
 $lang['sale_returns'] = "Sale Returns";
+$lang['sale_return_list'] = "Selling Returns List";
 $lang['returns'] = "Returns";
 
 

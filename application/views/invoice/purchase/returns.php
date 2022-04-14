@@ -120,7 +120,7 @@
                                             </td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
-                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" max="<?= (int)$value->item_quantity ?>" value="0" required>
+                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="0" max="<?= (int)$value->item_quantity ?>" value="0" required>
                                                     <input readonly class="form-control form-control-sm" type="number" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" value="<?= (int)$value->item_quantity ?>" required>
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
@@ -163,7 +163,7 @@
                 <div class="card-body payment">
 
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <h6><?= lang('subtotal') ?> :</h6>
                                 <div class="input-group mb-3">
@@ -173,33 +173,32 @@
                                     <input type="text" readonly name="sub_total" id="sub_total" class="form-control currency" value="<?= $invoice->total_price ?>" min="1" required>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-sm-12">
-                                    <div class="form-group">
-                                        <h6><?= lang('discount') ?> :</h6>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Rp</span>
-                                            </div>
-                                            <input type="text" name="discount" id="discount" class="form-control currency" value="<?= $invoice->discounts ?>" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-sm-12">
-                                    <div class="form-group">
-                                        <h6><?= lang('shipping_cost') ?> :</h6>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Rp</span>
-                                            </div>
-                                            <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" value="<?= $invoice->shipping_cost ?>" required>
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
 
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="form-group">
+                                <h6><?= lang('discount') ?> :</h6>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
+                                    </div>
+                                    <input type="text" name="discount" id="discount" class="form-control currency" value="<?= $invoice->discounts ?>" required>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="form-group">
+                                <h6><?= lang('shipping_cost') ?> :</h6>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
+                                    </div>
+                                    <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" value="<?= $invoice->shipping_cost ?>" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display:none;" class="col-lg-3 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('other_cost') ?> :</h6>
                                 <div class="input-group mb-3">
@@ -210,7 +209,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <h6><b><?= lang('grandtotal') ?> :</b></h6>
                                 <div class="input-group mb-3">
@@ -221,13 +220,36 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-12">
+                        
+                        <div class="col-lg-1 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('payment_type') ?></h6>
                                 <select class="custom-select" name="payment_type">
                                     <option value="cash" <?= ($invoice->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
                                     <option value="credit" <?= ($invoice->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-12">
+                            <div class="form-group">
+                                <h6><?=lang('date')?></h6>
+                                <div class="input-group">
+                                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at"/>
+                                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>            
+                            <div class="col-lg-3 col-sm-12">
+                            <div class="form-group">
+                                <h6><?= lang('date_due') ?></h6>
+                                <div class="input-group mb-3">
+                                <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
+                                <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg col-sm-12">
@@ -259,6 +281,47 @@
 <?php include viewPath('includes/footer'); ?>
 <script>
     $('body').addClass('sidebar-collapse');
+
+    function cb(start, end) {
+      $('#date_due span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+  }
+  $('#date_due').daterangepicker({
+    
+    startDate: moment(),
+    timePicker: true,
+    timePicker24Hour: true,
+    timePickerSeconds: true,
+    opens: "center",
+    drops: "up",
+    locale: {
+      format: 'DD/MM/YYYY H:mm:s'
+    },
+    ranges: {
+        'Today': [moment(), moment()],
+        'Tomorow': [moment(), moment().add(1, 'days')],
+        'Next 7 Days': [moment(), moment().add(6, 'days')],
+        'Next 14 Days': [moment(), moment().add(13, 'days')],
+        'Next 30 Days': [moment(), moment().add(29, 'days')],
+        'This Month': [moment().startOf('month'), moment().endOf('month')],
+        'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
+    },
+  }, cb).on('apply.daterangepicker', function(ev, picker) {
+      $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
+  });
+  
+  //Date range picker
+  $('#created_at').daterangepicker({
+    startDate: moment(),
+    singleDatePicker: true,
+    timePicker: true,
+    timePicker24Hour: true,
+    timePickerSeconds: true,
+    opens: "center",
+    drops: "up",
+    locale: {
+      format: 'DD/MM/YYYY H:mm:s'
+    }
+  });
 </script>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>

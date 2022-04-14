@@ -265,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
-    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
+    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
         console.log($(this))
@@ -275,15 +275,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $('input[type="search"]').focus()
     } );
     $('#min').on('apply.daterangepicker', function(ev, picker) {
-      startdate = picker.startDate.format('YYYY-MM-DD');
-      enddate = picker.endDate.format('YYYY-MM-DD');
+      startdate = picker.startDate.format('YYYY-MM-DD HH:mm');
+      enddate = picker.endDate.format('YYYY-MM-DD HH:mm');
       $.fn.dataTableExt.afnFiltering.push(
         function(oSettings, aData, iDataIndex) {
           if (startdate != undefined) {
             var coldate = aData[3].split("/");
             var d = new Date(coldate[2], coldate[1] - 1, coldate[1]);
             var date = moment(d.toISOString());
-            date = date.format("YYYY-MM-DD");
+            date = date.format("YYYY-MM-DD HH:mm");
             dateMin = startdate.replace(/-/g, "");
             dateMax = enddate.replace(/-/g, "");
             date = date.replace(/-/g, "");

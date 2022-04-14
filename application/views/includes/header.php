@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?php echo $page->title ?> | <?php echo $app->site_title ?> </title>
   <!-- Tell the browser to be responsive to screen width -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=0.1">
 
   <meta name="csrf_token_name" content="<?php echo $this->security->get_csrf_token_name(); ?>" />
   <meta name="csrf_token_hash" content="<?php echo $this->security->get_csrf_hash(); ?>" />

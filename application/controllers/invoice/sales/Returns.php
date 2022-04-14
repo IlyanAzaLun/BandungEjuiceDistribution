@@ -24,6 +24,9 @@ class Returns extends Sale
 		$this->page_data['page']->submenu = 'sale_list';
 		$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
 		$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+		$this->page_data['bank'] = $this->account_bank_model->get();
+		$this->page_data['expedition'] = $this->expedition_model->get();
+
 		if(!($this->page_data['invoice'] && get('id'))){
 			$this->session->set_flashdata('alert-type', 'danger');
 			$this->session->set_flashdata('alert', lang('error_worng_information'));
@@ -34,11 +37,12 @@ class Returns extends Sale
 		} else {
 			$this->data['invoice_code_parents'] = $this->input->get('id');
 			$this->data['invoice_code'] = str_replace('INV','RET', $this->data['invoice_code_parents']);
+			
 			// information invoice
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
-				'date_start' => trim($date[0]), 
-				'date_due'	 => trim($date[1])
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
 			);
 			//information items
 			$items = array();
@@ -84,19 +88,23 @@ class Returns extends Sale
 				'total_price' => post('sub_total'),
 				'discounts' => post('discount'),
 				'shipping_cost' => post('shipping_cost'),
+				'expedition' => post('expedition_name'),
+				'services_expedition' => post('services_expedition'),
 				'other_cost' => post('other_cost'),
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'transaction_destination' => post('transaction_destination'),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
 			try {
 				echo '<pre>';
 				// CREATE
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				$this->create_or_update_invoice($payment);
+				var_dump($this->create_or_update_invoice($payment));
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				echo '</pre>';
@@ -126,6 +134,8 @@ class Returns extends Sale
 		$this->page_data['page']->submenu = 'returns_edit';
 		$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
 		$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+		$this->page_data['bank'] = $this->account_bank_model->get();
+
 		if(!($this->page_data['invoice'] && get('id'))){
 			$this->session->set_flashdata('alert-type', 'danger');
 			$this->session->set_flashdata('alert', lang('error_worng_information'));
@@ -191,15 +201,18 @@ class Returns extends Sale
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'transaction_destination' => post('transaction_destination'),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
 			try {
 				// EDIT
 				echo '<pre>';
-				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				$this->create_or_update_invoice($payment);
+				// $this->create_item_history($items, ['RETURNS', 'RETURNS']);
+				var_dump($this->create_or_update_invoice($payment));
+				die();
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				// echo '<hr>';
@@ -221,11 +234,50 @@ class Returns extends Sale
 		}
 	}
 
+	public function list()
+	{
+		ifPermissions('sale_return_list');
+		$this->page_data['title'] = 'returns';
+		$this->page_data['page']->submenu = 'sale_return_list';
+		$this->load->view('invoice/sale/returns_list', $this->page_data);
+	}
+
+	protected function create_item_history($data, $status_type)
+	{
+		$item = array();
+		$data = json_encode($data, true);
+		$data = json_decode($data, true);
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['invoice_reference'] = $this->data['invoice_code'];
+			$request[$key]['item_id'] = $item[$key]->id;
+			$request[$key]['item_code'] = $value['item_code'];
+			$request[$key]['item_name'] = $value['item_name'];
+			if ($value['id']) {
+				$request[$key]['item_quantity'] = $item[$key]->quantity;
+			} else {
+				$request[$key]['item_quantity'] = $item[$key]->quantity;
+			}
+			$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
+			$request[$key]['item_unit'] = $value['item_unit'];
+			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
+			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
+			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
+			$request[$key]['total_price'] = setCurrency($value['total_price']);
+			$request[$key]['status_type'] = ($value['id']) ? $status_type[1] : $status_type[0];
+			$request[$key]['status_transaction'] = __CLASS__;
+			$request[$key]['created_by'] = logged('id');
+			$request[$key]['id'] = $value['id'];
+			$this->items_history_model->create($request[$key]);
+		}
+		return $request;
+		// // return $this->items_history_model->create_batch($request); // NOT USED HERE...  DIFFERENT CONDITION TO USE HERE...
+	}
 	// 
 	protected function create_or_update_invoice($data)
 	{
 		$response = $this->sale_model->get_invoice_selling_by_code($this->data['invoice_code']);
-
+		$request['transaction_destination'] = $data['transaction_destination'];
 		$request['total_price'] = setCurrency($data['total_price']);
 		$request['discounts'] = setCurrency($data['discounts']);
 		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
@@ -240,12 +292,15 @@ class Returns extends Sale
 		$request['expedition'] = $data['expedition'];
 		$request['services_expedition'] = $data['services_expedition'];
 		if ($response) {
+			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['created_at'] = $data['created_at'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
 			return $this->sale_model->update_by_code($this->data['invoice_code'], $request);
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['created_at'] = $data['created_at'];
 			$request['created_by'] = logged('id');
 			//	
 			$this->sale_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
@@ -318,10 +373,8 @@ class Returns extends Sale
 				if ($value['id']) {
 					//EDIT
 					$request[$key]['quantity'] = ($item[$key]->quantity - $value['item_order_quantity_current']) + ($value['item_order_quantity'] + $value['item_order_quantity_current']);
-					$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
 				} else {
 					$request[$key]['quantity'] = ($item[$key]->quantity + $value['item_order_quantity']);
-					$request[$key]['capital_price'] = (setCurrency($value['item_capital_price']) > $item[$key]->capital_price) ? setCurrency($value['item_capital_price']) : $item[$key]->capital_price;
 				}
 			}else{
 				if($value['id']){

@@ -125,7 +125,7 @@ $lang['important'] = "Penting";
 $lang['warning'] = "Peringatan";
 $lang['informational'] = "informasi";
 
-$lang['id'] = "Indo";
+$lang['id'] = "ID";
 $lang['action'] = "Tindakan";
 $lang['submit'] = "Kirim";
 $lang['cancel'] = "Membatalkan";
@@ -260,37 +260,37 @@ $lang['status_active'] = "Data ini tidak akan ditampilkan jika status dimatikan"
 /*
  * Items
  */
-$lang['item'] = "barang";
-$lang['item_list'] = "Daftar barang";
+$lang['item'] = "Barang";
+$lang['item_list'] = "Daftar Barang";
 $lang['item_add'] = "Tambahkan Barang";
-$lang['item_update'] = "Perbarui barang";
-$lang['item_code'] = "Kode barang";
-$lang['item_name'] = "Nama barang";
-$lang['item_quantity'] = "jumlah barang";
-$lang['item_capital_price'] = "Harga modal";
-$lang['item_selling_price'] = "Harga penjualan";
+$lang['item_update'] = "Perbarui Barang";
+$lang['item_code'] = "Kode Barang";
+$lang['item_name'] = "Nama Barang";
+$lang['item_quantity'] = "Jumlah Barang";
+$lang['item_capital_price'] = "Harga Modal";
+$lang['item_selling_price'] = "Harga Penjualan";
 $lang['item_info_add'] = "Tambahkan lebih banyak item data informasi";
 $lang['item_info_edit'] = "Edit item data informasi";
-$lang['category_item'] = "Kategori barang";
+$lang['category_item'] = "Kategori Barang";
 $lang['select_category_item'] = "Pilih item kategori";
-$lang['current_stock'] = "stok saat ini";
-$lang['sub_category'] = "Sub kategori";
+$lang['current_stock'] = "Stok saat ini";
+$lang['sub_category'] = "Sub Kategori";
 $lang['is_active'] = "Aktif";
-$lang['is_inactive'] = "tidak aktif";
+$lang['is_inactive'] = "Tidak Aktif";
 
 /*
  * Customer
  */
-$lang['customer'] = "pelanggan";
-$lang['customer_list'] = "Daftar pelanggan";
-$lang['customer_add'] = "Tambahkan pelanggan";
-$lang['customer_update'] = "Perbarui pelanggan";
-$lang['customer_code'] = "Kode pelanggan";
-$lang['store_name'] = "Nama toko";
-$lang['address_destination'] = "Alamat tujuan";
-$lang['select_store_name'] = "Pilih nama toko";
-$lang['customer_owner'] = "Nama pemilik";
-$lang['category_customer'] = "kategori pelanggan";
+$lang['customer'] = "Pelanggan";
+$lang['customer_list'] = "Daftar Pelanggan";
+$lang['customer_add'] = "Tambahkan Pelanggan";
+$lang['customer_update'] = "Perbarui Pelanggan";
+$lang['customer_code'] = "Kode Pelanggan";
+$lang['store_name'] = "Nama Toko";
+$lang['address_destination'] = "Alamat Tujuan";
+$lang['select_store_name'] = "Pilih Nama Toko";
+$lang['customer_owner'] = "Nama Pemilik";
+$lang['category_customer'] = "Kategori Pelanggan";
 $lang['customer_info_add'] = "Tambahkan lebih banyak informasi data pelanggan";
 $lang['customer_info_edit'] = "Edit informasi data pelanggan";
 $lang['select_category_customer'] = "Pilih kategori pelanggan";
@@ -299,7 +299,7 @@ $lang['customer_category_agent'] = "Agen";
 $lang['customer_category_special'] = "Agen Khusus";
 $lang['customer_category_distributor'] = "Distributor";
 $lang['customer_category_other'] = "Lainnya";
-$lang['customer_type'] = "Tipe pelanggan";
+$lang['customer_type'] = "Tipe Pelanggan";
 $lang['customer_category_other'] = "Lainnya";
 
 /*
@@ -329,7 +329,7 @@ $lang['supplier_category_other'] = "Lainnya";
 /*
  * Address
  */
-$lang['address'] = "alamat";
+$lang['address'] = "Alamat";
 $lang['address_list'] = "Daftar alamat";
 $lang['address_add'] = "Tambahkan alamat";
 $lang['address_edit'] = "Edit alamat";
