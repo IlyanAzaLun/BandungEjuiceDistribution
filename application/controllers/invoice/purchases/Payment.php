@@ -88,6 +88,8 @@ class Payment extends MY_Controller
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
 			// $this->db->where("purchasing.created_at BETWEEN $dateStart AND $dateFinal", null, FALSE);
+		}else{
+			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
@@ -95,7 +97,6 @@ class Payment extends MY_Controller
 		## Fetch records
 		$this->db->select('
 		purchasing.id as purchasing_id, 
-		SUBSTRING(purchasing.invoice_code, 5) as invoice_code_reference,
 		purchasing.invoice_code as invoice_code, 
 		purchasing.have_a_child as have_a_child, 
 		purchasing.created_at as purchasing_create_at, 
@@ -128,6 +129,8 @@ class Payment extends MY_Controller
 		if ($dateStart != '') {
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
 		$this->db->where('purchasing.have_a_child IS NULL', null, false);
 		$this->db->where('purchasing.is_cancelled', 0);
@@ -141,7 +144,6 @@ class Payment extends MY_Controller
 
 			$data[] = array(
 				'id' => $record->purchasing_id,
-				'invoice_code_reference' => $record->invoice_code_reference,
 				'invoice_code' => $record->invoice_code,
 				'have_a_child' => $record->have_a_child,
 				'supplier_code' => $record->supplier_code,

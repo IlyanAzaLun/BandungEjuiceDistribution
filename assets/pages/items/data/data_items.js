@@ -1,10 +1,10 @@
 class DataSourceItem {
     constructor() {
-        this.BASEURL = location.href + '/';
+        // constructor
     }
     itemComponentAdd(callback) {
         $.ajax({
-            url: this.BASEURL + 'component',
+            url: location.base + 'items/add/component',
             method: 'POST',
             dataType: 'HTML',
             data: { request: 'GET COMPONENT' },
@@ -30,13 +30,13 @@ class DataSourceItem {
             return result.join('');
         }
         $.ajax({
-            url: this.BASEURL + 'getItemCode',
+            url: location.base + 'items/add/getItemCode',
             method: 'POST',
             dataType: 'JSON',
             data: { request: 'GET COMPONENT', data: type },
         }).done(function (result) {
-            $('input#item_code').val(`${$('.category').find(':selected').data('id').substring(0, 3)}${($('.subcategory').find(':selected').data('id'))
-                ? `-${sub($('.subcategory').find(':selected').data('id'))}-`
+            $('input#item_code').val(`${$('.category').find(':selected').val()}${($('.subcategory').find(':selected').val())
+                ? `-${sub($('.subcategory').find(':selected').val())}-`
                 : `-`}${pad(result + 1, 6)}`)
         }).fail(function () {
             console.log("error");

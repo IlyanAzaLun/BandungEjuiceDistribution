@@ -221,7 +221,7 @@ $i = 0; ?>
                         <div class="col-lg-2 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('payment_type') ?></h6>
-                                <input readonly type="text" class="form-control bg-success" value="<?= lang($invoice->payment_type) ?>" required>
+                                <input readonly type="text" class="form-control<?=($invoice->payment_type!='credit')?' bg-success':' bg-danger'?>" value="<?= lang($invoice->payment_type) ?>" required>
                             </div>
                         </div>
                         <div class="col-lg col-sm-12">

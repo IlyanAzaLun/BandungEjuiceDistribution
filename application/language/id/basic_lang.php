@@ -34,8 +34,8 @@ $lang['old_password'] = "password lama";
 /**
  * Error Pages
  */
-$lang['not_allowed_403'] = "Anda tidak diperbolehkan mengakses halaman ini.";
-$lang['sorry_not_allowed_msg'] = "Maaf, Anda tidak dapat mengakses bagian/halaman web ini.
+$lang['not_allowed_403'] = "Anda tidak diperbolehkan mengakses Halaman ini.";
+$lang['sorry_not_allowed_msg'] = "Maaf, Anda tidak dapat mengakses bagian/Halaman web ini.
 Sementara itu, Anda dapat <a href='" . url('/') . "'>kembali ke dasbor</a> atau coba gunakan formulir pencarian.";
 
 
@@ -92,10 +92,10 @@ $lang['mailbox'] = "kotak surat";
 $lang['inbox'] = "kotak masuk";
 $lang['compose'] = "Menyusun";
 $lang['read'] = "Membaca";
-$lang['pages'] = "halaman";
+$lang['pages'] = "Halaman";
 $lang['invoice'] = "faktur";
 $lang['menus'] = "Menu";
-$lang['purchase'] = "pembelian";
+$lang['purchase'] = "Pembelian";
 $lang['selling'] = "penjualan";
 $lang['ecommerce'] = "Perdagangan elektronik";
 $lang['projects'] = "Proyek";
@@ -123,7 +123,7 @@ $lang['level'] = "Tingkat";
 $lang['labels'] = "Label";
 $lang['important'] = "Penting";
 $lang['warning'] = "Peringatan";
-$lang['informational'] = "informasi";
+$lang['informational'] = "Informasi";
 
 $lang['id'] = "ID";
 $lang['action'] = "Tindakan";
@@ -203,23 +203,23 @@ $lang['user'] = "Pengguna";
 $lang['new_user'] = "Pengguna baru";
 $lang['edit_user'] = "Edit Pengguna";
 $lang['view_user'] = "Lihat Pengguna";
-$lang['delete_user'] = "Hapus pengguna";
+$lang['delete_user'] = "Hapus Pengguna";
 $lang['delete_user_cannot'] = "Anda tidak dapat Menghapus Pengguna ini";
 $lang['user_unable_change_status'] = "Tidak dapat mengubah Status! Coba lagi";
 $lang['user_basic'] = "Detail Dasar";
 $lang['user_name'] = "Nama";
-$lang['user_enter_name'] = "Masukkan nama";
+$lang['user_enter_name'] = "Masukkan Nama";
 $lang['user_contact'] = "Nomor kontak";
 $lang['user_enter_contact'] = "Masukkan Nomor Kontak";
 
 $lang['user_login_details'] = "rincian masuk";
 $lang['user_email'] = "Surel";
-$lang['user_username'] = "Nama pengguna";
+$lang['user_username'] = "Nama Pengguna";
 $lang['user_email_exists'] = "Email sudah ada";
-$lang['user_enter_username'] = "Masukkan nama pengguna";
+$lang['user_enter_username'] = "Masukkan Nama Pengguna";
 
-$lang['user_enter_email'] = "Masukkan nama pengguna";
-$lang['user_username_take'] = "Nama pengguna Sudah diambil";
+$lang['user_enter_email'] = "Masukkan Nama Pengguna";
+$lang['user_username_take'] = "Nama Pengguna Sudah diambil";
 $lang['user_password'] = "Kata sandi";
 $lang['user_password_confirm'] = "setujui password";
 $lang['user_password_leave_blank'] = "Biarkan Kosong agar tetap tidak berubah!";
@@ -269,8 +269,8 @@ $lang['item_name'] = "Nama Barang";
 $lang['item_quantity'] = "Jumlah Barang";
 $lang['item_capital_price'] = "Harga Modal";
 $lang['item_selling_price'] = "Harga Penjualan";
-$lang['item_info_add'] = "Tambahkan lebih banyak item data informasi";
-$lang['item_info_edit'] = "Edit item data informasi";
+$lang['item_info_add'] = "Tambahkan lebih banyak item data Informasi";
+$lang['item_info_edit'] = "Edit item data Informasi";
 $lang['category_item'] = "Kategori Barang";
 $lang['select_category_item'] = "Pilih item kategori";
 $lang['current_stock'] = "Stok saat ini";
@@ -291,8 +291,8 @@ $lang['address_destination'] = "Alamat Tujuan";
 $lang['select_store_name'] = "Pilih Nama Toko";
 $lang['customer_owner'] = "Nama Pemilik";
 $lang['category_customer'] = "Kategori Pelanggan";
-$lang['customer_info_add'] = "Tambahkan lebih banyak informasi data pelanggan";
-$lang['customer_info_edit'] = "Edit informasi data pelanggan";
+$lang['customer_info_add'] = "Tambahkan lebih banyak Informasi data pelanggan";
+$lang['customer_info_edit'] = "Edit Informasi data pelanggan";
 $lang['select_category_customer'] = "Pilih kategori pelanggan";
 $lang['customer_category_ws'] = "Jual Dunia";
 $lang['customer_category_agent'] = "Agen";
@@ -305,25 +305,25 @@ $lang['customer_category_other'] = "Lainnya";
 /*
  * Supplier
  */
-$lang['supplier'] = "pemasok";
-$lang['supplier_list'] = "Daftar pemasok";
-$lang['supplier_add'] = "Tambahkan pemasok";
-$lang['supplier_update'] = "Perbarui pemasok";
+$lang['supplier'] = "Pemasok";
+$lang['supplier_list'] = "Daftar Pemasok";
+$lang['supplier_add'] = "Tambahkan Pemasok";
+$lang['supplier_update'] = "Perbarui Pemasok";
 $lang['supplier_code'] = "Kode penyuplai";
 $lang['store_name'] = "Nama toko";
 $lang['address_destination'] = "Alamat tujuan";
-$lang['select_store_name'] = "Pilih nama toko";
+$lang['select_store_name'] = "Pilih Nama toko";
 $lang['supplier_owner'] = "Nama pemilik";
-$lang['category_supplier'] = "kategori pemasok";
-$lang['supplier_info_add'] = "Tambahkan lebih banyak informasi pemasok data";
-$lang['supplier_info_edit'] = "Edit informasi data pemasok";
-$lang['select_category_supplier'] = "Pilih pemasok kategori";
+$lang['category_supplier'] = "kategori Pemasok";
+$lang['supplier_info_add'] = "Tambahkan lebih banyak Informasi Pemasok data";
+$lang['supplier_info_edit'] = "Edit Informasi data Pemasok";
+$lang['select_category_supplier'] = "Pilih Pemasok kategori";
 $lang['supplier_category_ws'] = "Jual Dunia";
 $lang['supplier_category_agent'] = "Agen";
 $lang['supplier_category_special'] = "Agen Khusus";
 $lang['supplier_category_distribution'] = "Distribusi";
 $lang['supplier_category_other'] = "Lainnya";
-$lang['supplier_type'] = "jenis pemasok";
+$lang['supplier_type'] = "jenis Pemasok";
 $lang['supplier_category_other'] = "Lainnya";
 
 /*
@@ -341,21 +341,21 @@ $lang['zip'] = "Ritsleting";
 $lang['contact_phone'] = "Hubungi telepon";
 $lang['contact_mail'] = "Kontak Email";
 $lang['address_update'] = "Perbarui alamat";
-$lang['address_info_add'] = "Tambahkan lebih banyak informasi alamat data";
-$lang['address_info_edit'] = "Edit informasi alamat data";
+$lang['address_info_add'] = "Tambahkan lebih banyak Informasi alamat data";
+$lang['address_info_edit'] = "Edit Informasi alamat data";
 $lang['is_open'] = "Terbuka";
 
 /*
  * Invoice
  * purchase
  */
-$lang['purchase_list'] = "daftar pembelian";
+$lang['purchase_list'] = "Daftar Pembelian";
 $lang['find_customer_code'] = "Temukan kode pelanggan...";
-$lang['find_store_name'] = "Cari nama toko...";
-$lang['purchase_list'] = "daftar pembelian";
+$lang['find_store_name'] = "Cari Nama toko...";
+$lang['purchase_list'] = "Daftar Pembelian";
 $lang['purchase_create'] = "Beli buat";
-$lang['purchase_info_create'] = "Tambahkan lebih banyak informasi pembelian data";
-$lang['information_customer'] = "informasi pengguna";
+$lang['purchase_info_create'] = "Tambahkan lebih banyak Informasi Pembelian data";
+$lang['information_customer'] = "Informasi Pengguna";
 $lang['information_items'] = "Informasi Barang";
 $lang['find_items'] = "Temukan item...";
 $lang['item_order_quantity'] = "Jumlah pesanan barang";
@@ -364,8 +364,7 @@ $lang['discount'] = "Diskon";
 $lang['shipping_cost'] = "Biaya pengiriman";
 $lang['other_cost'] = "Biaya lainnya";
 $lang['other_cost'] = "Biaya lainnya";
-$lang['grandtotal'] = "hasil akhir";
-$lang['grandtotal'] = "hasil akhir";
+$lang['grandtotal'] = "Hasil akhir";
 $lang['information_payment'] = "Informasi Pembayaran";
 
 /**
@@ -415,12 +414,12 @@ $lang['backup_generate_message'] = "Hasilkan & Unduh Cadangan Basis Data";
  * Settings
  */
 $lang['email_templates'] = "Template Email";
-$lang['settings_company_name'] = "Nama perusahaan";
+$lang['settings_company_name'] = "Nama Perusahaan";
 $lang['settings_company_email'] = "Email Perusahaan";
 $lang['settings_company_icon'] = "Ikon Perusahaan";
-$lang['settings_timezone'] = "Zona waktu";
+$lang['settings_timezone'] = "Zona Waktu";
 $lang['settings_date_format'] = "Format tanggal";
-$lang['settings_datetime_format'] = "Format TanggalWaktu";
+$lang['settings_datetime_format'] = "Format Tanggal Waktu";
 $lang['settings_g_recaptcha'] = "Google Recaptcha";
 $lang['settings_gr_sitekey'] = "Kunci Situs";
 $lang['settings_gr_secretkey'] = "Kunci rahasia";
@@ -428,7 +427,7 @@ $lang['settings_email_code'] = "Kode";
 $lang['settings_email_name'] = "Nama";
 $lang['edit'] = "Sunting";
 $lang['settings_email_template'] = "Templat";
-$lang['settings_timezone'] = "Zona waktu";
+$lang['settings_timezone'] = "Zona Waktu";
 
 $lang['language'] = "Bahasa";
 $lang['default_lang'] = "Bahasa Bawaan";

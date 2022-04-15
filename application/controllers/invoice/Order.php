@@ -68,8 +68,9 @@ class Order extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
+				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
 			// CREATE
@@ -160,6 +161,7 @@ class Order extends Invoice_controller
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
 				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'created_by' => logged('id'),
 				'is_confirmed' => 0,
@@ -235,6 +237,7 @@ class Order extends Invoice_controller
 		$request['customer'] = $data['customer'];
 		$request['payment_type'] = $data['payment_type'];
 		$request['note'] = $data['note'];
+		$request['created_at'] = $data['created_at'];		
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['is_confirmed'] = $data['is_confirmed'];
@@ -294,6 +297,7 @@ class Order extends Invoice_controller
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
 		$records = $this->db->get('order_sale')->result();
+		$this->db->where('is_created', 0);
 		$totalRecords = $records[0]->allcount;
 
 		## Total number of record with filtering
@@ -307,10 +311,12 @@ class Order extends Invoice_controller
 		if ($dateStart != '') {
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
+		$this->db->where('is_created', 0);
 		$records = $this->db->get('order_sale order')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
-
 		## Fetch records
 		$this->db->select('
 		order.id as id, 
@@ -344,16 +350,18 @@ class Order extends Invoice_controller
 		if ($dateStart != '') {
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
 			$this->db->where("order.created_by", $logged);
 		}
+		$this->db->where('is_created', 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('order_sale order')->result();
 
 		$data = array();
-
 		foreach ($records as $record) {
 
 			$data[] = array(
@@ -377,7 +385,6 @@ class Order extends Invoice_controller
 				'user_order_create_by' => $record->user_order_create_by,
 			);
 		}
-
 		## Response
 		$response = array(
 			"draw" => intval($draw),

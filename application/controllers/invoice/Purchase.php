@@ -428,16 +428,15 @@ class Purchase extends Invoice_controller
 		$request['date_start'] = $data['date_start'];
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
+		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
-			$request['created_at'] = $data['created_at'];
 			//
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
-			$request['created_at'] = $data['created_at'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->purchase_model->create($request);
@@ -501,7 +500,8 @@ class Purchase extends Invoice_controller
 		if ($dateStart != '') {
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
-			// $this->db->where("purchasing.created_at BETWEEN $dateStart AND $dateFinal", null, FALSE);
+		}else{
+			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
@@ -541,7 +541,7 @@ class Purchase extends Invoice_controller
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
 		}else{
-			$this->db->like("purchasing.created_at", date("Y-m-d"), 'after');
+			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);

@@ -126,7 +126,8 @@ class Items extends MY_Controller
     public function getItemCode()
     {
         if ($this->input->post('request')) {
-            echo json_encode($this->db->get_where('items', ['category' => $this->input->post('data')])->num_rows());
+            $this->db->like('item_code', $this->input->post('data'), 'after');
+            echo json_encode($this->db->get('items')->num_rows());
         }
     }
 
@@ -151,9 +152,11 @@ class Items extends MY_Controller
             $this->page_data['page']->submenu = 'edit';
             $this->load->view('items/edit', $this->page_data);
         } else {
+            $id = $this->input->get('id');
             $data = [
                 'item_code' => post('item_code'),
                 'item_name' => post('item_name'),
+                'category' => post('subcategory') ? post('subcategory') : post('category'),
                 'brand' => post('brand'),
                 'brands' => post('brands'),
                 'mg' => post('mg'),
@@ -171,9 +174,9 @@ class Items extends MY_Controller
                 'updated_at' => date('Y-m-d H:i:s', time()),
                 'updated_by' => logged('id'),
             ];
-            $history = (array)$this->items_model->getById(Get('id'));
+            $history = (array)$this->items_model->getById($id);
             $this->create_item_history(array(0 => $data), 'UPDATE');
-            $item = $this->items_model->update(Get('id'), $data);
+            $item = $this->items_model->update($id, $data);
             $this->activity_model->add("Updated Item #$item, #" . Post('item_code') . ", Updated by User: #" . logged('id'), $history);
 
             $this->session->set_flashdata('alert-type', 'success');

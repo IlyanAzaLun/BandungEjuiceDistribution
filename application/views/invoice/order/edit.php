@@ -231,7 +231,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-6 col-sm-12">
+                <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('payment_type') ?></h6>
                     <select class="custom-select" name="payment_type">
@@ -240,7 +240,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </select>
                   </div>
                 </div>
-
+                
+                <div class="col-lg-3 col-sm-12">
+                  <div class="form-group">
+                    <h6><?=lang('date')?></h6>
+                      <div class="input-group">
+                        <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($invoice->created_at))?>"/>
+                        <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                  </div>
+                </div>    
               </div>
             </div>
             <div class="col-lg-3 col-sm-12" style="display: none">
@@ -292,12 +303,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       })
   });
   //Date range picker
-  $('#date_due').daterangepicker({
+  $('#created_at').daterangepicker({
+    singleDatePicker: true,
     timePicker: true,
     timePicker24Hour: true,
-    timePickerIncrement: 30,
+    timePickerSeconds: true,
+    opens: "center",
+    drops: "up",
     locale: {
-      format: 'DD/MM/YYYY H:mm'
+      format: 'DD/MM/YYYY H:mm:s'
     }
   });
 </script>

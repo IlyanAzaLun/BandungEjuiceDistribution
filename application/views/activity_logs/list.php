@@ -43,21 +43,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="col-sm-12">
           <?php echo form_open('activity_logs', ['method' => 'GET', 'autocomplete' => 'off']); ?>
           <div class="row">
-
-            <div class="col-sm-2">
-              <div class="form-group">
-                <p style="margin-top: 20px"><strong><?php echo lang('filter') ?> :</strong> </p>
-              </div>
-            </div>
-
-            <div class="col-sm-4">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <label for="Filter-IpAddress"><?php echo lang('activity_ip_address') ?> </label>
-                <input type="text" name="ip" id="Filter-IpAddress" onchange="$(this).parents('form').submit();" class="form-control" value="<?php echo get('ip') ?>" placeholder="Search by Ip Addres" />
+                <input type="text" name="ip" id="Filter-IpAddress" onchange="$(this).parents('form').submit();" class="form-control form-control-sm" value="<?php echo get('ip') ?>" placeholder="Search by Ip Addres" />
               </div>
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <label for="Filter-User"><?php echo lang('user') ?></label>
                 <select name="user" id="Filter-User" onchange="$(this).parents('form').submit();" class="form-control select2">
@@ -70,10 +63,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
 
-            <div class="col-sm-2 text-right">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group" style="margin-top: 25px;">
-                <a href="<?php echo url('/activity_logs') ?>" class="btn btn-danger"><?php echo lang('reset') ?></a>
-                <button type="submit" class="btn btn-primary"><?php echo lang('filter') ?></button>
+                    <label for="">&nbsp;</label>
+                <a href="<?php echo url('/activity_logs') ?>" class="btn btn-sm btn-danger"><?php echo lang('reset') ?></a>
+                <button type="submit" class="btn btn-sm btn-primary"><?php echo lang('filter') ?></button>
               </div>
             </div>
 

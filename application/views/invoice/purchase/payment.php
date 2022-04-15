@@ -55,7 +55,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th>no.</th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
-                  <th><?= lang('invoice_code_reference') ?></th>
                   <th><?= lang('invoice_code') ?></th>
                   <th><?= lang('supplier_name') ?></th>
                   <th><?= lang('total_price') ?></th>
@@ -119,7 +118,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 3, "desc" ]],
+      order: [[ 1, "desc" ]],
       createdRow: function( row, data, dataIndex ) {
         let d = new Date();
         let month = d.getMonth()+1;
@@ -136,27 +135,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }else if(data['status_payment']=='Payed'){
           $(row).find('td:eq(10)').addClass('bg-success');
       }},
-      drawCallback: function ( settings ) {
-        var api = this.api();
-        var rows = api.rows( {page:'current'} ).nodes();
-        var last = null;
-        api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
-            if ( last !== group ) {
-                $(rows).eq( i ).before(
-                    `<tr class="group"><td class="group" colspan="15"><span class="text-info">${group}</span></td></tr>`
-                );
-                last = group;
-            }
-          });
-      },
       ajax: {
         "url": "<?php echo url('invoice/purchases/payment/serverside_datatables_data_purchase_payment') ?>",
         "type": "POST",
-        // "data": {
-        //   "<?php echo $this->security->get_csrf_token_name(); ?>": $('meta[name=csrf_token_hash]').attr('content'),
-        //   "startDate": startdate,
-        //   "finalDate": enddate
-        // }
         "data": function(d) {
           d.startDate = startdate;
           d.finalDate = enddate;
@@ -175,10 +156,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "updated_at"
         },
         {
-          data: "invoice_code_reference",
-          visible: false,
-        },
-        {
           data: "invoice_code",
           visible: false,
           render: function(data, type, row) {
@@ -186,7 +163,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let regex = /RET/;
             if(data.match(regex) != null){
               html += '<span class="float-right"><a class="btn btn-xs btn-default disabled" data-toggle="tooltip" data-placement="top" title="Is Returns"><i class="fa fa-fw fa-undo text-primary"></i></a></span>';
-              //<span class="badge badge-danger">RETURNS</span>
             }
             return `${data} ${html}`;
           }
@@ -309,7 +285,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
-    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
+    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
         console.log($(this))

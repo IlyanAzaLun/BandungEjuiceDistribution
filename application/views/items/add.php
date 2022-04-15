@@ -40,14 +40,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <label><?=lang('category_item')?></label>
                                 <select class="form-control select2" style="width: 100%;" name="category" id="category"value="<?=set_value('category')?>" required>
                                     <option value="" selected="selected"><?=lang('select_category_item')?></option>
-                                    <option value="ACC" data-id="ACC" <?=set_select('category', 'ACC' )?>>ACC</option>
+                                    <option value="ACS" data-id="ACCESSORIES" <?=set_select('category', 'ACCESSORIES' )?>>ACCESSORIES</option>
                                     <option value="ATO" data-id="ATOMIZER" <?=set_select('category', 'ATOMIZER' )?>>ATOMIZER</option>
                                     <option value="BAT" data-id="BATTERY" <?=set_select('category', 'BATTERY' )?>>BATTERY</option>
                                     <option value="CAT" data-id="CATTRIDGE & COIL"<?=set_select('category', 'CATTRIDGE & COIL' )?>>CATTRIDGE & COIL</option>
                                     <option value="COT" data-id="COTTON" <?=set_select('category', 'COTTON' )?>>COTTON</option>
-                                    <option value="DEV" data-id="DEVICE" <?=set_select('category', 'DEVICE' )?>>DEVICE</option>
                                     <option value="LIQ" data-id="LIQUID" <?=set_select('category', 'LIQUID' )?>>LIQUID</option>
-                                    <option value="POD" data-id="PODS" <?=set_select('category', 'PODS' )?>>PODS</option>
+                                    <option value="MODS" data-id="MODS" <?=set_select('category', 'MODS' )?>>MODS</option>
+                                    <option value="PODS" data-id="PODS" <?=set_select('category', 'PODS' )?>>PODS</option>
                                     <option value="WIR" data-id="WIRE" <?=set_select('category', 'WIRE' )?>>WIRE</option>
                                 </select>
                             </div>
@@ -59,31 +59,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('item_code')?></label>
-                                <input type="text" class="form-control" name="item_code" id="item_code" value="<?=set_value('item_code')?>" required readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                        <!-- text input -->
-                            <div class="form-group">
-                                <label><?=lang('item_quantity')?></label>
                                 <div class="input-group mb-3">
-                                  <input type="number" class="form-control" name="quantity" id="quantity" value="<?=set_value('quantity')?>" required>
+                                  <input type="text" class="form-control form-control-sm" name="item_code" id="item_code" value="<?=set_value('item_code')?>" required readonly>
                                   <div class="input-group-append">
-                                    <select class="input-group-text" name="unit" id="unit" required>
+                                    <select class="input-group-text form-control-sm" name="unit" id="unit" required>
                                       <option value="PCS">PCS</option>
-                                      <option value="PAC">PAC</option>
+                                      <option value="PAX">PAX</option>
                                     </select>
                                   </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-3" style="display:none">
+                        <!-- text input -->
+                            <div class="form-group">
+                                <label><?=lang('item_quantity')?></label>
+                                <div class="input-group mb-3">
+                                  <input type="number" class="form-control form-control-sm" name="quantity" id="quantity" value="<?=set_value('quantity')?>" value="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('item_name')?></label>
-                                <input type="text" class="form-control" name="item_name" id="item_name" value="<?=set_value('item_name')?>" required>
+                                <input type="text" class="form-control form-control-sm" name="item_name" id="item_name" value="<?=set_value('item_name')?>" required>
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -93,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('item_capital_price')?></label>
-                                    <input type="text" class="form-control" name="capital_price" id="capital_price" value="<?=set_value('capital_price')?>" required>
+                                    <input type="text" class="form-control form-control-sm" name="capital_price" id="capital_price" value="<?=set_value('capital_price')?>" required>
                                     <?=form_error('capital_price', '<small class="text-danger">','</small>')?>
                                 </div>
                             </div>
@@ -101,7 +103,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('item_selling_price')?></label>
-                                    <input type="text" class="form-control" name="selling_price" id="selling_price" value="<?=set_value('selling_price')?>" required>
+                                    <input type="text" class="form-control form-control-sm" name="selling_price" id="selling_price" value="<?=set_value('selling_price')?>" required>
                                     <?=form_error('selling_price', '<small class="text-danger">','</small>')?>
                                 </div>
                             </div>
@@ -112,7 +114,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('note')?></label>
-                                <textarea type="text" class="form-control" name="note" id="note"><?=set_value('note')?></textarea>
+                                <textarea type="text" class="form-control form-control-sm" name="note" id="note"><?=set_value('note')?></textarea>
                                 <?=form_error('note', '<small class="text-danger">','</small>')?>
                             </div>
                         </div>

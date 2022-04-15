@@ -146,8 +146,8 @@ class Returns extends Purchase
 			// information invoice
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
-				'date_start' => trim($date[0]), 
-				'date_due'	 => trim($date[1])
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
 			);
 			//information items
 			$items = array();

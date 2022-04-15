@@ -25,21 +25,28 @@ class Items extends MY_Controller
 			'item_discount' => $order->item_discount, 
 			'total_price' => $order->total_price, 
 			'status_type' => 'DELETE', 
-			'status_transaction' => 'Purchase', 
+			'status_transaction' => 'Sale', 
 			'invoice_reference' => $order->invoice_code, 
 			'created_by' => logged('id'), 
 		);		
 		$item_update = array(
 			'item_code' => $item->item_code, 
 			'item_name' => $item->item_name, 
-			'quantity' => $item->quantity - $order->item_quantity, 
+			'quantity' => $item->quantity + $order->item_quantity, 
 			'capital_price' => $item->capital_price, 
 			'selling_price' => $item->capital_price, 
 			'updated_by' => logged('id'), 
 		);
 		$this->items_history_model->create($history);
 		$this->items_model->update($item->id, $item_update);
-		$this->transaction_item_model->delete($order->id);
+		$this->order_list_item_model->delete($order->id);
+		header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+
+	public function remove_item_from_list_sale_order()
+	{
+		$order = $this->order_list_item_model->getById(post('id'));
+		$this->order_list_item_model->delete($order->id);
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}
 }

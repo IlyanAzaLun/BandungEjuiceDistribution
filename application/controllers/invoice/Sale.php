@@ -464,7 +464,7 @@ class Sale extends Invoice_controller
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
 		}else{
-			$this->db->like("sale.created_at", date("Y-m-d"), 'after');
+			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
@@ -505,7 +505,7 @@ class Sale extends Invoice_controller
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
 		}else{
-			$this->db->like("sale.created_at", date("Y-m-d"), 'after');
+			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
 			$this->db->where("sale.created_by", $logged);
