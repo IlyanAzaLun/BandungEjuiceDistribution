@@ -39,8 +39,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('customer_code') ?></label>
-                                    <input type="hidden" class="form-control" name="id" id="id" readonly value="<?= $customer->id ?>">
-                                    <input type="text" class="form-control" name="customer_code" id="customer_code" readonly value="<?= $customer->customer_code ?>">
+                                    <input type="hidden" class="form-control form-control-sm" name="id" id="id" readonly value="<?= $customer->id ?>">
+                                    <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" readonly value="<?= $customer->customer_code ?>">
                                 </div>
                             </div>
 
@@ -48,7 +48,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('store_name') ?></label>
-                                    <input type="text" class="form-control" name="store_name" id="store_name" value="<?= $customer->store_name ?>" required>
+                                    <input type="text" class="form-control form-control-sm" name="store_name" id="store_name" value="<?= $customer->store_name ?>" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -57,7 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('customer_owner') ?></label>
-                                            <input type="text" class="form-control" name="owner_name" id="customer_owner" value="<?= $customer->owner_name ?>" required>
+                                            <input type="text" class="form-control form-control-sm" name="owner_name" id="customer_owner" value="<?= $customer->owner_name ?>" required>
                                             <?= form_error('customer_owner', '<small class="text-danger">', '</small>') ?>
                                         </div>
                                     </div>
@@ -82,7 +82,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('note') ?></label>
-                                    <textarea type="text" class="form-control" name="note" id="note"><?= $customer->note ?></textarea>
+                                    <textarea type="text" class="form-control form-control-sm" name="note" id="note"><?= $customer->note ?></textarea>
                                     <?= form_error('note', '<small class="text-danger">', '</small>') ?>
                                 </div>
                             </div>

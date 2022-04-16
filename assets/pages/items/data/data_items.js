@@ -35,13 +35,15 @@ class DataSourceItem {
             dataType: 'JSON',
             data: { request: 'GET COMPONENT', data: type },
         }).done(function (result) {
-            $('input#item_code').val(`${$('.category').find(':selected').val()}${($('.subcategory').find(':selected').val())
-                ? `-${sub($('.subcategory').find(':selected').val())}-`
-                : `-`}${pad(result + 1, 6)}`)
-        }).fail(function () {
-            console.log("error");
-        }).always(function () {
-            console.log("complete");
+            $('input#item_code').val(`${$('.category').find(':selected').val()}-${pad(result + 1, 6)}`)
+            // USING SPESIFIC ITEM CODE //
+            // $('input#item_code').val(`${$('.category').find(':selected').val()}${($('.subcategory').find(':selected').val())
+            //     ? `-${sub($('.subcategory').find(':selected').val())}-`
+            //     : `-`}${pad(result + 1, 6)}`)
+        }).fail(function (data) {
+            console.log(`Error: ${data}`);
+        }).always(function (result) {
+            console.log(result);
         });
     }
 }

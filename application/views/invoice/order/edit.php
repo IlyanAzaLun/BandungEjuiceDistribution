@@ -153,7 +153,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <?php if (sizeof($items) <= 1) : ?>
                                     <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                 <?php else : ?>
-                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->item_code?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
+                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->item_code?>" data-indexlist="<?=$value->index_list?>" data-idorder="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
                                 <?php endif ?>
                                 </div>
                             </td>
@@ -297,8 +297,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   $(document).ready(function () {
       $('.remove').on('click', function(){
           let id = $(this).data('id');
+          let indexList = $(this).data('indexlist');
+          let idOrder = $(this).data('idorder');
           $('#modal-remove-order').on('shown.bs.modal', function(){
               $(this).find('input#id').val(id);
+              $(this).find('input#idorder').val(idOrder);
+              $(this).find('input#indexlist').val(indexList);
           })
       })
   });

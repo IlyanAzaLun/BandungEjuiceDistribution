@@ -39,7 +39,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- text input -->
                 <div class="form-group">
                   <label><?= lang('supplier_code') ?></label>
-                  <input type="text" class="form-control" name="customer_code" id="customer_code" readonly value="<?= $supplier_code ?>">
+                  <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" readonly value="<?= $supplier_code ?>">
                 </div>
               </div>
 
@@ -47,7 +47,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- text input -->
                 <div class="form-group">
                   <label><?= lang('store_name') ?></label>
-                  <input type="text" class="form-control" name="store_name" id="store_name" value="<?= set_value('store_name') ?>" required>
+                  <input type="text" class="form-control form-control-sm" name="store_name" id="store_name" value="<?= set_value('store_name') ?>" required>
                 </div>
               </div>
               <div class="col-sm-4">
@@ -56,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <!-- text input -->
                     <div class="form-group">
                       <label><?= lang('supplier_owner') ?></label>
-                      <input type="text" class="form-control" name="owner_name" id="owner_name" value="<?= set_value('owner_name') ?>" required>
+                      <input type="text" class="form-control form-control-sm" name="owner_name" id="owner_name" value="<?= set_value('owner_name') ?>" required>
                       <?= form_error('owner_name', '<small class="text-danger">', '</small>') ?>
                     </div>
                   </div>
@@ -79,7 +79,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- text input -->
                 <div class="form-group">
                   <label><?= lang('note') ?></label>
-                  <textarea type="text" class="form-control" name="note" id="note"><?= set_value('note') ?></textarea>
+                  <textarea type="text" class="form-control form-control-sm" name="note" id="note"><?= set_value('note') ?></textarea>
                   <?= form_error('note', '<small class="text-danger">', '</small>') ?>
                 </div>
               </div>

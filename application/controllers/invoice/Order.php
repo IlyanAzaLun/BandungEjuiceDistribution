@@ -74,16 +74,50 @@ class Order extends Invoice_controller
 				'note' => post('note'),
 			);
 			// CREATE
-			$this->create_or_update_order($payment);
+			$result = $this->validation_items($items);
+			$error = $result['error'];
+			$success = $result['success'];
+			$items = array_values($success);
+			$error = array_column(array_values($error), 'item_name');
+
+			if(!$item){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
+				redirect("invoice/order/create");
+				return false;
+			}
+			$result_payment = $this->create_or_update_order($payment);
 			$this->create_or_update_list_item_order_sale($items);
 			$this->update_items($items);
 		
 			$this->activity_model->add("Create Order, #" . $this->data['order_code'], (array) $payment);
+			$order_code = ($this->order_model->getRowById($result_payment, 'order_code'));
+			if($error){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error));
+				redirect("invoice/order/edit?id=$order_code");
+				return false;
+			}
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Create Order Successfully');
-
 			redirect('invoice/order/list');
 		}
+	}
+
+	private function validation_items($data)
+	{
+		$item = array();
+		$result = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			if (($item[$key]->quantity - $value['item_order_quantity']) < 0) {
+				$result['error'][$key] = $data[$key];
+				unset($data[$key]);
+				continue;
+			}
+			$result['success'][$key] = $data[$key];
+		}
+		return $result;
 	}
 
 	public function info()
@@ -115,7 +149,7 @@ class Order extends Invoice_controller
 			$this->page_data['modals'] = (object) array(
 				'id' => 'modal-remove-order',
 				'title' => 'Modals confirmation',
-				'link' => 'invoice/purchases/items/remove_item_from_list_sale_order',
+				'link' => "invoice/orders/items/remove_item_from_list_order_transaction?id=".get('id'),
 				'content' => 'delete',
 				'btn' => 'btn-danger',
 				'submit' => 'Yes do it',
@@ -123,7 +157,7 @@ class Order extends Invoice_controller
 			$this->load->view('invoice/order/edit', $this->page_data);
 			$this->load->view('includes/modals');
 		} else {
-			$this->data['order_code'] = $this->input->get('id');
+			$this->data['order_code'] = get('id');
 			$items = array();
 			foreach (post('item_code') as $key => $value) {
 				$items[$key]['id'] = post('id')[$key];

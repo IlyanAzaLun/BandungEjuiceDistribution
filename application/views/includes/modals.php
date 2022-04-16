@@ -18,6 +18,8 @@
         <div class="modal-body">
           <?php var_dump($data->link) ?>
           <input type="text" id='id' name="id">
+          <input type="text" id='idorder' name="idorder">
+          <input type="text" id='indexlist' name="indexlist">
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn <?= $data->btn ?>"><?= $data->submit ?></button>

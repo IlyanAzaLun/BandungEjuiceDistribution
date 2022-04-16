@@ -130,6 +130,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
 
   });
+  document.addEventListener('DOMContentLoaded', (e) => {
+      console.log(`Document is ready!`);
+  });
 /* disabeld right click
 document.onkeydown = function(e) {
   if(event.keyCode == 123) {

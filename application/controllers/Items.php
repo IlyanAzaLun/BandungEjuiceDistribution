@@ -84,6 +84,12 @@ class Items extends MY_Controller
     public function upload()
     {
         ifPermissions('upload_file');
+        
+        if (!$_FILES) {
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Empty File, Please select file to import');
+            redirect('items');
+        }
 
         $data = $this->uploadlib->uploadFile();
         $request = [];
@@ -301,6 +307,7 @@ class Items extends MY_Controller
         if ($searchQuery != '') {
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->or_like('category', $searchValue, 'both');
         }
         $records = $this->db->get('items')->result();
         $totalRecordwithFilter = $records[0]->allcount;
@@ -310,6 +317,7 @@ class Items extends MY_Controller
         if ($searchQuery != '') {
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->or_like('category', $searchValue, 'both');
         }
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
@@ -323,6 +331,7 @@ class Items extends MY_Controller
                 "id" => $record->id,
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,
+                "category" => $record->category,
                 "item_quantity" => $record->quantity,
                 "item_broken" => $record->broken,
                 "item_unit" => $record->unit,
@@ -449,7 +458,12 @@ class Items extends MY_Controller
 
     public function serverside_datatables_data_items_transaction()
     {
-        // ifPermissions('items_list');
+        /**
+         * List item transcation
+         * Schedule: Order, show to list transaction, and removed if created invoice is done. 
+         *  
+         * **/
+        ifPermissions('items_list');
         try {
             $response = array();
 

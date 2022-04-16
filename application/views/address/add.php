@@ -37,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label><?= lang('store_name') ?></label>
-                  <select class="form-control" style="width: 100%;" name="customer_code" id="customer_code" required>
+                  <select class="custom-select custom-select-sm" style="width: 100%;" name="customer_code" id="customer_code" required>
                     <option value="" selected><?= lang('select_store_name') ?></option>
                     <?php foreach ($customers as $key => $customer) : ?>
                       <option value="<?= $customer->customer_code ?>" <?= ($customer->customer_code == GET('id')) ? ' selected' : '' ?>><?= $customer->store_name ?></option>
@@ -48,7 +48,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="province"><?= lang('province') ?></label>
-                  <select class="form-control" name="province" id="province" required>
+                  <select class="custom-select custom-select-sm" name="province" id="province" required>
 
                   </select>
                 </div>
@@ -56,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="city"><?= lang('city') ?></label>
-                  <select class="form-control" name="city" id="city" required>
+                  <select class="custom-select custom-select-sm" name="city" id="city" required>
 
                   </select>
                 </div>
@@ -64,45 +64,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="sub_district"><?= lang('sub_district') ?></label>
-                  <input type="text" class="form-control" name="sub_district" id="sub_district">
+                  <input type="text" class="form-control form-control-sm" name="sub_district" id="sub_district">
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="village"><?= lang('village') ?></label>
-                  <input type="text" class="form-control" name="village" id="village">
+                  <input type="text" class="form-control form-control-sm" name="village" id="village">
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="zip"><?= lang('zip') ?></label>
-                  <input type="text" class="form-control" name="zip" id="zip">
+                  <input type="text" class="form-control form-control-sm" name="zip" id="zip">
                 </div>
               </div>
 
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="contact_phone"><?= lang('contact_phone') ?></label>
-                  <input type="text" class="form-control" name="contact_phone" id="contact_phone">
+                  <input type="text" class="form-control form-control-sm" name="contact_phone" id="contact_phone">
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="contact_mail"><?= lang('contact_mail') ?></label>
-                  <input type="text" class="form-control" name="contact_mail" id="contact_mail">
+                  <input type="text" class="form-control form-control-sm" name="contact_mail" id="contact_mail">
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="address"><?= ucwords(lang('address')); ?></label>
-                  <textarea class="form-control" name="address" id="address"></textarea>
+                  <textarea class="form-control form-control-sm" name="address" id="address"></textarea>
                 </div>
               </div>
 
               <div class="col">
                 <div class="form-group">
                   <label><?= lang('note') ?></label>
-                  <textarea type="text" class="form-control" name="note" id="note"><?= set_value('note') ?></textarea>
+                  <textarea type="text" class="form-control form-control-sm" name="note" id="note"><?= set_value('note') ?></textarea>
                 </div>
               </div>
             </div>

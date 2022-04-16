@@ -10,7 +10,7 @@ body {
     /* font-size: 12px */
 }
 
-.loading{
+.loading {
     display: none;
     position: fixed;
     top: 0;
@@ -23,6 +23,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
 }
+
 tr.group,
 tr.group:hover {
     background-color: #ddd !important;

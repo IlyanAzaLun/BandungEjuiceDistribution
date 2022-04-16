@@ -46,8 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <option value="CAT" data-id="CATTRIDGE & COIL"<?=set_select('category', 'CATTRIDGE & COIL' )?>>CATTRIDGE & COIL</option>
                                     <option value="COT" data-id="COTTON" <?=set_select('category', 'COTTON' )?>>COTTON</option>
                                     <option value="LIQ" data-id="LIQUID" <?=set_select('category', 'LIQUID' )?>>LIQUID</option>
-                                    <option value="MODS" data-id="MODS" <?=set_select('category', 'MODS' )?>>MODS</option>
-                                    <option value="PODS" data-id="PODS" <?=set_select('category', 'PODS' )?>>PODS</option>
+                                    <option value="DEVS" data-id="DEVICES" <?=set_select('category', 'DEVICES' )?>>DEVICES</option>
                                     <option value="WIR" data-id="WIRE" <?=set_select('category', 'WIRE' )?>>WIRE</option>
                                 </select>
                             </div>
@@ -62,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="input-group mb-3">
                                   <input type="text" class="form-control form-control-sm" name="item_code" id="item_code" value="<?=set_value('item_code')?>" required readonly>
                                   <div class="input-group-append">
-                                    <select class="input-group-text form-control-sm" name="unit" id="unit" required>
+                                    <select class="input-group-text custom-select custom-select-sm" name="unit" id="unit" required>
                                       <option value="PCS">PCS</option>
                                       <option value="PAX">PAX</option>
                                     </select>
@@ -76,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="form-group">
                                 <label><?=lang('item_quantity')?></label>
                                 <div class="input-group mb-3">
-                                  <input type="number" class="form-control form-control-sm" name="quantity" id="quantity" value="<?=set_value('quantity')?>" value="0" required>
+                                  <input type="number" class="form-control form-control-sm" name="quantity" id="quantity" value="0" required>
                                 </div>
                             </div>
                         </div>

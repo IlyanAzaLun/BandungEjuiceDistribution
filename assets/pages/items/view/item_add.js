@@ -16,7 +16,8 @@ const main = () => {
         // category code //		
         $('input#item_name.form-control', 'form').on('focus', function () {
             dataSourceItem.getCode(($('div.subcategory').find(':selected').val())
-                ? $('div.subcategory').find(':selected').val()
+                // ? $('div.subcategory').find(':selected').val() // BEFORE USE 2 SPECIFIC ITEM CODE
+                ? $('div.category').find(':selected').val()
                 : $('div.category').find(':selected').val())
         })
     });

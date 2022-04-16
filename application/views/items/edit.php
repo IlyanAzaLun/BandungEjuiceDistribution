@@ -44,25 +44,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <option value="CAT" <?= (explode('-', $item->category)[0] == 'CAT') ? 'selected' : '' ?> data-id="CATTRIDGE & COIL" <?= set_select('category', 'CATTRIDGE & COIL') ?>>CATTRIDGE & COIL</option>
                                         <option value="COT" <?= (explode('-', $item->category)[0] == 'COT') ? 'selected' : '' ?> data-id="COTTON" <?= set_select('category', 'COTTON') ?>>COTTON</option>
                                         <option value="LIQ" <?= (explode('-', $item->category)[0] == 'LIQ') ? 'selected' : '' ?> data-id="LIQUID" <?= set_select('category', 'LIQUID') ?>>LIQUID</option>
-                                        <option value="MODS" <?= (explode('-', $item->category)[0] == 'MODS') ? 'selected' : '' ?> data-id="MODS" <?= set_select('category', 'MODS') ?>>MODS</option>
-                                        <option value="PODS" <?= (explode('-', $item->category)[0] == 'PODS') ? 'selected' : '' ?> data-id="PODS" <?= set_select('category', 'PODS') ?>>PODS</option>
+                                        <option value="DEVS" <?= (explode('-', $item->category)[0] == 'DEVS') ? 'selected' : '' ?> data-id="DEVICES" <?= set_select('category', 'DEVICES') ?>>DEVICES</option>
                                         <option value="WIR" <?= (explode('-', $item->category)[0] == 'WIR') ? 'selected' : '' ?> data-id="WIRE" <?= set_select('category', 'WIRE') ?>>WIRE</option>
                                     </select>
                                 </div>
                             </div>
-                            <?php $tmp = explode('-', $item->item_code); ?>
+                            <?php $tmp = explode('-', $item->category); ?>
                             <!-- condition if item is liquid -->
-                            <?php if (count($tmp) >= 3) : ?>
+                            <?php if (count($tmp) >= 2) : ?>
                                 <div class="col-sm-3 subcategory">
                                     <div class="form-group">
                                         <label>Sub Category</label>
                                         <select class="form-control form-control-sm select2" style="width: 100%;" name="subcategory" id="subcategory" required>
-                                            <option value="LIQUID FREEBASE CREAMY" data-id="FC" <?= ($tmp[2] == "FC") ? 'selected' : '' ?>>LIQUID FREEBASE CREAMY</option>
-                                            <option value="LIQUID FREEBASE FRUITY" data-id="FF" <?= ($tmp[2] == "FF") ? 'selected' : '' ?>>LIQUID FREEBASE FRUITY</option>
-                                            <option value="LIQUID SALT CREAMY" data-id="SC" <?= ($tmp[2] == "SC") ? 'selected' : '' ?>>LIQUID SALT CREAMY</option>
-                                            <option value="LIQUID SALT FRUITY" data-id="SF" <?= ($tmp[2] == "SF") ? 'selected' : '' ?>>LIQUID SALT FRUITY</option>
-                                            <option value="LIQUID PODS CREAMY" data-id="PC" <?= ($tmp[2] == "PC") ? 'selected' : '' ?>>LIQUID PODS CREAMY</option>
-                                            <option value="LIQUID PODS FRUITY" data-id="PF" <?= ($tmp[2] == "PF") ? 'selected' : '' ?>>LIQUID PODS FRUITY</option>
+                                            <option value="LIQ-FC" data-id="FREEBASE-CREAMY" <?= ($tmp[1] == "FC") ? 'selected' : '' ?>>LIQUID FREEBASE CREAMY</option>
+                                            <option value="LIQ-FF" data-id="FREEBASE-FRUITY" <?= ($tmp[1] == "FF") ? 'selected' : '' ?>>LIQUID FREEBASE FRUITY</option>
+                                            <option value="LIQ-SC" data-id="SALT-CREAMY" <?= ($tmp[1] == "SC") ? 'selected' : '' ?>>LIQUID SALT CREAMY</option>
+                                            <option value="LIQ-SF" data-id="SALT-FRUITY" <?= ($tmp[1] == "SF") ? 'selected' : '' ?>>LIQUID SALT FRUITY</option>
+                                            <option value="LIQ-PC" data-id="PODS-CREAMY" <?= ($tmp[1] == "PC") ? 'selected' : '' ?>>LIQUID PODS CREAMY</option>
+                                            <option value="LIQ-PF" data-id="PODS-FRUITY" <?= ($tmp[1] == "PF") ? 'selected' : '' ?>>LIQUID PODS FRUITY</option>
                                         </select>
                                     </div>
                                 </div>
@@ -141,7 +140,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control form-control-sm" name="item_code" id="item_code" value="<?= $item->item_code ?>" required readonly>
                                         <div class="input-group-append">
-                                            <select class="input-group-text form-control-sm" name="unit" id="unit" required>
+                                            <select class="input-group-text custom-select custom-select-sm" name="unit" id="unit" required>
                                                 <option value="PCS" <?= ($item->unit == 'PCS') ? ' selected' : '' ?>>PCS</option>
                                                 <option value="PAX" <?= ($item->unit == 'PAX') ? ' selected' : '' ?>>PAX</option>
                                             </select>
