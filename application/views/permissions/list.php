@@ -35,12 +35,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     </div>
     <div class="card-body">
-      <table id="dataTable1" class="table table-bordered table-striped">
+      <table id="dataTable1" class="table table-sm table-bordered table-striped">
         <thead>
           <tr>
             <th><?php echo lang('id') ?></th>
             <th><?php echo lang('permission_name') ?></th>
             <th><?php echo lang('permission_code') ?></th>
+            <th><?php echo lang('item_description') ?></th>
             <th><?php echo lang('action') ?></th>
           </tr>
         </thead>
@@ -56,12 +57,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <?php echo $row->code ?>
               </td>
               <td>
+                <?php echo $row->description ?>
+              </td>
+              <td>
+              <div class="btn-group d-flex justify-content-center">
                 <?php if (hasPermissions('permissions_edit')): ?>
-                  <a href="<?php echo url('permissions/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="<?php echo lang('edit_permission') ?>" data-toggle="tooltip"><i class="fas fa-edit"></i></a>
+                  <a href="<?php echo url('permissions/edit/'.$row->id) ?>" class="btn btn-xs btn-default" title="<?php echo lang('edit_permission') ?>" data-toggle="tooltip"><i class="fas fa-edit"></i></a>
                 <?php endif ?>
                 <?php if (hasPermissions('permissions_delete')): ?>
-                  <a href="<?php echo url('permissions/delete/'.$row->id) ?>" class="btn btn-sm btn-default" onclick='return confirm("Do you really want to delete this permissions ? \nIt may cause errors where it is currently being used !!")' title="<?php echo lang('delete_permission') ?>" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                  <a href="<?php echo url('permissions/delete/'.$row->id) ?>" class="btn btn-xs btn-default" onclick='return confirm("Do you really want to delete this permissions ? \nIt may cause errors where it is currently being used !!")' title="<?php echo lang('delete_permission') ?>" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                 <?php endif ?>
+                </div>
               </td>
             </tr>
           <?php endforeach ?>

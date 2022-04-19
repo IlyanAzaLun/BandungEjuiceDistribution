@@ -272,26 +272,100 @@ class Sale extends Invoice_controller
 	}
 
 	/** 
-	 * @change status order
-	 * @change status selling
-	 * @cancel item_list selling
+	 * @change status is_cancel to 1
+	 * @change status parent have a child, if child is cancel
+	 * @change status order is_created to null, if parents is cancel
 	**/
 	public function cancel()
 	{
-		// try {
-			$get = $this->input->get();
-		// 	$invoice_sale = $this->sale_model->get_invoice_selling_by_code($get['id']);
-		// 	$this->order_model->update_by_code($invoice_sale->reference_order, array('is_created' => 0)); // change status is_created
-		// 	$this->sale_model->update($invoice_sale->id, array('is_cancelled'=>0)); // change status is_cancelled
-		// 	$invoice_sale = $this->sale_model->get_invoice_selling_by_code($get['id']);
-		// 	$list_items = $this->transaction_item_model->get_transaction_item_by_code_invoice($get['id']);
-		// 	var_dump($invoice_sale);
-		// 	echo '<hr>';
-		// 	var_dump($this->db->last_query());
-		// } catch (\Throwable $th) {
-		// 	var_dump($th);
-		// }
-		// echo '</pre>';
+			$this->data_sales();
+			echo '<pre>';
+			$i = 0;
+			$invoice_parent_transaction = $this->page_data['invoice_information_transaction'];
+			$this->data['invoice_code'] = get('id');
+			if($this->page_data['_data_item_invoice_child_'][0]->invoice_code == get('id')){
+				$this->transaction_item_model->update($invoice_parent_transaction->id, array('have_a_child', 0));
+			}
+			$items = array();
+			if(preg_match('/INV/', get('id'))){
+				foreach ($this->page_data['_data_item_invoice_parent'] as $key => $value){
+					if($value->item_code == $this->page_data['intersect_codex_item'][$key] && $value->index_list == $this->page_data['intersect_index_item'][$key]){
+						$items[$key]['id'] = $value->id;
+						$items[$key]['item_id'] = $value->item_id;
+						$items[$key]['invoice_code'] = $value->invoice_code;
+						$items[$key]['index_list'] = $value->index_list;
+						$items[$key]['item_code'] = $value->item_code;
+						$items[$key]['item_name'] = $value->item_name;
+						$items[$key]['item_quantity_current'] = $this->page_data['_data_item_invoice_child_'][$i]->item_current_quantity;
+						$items[$key]['item_unit'] = $value->item_unit;
+						$items[$key]['item_capital_price'] = $this->page_data['_data_item_invoice_child_'][$i]->item_capital_price;
+						$items[$key]['item_selling_price'] = $this->page_data['_data_item_invoice_child_'][$i]->item_selling_price;
+						$items[$key]['item_discount'] = $this->page_data['_data_item_invoice_child_'][$i]->item_discount;
+						$items[$key]['total_price'] = $this->page_data['_data_item_invoice_child_'][$i]->item_description;
+						$items[$key]['item_description'] = $this->page_data['_data_item_invoice_child_'][$i]->item_description;
+						$items[$key]['customer_code'] = $value->customer_code;
+						$items[$key]['is_cancelled'] = 1;
+						if($this->page_data['_data_item_invoice_child_'][$i]->is_cancelled){
+							$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
+						}else{
+							$items[$key]['item_order_quantity'] = ($value->item_quantity - $this->page_data['_data_item_invoice_child_'][$i]->item_quantity) * -1;
+						}
+						$i++;
+					}else{
+						$items[$key]['id'] = $value->id;
+						$items[$key]['item_id'] = $value->item_id;
+						$items[$key]['invoice_code'] = $value->invoice_code;
+						$items[$key]['index_list'] = $value->index_list;
+						$items[$key]['item_code'] = $value->item_code;
+						$items[$key]['item_name'] = $value->item_name;
+						$items[$key]['item_quantity_current'] = $value->item_current_quantity;
+						$items[$key]['item_unit'] = $value->item_unit;
+						$items[$key]['item_capital_price'] = $value->item_capital_price;
+						$items[$key]['item_selling_price'] = $value->item_selling_price;
+						$items[$key]['item_discount'] = $value->item_discount;
+						$items[$key]['total_price'] = $value->item_description;
+						$items[$key]['item_description'] = $value->item_description;
+						$items[$key]['customer_code'] = $value->customer_code;
+						$items[$key]['is_cancelled'] = 1;
+						$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
+					}
+				}
+			}else{
+				$sale_parent_code = str_replace('RET','INV',$this->input->get('id'));
+				$this->sale_model->update_by_code($sale_parent_code, array('have_a_child'=> null));
+				foreach ($this->page_data['_data_item_invoice_child_'] as $key => $value) {
+					$items[$key]['id'] = $value->id;
+					$items[$key]['item_id'] = $value->item_id;
+					$items[$key]['invoice_code'] = $value->invoice_code;
+					$items[$key]['index_list'] = $value->index_list;
+					$items[$key]['item_code'] = $value->item_code;
+					$items[$key]['item_name'] = $value->item_name;
+					$items[$key]['item_quantity_current'] = $value->item_current_quantity;
+					$items[$key]['item_unit'] = $value->item_unit;
+					$items[$key]['item_capital_price'] = $value->item_capital_price;
+					$items[$key]['item_selling_price'] = $value->item_selling_price;
+					$items[$key]['item_discount'] = $value->item_discount;
+					$items[$key]['total_price'] = $value->item_description;
+					$items[$key]['item_description'] = $value->item_description;
+					$items[$key]['customer_code'] = $value->customer_code;
+					$items[$key]['is_cancelled'] = 1;
+					$items[$key]['item_order_quantity'] = ($value->item_quantity);
+				}
+			}
+			$payment = (array) $this->page_data['invoice_information_transaction'];
+
+			$payment['is_cancelled'] = 1;
+			$this->create_item_history( $items, ['CANCELED', 'CANCELED']);
+			$this->create_or_update_invoice($payment);
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+			
+			$this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Cancel Sale Invoice Successfully');	
+			echo '</pre>';
+			
+			redirect('invoice/sale/list');
 	}
 	
 	protected function create_item_history($data, $status_type)

@@ -80,7 +80,7 @@ class Order extends Invoice_controller
 			$items = array_values($success);
 			$error = array_column(array_values($error), 'item_name');
 
-			if(!$item){
+			if(!$items){
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
 				redirect("invoice/order/create");
@@ -118,11 +118,6 @@ class Order extends Invoice_controller
 			$result['success'][$key] = $data[$key];
 		}
 		return $result;
-	}
-
-	public function info()
-	{
-		# code...
 	}
 
 	public function edit()
@@ -215,12 +210,60 @@ class Order extends Invoice_controller
 		}
 	}
 
+	public function info()
+	{
+		$this->page_data['title'] = 'order_edit';
+		$this->page_data['page']->submenu = 'order_list';
+		$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
+		$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+
+		$this->page_data['modals'] = (object) array(
+			'id' => 'modal-remove-order',
+			'title' => 'Modals confirmation',
+			'link' => "invoice/orders/items/remove_item_from_list_order_transaction?id=".get('id'),
+			'content' => 'delete',
+			'btn' => 'btn-danger',
+			'submit' => 'Yes do it',
+		);
+		$this->load->view('invoice/order/edit', $this->page_data);
+		$this->load->view('includes/modals');
+	}
+
+	public function cancel()
+	{
+		echo '<pre>';
+		$order = $this->order_model->get_order_selling_by_code(get('id'));
+		$this->order_model->update_by_code(get('id'), array('is_cancelled' => true));
+		$items_order = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+		$item = [];
+		foreach ($items_order as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value->item_code])->row());
+			$request[$key]['id'] = $item[$key]->id;
+			$request[$key]['quantity'] = $item[$key]->quantity + $value->item_order_quantity;
+		}
+		$response = $this->items_model->update_batch($request, 'id');
+		if ($response) {
+			$this->activity_model->add("Delete Order, #" . get('id'), (array) $order);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Update Order Successfully');
+			redirect('invoice/order/list');
+			return true;
+			die();
+		}else{
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Update Order Successfully');
+			redirect('invoice/order/info?id='.get('id'));
+			return false;
+			die();
+		}
+		echo '</pre>';
+	}
+
 	protected function create_or_update_list_item_order_sale($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
-			$request[$key]['index_list'] = $key;
 			$request[$key]['order_code'] = $this->data['order_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
@@ -241,6 +284,7 @@ class Order extends Invoice_controller
 				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$data_positif[] = $request[$key];
 			} else {
+				$request[$key]['index_list'] = $key;
 				$request[$key]['item_quantity'] = $item[$key]->quantity;
 				$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 				$request[$key]['created_by'] = logged('id');

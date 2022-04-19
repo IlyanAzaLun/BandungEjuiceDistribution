@@ -17,7 +17,7 @@ class Items extends MY_Controller
 		$item_update = array(
 			'item_code' => $item->item_code, 
 			'item_name' => $item->item_name, 
-			'quantity' => $item->quantity + $order_item->item_quantity, 
+			'quantity' => $item->quantity + $order_item->item_order_quantity, 
 			'capital_price' => $item->capital_price, 
 			'selling_price' => $item->capital_price, 
 			'updated_by' => logged('id'), 

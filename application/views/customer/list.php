@@ -156,9 +156,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           render: function(data, type, row) {
             return `
-                <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('master_information/customer') ?>/edit?id=${data}" class="btn btn-sm btn-warning"><i class="fa fa-inverse fa-tw fa-edit"></i></a>
-                <a href="<?= url('master_information/customer') ?>/info?id=${data}" class="btn btn-sm btn-primary"><i class="fa fa-tw fa-search-plus"></i></a>
+                <div class="btn-group d-flex">
+                <a href="<?= url('master_information/customer') ?>/edit?id=${data}" class="btn btn-xs btn-default"><i class="text-primary fa fa-tw fa-edit"></i></a>
+                <a href="<?= url('master_information/customer') ?>/info?id=${data}" class="btn btn-xs btn-default"><i class="text-primary fa fa-tw fa-search-plus"></i></a>
                 </div>`;
           }
         },

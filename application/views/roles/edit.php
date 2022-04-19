@@ -43,11 +43,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="form-group">
         <label for="formClient-Table"><?php echo lang('permissions') ?></label>
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-12">
             <table class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <th><?php echo lang('role_name') ?></th>
+                  <th><?php echo lang('item_description') ?></th>
                   <th width="50" class="text-center"><input type="checkbox" class="check-select-all-p"></th>
                 </tr>
               </thead>
@@ -56,6 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <?php if (!empty($permissions = $this->permissions_model->get())): ?>
                     <?php foreach ($permissions as $row): ?>
                       <td><?php echo ucfirst($row->title) ?></td>
+                      <td><?php echo ucfirst($row->description) ?></td>
                       <?php 
                         $isChecked = in_array($row->code, $role_permissions) ? 'checked' : '';
                        ?>

@@ -49,6 +49,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <p style="color: red;">* code must be unique</p>
       </div>
 
+      <div class="form-group">
+        <label for="description"> <?php echo lang('item_description') ?></label>
+        <textarea type="text" class="form-control" name="description" id="description" placeholder="Enter Description"></textarea>
+      </div>
+
     </div>
     <!-- /.card-body -->
 

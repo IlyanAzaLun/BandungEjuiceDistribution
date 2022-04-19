@@ -142,7 +142,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           if(index['is_created'] == true){
             $(rows).eq(i).remove();
           }
-        })
+        });
+        api.rows( {page:'current'} ).data().each(function(index, i){
+          if(index['is_cancelled'] == true){
+            $(rows).eq(i).addClass('bg-danger');
+          }
+        });
       },
       columns: [{
           data: "order_code",
@@ -231,12 +236,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           render: function(data, type, row, meta) {
             let html = ``;
-            if(row['is_confirmed'] == 1){
-              html = `<a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>`;
+            if(row['is_cancelled'] == 1){
+              html = `
+              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
+              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></button>`;
+            }else if(row['is_confirmed'] == 0){
+              html = `
+              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
+              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+            }else{
+              {
+              html = `
+              <a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
+              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+            }
             }
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
                   ${html}
                 </div>`;
           }

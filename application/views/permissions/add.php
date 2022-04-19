@@ -48,6 +48,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <input type="text" class="form-control" data-rule-remote="<?php echo url('permissions/checkIfUnique') ?>" name="code" id="formClient-Code" required placeholder="Enter Code" autofocus />
         <p style="color: red;"> <?php echo lang('permission_code_unique') ?></p>
       </div>
+      
+      <div class="form-group">
+        <label for="description"> <?php echo lang('item_description') ?></label>
+        <textarea type="text" class="form-control" name="description" id="description"></textarea>
+      </div>
 
     </div>
     <!-- /.card-body -->

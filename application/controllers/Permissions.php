@@ -48,6 +48,7 @@ class Permissions extends MY_Controller {
 		$permission = $this->permissions_model->create([
 			'title' => $this->input->post('name'),
 			'code' => $this->input->post('code'),
+			'description' => $this->input->post('description'),
 		]);
 
 		$this->activity_model->add("New Permission #$permission Created by User: #".logged('id'), $this->input->post());
@@ -65,16 +66,16 @@ class Permissions extends MY_Controller {
 		postAllowed();
 
 		ifPermissions('permissions_edit');
-
 		$history = (array)$this->permissions_model->getById($id);
 
 		$data = [
 			'title' => $this->input->post('name'),
 			'code' => $this->input->post('code'),
+			'description' => $this->input->post('description'),
 		];
-
+		
 		$permission = $this->permissions_model->update($id, $data);
-
+		
 		$this->activity_model->add("Permission #$id Updated by User: #".logged('id'), $history);
 
 		$this->session->set_flashdata('alert-type', 'success');

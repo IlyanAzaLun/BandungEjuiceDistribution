@@ -280,7 +280,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card-footer">
           <div class="float-right">
             <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-            <button type="button" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
+            <a href="<?=url('invoice/order/cancel?id='.get('id'))?>" class="btn btn-danger mr-2" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></a>            
           </div>
         </div>
       </div>

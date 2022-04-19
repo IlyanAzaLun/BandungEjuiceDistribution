@@ -87,7 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     function format(d) {
       // `d` is the original data object for the row
       return `
-        <table class="table bg-secondary">
+        <table class="table bg-secondary table-sm">
           <thead>
             <tr>
               <th><?= lang('village') ?>:</th>
@@ -157,8 +157,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a href="<?= url('master_information/supplier') ?>/edit?id=${data}" class="btn btn-sm btn-warning"><i class="fa fa-inverse fa-tw fa-edit"></i></a>
-                <a href="<?= url('master_information/supplier') ?>/info?id=${data}" class="btn btn-sm btn-primary"><i class="fa fa-tw fa-search-plus"></i></a>
+                <a href="<?= url('master_information/supplier') ?>/edit?id=${data}" class="btn btn-xs btn-default"><i class="text-primary fa fa-fw fa-edit"></i></a>
+                <a href="<?= url('master_information/supplier') ?>/info?id=${data}" class="btn btn-xs btn-default"><i class="text-primary fa fa-fw fa-search-plus"></i></a>
                 </div>`;
           }
         },

@@ -298,6 +298,8 @@ class Purchase extends Invoice_controller
 			//DIKURANGI
 		}else{
 			$purchase_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+			$purchase_parent_code = str_replace('RET','INV',$this->input->get('id'));
+			$this->purchase_model->update_by_code($purchase_parent_code, array('have_a_child'=> null));
 			foreach ($purchase_ as $key => $value) {
 				$items[$key]['id'] = $value->id;
 				$items[$key]['item_id'] = $value->item_id;

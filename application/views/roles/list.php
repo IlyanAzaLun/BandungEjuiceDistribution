@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     </div>
     <div class="card-body">
-      <table id="dataTable1" class="table table-bordered table-striped">
+      <table id="dataTable1" class="table table-sm table-bordered table-striped">
         <thead>
           <tr>
             <th><?php echo lang('id') ?></th>
@@ -50,9 +50,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <td>
                 <?php echo $row->title ?>
               </td>
-              <td>
+              <td width=10%>
                 <?php if (hasPermissions('roles_edit')): ?>
-                  <a href="<?php echo url('roles/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit User Role" data-toggle="tooltip"><i class="fas fa-edit"></i></a>
+                  <a href="<?php echo url('roles/edit/'.$row->id) ?>" class="btn btn-xs btn-default" title="Edit User Role" data-toggle="tooltip"><i class="fas fa-edit"></i></a>
                 <?php endif ?>
               </td>
             </tr>

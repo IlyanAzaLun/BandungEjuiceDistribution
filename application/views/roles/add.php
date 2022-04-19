@@ -51,11 +51,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <div class="form-group">
         <label for="formClient-Table"><?php echo lang('permissions') ?></label>
         <div class="row">
-          <div class="col-sm-6">
-            <table class="table table-bordered table-striped">
+          <div class="col-sm-12">
+            <table class="table table-sm table-bordered table-striped">
               <thead>
                 <tr>
                   <th><?php echo lang('role_name') ?></th>
+                  <th><?php echo lang('item_description') ?></th>
                   <th width="50" class="text-center"><input type="checkbox" class="check-select-all-p"></th>
                 </tr>
               </thead>
@@ -64,6 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <?php foreach ($permissions as $row): ?>
                     <tr>
                       <td><?php echo ucfirst($row->title) ?></td>
+                      <td><?php echo ucfirst($row->description) ?></td>
                       <td width="50" class="text-center"><input type="checkbox" class="check-select-p" name="permission[]" value="<?php echo $row->code ?>"></td>
                     </tr>
                     <?php endforeach ?>

@@ -104,7 +104,7 @@ class Returns extends Sale
 				echo '<pre>';
 				// CREATE
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				var_dump($this->create_or_update_invoice($payment));
+				$this->create_or_update_invoice($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				echo '</pre>';
@@ -150,8 +150,8 @@ class Returns extends Sale
 			// information invoice
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
-				'date_start' => trim($date[0]), 
-				'date_due'	 => trim($date[1])
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
 			);
 			//information items
 			$items = array();
@@ -197,6 +197,8 @@ class Returns extends Sale
 				'total_price' => post('sub_total'),
 				'discounts' => post('discount'),
 				'shipping_cost' => post('shipping_cost'),
+				'expedition' => post('expedition_name'),
+				'services_expedition' => post('services_expedition'),
 				'other_cost' => post('other_cost'),
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
@@ -210,9 +212,8 @@ class Returns extends Sale
 			try {
 				// EDIT
 				echo '<pre>';
-				// $this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				var_dump($this->create_or_update_invoice($payment));
-				die();
+				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
+				$this->create_or_update_invoice($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				// echo '<hr>';
