@@ -143,6 +143,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         })
       },
+      
+      rowCallback: function(row, data, index){
+          if(data['is_cancelled'] == true){
+              $(row).addClass('bg-danger');
+              $(row).find('a').addClass('text-light');
+              <?php if(!hasPermissions('permissions_list')):?>
+              $(row).css('display', 'none');
+              <?php endif;?>
+          }
+      },
       columns: [{
           data: "invoice_code",
           render: function(data, type, row) {
@@ -241,6 +251,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if(row['is_cancelled'] == false){
             html += `
                 <a href="<?= url('invoice/sales/returns') ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                `;
+            }else{
+              html += `
+                <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></butt>
                 `;
             }
             return `

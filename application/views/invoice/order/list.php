@@ -239,19 +239,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if(row['is_cancelled'] == 1){
               html = `
               <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
-              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
               <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></button>`;
             }else if(row['is_confirmed'] == 0){
               html = `
               <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
-              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+              <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
             }else{
               {
               html = `
-              <a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
-              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+              <a target="_blank" href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
+              <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
             }
             }
             return `

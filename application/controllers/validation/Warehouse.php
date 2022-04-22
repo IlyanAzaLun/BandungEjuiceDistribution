@@ -166,13 +166,6 @@ class Warehouse extends MY_Controller
 	{
 		$response = $this->order_model->get_order_selling_by_code($this->data['order_code']);
 
-		$request['total_price'] = setCurrency($data['total_price']);
-		$request['discounts'] = setCurrency($data['discounts']);
-		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
-		$request['other_cost'] = setCurrency($data['other_cost']);
-		$request['grand_total'] = setCurrency($data['grand_total']);
-		$request['customer'] = $data['customer'];
-		$request['payment_type'] = $data['payment_type'];
 		$request['note'] = $data['note'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];

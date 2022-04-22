@@ -56,6 +56,7 @@ class Purchase extends Invoice_controller
 					"item_order_quantity" => post('item_order_quantity')[$key],
 					"item_unit" => post('item_unit')[$key],
 					"item_capital_price" => post('item_capital_price')[$key],
+					"item_capital_price_is_change" => post('item_capital_price_is_change')[$key],
 					"item_selling_price" => post('item_selling_price')[$key],
 					"item_discount" => post('item_discount')[$key],
 					"total_price" => post('total_price')[$key],
@@ -103,6 +104,7 @@ class Purchase extends Invoice_controller
 	public function edit()
 	{
 		ifPermissions('purchase_edit');
+		$this->data_purchase();
 		$this->form_validation->set_rules('supplier_code', lang('supplier_code'), 'required|trim');
 		$this->form_validation->set_rules('store_name', lang('store_name'), 'required|trim');
 		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
@@ -111,7 +113,6 @@ class Purchase extends Invoice_controller
 		if ($this->form_validation->run() == false) {
 			$this->page_data['title'] = 'purchase_edit';
 			$this->page_data['page']->submenu = 'edit';
-			$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 
 			$this->page_data['modals'] = (object) array(
@@ -145,6 +146,7 @@ class Purchase extends Invoice_controller
 				$items[$key]['item_order_quantity'] =  post('item_order_quantity')[$key];
 				$items[$key]['item_unit'] = post('item_unit')[$key];
 				$items[$key]['item_capital_price'] = post('item_capital_price')[$key];
+				$items[$key]['item_capital_price_is_change'] = post('item_capital_price_is_change')[$key];
 				$items[$key]['item_selling_price'] = post('item_selling_price')[$key];
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
@@ -209,9 +211,12 @@ class Purchase extends Invoice_controller
 		$this->page_data['intersect_codex_item'] = array_intersect($parent_items_codex, $childs_items_codex);
 		$this->page_data['intersect_index_item'] = array_intersect($parent_items_index, $childs_items_index);
 		
+		$this->page_data['_data_invoice_parent'] = $this->purchase_model->get_invoice_purchasing_by_code($_invoice_parent_code);
+		$this->page_data['_data_invoice_child_'] = $this->purchase_model->get_invoice_purchasing_by_code($_invoice_child__code);
+		
 		$this->page_data['invoice_informaiton_transaction'] = $is_replace? 
-			$this->purchase_model->get_invoice_purchasing_by_code($_invoice_child__code):
-			$this->purchase_model->get_invoice_purchasing_by_code($_invoice_parent_code);
+			$this->page_data['_data_invoice_child_']:
+			$this->page_data['_data_invoice_parent'];
 		$this->page_data['supplier'] = $this->supplier_model->get_information_supplier($this->page_data['invoice_informaiton_transaction']->supplier);
 	
 	}
@@ -321,6 +326,7 @@ class Purchase extends Invoice_controller
 			//DITAMBAH
 		}
 		$payment['is_cancelled'] = 1;
+		$payment['cancel_note'] = $this->input->post('note');
 		try {
 			$this->create_item_history( $items, ['CANCELED', 'CANCELED']);
 			$this->create_or_update_invoice($payment);
@@ -372,7 +378,6 @@ class Purchase extends Invoice_controller
 		$item = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
-			$request[$key]['index_list'] = $key;
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
@@ -399,6 +404,7 @@ class Purchase extends Invoice_controller
 				$data_positif[] = $request[$key];
 				// unset($data_positif[$key]['id']);
 			} else {
+				$request[$key]['index_list'] = $key;
 				$request[$key]['created_by'] = logged('id');
 				$data_negatif[$key] = $request[$key];
 				unset($data_negatif[$key]['id']);
@@ -455,10 +461,12 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_name'] = $value['item_name'];
 			if ($value['id']) {
 				$request[$key]['quantity'] = $item[$key]->quantity + ($value['item_order_quantity'] - $value['item_order_quantity_current']);
-				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
 			} else {
 				$request[$key]['quantity'] = $item[$key]->quantity + $value['item_order_quantity'];
-				$request[$key]['capital_price'] = (setCurrency($value['item_capital_price']) > $item[$key]->capital_price) ? setCurrency($value['item_capital_price']) : $item[$key]->capital_price;
+			}
+			$request[$key]['capital_price'] = $item[$key]->capital_price;
+			if ($value['item_capital_price_is_change'] == 1) {
+				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
 			}
 			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
@@ -526,6 +534,7 @@ class Purchase extends Invoice_controller
 		purchasing.updated_at as updated_at, 
 		purchasing.created_by as created_by, 
 		purchasing.is_cancelled as is_cancelled, 
+		purchasing.cancel_note as cancel_note, 
 		supplier.customer_code as supplier_code, 
 		supplier.store_name as store_name, 
 		user.id as user_id, 
@@ -572,6 +581,7 @@ class Purchase extends Invoice_controller
 				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,
 				'is_cancelled' => $record->is_cancelled,
+				'cancel_note' => $record->cancel_note,
 				'user_purchasing_create_by' => $record->user_purchasing_create_by,
 			);
 		}

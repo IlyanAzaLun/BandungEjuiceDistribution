@@ -123,6 +123,7 @@ class Sale extends Invoice_controller
 		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
+			$this->data_sales();
 			$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
 			$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
@@ -227,9 +228,12 @@ class Sale extends Invoice_controller
 		$this->page_data['intersect_codex_item'] = array_intersect($parent_items_codex, $childs_items_codex);
 		$this->page_data['intersect_index_item'] = array_intersect($parent_items_index, $childs_items_index);
 		
+		$this->page_data['_data_invoice_parent'] = $this->sale_model->get_invoice_selling_by_code($_invoice_parent_code);
+		$this->page_data['_data_invoice_child_'] = $this->sale_model->get_invoice_selling_by_code($_invoice_child__code);
+
 		$this->page_data['invoice_information_transaction'] = $is_replace? 
-			$this->sale_model->get_invoice_selling_by_code($_invoice_child__code):
-			$this->sale_model->get_invoice_selling_by_code($_invoice_parent_code);
+			$this->page_data['_data_invoice_child_']:
+			$this->page_data['_data_invoice_parent'];
 		$this->page_data['customer'] = $this->customer_model->get_information_customer($this->page_data['invoice_information_transaction']->customer);
 		$this->page_data['bank'] = $this->account_bank_model->getById($this->page_data['invoice_information_transaction']->transaction_destination);
 
@@ -561,7 +565,8 @@ class Sale extends Invoice_controller
 		sale.created_at as created_at, 
 		sale.updated_at as updated_at, 
 		sale.created_by as created_by, 
-		sale.is_cancelled as is_cancelled, 
+		sale.is_cancelled as is_cancelled,  
+		sale.cancel_note as cancel_note,
 		customer.customer_code as customer_code, 
 		customer.store_name as store_name, 
 		user.id as user_id, 
@@ -612,6 +617,7 @@ class Sale extends Invoice_controller
 				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,
 				'is_cancelled' => $record->is_cancelled,
+				'cancel_note' => $record->cancel_note,
 				'user_sale_create_by' => $record->user_sale_create_by,
 			);
 		}

@@ -105,6 +105,7 @@ class Returns extends Sale
 				// CREATE
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
+				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				echo '</pre>';
@@ -214,6 +215,7 @@ class Returns extends Sale
 				echo '<pre>';
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
+				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				// echo '<hr>';
@@ -305,6 +307,41 @@ class Returns extends Sale
 			$request['created_by'] = logged('id');
 			//	
 			$this->sale_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
+			return $this->sale_model->create($request);
+		}
+		return $request;
+	}
+
+	
+	protected function create_or_update_invoice_parent($data)
+	{
+		$response = $this->sale_model->get_invoice_selling_by_code($this->data['invoice_code_parents']);
+		$request['transaction_destination'] = $data['transaction_destination'];
+		$request['total_price'] = setCurrency($data['total_price']);
+		$request['discounts'] = setCurrency($data['discounts']);
+		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
+		$request['other_cost'] = setCurrency($data['other_cost']);
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		$request['customer'] = $data['customer'];
+		$request['payment_type'] = $data['payment_type'];
+		$request['status_payment'] = $data['status_payment'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['note'] = $data['note'];
+		$request['expedition'] = $data['expedition'];
+		$request['services_expedition'] = $data['services_expedition'];
+		if ($response) {
+			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['created_at'] = $data['created_at'];
+			$request['updated_by'] = logged('id');
+			$request['updated_at'] = date('Y-m-d H:i:s');
+			//
+			return $this->sale_model->update_by_code($this->data['invoice_code_parents'], $request);
+		} else {
+			$request['invoice_code'] = $this->data['invoice_code_parents'];
+			$request['created_at'] = $data['created_at'];
+			$request['created_by'] = logged('id');
+			//	
 			return $this->sale_model->create($request);
 		}
 		return $request;

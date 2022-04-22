@@ -17,7 +17,14 @@ function sum_sub_total_item_returns(row) {
     let total_price_current = $(`.${row} td input[data-id='total_price_current']`).val();
     let total_price = $(`.${row} td input[data-id='total_price']`);
     total_price.val(
-        currency(currencyToNum(total_price_current) - ((currencyToNum(item_selling_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount)))
+        currency(
+            // currencyToNum(total_price_current) - ((currencyToNum(item_selling_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount))
+            (
+                (Number(currencyToNum(total_price_current)) + Number(currencyToNum(item_discount))) -
+                (Number(currencyToNum(item_capital_price)) * Number(item_order_quantity)) - Number(currencyToNum(item_discount))
+            )
+
+        )
     )
 }
 

@@ -45,6 +45,12 @@ const main = () => {
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item_returns(row);
+
+            // get sub total
+            $('input#sub_total').val(currency(sum_sub_total()));
+            // get grand total
+            $('input#grand_total').val(currency(sum_grand_total()));
+
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));
@@ -64,6 +70,9 @@ const main = () => {
         // discount, shipping, other cost to currency
         $(document).on('keyup', 'input#discount, input#shipping_cost, input#other_cost', function () {
             $(this).val(currency(currencyToNum($(this).val())));
+
+            // get grand total
+            $('input#grand_total').val(currency(sum_grand_total()));
         })
         // get grand total
         $('input#grand_total').val(currency(sum_grand_total()));

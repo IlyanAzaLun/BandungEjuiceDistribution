@@ -82,28 +82,37 @@ $i = 0; ?>
                 <div class="card-body">
                     <div class="row" id="order_item">
                         <div class="col-12">
-                            <table class="table table-sm">
+                            <table class="table table-sm table-striped">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
-                                        <th><?= lang('item_code') ?></th>
+                                        <th width="2%">No.</th>
+                                        <th width="8%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
-                                        <th><?= lang('item_order_quantity') ?></th>
-                                        <th><?= lang('item_capital_price') ?></th>
+                                        <th width="10%"><small><?= lang('item_order_quantity') ?></small><br>Parents <small><?=date("d-m-Y",strtotime($_data_invoice_parent->created_at))?></small></th>
+
+                                        <?php if($intersect_codex_item):?>
+                                        <th width="10%"><small><?= lang('item_order_quantity') ?></small><br>Returns <small><?=date("d-m-Y",strtotime($_data_invoice_child_->created_at))?></small></th>
+                                        <th width="9%"><small><?= lang('item_order_quantity') ?></small><br>Total Balance</th>
+                                        <?php endif;?>
+                                        
+                                        <th width="8%"><?= lang('item_capital_price') ?></th>
                                         <th style="display:none"><?= lang('item_selling_price') ?></th>
-                                        <th><?= lang('discount') ?></th>
-                                        <th><?= lang('total_price') ?></th>
+                                        <th width="6%"><?= lang('discount') ?></th>
+                                        <th width="9%"><?= lang('total_price') ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($_data_item_invoice_parent as $key => $value) : ?>
+                                        <?php $total_price += $value->total_price;?>
                                         <?php if($value->item_code == $intersect_codex_item[$key] && $value->index_list == $intersect_index_item[$key]):?>
                                         <tr class="input-<?= $key ?>">
                                             <td><?= $key+1 ?>.</td>
                                             <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
                                             <td><?= $value->item_name ?></td>
                                             <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
+                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td><?= $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_capital_price) ?></td>
                                             <td style="display:none">Rp.<?= number_format($_data_item_invoice_child_[$i]->item_selling_price) ?></td>
@@ -125,6 +134,10 @@ $i = 0; ?>
                                                 <td><?= $value->item_name ?></td>
                                                 <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
                                                 <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                                <?php if($intersect_codex_item):?>
+                                                <td>0 PCS</td>
+                                                <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                                <?php endif;?>
                                                 <td>Rp.<?= number_format($value->item_capital_price) ?></td>
                                                 <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
                                                 <td>Rp.<?= number_format($value->item_discount) ?></td>
@@ -155,17 +168,19 @@ $i = 0; ?>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-group">
-                                <h6><?= lang('subtotal') ?> :</h6>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input readonly type="text" readonly class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->total_price) ?>" min="1" required>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('subtotal') ?> :</h6>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Rp</span>
+                                            </div>
+                                            <input readonly type="text" readonly class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->total_price) ?>" min="1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('discount') ?> :</h6>
                                         <div class="input-group mb-3">
@@ -176,7 +191,7 @@ $i = 0; ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-sm-12">
+                                <div class="col-lg-3 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('shipping_cost') ?> :</h6>
                                         <div class="input-group mb-3">
@@ -189,7 +204,7 @@ $i = 0; ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12">
+                        <div class="col-lg-6 col-sm-12" style="display: none;">
                             <div class="form-group">
                                 <h6><?= lang('other_cost') ?> :</h6>
                                 <div class="input-group mb-3">
@@ -200,7 +215,7 @@ $i = 0; ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <h6><b><?= lang('grandtotal') ?> :</b></h6>
                                 <div class="input-group mb-3">
@@ -211,13 +226,21 @@ $i = 0; ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('payment_type') ?></h6>
                                 <input readonly type="text" class="form-control" value="<?= lang($invoice_informaiton_transaction->payment_type) ?>" required>
                             </div>
                         </div>
-                        <div class="col-lg col-sm-12">
+                        <?php if($intersect_codex_item):?>
+                        <div class="col-lg-3 col-sm-12 text-danger">
+                            <div class="form-group">
+                                <h6><b><?= lang('deposit') ?></b></h6>
+                                <input readonly type="text" class="form-control" value="<?= number_format($_data_invoice_parent->grand_total - $_data_invoice_child_->grand_total) ?>" required>
+                            </div>
+                        </div>
+                        <?php endif;?>
+                        <div class="col-lg-12 col-sm-12">
                             <div class="form-group">
                                 <label for="note"><?= lang('note') ?></label>
                                 <textarea readonly class="form-control"><?= $invoice_informaiton_transaction->note ?></textarea>

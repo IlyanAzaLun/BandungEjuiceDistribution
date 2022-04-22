@@ -43,6 +43,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
+                  <th><?= lang('note') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </thead>
@@ -59,6 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
+                  <th><?= lang('note') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </tfoot>
@@ -150,6 +152,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row) {
             return (data) ? currency(data) : 0
           }
+        },
+        {
+          data: "note"
         },
         {
           data: "id",

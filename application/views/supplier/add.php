@@ -50,32 +50,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <input type="text" class="form-control form-control-sm" name="store_name" id="store_name" value="<?= set_value('store_name') ?>" required>
                 </div>
               </div>
-              <div class="col-sm-4">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <!-- text input -->
-                    <div class="form-group">
-                      <label><?= lang('supplier_owner') ?></label>
-                      <input type="text" class="form-control form-control-sm" name="owner_name" id="owner_name" value="<?= set_value('owner_name') ?>" required>
-                      <?= form_error('owner_name', '<small class="text-danger">', '</small>') ?>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label><?= lang('category_supplier') ?></label>
-                      <select class="form-control select2" style="width: 100%;" name="supplier_type" id="category" value="<?= set_value('category') ?>" required>
-                        <option value="" selected="selected"><?= lang('select_category_supplier') ?></option>
-                        <option value="WS"><?= lang('supplier_category_ws') ?></option>
-                        <option value="DISTRIBUTION"><?= lang('supplier_category_distribution') ?></option>
-                        <option value="OTHER"><?= lang('supplier_category_other') ?></option>
-                      </select>
-                    </div>
-                  </div>
-
+              <!-- text input -->
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label><?= lang('supplier_owner') ?></label>
+                  <input type="text" class="form-control form-control-sm" name="owner_name" id="owner_name" value="<?= set_value('owner_name') ?>" required>
+                  <?= form_error('owner_name', '<small class="text-danger">', '</small>') ?>
                 </div>
               </div>
-              <div class="col">
+              <div class="col-sm-2" style="display:none;">
+                <div class="form-group">
+                  <label><?= lang('category_supplier') ?></label>
+                  <select class="form-control select2" style="width: 100%;" name="supplier_type" id="category" value="<?= set_value('category') ?>" required>
+                    <option value="WS"><?= lang('supplier_category_ws') ?></option>
+                    <option value="DISTRIBUTION" selected="selected"><?= lang('supplier_category_distribution') ?></option>
+                    <option value="OTHER"><?= lang('supplier_category_other') ?></option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm">
                 <!-- text input -->
                 <div class="form-group">
                   <label><?= lang('note') ?></label>

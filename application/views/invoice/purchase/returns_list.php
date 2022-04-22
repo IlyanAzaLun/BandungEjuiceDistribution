@@ -242,13 +242,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           render: function(data, type, row, meta) {
             let html = `
-                  <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
+                  <a target="_blank" href="<?= url('invoice/purchases') ?>/returns/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a target="_blank" href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
                   `;
             let drop = `
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                  <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                  <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                  <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                   `;
             return `
                 <div class="btn-group d-flex justify-content-center">

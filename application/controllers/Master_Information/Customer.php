@@ -127,7 +127,7 @@ class Customer extends MY_Controller
                     'is_active' => 1,
                 ]);
                 array_push($request['address'], [
-                    'customer_code' => $value['A'],
+                    'customer_code' => $value['B'],
                     'address' => $value['G'],
                     'village' => $value['H'],
                     'sub_district' => $value['I'],

@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $account_bank = "$bank->name: $bank->no_account, a/n $bank->own_by, $bank->description";
 $destination = "$customer->address $customer->village $customer->subdistric $customer->city $customer->province $customer->zip";
 $contact = "$customer->contact_phone $customer->contact_mail";
+$i = 0;
 ?>
 <html>
     <head>
@@ -120,18 +121,18 @@ $contact = "$customer->contact_phone $customer->contact_mail";
                     <?php
                     $total_item = 0;
                     foreach ($_data_item_invoice_parent as $key => $value):?>
-                    <?php if($value->item_code == $intersect_code_item[$key] && $value->index_list == $intersect_index_list[$key]):?>
-                    <tr id="data" <?=($_data_item_invoice_child_[$i]->item_quantity-$value->item_quantity == 0)?'style="display:none;"':''?>>
+                    <?php if($value->item_code == $intersect_codex_item[$key] && $value->index_list == $intersect_index_item[$key]):?>
+                    <tr id="data" <?=(($value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity) == 0)?'style="display:none;"':''?>>
                         <td ><?=$key+1?></td>
                         <td><?=$value->item_code?></td>
                         <td><?=$value->item_name?></td>
-                        <td class="text-right"><?=$_data_item_invoice_child_[$i]->item_quantity-$value->item_quantity?></td>
+                        <td class="text-right"><?=$value->item_quantity - $_data_item_invoice_child_[$i]->item_quantity?></td>
                         <td><?=$value->item_unit?></td>
                         <td class="text-right"><?=getCurrentcy($_data_item_invoice_child_[$i]->item_selling_price)?></td>
                         <td class="text-right"><?=getCurrentcy($_data_item_invoice_child_[$i]->discount)?></td>
                         <td class="text-right"><?=getCurrentcy($_data_item_invoice_child_[$i]->total_price)?></td>
                     </tr>
-                    <?php $total_item += $_data_item_invoice_child_[$i]->item_quantity-$value->item_quantity?>;
+                    <?php $total_item += $value->item_quantity - $_data_item_invoice_child_[$i]->item_quantity?>;
                     <!-- <pre>Item INDEX RETURN:<?=$value->index_list?> | Item CODE RETURN:<?=$value->item_code?> | Item Quantity RETURN:<?=$_data_item_invoice_child_[$i]->item_quantity-$value->item_quantity?></pre> -->
                     <?php $i++;?>
                     <?php else:?>

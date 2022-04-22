@@ -17,9 +17,19 @@
       <?php echo form_open_multipart($data->link, ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
         <div class="modal-body">
           <?php var_dump($data->link) ?>
-          <input type="text" id='id' name="id">
-          <input type="text" id='idorder' name="idorder">
-          <input type="text" id='indexlist' name="indexlist">
+          <div class="form-group">
+            <input type="text" disabled class="form-control" id='id' name="id">
+          </div>
+            <div class="form-group">
+            <input type="text" disabled class="form-control" id='idorder' name="idorder">
+          </div>
+          <div class="form-group">
+            <input type="text" disabled class="form-control" id='indexlist' name="indexlist">
+          </div>
+
+          <div class="form-group">
+            <textarea autofocus class="form-control" name="note" id="note"></textarea>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn <?= $data->btn ?>"><?= $data->submit ?></button>

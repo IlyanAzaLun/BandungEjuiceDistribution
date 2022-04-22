@@ -90,12 +90,13 @@ class Returns extends Purchase
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-
 				'note' => post('note'),
 			);
 			try {
+				// CREATE
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
+				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 			} catch (\Throwable $th) {
@@ -174,14 +175,6 @@ class Returns extends Purchase
 					unset($items[$key]);
 				}
 			}
-			$items = array_values($items);
-			if(sizeof($items) < 1){
-				$this->session->set_flashdata('alert-type', 'warning');
-				$this->session->set_flashdata('alert', lang('returns_failed'));
-
-				redirect('invoice/purchases/returns/edit?id='.get('id'));
-				die();
-			}
 			//information payment
 			$payment = array(
 				'supplier' => post('supplier_code'),
@@ -200,9 +193,26 @@ class Returns extends Purchase
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
+			
+			$items = array_values($items);
+			// echo '<pre>';
+			// var_dump($items);
+			// echo '</pre>';
+			// die();
+
+			if(sizeof($items) < 1){
+				$this->create_or_update_invoice($payment);
+				$this->session->set_flashdata('alert-type', 'warning');
+				$this->session->set_flashdata('alert', lang('returns_failed'));
+
+				redirect('invoice/purchases/returns/edit?id='.get('id'));
+				die();
+			}
 			try {
+				// EDIT
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
+				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 			} catch (\Throwable $th) {
@@ -262,12 +272,42 @@ class Returns extends Purchase
 		return $request;
 	}
 
+	protected function create_or_update_invoice_parent($data)
+	{
+		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code_parents']);
+
+		$request['total_price'] = setCurrency($data['total_price']);
+		$request['discounts'] = setCurrency($data['discounts']);
+		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
+		$request['other_cost'] = setCurrency($data['other_cost']);
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		$request['supplier'] = $data['supplier'];
+		$request['payment_type'] = $data['payment_type'];
+		$request['status_payment'] = $data['status_payment'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['note'] = $data['note'];
+		$request['created_at'] = $data['created_at'];
+		if ($response) {
+			$request['updated_by'] = logged('id');
+			$request['updated_at'] = date('Y-m-d H:i:s');
+			//
+			return $this->purchase_model->update_by_code($this->data['invoice_code_parents'], $request);
+		} else {
+			$request['invoice_code'] = $this->data['invoice_code_parents'];
+			$request['created_by'] = logged('id');
+			//	
+			return $this->purchase_model->create($request);
+		}
+		return $request;
+	}
+
 	protected function create_or_update_list_item_transcation($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
-			$request[$key]['index_list'] = (int)$value['index_list'];
+			$request[$key]['index_list'] = $value['index_list'];
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
@@ -287,23 +327,25 @@ class Returns extends Purchase
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				$data_positif[] = $request[$key];
+				$this->transaction_item_model->update($request[$key]['id'], $request[$key]);
 				// unset($data_positif[$key]['id']);
 			} else {
 				$request[$key]['item_quantity'] = $value['item_order_quantity'];
 				$request[$key]['created_by'] = logged('id');
 				$data_negatif[$key] = $request[$key];
-				unset($data_negatif[$key]['id']);
+				$this->transaction_item_model->create($request[$key]);
+				// unset($data_negatif[$key]['id']);
 			}
 		}
-		if (@$data_negatif) {
-			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
-				return true;
-			}
-		} else {
-			$this->transaction_item_model->update_batch($data_positif, 'id');
-			return true;
-		}
-		return false;
+		// if (@$data_negatif) {
+		// 	if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
+		// 		return true;
+		// 	}
+		// } else {
+		// 	$this->transaction_item_model->update_batch($data_positif, 'id');
+		// 	return true;
+		// }
+		return $request;
 	}
 
 	protected function update_items($data)

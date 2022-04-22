@@ -92,10 +92,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
-                    <th width="15%"><?= lang('item_order_quantity') ?></th>
+                    <th width="10%"><?= lang('note') ?></th>
+                    <th width="12%"><?= lang('item_order_quantity') ?></th>
                     <th width="10%"><?= lang('item_capital_price') ?></th>
                     <th style="display:none"><?= lang('item_selling_price') ?></th>
-                    <th width="10%"><?= lang('discount') ?></th>
+                    <th width="7%"><?= lang('discount') ?></th>
                     <th width="10%"><?= lang('total_price') ?></th>
                     <th width="7%"><?= lang('option') ?></th>
                   </tr>
@@ -107,7 +108,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                     </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></td>
+                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
+                    <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" required></td>
                     <td style="display:none" >
                       <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
@@ -125,7 +127,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </div>
                     </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td>
+                      <input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required>
+                      <input class="form-control form-control-sm" type="hidden" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=0>
+                    </td>
                     <td style="display:none" ><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>

@@ -193,6 +193,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if(data['is_cancelled'] == true){
                 $(row).addClass('bg-danger');
                 $(row).find('a').addClass('text-light');
+                <?php if(!hasPermissions('permissions_list')):?>
+                $(row).css('display', 'none');
+                <?php endif;?>
             }
         },
         columns: [{
@@ -219,8 +222,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             {
                 data: "invoice_code",
                 render: function(data, type, row) {
+                    let url =  '';
+                    if(data.match(/ORDER/)){
+                        url = 'order';
+                    }else if(data.match(/PURCHASE/)){
+                        url = 'purchase';
+                    }else{
+                        url = 'sale';
+                    }
                     if (data) {
-                        return `<a href="${location.base}invoice/purchase/info?id=${data}">${data}</a>`;
+                        return `<a href="${location.base}invoice/${url}/info?id=${data}">${data}</a>`;
                     }
                     return '';
                 }

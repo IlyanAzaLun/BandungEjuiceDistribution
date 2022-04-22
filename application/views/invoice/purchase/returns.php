@@ -105,9 +105,9 @@
                                                 <input disabled type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
                                                 <input type="hidden" name="index_list[]" id="index_list" value="<?= $value->index_list ?>">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
-                                                <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
+                                                <input readonly class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
                                             </td>
-                                            <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" required></td>
+                                            <td><input readonly class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" required></td>
                                             <td style="display:none">
                                                 <div class=" input-group input-group-sm">
                                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
@@ -120,7 +120,7 @@
                                             </td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
-                                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="0" max="<?= (int)$value->item_quantity ?>" value="0" required>
+                                                    <input <?= ($value->total_price == 0)?'readonly':'' ?> class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="0" max="<?= (int)$value->item_quantity ?>" value="0" required>
                                                     <input readonly class="form-control form-control-sm" type="number" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" value="<?= (int)$value->item_quantity ?>" required>
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>

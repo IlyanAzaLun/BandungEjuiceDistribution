@@ -14,7 +14,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
+          <li class="breadcrumb-item"><a target="_blank" href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
           <li class="breadcrumb-item active"><?php echo lang('page_sale') ?></li>
           <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>
@@ -174,8 +174,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
         {
@@ -232,9 +232,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`;
-            return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
+            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
         },
         {
@@ -248,8 +248,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               drop += ``;
               if(row['have_a_child'] == null){
                 html += `
-                  <a href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
+                  <a target="_blank" href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a target="_blank" href="<?= url('invoice/sales') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></a>
                   `;
                   if(row['is_cancelled'] == true){
                     html = `
@@ -257,14 +257,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></button>
                     `;
                   }
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
               }else{
                 html += `
-                  <a href="<?= url('invoice/sales/returns') ?>/edit?id=${row['have_a_child']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a target="_blank" href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
                   <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></button>
                   `;
                   
@@ -274,12 +269,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns of sales"><i class="fa fa-fw fa-undo text-primary"></i></button>
                     `;
                   }
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
+
               }
+              drop += `
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                  `;
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <div class="btn-group">

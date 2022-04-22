@@ -32,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
             <div class="card-tools pull-right">
               <?php if (hasPermissions('purchase_create')) : ?>
-                <a href="<?php echo url('invoice/purchase/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('purchase_create') ?></a>
+                <a target="_blank" href="<?php echo url('invoice/purchase/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('purchase_create') ?></a>
               <?php endif ?>
             </div>
 
@@ -245,6 +245,41 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             let html = ``;
             let drop = ``;
+            if(row['have_a_child'] == null && row['is_cancelled'] == false){
+              html += `
+                <a target="_blank" href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                <a target="_blank" href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
+                <a target="_blank" href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
+                `;
+              drop += `
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                `;
+            }else if(row['have_a_child']){
+              html += `
+                <a target="_blank" href="<?= url('invoice/purchase') ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                <button class="btn btn-xs btn-default" disabled data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></button>
+                <a target="_blank" href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
+                `;
+              drop += `
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                `;
+            }else{
+              html += `
+                <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></button>
+                <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></button>
+                <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></button>
+                `;
+              drop += `
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                `;
+            }
+           /**
               if(row['have_a_child'] == null && row['is_cancelled'] == false){
                 html += `
                   <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
@@ -279,6 +314,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                   `;
               }
+            **/
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <div class="btn-group">

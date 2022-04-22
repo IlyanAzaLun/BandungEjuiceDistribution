@@ -10,7 +10,7 @@ $contact = "$customer->contact_phone $customer->contact_mail";
                 can be of the full height and width !
              **/
             @page {
-                margin: 5px;
+                margin: 10px;
                 font-family: helvetica;
             }
 
@@ -44,11 +44,12 @@ $contact = "$customer->contact_phone $customer->contact_mail";
                 width: 100%;
             }
             table{
-                font-size: 8px;
+                font-size: 14px;
                 width: 100%;
             }
             th, td{
                 border: 1px solid;
+                padding: 10px;
             }
             .text-right{
                 text-align: right;

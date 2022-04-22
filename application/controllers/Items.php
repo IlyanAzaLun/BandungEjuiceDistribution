@@ -337,6 +337,7 @@ class Items extends MY_Controller
                 "item_unit" => $record->unit,
                 "item_capital_price" => $record->capital_price,
                 "item_selling_price" => $record->selling_price,
+                "note" => $record->note,
                 "is_active" => $record->is_active,
             );
         }
@@ -563,7 +564,32 @@ class Items extends MY_Controller
             $this->db->order_by($columnName, $columnSortOrder);
             // $this->db->group_by('invoice_code');
             $this->db->limit($rowperpage, $start);
-            $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+            $records = $this->db->get("(SELECT * FROM invoice_transaction_list_item UNION
+            SELECT 
+                `id`, 
+                `index_list`, 
+                `order_code`, 
+                `item_id`, 
+                `item_code`, 
+                `item_name`, 
+                `item_capital_price`, 
+                `item_selling_price`, 
+                `item_quantity` as item_current_quantity, 
+                `item_order_quantity` as item_quantity, 
+                `item_unit`, 
+                `item_discount`, 
+                `item_total_price`, 
+                'OUT' as item_status, 
+                `item_description`, 
+                `customer_code`, 
+                `is_cancelled`, 
+                `created_at`, 
+                `created_by`, 
+                `updated_at`, 
+                `updated_by` 
+            FROM 
+                `order_sale_list_item`
+            WHERE item_code = '$item_code' AND is_cancelled = 0 AND status_available IS NULL) transaction")->result();
             $data = array();
             
             // echo '<pre>';
