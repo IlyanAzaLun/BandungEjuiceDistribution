@@ -217,6 +217,7 @@ class Customer extends MY_Controller
                 "customer_type" => $record->customer_type,
 
                 "id" => $record->id,
+                "address" => $record->address,
                 "village" => $record->village,
                 "sub_district" => $record->sub_district,
                 "city" => $record->city,

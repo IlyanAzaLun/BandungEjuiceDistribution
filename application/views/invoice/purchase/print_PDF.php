@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); 
 $i = 0; 
 foreach ($bank as $key => $value) {
-    if($value->id == $invoice_informaiton_transaction->transaction_destination){
+    if($value->id == $invoice_information_transaction->transaction_destination){
         $bank = $bank[$key];
     }
 }?>
@@ -98,7 +98,7 @@ $contact = "$supplier->contact_phone $supplier->contact_mail";
                     </tr>
                     <tr>
                     <th class="text-right" colspan="3">Created at: </th>
-                        <th class="text-left" colspan="3"><?=$invoice_informaiton_transaction->created_at?> </th>
+                        <th class="text-left" colspan="3"><?=$invoice_information_transaction->created_at?> </th>
                     </tr>
                     <tr>
                         <th colspan="2" style="vertical-align:top;"><?=lang('user_address')?>: <?=$destination?></th>
@@ -107,8 +107,8 @@ $contact = "$supplier->contact_phone $supplier->contact_mail";
                     </tr>
                     <tr>
                         <th colspan="2" style="vertical-align:top;"><?=lang('contacts')?>: <?=$contact?></th>
-                        <th colspan="2" class="text-left"><?=$invoice_informaiton_transaction->date_start?> </th>
-                        <th colspan="2" class="text-left"><?=$invoice_informaiton_transaction->date_due?> </th>
+                        <th colspan="2" class="text-left"><?=$invoice_information_transaction->date_start?> </th>
+                        <th colspan="2" class="text-left"><?=$invoice_information_transaction->date_due?> </th>
                     </tr>
                     <tr id="header">
                         <th  width="1%">No.</th>
@@ -158,38 +158,38 @@ $contact = "$supplier->contact_phone $supplier->contact_mail";
                 <tfoot>
                     <tr>
                         <th rowspan="2" style="vertical-align:top;">Note: </th>
-                        <th colspan="2" rowspan="2" class="text-left" style="vertical-align:top;"><?=$invoice_informaiton_transaction->note?></th>
+                        <th colspan="2" rowspan="2" class="text-left" style="vertical-align:top;"><?=$invoice_information_transaction->note?></th>
                         <th class="text-right"><b><?=$total_item?></b></th>
                         <th colspan="3" class="text-right"><?=lang('total_price')?>: </th>
-                        <th class="text-right"><?=getCurrentcy($invoice_informaiton_transaction->total_price)?></th>
+                        <th class="text-right"><?=getCurrentcy($invoice_information_transaction->total_price)?></th>
                     </tr>
                     <tr>
                         <th colspan="4" class="text-right"><?=lang('discount')?>: </th>
-                        <th class="text-right"><?=getCurrentcy($invoice_informaiton_transaction->discounts)?></th>
+                        <th class="text-right"><?=getCurrentcy($invoice_information_transaction->discounts)?></th>
                     </tr>
                     <tr>
                         <th colspan="2" class="text-right"></th>
                         <th class="text-center">Hormat Kami</th>
                         <th colspan="2" class="text-right">Penerima</th>
                         <th colspan="2" class="text-right"><?=lang('shipping_cost')?>: </th>
-                        <th class="text-right"><?=getCurrentcy($invoice_informaiton_transaction->shipping_cost)?></th>
+                        <th class="text-right"><?=getCurrentcy($invoice_information_transaction->shipping_cost)?></th>
                     </tr>
                     <tr>
                         <th colspan="3" class="text-left"></th>
-                        <th colspan="4" class="text-right"><?=$invoice_informaiton_transaction->expedition?>:</th>
-                        <th class="text-left"><?=$invoice_informaiton_transaction->services_expedition?></th>
+                        <th colspan="4" class="text-right"><?=$invoice_information_transaction->expedition?>:</th>
+                        <th class="text-left"><?=$invoice_information_transaction->services_expedition?></th>
                     </tr>
                     <tr>
                         <th colspan="2" class="text-right"></th>
                         <th class="text-center">(..................................)</th>
                         <th colspan="3" class="text-center">(..................................)</th>
                         <th  class="text-right"><?=lang('status_payment')?>:</th>
-                        <th class="text-left"><?=$invoice_informaiton_transaction->status_payment?></th>
+                        <th class="text-left"><?=$invoice_information_transaction->status_payment?></th>
                     </tr>
                     <tr>
                         <th colspan="3" class="text-left"></th>
                         <th colspan="4" class="text-right"><?=lang('grandtotal')?>: </th>
-                        <th class="text-right"><?=getCurrentcy($invoice_informaiton_transaction->grand_total)?></th>
+                        <th class="text-right"><?=getCurrentcy($invoice_information_transaction->grand_total)?></th>
                     </tr>
                     <tr>
                         <th colspan="8" class="text-center"><?=$account_bank?></th>

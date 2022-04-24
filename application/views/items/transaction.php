@@ -81,7 +81,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th><?= lang('created_at') ?></th>
                     <th><?= lang('date') ?></th>
                     <th><?= lang('updated_at') ?></th>
-                    <th><?= lang('invoice_code_reference') ?></th>
                     <th><?= lang('invoice_reference') ?></th>
                     <th><?= lang('customer') ?></th>
                     <th><?= lang('item_code') ?></th>
@@ -107,7 +106,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <th><?= lang('created_at') ?></th>
                         <th><?= lang('date') ?></th>
                         <th><?= lang('updated_at') ?></th>
-                        <th><?= lang('invoice_code_reference') ?></th>
                         <th><?= lang('invoice_reference') ?></th>
                         <th><?= lang('customer') ?></th>
                         <th><?= lang('item_code') ?></th>
@@ -214,10 +212,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             {
                 visible: false,
                 data: "transaction_updated_at"
-            },
-            {
-                data: "invoice_code_reference",
-                visible: false,
             },
             {
                 data: "invoice_code",

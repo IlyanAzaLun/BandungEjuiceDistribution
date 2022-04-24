@@ -73,19 +73,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php endif ?>
                       </td>
                       <td>
+                        <div class="btn-group d-flex justify-content-center">
                         <?php if (hasPermissions('users_edit')): ?>
-                          <a href="<?php echo url('users/edit/'.$row->id) ?>" class="btn btn-sm btn-primary" title="<?php echo lang('edit_user') ?>" data-toggle="tooltip"><i class="fas fa-edit"></i></a>
+                          <a href="<?php echo url('users/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="<?php echo lang('edit_user') ?>" data-toggle="tooltip"><i class="fas fa-edit"></i></a>
                         <?php endif ?>
                         <?php if (hasPermissions('users_view')): ?>
-                          <a href="<?php echo url('users/view/'.$row->id) ?>" class="btn btn-sm btn-info" title="<?php echo lang('view_user') ?>" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                          <a href="<?php echo url('users/view/'.$row->id) ?>" class="btn btn-sm btn-default" title="<?php echo lang('view_user') ?>" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
                         <?php endif ?>
                         <?php if (hasPermissions('users_delete')): ?>
                           <?php if ($row->id!=1 && logged('id')!=$row->id): ?>
-                            <a href="<?php echo url('users/delete/'.$row->id) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Do you really want to delete this user ?')" title="<?php echo lang('delete_user') ?>" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                            <a href="<?php echo url('users/delete/'.$row->id) ?>" class="btn btn-sm btn-default" onclick="return confirm('Do you really want to delete this user ?')" title="<?php echo lang('delete_user') ?>" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                           <?php else: ?>
-                            <a href="#" class="btn btn-sm btn-danger" title="<?php echo lang('delete_user_cannot') ?>" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
+                            <a href="#" class="btn btn-sm btn-secondary" title="<?php echo lang('delete_user_cannot') ?>" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                           <?php endif ?>
                         <?php endif ?>
+                        </div>
                       </td>
                     </tr>
                   <?php endforeach ?>

@@ -285,6 +285,11 @@ const main = () => {
             // Grand Total
             $('input#grand_total').val(currency(sum_grand_total()));
         })
+        // Shipping cost
+        $(document).on('focusout', 'input#shipping_cost', function () {
+
+        })
+
         // get grand total
         $(document).on('focus keyup', 'input#grand_total', function (event) {
             switch (event.type) {

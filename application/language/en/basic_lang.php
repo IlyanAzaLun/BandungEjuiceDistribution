@@ -446,6 +446,13 @@ $lang['invoice_code_reference'] = "Invoice code reference";
 $lang['purchase_payment'] = "Purchase to pay";
 $lang['purchase_return_list'] = "Purchase Returns List";
 
+/*
+CONSIGNMENT
+*/
+$lang['consignment'] = "Consignment";
+$lang['consignment_create'] = "Create Consignment";
+$lang['consignment_report'] = "Consignment Report";
+$lang['is_consignment'] = 'is transaction consigment ?';
 
 /*
  * Invoice

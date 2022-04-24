@@ -122,8 +122,8 @@ $i = 0; ?>
                                             <td><?= $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <!--  -->
-                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_capital_price) ?></td>
-                                            <td style="display:none">Rp.<?= number_format($_data_item_invoice_child_[$i]->item_selling_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format($_data_item_invoice_child_[$i]->item_capital_price) ?></td>
+                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_selling_price) ?></td>
                                             <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_discount) ?></td>
                                             <td>Rp.<b><?= number_format($_data_item_invoice_child_[$i]->total_price) ?></b></td>
                                         </tr>
@@ -319,12 +319,14 @@ $i = 0; ?>
                     </div>
                 </div>
                 <!-- /.card-body -->
+                <?php if(!$invoice_information_transaction->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-default mr-2"><?= lang('PDF') ?></button>
                         <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
                     </div>
                 </div>
+                <?php endif?>
             </div>
             
             <!-- //end-content -->
@@ -342,11 +344,9 @@ $i = 0; ?>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('.remove').on('click', function(){
-            let id = $(this).data('id');
-            $('#modal-remove-order').on('shown.bs.modal', function(){
-                $(this).find('input#id').val(id);
-            })
+        $('#exampleModal').on('shown.bs.modal', function(){
+            $('textarea').prop('required',true);
+            $('textarea').focus();
         })
 
         $('#expedition_name').on('change', function(){

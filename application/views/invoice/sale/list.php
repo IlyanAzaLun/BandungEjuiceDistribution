@@ -142,6 +142,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $(rows).eq(i).remove();
           }
         })
+        api.rows( {page:'current'} ).data().each(function(index, i){
+          if(index['is_cancelled'] == 1){
+            $(rows).eq(i).addClass('bg-danger');
+          }
+        })
       },
       columns: [{
           data: "invoice_code",

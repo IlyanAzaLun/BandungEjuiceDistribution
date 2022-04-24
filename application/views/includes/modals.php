@@ -18,16 +18,17 @@
         <div class="modal-body">
           <?php var_dump($data->link) ?>
           <div class="form-group">
-            <input type="text" disabled class="form-control" id='id' name="id">
+            <input type="text" readonly class="form-control" id='id' name="id">
           </div>
             <div class="form-group">
-            <input type="text" disabled class="form-control" id='idorder' name="idorder">
+            <input type="text" readonly class="form-control" id='idorder' name="idorder">
           </div>
           <div class="form-group">
-            <input type="text" disabled class="form-control" id='indexlist' name="indexlist">
+            <input type="text" readonly class="form-control" id='indexlist' name="indexlist">
           </div>
 
           <div class="form-group">
+            <label for="note"><?=lang('note')?></label>
             <textarea autofocus class="form-control" name="note" id="note"></textarea>
           </div>
         </div>

@@ -13,6 +13,7 @@ class Transaction_item_model extends MY_Model {
     public function get_transaction_item_by_code_invoice($data)
     {
         $this->db->where('invoice_code', $data);
+        $this->db->where('is_cancelled', 0);
         return $this->db->get($this->table)->result();
     }
 

@@ -8,7 +8,7 @@ class Sale extends Invoice_controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->page_data['page']->title = 'Sale (Penjualan)';
+		$this->page_data['page']->title = 'Sale';
 		$this->page_data['page']->menu = 'Sale';
 	}
 	public function index()
@@ -231,7 +231,7 @@ class Sale extends Invoice_controller
 		$this->page_data['_data_invoice_parent'] = $this->sale_model->get_invoice_selling_by_code($_invoice_parent_code);
 		$this->page_data['_data_invoice_child_'] = $this->sale_model->get_invoice_selling_by_code($_invoice_child__code);
 
-		$this->page_data['invoice_information_transaction'] = $is_replace? 
+		$this->page_data['invoice_information_transaction'] = $this->page_data['intersect_codex_item']? 
 			$this->page_data['_data_invoice_child_']:
 			$this->page_data['_data_invoice_parent'];
 		$this->page_data['customer'] = $this->customer_model->get_information_customer($this->page_data['invoice_information_transaction']->customer);
@@ -359,6 +359,8 @@ class Sale extends Invoice_controller
 			$payment = (array) $this->page_data['invoice_information_transaction'];
 
 			$payment['is_cancelled'] = 1;
+			$payment['cancel_note'] = $this->input->post('note');
+
 			$this->create_item_history( $items, ['CANCELED', 'CANCELED']);
 			$this->create_or_update_invoice($payment);
 			$this->update_items($items);
@@ -422,6 +424,7 @@ class Sale extends Invoice_controller
 		$request['note'] = $data['note'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['cancel_note'] = $data['cancel_note'];
 			$request['created_at'] = $data['created_at'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');

@@ -32,6 +32,12 @@ class Purchase_model extends MY_Model
         $this->db->update($this->table, $data);
         return $id;
     }
+
+    public function purchase_consignment()
+    {
+        $this->db->where('is_consignment', 1);
+        return $this->db->get($this->table)->result();
+    }
 }
 
 /* End of file Purchase_model.php */

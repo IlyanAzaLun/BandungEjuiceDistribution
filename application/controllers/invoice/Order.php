@@ -9,7 +9,7 @@ class Order extends Invoice_controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->page_data['page']->title = 'Order (Pemesanan)';
+		$this->page_data['page']->title = 'Order';
 		$this->page_data['page']->menu = 'Sale';
 	}
 	public function index()

@@ -9,7 +9,7 @@ class Purchase extends Invoice_controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->page_data['page']->title = 'Purchase (Pembelian)';
+		$this->page_data['page']->title = 'Purchase';
 		$this->page_data['page']->menu = 'Purchase';
 	}
 	public function index()
@@ -81,6 +81,7 @@ class Purchase extends Invoice_controller
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
+				'is_consignment' => post('is_consignment'),
 			);
 			try {
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
@@ -214,10 +215,10 @@ class Purchase extends Invoice_controller
 		$this->page_data['_data_invoice_parent'] = $this->purchase_model->get_invoice_purchasing_by_code($_invoice_parent_code);
 		$this->page_data['_data_invoice_child_'] = $this->purchase_model->get_invoice_purchasing_by_code($_invoice_child__code);
 		
-		$this->page_data['invoice_informaiton_transaction'] = $is_replace? 
+		$this->page_data['invoice_information_transaction'] = $this->page_data['intersect_codex_item']? 
 			$this->page_data['_data_invoice_child_']:
 			$this->page_data['_data_invoice_parent'];
-		$this->page_data['supplier'] = $this->supplier_model->get_information_supplier($this->page_data['invoice_informaiton_transaction']->supplier);
+		$this->page_data['supplier'] = $this->supplier_model->get_information_supplier($this->page_data['invoice_information_transaction']->supplier);
 	
 	}
 
@@ -439,6 +440,7 @@ class Purchase extends Invoice_controller
 		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['cancel_note'] = $data['cancel_note'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
@@ -446,6 +448,7 @@ class Purchase extends Invoice_controller
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_by'] = logged('id');
+			$request['is_consignment'] = $data['is_consignment'];
 			//	
 			return $this->purchase_model->create($request);
 		}

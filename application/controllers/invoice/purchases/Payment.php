@@ -14,7 +14,7 @@ class Payment extends MY_Controller
 	{
 		ifPermissions('purchase_payment');
 		$this->form_validation->set_rules('supplier_code', lang('supplier_code'), 'required|trim');
-		$this->page_data['title'] = 'purchase_returns';
+		$this->page_data['title'] = 'information_payment';
 		$this->page_data['page']->submenu = 'payment';
 		$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 		$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));

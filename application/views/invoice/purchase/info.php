@@ -43,7 +43,7 @@ $i = 0; ?>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('supplier_code') ?></label>
-                                <div type="text" name="supplier_code" id="supplier_code" class="form-control" readonly><?= $invoice_informaiton_transaction->supplier ?></div>
+                                <div type="text" name="supplier_code" id="supplier_code" class="form-control" readonly><?= $invoice_information_transaction->supplier ?></div>
                                 <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -176,7 +176,7 @@ $i = 0; ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" readonly class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->total_price) ?>" min="1" required>
+                                            <input readonly type="text" readonly class="form-control currency" value="<?= number_format($invoice_information_transaction->total_price) ?>" min="1" required>
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +187,7 @@ $i = 0; ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->discounts) ?>" required>
+                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_information_transaction->discounts) ?>" required>
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@ $i = 0; ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->shipping_cost) ?>" required>
+                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_information_transaction->shipping_cost) ?>" required>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +211,7 @@ $i = 0; ?>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp</span>
                                     </div>
-                                    <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->other_cost) ?>" required>
+                                    <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_information_transaction->other_cost) ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -222,14 +222,14 @@ $i = 0; ?>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><b>Rp</b></span>
                                     </div>
-                                    <input type="text" readonly class="form-control currency" value="<?= number_format($invoice_informaiton_transaction->grand_total) ?>" min="1" required>
+                                    <input type="text" readonly class="form-control currency" value="<?= number_format($invoice_information_transaction->grand_total) ?>" min="1" required>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('payment_type') ?></h6>
-                                <input readonly type="text" class="form-control" value="<?= lang($invoice_informaiton_transaction->payment_type) ?>" required>
+                                <input readonly type="text" class="form-control" value="<?= lang($invoice_information_transaction->payment_type) ?>" required>
                             </div>
                         </div>
                         <?php if($intersect_codex_item):?>
@@ -243,14 +243,14 @@ $i = 0; ?>
                         <div class="col-lg-12 col-sm-12">
                             <div class="form-group">
                                 <label for="note"><?= lang('note') ?></label>
-                                <textarea readonly class="form-control"><?= $invoice_informaiton_transaction->note ?></textarea>
+                                <textarea readonly class="form-control"><?= $invoice_information_transaction->note ?></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.card-body -->
                 <!-- /card-footer -->
-                <?php if(!$invoice_informaiton_transaction->is_cancelled):?>
+                <?php if(!$invoice_information_transaction->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
@@ -269,5 +269,11 @@ $i = 0; ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
     $('body').addClass('sidebar-collapse');
+    $(document).ready(function(){
+        $('#exampleModal').on('shown.bs.modal', function(){
+            $('textarea').prop('required',true);
+            $('textarea').focus();
+        })
+    })
 </script>
 <script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseEdit.js"></script>

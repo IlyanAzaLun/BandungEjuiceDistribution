@@ -122,7 +122,7 @@ class Supplier extends MY_Controller
             } else {
                 array_push($request['supplier'], [
                     'id' => $value['A'],
-                    'supplier_code' => $value['B'],
+                    'customer_code' => $value['B'],
                     'store_name' => $value['C'],
                     'owner_name' => $value['D'],
                     'supplier_type' => $value['E'],
@@ -131,7 +131,7 @@ class Supplier extends MY_Controller
                     'is_active' => 1,
                 ]);
                 array_push($request['address'], [
-                    'supplier_id' => $value['A'],
+                    'customer_code' => $value['B'],
                     'address' => $value['G'],
                     'village' => $value['H'],
                     'sub_district' => $value['I'],

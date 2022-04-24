@@ -128,7 +128,7 @@ const main = () => {
         // Add item to list
         //ShortCut Shift + Enter
         document.onkeyup = function (e) {
-            if (e.shiftKey && e.which == 13) {
+            if (e.shiftKey && e.which == 78) {
                 let input_id = parseInt($('tbody tr:nth-child(n)').last().attr('class').split('-')[1]) + 1;
                 let html = `
             <tr class="input-${input_id}" id="main">

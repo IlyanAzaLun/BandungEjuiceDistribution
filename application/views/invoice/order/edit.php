@@ -276,14 +276,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- /.card-body -->
       </div>
       <!-- Information payment END -->
+      <?php if ($invoice->is_cancelled == 0):?>
       <div class="card">
         <div class="card-footer">
           <div class="float-right">
-            <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-            <a href="<?=url('invoice/order/cancel?id='.get('id'))?>" class="btn btn-danger mr-2" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></a>            
+              <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
+              <a href="<?=url('invoice/order/cancel?id='.get('id'))?>" class="btn btn-danger mr-2" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></a>            
+            </div>
           </div>
         </div>
-      </div>
+        <?php endif;?>
       <!-- /.card -->
       <?php echo form_close(); ?>
     </div>

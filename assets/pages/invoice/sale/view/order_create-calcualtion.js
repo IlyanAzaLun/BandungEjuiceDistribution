@@ -13,19 +13,17 @@ function sum_sub_total_item_returns(row) {
     let item_capital_price = $(`.${row} td input[data-id='item_capital_price']`).val();
     let item_selling_price = $(`.${row} td input[data-id='item_selling_price']`).val();
     let item_order_quantity = $(`.${row} td input[data-id='item_order_quantity']`).val();
+    let item_order_quantity_current = $(`.${row} td input[data-id='item_order_quantity_current']`).val();
     let item_discount = $(`.${row} td input[data-id='discount']`).val();
     let total_price_current = $(`.${row} td input[data-id='total_price_current']`).val();
     let total_price = $(`.${row} td input[data-id='total_price']`);
-    total_price.val(
-        currency(
-            // currencyToNum(total_price_current) - ((currencyToNum(item_selling_price) * parseInt(item_order_quantity)) - currencyToNum(item_discount))
-            (
-                (Number(currencyToNum(total_price_current)) + Number(currencyToNum(item_discount))) -
-                (Number(currencyToNum(item_capital_price)) * Number(item_order_quantity)) - Number(currencyToNum(item_discount))
-            )
-
+    if (currencyToNum(item_discount) == (currencyToNum(item_selling_price) * parseInt(item_order_quantity_current))) {
+        total_price.val(0)
+    } else {
+        total_price.val(
+            currency(currencyToNum(total_price_current) - (currencyToNum(item_selling_price) * parseInt(item_order_quantity)))
         )
-    )
+    }
 }
 
 function sum_sub_total() {

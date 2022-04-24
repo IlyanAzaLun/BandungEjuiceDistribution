@@ -43,26 +43,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-sm table-bordered table-hover">
               <thead>
                 <tr>
-                  <th></th>
-                  <th>No.</th>
-                  <th><?= lang('customer_code') ?></th>
+                  <th width="3%"></th>
+                  <th width="2%">No.</th>
+                  <th width="10%"><?= lang('customer_code') ?></th>
                   <th><?= lang('store_name') ?></th>
-                  <th><?= lang('customer_owner') ?></th>
-                  <th><?= lang('customer_type') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="10%"><?= lang('customer_owner') ?></th>
+                  <th width="10%"><?= lang('customer_type') ?></th>
+                  <th width="5%"><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>
               </tbody>
               <tfoot>
                 <tr>
-                  <th></th>
-                  <th>No.</th>
-                  <th><?= lang('customer_code') ?></th>
+                  <th width="3%"></th>
+                  <th width="2%">No.</th>
+                  <th width="10%"><?= lang('customer_code') ?></th>
                   <th><?= lang('store_name') ?></th>
-                  <th><?= lang('customer_owner') ?></th>
-                  <th><?= lang('customer_type') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="10%"><?= lang('customer_owner') ?></th>
+                  <th width="10%"><?= lang('customer_type') ?></th>
+                  <th width="5%"><?= lang('option') ?></th>
                 </tr>
               </tfoot>
             </table>
@@ -90,18 +90,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <table class="table bg-secondary">
           <thead>
             <tr>
-              <th><?= lang('village') ?>:</th>
-              <th><?= lang('sub_district') ?>:</th>
-              <th><?= lang('city') ?>:</th>
-              <th><?= lang('province') ?>:</th>
-              <th><?= lang('zip') ?>:</th>
-              <th><?= lang('contact_phone') ?>:</th>
-              <th><?= lang('contact_mail') ?>:</th>
-              <th><?= lang('created_at') ?>:</th>
-              <th><?= lang('created_by') ?>:</th>
+              <th ><?= lang('address') ?>:</th>
+              <th width="10%"><?= lang('village') ?>:</th>
+              <th width="10%"><?= lang('sub_district') ?>:</th>
+              <th width="10%"><?= lang('city') ?>:</th>
+              <th width="10%"><?= lang('province') ?>:</th>
+              <th width="5%"><?= lang('zip') ?>:</th>
+              <th width="10%"><?= lang('contact_phone') ?>:</th>
+              <th width="10%"><?= lang('contact_mail') ?>:</th>
+              <th width="10%"><?= lang('created_at') ?>:</th>
+              <th width="8%"><?= lang('created_by') ?>:</th>
             </tr>
           </thead>
             <tr>
+                <td>${d.address}</td>
                 <td>${d.village}</td>
                 <td>${d.sub_district}</td>
                 <td>${d.city}</td>
@@ -122,6 +124,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
+      lengthMenu: [
+        [10, 25, 50, 100, 200, <?=$this->db->get('customer_information')->num_rows()?>], 
+        [10, 25, 50, 100, 200, "All"]
+        ],
       ajax: {
         "url": "<?php echo url('master_information/customer/serverside_datatables_data_customer') ?>",
         "type": "POST",

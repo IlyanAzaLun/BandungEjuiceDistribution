@@ -273,16 +273,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-12">
-                  <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                      <input class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" value=1>
-                      <label for="is_consignment" class="custom-control-label"><?=lang('is_consignment')?></label>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

@@ -112,8 +112,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <td><?= $this->items_model->getByCodeItem($value->item_code, 'note') ?></td>
                                             <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
                                             <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
-                                            <td>Rp.<?= number_format($value->item_capital_price) ?></td>
-                                            <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format($value->item_capital_price) ?></td>
+                                            <td>Rp.<?= number_format($value->item_selling_price) ?></td>
                                             <td>Rp.<?= number_format($value->item_discount) ?></td>
                                             <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
                                             <td><button type="button" class="btn btn-block btn-danger" id="update" data-id="<?=$value->id?>"><i class="fa fa-tw fa-pencil-alt"></i></button></td>
@@ -147,15 +147,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </td>
                                             <td>
                                                 <div class=" input-group input-group-sm">
-                                                    <input <?= ($value->total_price == 0)?'readonly':'' ?> class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" max="<?= (int)$value->item_quantity ?>" value="0" required>
+                                                    <input <?= ($value->total_price == 0)?'this_horiable':'' ?> class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="0" max="<?= (int)$value->item_quantity ?>" value="0" required>
                                                     <input readonly class="form-control form-control-sm" type="number" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" value="<?= (int)$value->item_quantity ?>" required>
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
-                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
+                                            <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
+                                            <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>"></td>
                                             <td>
                                                 <input class="form-control form-control-sm currency" type="hidden" name="total_price_current[]" data-id="total_price_current" min="0" required value="<?= $value->total_price ?>" readonly>
