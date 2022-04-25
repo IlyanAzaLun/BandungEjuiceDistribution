@@ -232,6 +232,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <select class="custom-select" name="payment_type">
                       <option value="cash"><?= lang('cash') ?></option>
                       <option value="credit"><?= lang('credit') ?></option>
+                      <option value="consignment"><?= lang('consignment') ?></option>
                     </select>
                   </div>
                 </div>

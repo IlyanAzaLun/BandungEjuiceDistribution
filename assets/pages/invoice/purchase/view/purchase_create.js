@@ -289,7 +289,6 @@ const main = () => {
         $(document).on('focusout', 'input#shipping_cost', function () {
 
         })
-
         // get grand total
         $(document).on('focus keyup', 'input#grand_total', function (event) {
             switch (event.type) {
@@ -302,6 +301,30 @@ const main = () => {
                 default:
                     console.log(event.type)
                     break;
+            }
+        });
+        //if is consignment
+        $(document).on('change', 'select[name=payment_type]', function () {
+            if ($(this).val() == 'consignment') {
+                $('input#is_consignment').prop('checked', true)
+            } else {
+                $('input#is_consignment').prop('checked', false)
+            }
+        })
+        $(document).on('change', 'input#is_consignment', function (event) {
+            if ($(this).is(':checked')) {
+                $('input#sub_total, input#grand_total').val(0);
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+                $('select[name=payment_type] option[value=consignment]').prop('selected', true);
+            } else {
+                //Sub total
+                $('input#sub_total').val(currency(sum_sub_total()));
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+                $('select[name=payment_type] option[value=credit]').prop('selected', true);
             }
         })
     });

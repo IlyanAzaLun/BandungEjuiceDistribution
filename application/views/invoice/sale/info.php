@@ -322,8 +322,8 @@ $i = 0; ?>
                 <?php if(!$invoice_information_transaction->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-right">
-                        <button type="button" class="btn btn-default mr-2"><?= lang('PDF') ?></button>
-                        <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
+                        <button type="button" class="btn btn-sm btn-default mr-2"><?= lang('PDF') ?></button>
+                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
                     </div>
                 </div>
                 <?php endif?>
@@ -345,8 +345,10 @@ $i = 0; ?>
 <script>
     $(document).ready(function () {
         $('#exampleModal').on('shown.bs.modal', function(){
-            $('textarea').prop('required',true);
-            $('textarea').focus();
+            $('.modal textarea').prop('required',true);
+            $('.modal textarea').focus();
+            $('.modal textarea').val('Have a Child: <?=$_data_invoice_parent->have_a_child?>');
+            $('.modal .modal-footer').prepend('<a href="<?=url('invoice/sale/info?id='.$_data_invoice_parent->have_a_child)?>" class="btn btn-sm btn-primary">Reference</a>');
         })
 
         $('#expedition_name').on('change', function(){

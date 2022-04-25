@@ -273,9 +273,10 @@ $i = 0; ?>
                                 <div class="col-lg-2 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('payment_type') ?></h6>
-                                        <select class="custom-select" name="payment_type">
+                                        <select class="custom-select" name="payment_type" id="payment_type">
                                             <option value="cash" <?= ($_data_invoice_parent->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
                                             <option value="credit" <?= ($_data_invoice_parent->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                            <option value="consignment" <?= ($_data_invoice_parent->payment_type == 'consignment') ? ' selected' : '' ?>><?= lang('consignment') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -304,10 +305,18 @@ $i = 0; ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg col-sm-12">
+                        <div class="col-lg-12 col-sm-12">
                             <div class="form-group">
                                 <label for="note"><?= lang('note') ?></label>
                                 <textarea name="note" id="note" class="form-control"><?= $_data_invoice_parent->note ?></textarea>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" <?= $_data_invoice_parent->is_consignment?'checked':'' ?> value=1>
+                                <label for="is_consignment" class="custom-control-label"><?=lang('is_consignment')?></label>
+                                </div>
                             </div>
                         </div>
                     </div>

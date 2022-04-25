@@ -300,7 +300,43 @@ const main = () => {
                     console.log(event.type)
                     break;
             }
+        });
+
+        //if is consignment
+        $(document).on('change', 'select[name=payment_type]', function () {
+            if ($(this).val() == 'consignment') {
+                $('input#is_consignment').prop('checked', true)
+            } else {
+                $('input#is_consignment').prop('checked', false)
+            }
         })
+        $(document).on('change', 'input#is_consignment', function (event) {
+            if ($('input#is_consignment').is(':checked')) {
+                $('input#sub_total, input#grand_total').val(0);
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+            } else {
+                //Sub total
+                $('input#sub_total').val(currency(sum_sub_total()));
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+                $('select[name=payment_type] option[value=credit]').prop('selected', true);
+            }
+        })
+        if ($('input#is_consignment').is(':checked')) {
+            $('input#sub_total, input#grand_total').val(0);
+
+            // Grand Total
+            $('input#grand_total').val(currency(sum_grand_total()));
+        } else {
+            //Sub total
+            $('input#sub_total').val(currency(sum_sub_total()));
+
+            // Grand Total
+            $('input#grand_total').val(currency(sum_grand_total()));
+        }
     });
 }
 export default main;

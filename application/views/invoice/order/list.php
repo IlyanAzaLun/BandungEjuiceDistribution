@@ -32,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
             <div class="card-tools pull-right">
               <?php if (hasPermissions('order_create')) : ?>
-                <a href="<?php echo url('invoice/order/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('order_create') ?></a>
+                <a target="_blank" href="<?php echo url('invoice/order/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('order_create') ?></a>
               <?php endif ?>
             </div>
 

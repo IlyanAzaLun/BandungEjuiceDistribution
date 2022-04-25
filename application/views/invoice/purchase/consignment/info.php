@@ -74,6 +74,7 @@ $i = 0; ?>
                 <!-- /.card-body -->
             </div>
             <!-- Information customer END -->
+            <pre><?php var_dump($sale_out);?></pre>
             <!-- Information Items START -->
             <div class="card">
                 <div class="card-header with-border">

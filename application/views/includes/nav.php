@@ -286,15 +286,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </a>
         <ul class="nav nav-treeview">
           <li class="nav-item">
-            <a href="<?php echo url('invoice/purchases/consignment/create') ?>" class="nav-link <?php echo ($page->submenu_child == 'consignment_create') ? 'active' : '' ?>">
-              <i class="far fa-dot-circle nav-icon"></i>
-              <p><?php echo lang('consignment_create') ?></p>
-            </a>
-          </li>
-          <li class="nav-item">
             <a href="<?php echo url('invoice/purchases/consignment/') ?>" class="nav-link <?php echo ($page->submenu_child == 'consignment_report') ? 'active' : '' ?>">
               <i class="far fa-dot-circle nav-icon"></i>
-              <p><?php echo lang('consignment_report') ?></p>
+              <p><?php echo lang('consignment_list') ?></p>
+            </a>
+          </li>
+        </ul>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="<?php echo url('invoice/purchases/consignments/returns/') ?>" class="nav-link <?php echo ($page->submenu_child == 'consignment_return_report') ? 'active' : '' ?>">
+              <i class="far fa-dot-circle nav-icon"></i>
+              <p><?php echo lang('consignment_return_list') ?></p>
             </a>
           </li>
         </ul>

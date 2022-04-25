@@ -197,7 +197,7 @@ class Purchase extends Invoice_controller
 		}
 	}
 
-	private function data_purchase()
+	protected function data_purchase()
 	{
 		$_invoice_parent_code = str_replace('RET','INV',$this->input->get('id'), $is_replace);
 		$_invoice_child__code = str_replace('INV','RET',$this->input->get('id'));
@@ -262,6 +262,7 @@ class Purchase extends Invoice_controller
 		$items = array();
 		$payment = (array) $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 		$this->data['invoice_code'] = get('id');
+		$this->data['invoice_code_child'] = str_replace('INV','RET', $this->data['invoice_code']);;
 		if(preg_match('/INV/', get('id'))){
 			$purchase_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$purchase_return_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(str_replace('INV','RET',$this->input->get('id')));
@@ -272,6 +273,7 @@ class Purchase extends Invoice_controller
 			$intersect_code_item = array_intersect($items_code, $items_code_return);
 			$intersect_index_item = array_intersect($items_index, $items_index_return);
 			$i = 0;
+			$to_cancel = false;
 			foreach ($purchase_ as $key => $value){
 				$items[$key]['id'] = $value->id;
 				$items[$key]['item_id'] = $value->item_id;
@@ -295,11 +297,18 @@ class Purchase extends Invoice_controller
 						$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
 					}else{
 						$items[$key]['item_order_quantity'] = ($value->item_quantity - $purchase_return_[$i]->item_quantity) * -1;
+						$to_cancel = true;
 					}
 					$i++;
 				}else{
 					$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
 				}
+			}
+			if ($to_cancel) {
+				$this->db->set('note', $this->input->post('note'));
+				$this->db->set('is_cancelled', 1);
+				$this->db->where('invoice_code', $this->data['invoice_code_child']);
+				$this->db->update('invoice_purchasing');
 			}
 			//DIKURANGI
 		}else{

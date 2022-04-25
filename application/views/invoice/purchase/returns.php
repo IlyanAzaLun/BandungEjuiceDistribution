@@ -258,6 +258,14 @@
                                 <textarea name="note" id="note" class="form-control"><?= $invoice->note ?></textarea>
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                <input onclick="return false;" class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" <?= $invoice->is_consignment?'checked':'' ?> value=1>
+                                <label for="is_consignment" class="custom-control-label"><?=lang('is_consignment')?></label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /.card-body -->

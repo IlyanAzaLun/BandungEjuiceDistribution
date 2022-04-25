@@ -47,14 +47,22 @@ const main = () => {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item_returns(row);
 
-            // get sub total
-            $('input#sub_total').val(currency(sum_sub_total()));
-            // get grand total
-            $('input#grand_total').val(currency(sum_grand_total()));
+            if ($('input#is_consignment').is(':checked')) {
+                $('input#sub_total, input#grand_total').val(0);
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+            } else {
+                //Sub total
+                $('input#sub_total').val(currency(sum_sub_total()));
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+            }
 
         })
         // get sub total
-        $('input#sub_total').val(currency(sum_sub_total()));
+        // $('input#sub_total').val(currency(sum_sub_total()));
         $(document).on('focus keyup', 'input#sub_total', function (event) {
             switch (event.type) {
                 case 'keyup':
@@ -77,7 +85,7 @@ const main = () => {
 
         })
         // get grand total
-        $('input#grand_total').val(currency(sum_grand_total()));
+        // $('input#grand_total').val(currency(sum_grand_total()));
         $(document).on('focus keyup', 'input#grand_total', function (event) {
             switch (event.type) {
                 case 'keyup':
@@ -90,7 +98,36 @@ const main = () => {
                     console.log(event.type)
                     break;
             }
+        });
+
+
+        //if is consignment
+        $(document).on('change', 'input#is_consignment', function (event) {
+            if ($('input#is_consignment').is(':checked')) {
+                $('input#sub_total, input#grand_total').val(0);
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+            } else {
+                //Sub total
+                $('input#sub_total').val(currency(sum_sub_total()));
+
+                // Grand Total
+                $('input#grand_total').val(currency(sum_grand_total()));
+            }
         })
+        if ($('input#is_consignment').is(':checked')) {
+            $('input#sub_total, input#grand_total').val(0);
+
+            // Grand Total
+            $('input#grand_total').val(currency(sum_grand_total()));
+        } else {
+            //Sub total
+            $('input#sub_total').val(currency(sum_sub_total()));
+
+            // Grand Total
+            $('input#grand_total').val(currency(sum_grand_total()));
+        }
     });
 }
 export default main;

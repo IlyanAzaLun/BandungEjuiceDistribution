@@ -91,6 +91,7 @@ class Returns extends Purchase
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
+				'is_consignment' => post('is_consignment'),
 			);
 			try {
 				// CREATE
@@ -265,6 +266,7 @@ class Returns extends Purchase
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_by'] = logged('id');
+			$request['is_consignment'] = $data['is_consignment'];
 			//	
 			$this->purchase_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
 			return $this->purchase_model->create($request);

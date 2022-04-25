@@ -403,14 +403,14 @@ $lang['menu_invoice'] = "Menus Invoice";
 $lang['invoice_code'] = "Invoice code";
 
 $lang['page_purchase'] = "Page Purchase";
-$lang['purchase_list'] = "Purchase list";
+$lang['purchase_list'] = "List Purchase";
 $lang['find_supplier_code'] = "Find supplier code ...";
 $lang['find_store_name'] = "Find store name ...";
-$lang['purchase_create'] = "Purchase create";
-$lang['purchase_edit'] = "Purchase edit";
+$lang['purchase_create'] = "Create Purchase";
+$lang['purchase_edit'] = "Edit Purchase";
 $lang['purchase_info'] = "Purchase information";
-$lang['purchase_returns'] = "Purchase Returns";
-$lang['purchase_returns_edit'] = "Purchase Returns Edit";
+$lang['purchase_returns'] = " Returns Purchase";
+$lang['purchase_returns_edit'] = "Edit Returns Purchase";
 $lang['purchase_info_create'] = "Add more information data purchase";
 $lang['purchase_info_edit'] = "Edit information data purchase ";
 $lang['purchase_info_info'] = "Information data purchase ";
@@ -444,12 +444,14 @@ $lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
 $lang['invoice_code_reference'] = "Invoice code reference";
 $lang['purchase_payment'] = "Purchase to pay";
-$lang['purchase_return_list'] = "Purchase Returns List";
+$lang['purchase_return_list'] = "List Returns Purchase";
 
 /*
 CONSIGNMENT
 */
 $lang['consignment'] = "Consignment";
+$lang['consignment_list'] = "List Consignment";
+$lang['consignment_return_list'] = "List Return Consignment";
 $lang['consignment_create'] = "Create Consignment";
 $lang['consignment_report'] = "Consignment Report";
 $lang['is_consignment'] = 'is transaction consigment ?';
@@ -460,10 +462,10 @@ $lang['is_consignment'] = 'is transaction consigment ?';
  */
 $lang['order'] = "Order";
 $lang['page_order'] = "Page Orders";
-$lang['order_list'] = "Order List";
+$lang['order_list'] = "List Order";
 $lang['order_report'] = "Report Order";
-$lang['order_create'] = "Order Create";
-$lang['order_edit'] = "Order Edit";
+$lang['order_create'] = "Create Order";
+$lang['order_edit'] = "Edit Order";
 $lang['order_code'] = "Order Code";
 $lang['status_available'] = "Status Available";
 
@@ -477,12 +479,12 @@ $lang['order_info_info'] = "Information data order ";
  */
 $lang['page_sale'] = "Page Sale";
 
-$lang['sale_list'] = "Selling List";
-$lang['sale_create'] = "Selling Create";
-$lang['sale_edit'] = "Selling Edit";
+$lang['sale_list'] = "List Sales ";
+$lang['sale_create'] = "Create Sale";
+$lang['sale_edit'] = "Edit Sale";
 $lang['sale_payment'] = "Selling to pay";
-$lang['sale_returns'] = "Sale Returns";
-$lang['sale_return_list'] = "Selling Returns List";
+$lang['sale_returns'] = "Returns Sale";
+$lang['sale_return_list'] = "List Returns Sale";
 $lang['returns'] = "Returns";
 
 
@@ -493,9 +495,6 @@ $lang['returns'] = "Returns";
 $lang['menu_validation'] = "Menus Validation";
 
 $lang['order_list_item_available'] = "List Order Item";
-$lang['sale_list'] = "Selling List";
-$lang['sale_create'] = "Selling Create";
-$lang['sale_edit'] = "Selling Edit";
 
  
 /*
