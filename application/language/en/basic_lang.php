@@ -199,6 +199,10 @@ $lang['dashboard_add_event'] = "Add new event";
 $lang['dashboard_clear_events'] = "Clear events";
 $lang['dashboard_view_calendar'] = "View calendar";
 
+$lang['parents'] = "Parents";
+$lang['total_balace'] = "Total Balance";
+$lang['total_is_sold'] = "Total Sold";
+
 /**
  * Users
  */
@@ -431,6 +435,7 @@ $lang['grandtotal'] = "Grand total";
 $lang['information_payment'] = "Payment Information";
 $lang['payment_type'] = "Type Payment";
 $lang['status_payment'] = "Status Payment";
+$lang['is_status_payment'] = "Is Status Payment ?";
 $lang['date_due'] = "Date due";
 $lang['date_due_start'] = "Date due start";
 $lang['date_due_end'] = "Date due end";

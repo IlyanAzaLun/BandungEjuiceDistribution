@@ -46,6 +46,7 @@ class Returns extends Purchase
 			foreach (post('item_code') as $key => $value) {
 				array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
+				$items[$key]['id_fifo'] = post('id_fifo')[$key];
 				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
@@ -57,7 +58,7 @@ class Returns extends Purchase
 				$items[$key]['item_unit'] = post('item_unit')[$key];
 				$items[$key]['item_capital_price'] = post('item_capital_price')[$key];
 				$items[$key]['item_selling_price'] = post('item_selling_price')[$key];
-				$items[$key]['item_discount'] = post('item_discount')[$key];
+				$items[$key]['item_discount'] = (post('total_price')[$key] == 0)?setCurrency(post('item_capital_price')[$key])*(post('item_order_quantity_current')[$key]-post('item_order_quantity')[$key]):post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
 				$items[$key]['customer_code'] = post('supplier_code');
@@ -92,14 +93,19 @@ class Returns extends Purchase
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'is_consignment' => post('is_consignment'),
+				'is_child' => 1,
+				'is_cancelled' => 0,
 			);
 			try {
+				echo '<pre>';
 				// CREATE
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
 				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
+				var_dump($this->create_or_update_item_fifo($items));
+				echo '</pre>';
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -157,6 +163,7 @@ class Returns extends Purchase
 			foreach (post('item_code') as $key => $value) {
 				array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
+				$items[$key]['id_fifo'] = post('id_fifo')[$key];
 				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
 				$items[$key]['item_code'] = post('item_code')[$key];
@@ -193,6 +200,7 @@ class Returns extends Purchase
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
+				'is_cancelled' => 0,
 			);
 			
 			$items = array_values($items);
@@ -211,11 +219,14 @@ class Returns extends Purchase
 			}
 			try {
 				// EDIT
+				echo '<pre>';
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
 				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
+				var_dump($this->create_or_update_item_fifo($items));
+				echo '</pre>';
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -258,6 +269,8 @@ class Returns extends Purchase
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
 		$request['created_at'] = $data['created_at'];
+		$request['is_cancelled'] = $data['is_cancelled'];
+		$this->purchase_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
 		if ($response) {
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
@@ -267,8 +280,8 @@ class Returns extends Purchase
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_by'] = logged('id');
 			$request['is_consignment'] = $data['is_consignment'];
+			$request['is_child'] = $data['is_child'];
 			//	
-			$this->purchase_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
 			return $this->purchase_model->create($request);
 		}
 		return $request;
@@ -349,6 +362,48 @@ class Returns extends Purchase
 		// }
 		return $request;
 	}
+	
+
+	protected function create_or_update_item_fifo($data)
+	{
+		$response = $this->items_fifo_model->get_items_fifo($this->data['invoice_code_parents']);
+		$item = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['invoice_code'] = $this->data['invoice_code_parents'];
+			$request[$key]['item_id'] = $value['item_id'];
+			$request[$key]['item_code'] = $item[$key]->item_code;
+			$request[$key]['item_name'] = $value['item_name'];
+			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
+			$request[$key]['item_quantity'] = abs($value['item_order_quantity_current']-$value['item_order_quantity']);
+			$request[$key]['item_unit'] = $value['item_unit'];
+			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
+			$request[$key]['total_price'] = setCurrency($value['total_price']);
+			$request[$key]['customer_code'] = $value['customer_code'];
+			if ($response) {
+				$request[$key]['id'] = $value['id_fifo'];
+				$request[$key]['updated_by'] = logged('id');
+				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
+				$request[$key]['is_cancelled'] = $value['is_cancelled'];
+				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+				$data_positif[] = $request[$key];
+			} else {
+				$request[$key]['created_at'] = $value['created_at'];
+				$request[$key]['created_by'] = logged('id');
+				// $this->purchase_model->create($request);
+				$data_negatif[] = $request[$key];
+			}
+		}
+		if (@$data_negatif) {
+			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id')) {
+				return true;
+			}
+		} else {
+			$this->items_fifo_model->update_batch($data_positif, 'id');
+			return true;
+		}
+		return $request;
+	}
 
 	protected function update_items($data)
 	{
@@ -370,6 +425,127 @@ class Returns extends Purchase
 		}
 		return true;
 		// return $this->items_model->update_batch($request, 'item_code');
+	}
+
+	
+	public function serverside_datatables_data_purchase_returns()
+	{
+		ifPermissions('purchase_return_list');
+		$response = array();
+
+		$postData = $this->input->post();
+
+		## Read value
+		$draw = $postData['draw'];
+		$start = $postData['start'];
+		$rowperpage = $postData['length']; // Rows display per page
+		$columnIndex = $postData['order'][0]['column']; // Column index
+		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+		$searchValue = $postData['search']['value']; // Search value
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
+
+		## Total number of records without filtering
+		$this->db->select('count(*) as allcount');
+		$records = $this->db->get('invoice_purchasing')->result();
+		$totalRecords = $records[0]->allcount;
+
+		## Total number of record with filtering
+		$this->db->select('count(*) as allcount');
+		if ($searchValue != '') {
+			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
+			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
+			$this->db->or_like('purchasing.note', $searchValue, 'both');
+			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+		}
+		if ($dateStart != '') {
+			$this->db->where("purchasing.created_at >=", $dateStart);
+			$this->db->where("purchasing.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
+		}
+		$records = $this->db->get('invoice_purchasing purchasing')->result();
+		$totalRecordwithFilter = $records[0]->allcount;
+
+		## Fetch records
+		$this->db->select('
+		purchasing.id as purchasing_id, 
+		purchasing.invoice_code as invoice_code, 
+		purchasing.have_a_child as have_a_child, 
+		purchasing.created_at as purchasing_create_at, 
+		purchasing.total_price as total_price, 
+		purchasing.discounts as discounts, 
+		purchasing.other_cost as other_cost, 
+		purchasing.payment_type as payment_type, 
+		purchasing.status_payment as status_payment, 
+		purchasing.grand_total as grand_total, 
+		purchasing.note as purchase_note, 
+		purchasing.created_at as created_at, 
+		purchasing.updated_at as updated_at, 
+		purchasing.created_by as created_by, 
+		purchasing.is_cancelled as is_cancelled, 
+		purchasing.cancel_note as cancel_note, 
+		supplier.customer_code as supplier_code, 
+		supplier.store_name as store_name, 
+		user.id as user_id, 
+		user.name as user_purchasing_create_by');
+		if ($searchValue != '') {
+			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
+			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
+			$this->db->or_like('purchasing.note', $searchValue, 'both');
+			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+			$this->db->or_like('supplier.store_name', $searchValue, 'both');
+		}
+		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
+		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
+		$this->db->where('purchasing.is_child', 1);
+		if ($dateStart != '') {
+			$this->db->where("purchasing.created_at >=", $dateStart);
+			$this->db->where("purchasing.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
+		}
+		$this->db->order_by($columnName, $columnSortOrder);
+		$this->db->limit($rowperpage, $start);
+		$records = $this->db->get('invoice_purchasing purchasing')->result();
+
+		$data = array();
+
+		foreach ($records as $record) {
+
+			$data[] = array(
+				'id' => $record->purchasing_id,
+				'invoice_code' => $record->invoice_code,
+				'have_a_child' => $record->have_a_child,
+				'supplier_code' => $record->supplier_code,
+				'store_name' => $record->store_name,
+				'total_price' => $record->total_price,
+				'discounts' => $record->discounts,
+				'shipping_cost' => $record->shipping_cost,
+				'other_cost' => $record->other_cost,
+				'payment_type' => lang($record->payment_type),
+				'status_payment' => lang($record->status_payment),
+				'grand_total' => $record->grand_total,
+				'purchase_note' => $record->purchase_note,
+				'created_at' => $record->created_at,
+				'updated_at' => $record->updated_at,
+				'user_id' => $record->user_id,
+				'is_cancelled' => $record->is_cancelled,
+				'cancel_note' => $record->cancel_note,
+				'user_purchasing_create_by' => $record->user_purchasing_create_by,
+			);
+		}
+
+		## Response
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $totalRecords,
+			"iTotalDisplayRecords" => $totalRecordwithFilter,
+			"aaData" => $data,
+			"invoices_code" => $invoices_code
+		);
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}
 	
 }

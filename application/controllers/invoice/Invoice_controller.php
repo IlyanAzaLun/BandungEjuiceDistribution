@@ -23,6 +23,11 @@ abstract class Invoice_controller extends MY_Controller {
         // ... 
 	}
 
+    protected function cancel_return_fifo()
+    {
+        return $this->data['invoice_code'];
+    }
+
     public function serverside_datatables_data_purchase()
     {
 

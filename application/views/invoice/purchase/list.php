@@ -124,13 +124,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       drawCallback: function ( settings ) {
           var api = this.api();
           var rows = api.rows( {page:'current'} ).nodes();
-          var last = null;
-          let regex = /RET/;
           api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['invoice_code'].match(regex) != null){
-              $(rows).eq(i).addClass('bg-lightblue color-palette');
-              $(rows).eq(i).remove();
-            }
             if(index['is_cancelled'] == true){
               $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
             }

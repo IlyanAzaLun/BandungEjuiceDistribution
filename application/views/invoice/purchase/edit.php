@@ -319,6 +319,15 @@ $i = 0; ?>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                <input type="hidden" name="status_payment" value="credit">
+                                <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment=='payed'?'checked':'' ?> value='payed'>
+                                <label for="status_payment" class="custom-control-label"><?=strtolower(lang('is_status_payment'))?></label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /.card-body -->

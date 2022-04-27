@@ -61,7 +61,7 @@ class Returns extends Sale
 				$items[$key]['item_unit'] = post('item_unit')[$key];
 				$items[$key]['item_capital_price'] = post('item_capital_price')[$key];
 				$items[$key]['item_selling_price'] = post('item_selling_price')[$key];
-				$items[$key]['item_discount'] = post('item_discount')[$key];
+				$items[$key]['item_discount'] = (post('total_price')[$key] == 0)?setCurrency(post('item_capital_price')[$key])*(post('item_order_quantity_current')[$key]-post('item_order_quantity')[$key]):post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
 				$items[$key]['status_return'] = post('status_return')[$key];
@@ -99,6 +99,8 @@ class Returns extends Sale
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
+				'is_child' => 1,
+				'is_cancelled' => 0,
 			);
 			try {
 				echo '<pre>';
@@ -209,6 +211,8 @@ class Returns extends Sale
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
+				'is_cancelled' => 0,
+
 			);
 			try {
 				// EDIT
@@ -294,6 +298,7 @@ class Returns extends Sale
 		$request['note'] = $data['note'];
 		$request['expedition'] = $data['expedition'];
 		$request['services_expedition'] = $data['services_expedition'];
+		$this->sale_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['created_at'] = $data['created_at'];
@@ -305,8 +310,8 @@ class Returns extends Sale
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_at'] = $data['created_at'];
 			$request['created_by'] = logged('id');
+			$request['is_child'] = $data['is_child'];
 			//	
-			$this->sale_model->update_by_code($this->data['invoice_code_parents'], array('have_a_child' => $this->data['invoice_code']));
 			return $this->sale_model->create($request);
 		}
 		return $request;

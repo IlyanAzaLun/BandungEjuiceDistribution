@@ -62,6 +62,7 @@ class Purchase extends Invoice_controller
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => post('supplier_code'),
+					'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				);
 			}
 			//information payment
@@ -84,10 +85,15 @@ class Purchase extends Invoice_controller
 				'is_consignment' => post('is_consignment'),
 			);
 			try {
+				//Create
+				echo '<pre>';
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
+				$this->create_or_update_item_fifo($items);
+				echo "</pre>";
+				// die();
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -153,6 +159,7 @@ class Purchase extends Invoice_controller
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
 				$items[$key]['customer_code'] = post('supplier_code');
+				$items[$key]['is_cancelled'] = 0;
 				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
 					unset($items[$key]);
 				}
@@ -171,18 +178,20 @@ class Purchase extends Invoice_controller
 				'other_cost' => post('other_cost'),
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
-				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'status_payment' => post('status_payment'),
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'created_by' => logged('id'),
+				'is_consignment' => post('is_consignment'),
 			);
 			try {
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
+				$this->create_or_update_item_fifo($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -342,6 +351,8 @@ class Purchase extends Invoice_controller
 			$this->create_or_update_invoice($payment);
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
+			// CANCEL FIFO
+			$this->cancel_return_fifo($items);
 		} catch (\Throwable $th) {
 			echo "<pre>";
 			var_dump($th);
@@ -416,7 +427,7 @@ class Purchase extends Invoice_controller
 			} else {
 				$request[$key]['index_list'] = $key;
 				$request[$key]['created_by'] = logged('id');
-				$data_negatif[$key] = $request[$key];
+				$data_negatif[] = $request[$key];
 				unset($data_negatif[$key]['id']);
 			}
 		}
@@ -429,6 +440,47 @@ class Purchase extends Invoice_controller
 			return true;
 		}
 		return false;
+	}
+
+	protected function create_or_update_item_fifo($data)
+	{
+		$response = $this->items_fifo_model->get_items_fifo($this->data['invoice_code']);
+		$item = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['invoice_code'] = $this->data['invoice_code'];
+			$request[$key]['item_id'] = $value['item_id'];
+			$request[$key]['item_code'] = $item[$key]->item_code;
+			$request[$key]['item_name'] = $value['item_name'];
+			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
+			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
+			$request[$key]['item_unit'] = $value['item_unit'];
+			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
+			$request[$key]['total_price'] = setCurrency($value['total_price']);
+			$request[$key]['customer_code'] = $value['customer_code'];
+			if ($response) {
+				$request[$key]['id'] = $value['id'];
+				$request[$key]['updated_by'] = logged('id');
+				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
+				$request[$key]['is_cancelled'] = $value['is_cancelled'];
+				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+				$data_positif[] = $request[$key];
+			} else {
+				$request[$key]['created_at'] = $value['created_at'];
+				$request[$key]['created_by'] = logged('id');
+				// $this->purchase_model->create($request);
+				$data_negatif[] = $request[$key];
+			}
+		}
+		if (@$data_negatif) {
+			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id')) {
+				return true;
+			}
+		} else {
+			$this->items_fifo_model->update_batch($data_positif, 'id');
+			return true;
+		}
+		return $request;
 	}
 
 	protected function create_or_update_invoice($data)
@@ -447,6 +499,7 @@ class Purchase extends Invoice_controller
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
 		$request['created_at'] = $data['created_at'];
+		$request['is_consignment'] = $data['is_consignment'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['cancel_note'] = $data['cancel_note'];
@@ -457,7 +510,6 @@ class Purchase extends Invoice_controller
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_by'] = logged('id');
-			$request['is_consignment'] = $data['is_consignment'];
 			//	
 			return $this->purchase_model->create($request);
 		}
@@ -560,6 +612,7 @@ class Purchase extends Invoice_controller
 		}
 		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
 		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
+		$this->db->where("purchasing.is_child", 0);
 		if ($dateStart != '') {
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);

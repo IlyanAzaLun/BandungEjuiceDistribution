@@ -55,7 +55,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th>no.</th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
-                  <th><?= lang('invoice_code_reference') ?></th>
                   <th><?= lang('invoice_code') ?></th>
                   <th><?= lang('supplier_name') ?></th>
                   <th><?= lang('total_price') ?></th>
@@ -124,20 +123,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       drawCallback: function ( settings ) {
           var api = this.api();
           var rows = api.rows( {page:'current'} ).nodes();
-          var last = null;
-          let regex = /INV/;
           api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['invoice_code'].match(regex) != null){
-              $(rows).eq(i).addClass('bg-lightblue color-palette');
-              $(rows).eq(i).remove();
-            }
             if(index['is_cancelled'] == true){
               $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
             }
           })
       },
       ajax: {
-        "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
+        "url": "<?php echo url('invoice/purchases/returns/serverside_datatables_data_purchase_returns') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -155,10 +148,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "updated_at"
-        },
-        {
-          data: "invoice_code_reference",
-          visible: false,
         },
         {
           data: "invoice_code",

@@ -17,11 +17,11 @@ function sum_sub_total_item_returns(row) {
     let item_discount = $(`.${row} td input[data-id='discount']`).val();
     let total_price_current = $(`.${row} td input[data-id='total_price_current']`).val();
     let total_price = $(`.${row} td input[data-id='total_price']`);
-    if (currencyToNum(item_discount) == (currencyToNum(item_capital_price) * parseInt(item_order_quantity_current))) {
+    if (total_price.val() == 0) {
         total_price.val(0)
     } else {
         total_price.val(
-            currency(currencyToNum(total_price_current) - (currencyToNum(item_capital_price) * parseInt(item_order_quantity)))
+            currency((currencyToNum(total_price_current)) - (currencyToNum(item_capital_price) * parseInt(item_order_quantity)))
         )
     }
 }

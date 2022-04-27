@@ -35,25 +35,35 @@ class Consignment extends Purchase
 
 		echo '<pre>'; // find item is sale where between date purchase and date now.
 		$item_on_invoice = $this->page_data['_data_item_invoice_parent'];
+		$data_on_invoice = $this->page_data['_data_invoice_parent'];		
 		
 		$this->db->select(
 			'item_id
 			,item_code
 			,item_name
 			,index_list
-			,SUM(IF(item_status = "IN", item_quantity, NULL)) as item_in
-			,SUM(IF(item_status = "IN", concat("-",item_quantity), item_quantity)) as item_is_sold
-			,SUM(IF(item_status = "OUT", item_quantity, NULL)) as item_out
+			,IF(item_status = "IN", item_quantity, NULL) as item_in
+			,IF(item_status = "IN", concat("-",item_quantity), item_quantity) as item_is_sold
+			,IF(item_status = "OUT", item_quantity, NULL) as item_out
 			,item_capital_price
-			,item_selling_price'
+			,item_selling_price
+			,total_price
+			,created_at
+			,updated_at'
 		);
 		$this->db->where_in('item_code', array_unique(array_column($item_on_invoice, 'item_code')));
 		$this->db->where('is_cancelled', 0);
-		$this->db->where("created_at >=", array_column($item_on_invoice, 'created_at')[0]);
-		$this->db->where("created_at <=", date("Y-m-d H:i:s"));
+		
+		$this->db->where("created_at >=", $data_on_invoice->created_at);
+		$this->db->where("created_at <=", $data_on_invoice->status_payment == 'payed'? $data_on_invoice->updated_at: date("Y-m-d H:i:s"));
 		$this->db->like('invoice_code', '/SALE/', 'both');
-		$this->db->group_by('item_code');
+		// $this->db->group_by('item_code');
 		$this->page_data['sale_out'] = $this->db->get('invoice_transaction_list_item')->result();
+
+		// var_dump($item_on_invoice);
+		// var_dump($this->db->last_query());
+		// var_dump($this->page_data['sale_out']);
+		// die();
 		echo '</pre>';
 
 		$this->page_data['title'] = 'purchase_info';

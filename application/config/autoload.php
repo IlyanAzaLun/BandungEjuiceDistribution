@@ -142,6 +142,7 @@ $autoload['model'] = array(
 	'templates_model',
 	'item/items_model',
 	'item/items_history_model',
+	'item/items_fifo_model',
 	'customer_model',
 	'supplier_model',
 	'address_model',

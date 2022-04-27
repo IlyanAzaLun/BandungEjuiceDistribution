@@ -474,7 +474,7 @@ class Sale extends Invoice_controller
 				$data_positif[] = $request[$key];
 			} else {
 				$request[$key]['created_by'] = logged('id');
-				$data_negatif[$key] = $request[$key];
+				$data_negatif[] = $request[$key];
 				unset($data_negatif[$key]['id']);
 			}
 		}
