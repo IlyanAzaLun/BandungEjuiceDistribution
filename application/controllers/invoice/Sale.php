@@ -42,7 +42,6 @@ class Sale extends Invoice_controller
 			$this->page_data['page']->submenu = 'sale_list';
 			$this->load->view('invoice/sale/form', $this->page_data);
 		}else{
-			echo '<pre>';
 			$this->data['invoice_code'] = $this->sale_model->get_code_invoice_sale();
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
@@ -89,16 +88,18 @@ class Sale extends Invoice_controller
 				'note' => post('note'),
 				'reference_order' => get('id'),
 			);
-			var_dump($payment);
+			// Check
+			echo '<pre>';
+			var_dump($this->create_or_update_item_fifo($items));
 			echo '</pre>';
-			// die();
+			die();
 			try {
 				// CREATE
-				$this->order_model->update_by_code(get('id'), array('is_created' => 1));
-				$this->create_item_history($items, ['CREATE', 'UPDATE']);
-				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
-				// $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
+				// $this->order_model->update_by_code(get('id'), array('is_created' => 1));
+				// $this->create_item_history($items, ['CREATE', 'UPDATE']);
+				// $this->create_or_update_invoice($payment);
+				// $this->create_or_update_list_item_transcation($items);
+				// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -194,7 +195,13 @@ class Sale extends Invoice_controller
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'reference_order' => get('id'),
-			);
+			);			// Check
+			
+			echo '<pre>';
+			var_dump($this->create_or_update_item_fifo($items));
+			echo '</pre>';
+			die();
+
 			try {
 				// EDIT
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
@@ -441,7 +448,46 @@ class Sale extends Invoice_controller
 		return $request;
 	}
 
-
+	protected function create_or_update_item_fifo($data)
+	{
+		$item = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			$request[$key]['invoice_code'] = $this->data['invoice_code'];
+			$request[$key]['item_id'] = $value['item_id'];
+			$request[$key]['item_code'] = $item[$key]->item_code;
+			$request[$key]['item_name'] = $value['item_name'];
+			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
+			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
+			$request[$key]['item_unit'] = $value['item_unit'];
+			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
+			$request[$key]['total_price'] = setCurrency($value['total_price']);
+			$request[$key]['customer_code'] = $value['customer_code'];
+			if ($value['id']) {
+				$request[$key]['id'] = $value['id'];
+				$request[$key]['updated_by'] = logged('id');
+				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
+				$request[$key]['is_cancelled'] = $value['is_cancelled'];
+				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+				$data_positif[] = $request[$key];
+			} else {
+				$request[$key]['created_at'] = $value['created_at'];
+				$request[$key]['created_by'] = logged('id');
+				// $this->purchase_model->create($request);
+				$data_negatif[] = $request[$key];
+			}
+		}
+		if (@$data_negatif) {
+			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id')) {
+				return true;
+			}
+		} else {
+			$this->items_fifo_model->update_batch($data_positif, 'id');
+			return true;
+		}
+		return $request;
+	}
+	
 	protected function create_or_update_list_item_transcation($data)
 	{
 		$item = array();

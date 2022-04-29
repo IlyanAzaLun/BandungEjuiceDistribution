@@ -344,6 +344,9 @@ class Purchase extends Invoice_controller
 			}
 			//DITAMBAH
 		}
+		// HELL YEAH DUDE, FELL DIZZY HERE..
+		// IF INVOICE HAVE INVOICE_RETUR, THE INVOICE WANT TO CANCEL. MUST INVOICE_RETUR FIRST TO CANCEL..
+		// IF INVOICE HAVE INVOICE_RETUR, CANCELLD FIRST BEFORE INVOICE_RETUR, HAVE SOME TRUBLE WITH INVOICE AND QUANTITY
 		$payment['is_cancelled'] = 1;
 		$payment['cancel_note'] = $this->input->post('note');
 		try {
@@ -351,8 +354,7 @@ class Purchase extends Invoice_controller
 			$this->create_or_update_invoice($payment);
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
-			// CANCEL FIFO
-			$this->cancel_return_fifo($items);
+			$this->create_or_update_item_fifo($items);
 		} catch (\Throwable $th) {
 			echo "<pre>";
 			var_dump($th);
@@ -444,7 +446,6 @@ class Purchase extends Invoice_controller
 
 	protected function create_or_update_item_fifo($data)
 	{
-		$response = $this->items_fifo_model->get_items_fifo($this->data['invoice_code']);
 		$item = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
@@ -458,7 +459,7 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['customer_code'] = $value['customer_code'];
-			if ($response) {
+			if ($value['id']) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');

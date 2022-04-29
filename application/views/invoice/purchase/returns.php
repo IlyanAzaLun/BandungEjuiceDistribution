@@ -103,7 +103,6 @@
                                             <td><?= $key+1 ?>.</td>
                                             <td>
                                                 <input disabled type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
-                                                <input type="hidden" name="id_fifo[]" id="id_fifo" value="<?= $value->id ?>">
                                                 <input type="hidden" name="index_list[]" id="index_list" value="<?= $value->index_list ?>">
                                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                                                 <input readonly class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required>
