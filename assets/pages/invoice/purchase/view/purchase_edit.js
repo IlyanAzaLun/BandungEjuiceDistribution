@@ -316,6 +316,7 @@ const main = () => {
 
                 // Grand Total
                 $('input#grand_total').val(currency(sum_grand_total()));
+                $('select[name=payment_type] option[value=consignment]').prop('selected', true);
             } else {
                 //Sub total
                 $('input#sub_total').val(currency(sum_sub_total()));

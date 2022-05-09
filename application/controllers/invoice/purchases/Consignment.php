@@ -133,6 +133,7 @@ class Consignment extends Purchase
 		purchasing.have_a_child as have_a_child, 
 		purchasing.created_at as purchasing_create_at, 
 		purchasing.total_price as total_price, 
+		purchasing.shipping_cost as shipping_cost, 
 		purchasing.discounts as discounts, 
 		purchasing.other_cost as other_cost, 
 		purchasing.payment_type as payment_type, 
@@ -175,7 +176,6 @@ class Consignment extends Purchase
 
 			$data[] = array(
 				'id' => $record->purchasing_id,
-				'invoice_code_reference' => $record->invoice_code_reference,
 				'invoice_code' => $record->invoice_code,
 				'have_a_child' => $record->have_a_child,
 				'supplier_code' => $record->supplier_code,

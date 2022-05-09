@@ -479,11 +479,11 @@ class Items extends MY_Controller
             $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
             $searchValue = $postData['search']['value']; // Search value
             $item_code = $postData['id'];
-            $dateStart = $postData['startDate'];
-            $dateFinal = $postData['finalDate'];    
+            $dateStart = @$postData['startDate'];
+            $dateFinal = @$postData['finalDate'];    
             $getCustomer = $postData['getCustomer'];
-            $customer = $postData['DCustomer'];
-            $supplier = $postData['DSupplier'];
+            $customer = @$postData['DCustomer'];
+            $supplier = @$postData['DSupplier'];
 
             ## Total number of records without filtering
             $this->db->select('count(*) as allcount');

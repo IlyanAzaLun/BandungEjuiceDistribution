@@ -80,7 +80,7 @@ $i = 0; ?>
                                 <tbody>
                                     <!-- TO -->
                                     <?php foreach ($_data_item_invoice_parent as $key => $value) : ?>
-                                        <?php if($value->item_code == $intersect_codex_item[$key] && $value->index_list == $intersect_index_item[$key]):?>
+                                        <?php if($value->item_code == isset($intersect_codex_item[$key]) && $value->index_list == isset($intersect_index_item[$key])):?>
                                         <tr class="input-<?= $key ?>" id="main">
                                             <td class="text-center"><input class="form-control form-control-sm" disabled value="<?=$key+1?>."></td>
                                             <td>

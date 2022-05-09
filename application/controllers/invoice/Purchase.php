@@ -387,7 +387,7 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
-			$request[$key]['status_type'] = ($value['id']) ? $status_type[1] : $status_type[0];
+			$request[$key]['status_type'] = isset($value['id']) ? $status_type[1] : $status_type[0];
 			$request[$key]['status_transaction'] = __CLASS__;
 			$request[$key]['created_by'] = logged('id');
 			$this->items_history_model->create($request[$key]);
@@ -419,7 +419,7 @@ class Purchase extends Invoice_controller
 			}
 			$request[$key]['item_description'] = $value['item_description'];
 			$request[$key]['customer_code'] = $value['customer_code'];
-			if ($value['id']) {
+			if (isset($value['id'])) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
@@ -433,8 +433,8 @@ class Purchase extends Invoice_controller
 				unset($data_negatif[$key]['id']);
 			}
 		}
-		if (@$data_negatif) {
-			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
+		if (isset($data_negatif)) {
+			if ($this->transaction_item_model->create_batch($data_negatif) || $this->transaction_item_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
 		} else {
@@ -459,7 +459,7 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['customer_code'] = $value['customer_code'];
-			if ($value['id']) {
+			if (isset($value['id'])) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
@@ -474,7 +474,7 @@ class Purchase extends Invoice_controller
 			}
 		}
 		if (@$data_negatif) {
-			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id')) {
+			if ($this->items_fifo_model->create_batch($data_negatif) || $this->items_fifo_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
 		} else {
@@ -524,7 +524,7 @@ class Purchase extends Invoice_controller
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 			$request[$key]['item_code'] = $item[$key]->item_code;
 			$request[$key]['item_name'] = $value['item_name'];
-			if ($value['id']) {
+			if (isset($value['id'])) {
 				$request[$key]['quantity'] = $item[$key]->quantity + ($value['item_order_quantity'] - $value['item_order_quantity_current']);
 			} else {
 				$request[$key]['quantity'] = $item[$key]->quantity + $value['item_order_quantity'];
@@ -590,6 +590,7 @@ class Purchase extends Invoice_controller
 		purchasing.created_at as purchasing_create_at, 
 		purchasing.total_price as total_price, 
 		purchasing.discounts as discounts, 
+		purchasing.shipping_cost as shipping_cost, 
 		purchasing.other_cost as other_cost, 
 		purchasing.payment_type as payment_type, 
 		purchasing.status_payment as status_payment, 

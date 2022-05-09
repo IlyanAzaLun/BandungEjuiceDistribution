@@ -102,6 +102,7 @@ class Payment extends MY_Controller
 		purchasing.created_at as purchasing_create_at, 
 		purchasing.total_price as total_price, 
 		purchasing.discounts as discounts, 
+		purchasing.shipping_cost as shipping_cost, 
 		purchasing.other_cost as other_cost, 
 		purchasing.payment_type as payment_type, 
 		purchasing.status_payment as status_payment, 

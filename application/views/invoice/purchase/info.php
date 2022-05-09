@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); 
-$i = 0; ?>
+$i = 0; $total_price = 0;?>
 <!-- Theme style -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
@@ -114,10 +114,10 @@ $i = 0; ?>
                                             <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td><?= $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
-                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_capital_price) ?></td>
-                                            <td style="display:none">Rp.<?= number_format($_data_item_invoice_child_[$i]->item_selling_price) ?></td>
-                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_discount) ?></td>
-                                            <td>Rp.<b><?= number_format($_data_item_invoice_child_[$i]->total_price) ?></b></td>
+                                            <td>Rp.<?= number_format((int)$_data_item_invoice_child_[$i]->item_capital_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format((int)$_data_item_invoice_child_[$i]->item_selling_price) ?></td>
+                                            <td>Rp.<?= number_format((int)$_data_item_invoice_child_[$i]->item_discount) ?></td>
+                                            <td>Rp.<b><?= number_format((int)$_data_item_invoice_child_[$i]->total_price) ?></b></td>
                                         </tr>
                                         <?php if((strlen($_data_item_invoice_child_[$i]->item_description)) >= 1):?>
                                         <tr>
@@ -138,10 +138,10 @@ $i = 0; ?>
                                                 <td>0 PCS</td>
                                                 <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
                                                 <?php endif;?>
-                                                <td>Rp.<?= number_format($value->item_capital_price) ?></td>
-                                                <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
-                                                <td>Rp.<?= number_format($value->item_discount) ?></td>
-                                                <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
+                                                <td>Rp.<?= number_format((int)$value->item_capital_price) ?></td>
+                                                <td style="display:none">Rp.<?= number_format((int)$value->item_selling_price) ?></td>
+                                                <td>Rp.<?= number_format((int)$value->item_discount) ?></td>
+                                                <td>Rp.<b><?= number_format((int)$value->total_price) ?></b></td>
                                             </tr>
                                             <?php if((strlen($value->item_description)) >= 1):?>
                                             <tr>
@@ -176,7 +176,7 @@ $i = 0; ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" readonly class="form-control currency" value="<?= number_format($invoice_information_transaction->total_price) ?>" min="1" required>
+                                            <input readonly type="text" readonly class="form-control currency" value="<?= number_format((int)$invoice_information_transaction->total_price) ?>" min="1" required>
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +187,7 @@ $i = 0; ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_information_transaction->discounts) ?>" required>
+                                            <input readonly type="text" class="form-control currency" value="<?= number_format((int)$invoice_information_transaction->discounts) ?>" required>
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@ $i = 0; ?>
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_information_transaction->shipping_cost) ?>" required>
+                                            <input readonly type="text" class="form-control currency" value="<?= number_format((int)$invoice_information_transaction->shipping_cost) ?>" required>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +211,7 @@ $i = 0; ?>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Rp</span>
                                     </div>
-                                    <input readonly type="text" class="form-control currency" value="<?= number_format($invoice_information_transaction->other_cost) ?>" required>
+                                    <input readonly type="text" class="form-control currency" value="<?= number_format((int)$invoice_information_transaction->other_cost) ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -222,7 +222,7 @@ $i = 0; ?>
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><b>Rp</b></span>
                                     </div>
-                                    <input type="text" readonly class="form-control currency" value="<?= number_format($invoice_information_transaction->grand_total) ?>" min="1" required>
+                                    <input type="text" readonly class="form-control currency" value="<?= number_format((int)$invoice_information_transaction->grand_total) ?>" min="1" required>
                                 </div>
                             </div>
                         </div>
@@ -236,7 +236,7 @@ $i = 0; ?>
                         <div class="col-lg-3 col-sm-12 text-danger">
                             <div class="form-group">
                                 <h6><b><?= lang('deposit') ?></b></h6>
-                                <input readonly type="text" class="form-control" value="<?= number_format($_data_invoice_parent->grand_total - $_data_invoice_child_->grand_total) ?>" required>
+                                <input readonly type="text" class="form-control" value="<?= number_format((int)$_data_invoice_parent->grand_total - (int)$_data_invoice_child_->grand_total) ?>" required>
                             </div>
                         </div>
                         <?php endif;?>

@@ -44,7 +44,8 @@ class Returns extends Purchase
 			$items = array();
 			$item = array();
 			foreach (post('item_code') as $key => $value) {
-				array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+				var_dump($value);
+				array_push($item, $this->db->get_where('items', ['item_code' => $value])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
@@ -382,14 +383,14 @@ class Returns extends Purchase
 				$data_positif[] = $request[$key];
 			} else {
 				$request[$key]['item_quantity'] = $value['item_order_quantity'];
-				$request[$key]['created_at'] = $value['created_at'];
+				$request[$key]['created_at'] = @$value['created_at'];
 				$request[$key]['created_by'] = logged('id');
 				// $this->purchase_model->create($request);
 				$data_negatif[] = $request[$key];
 			}
 		}
 		if (@$data_negatif) {
-			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id')) {
+			if ($this->items_fifo_model->create_batch($data_negatif) || $this->items_fifo_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
 		} else {
@@ -470,6 +471,7 @@ class Returns extends Purchase
 		purchasing.created_at as purchasing_create_at, 
 		purchasing.total_price as total_price, 
 		purchasing.discounts as discounts, 
+		purchasing.shipping_cost as shipping_cost, 
 		purchasing.other_cost as other_cost, 
 		purchasing.payment_type as payment_type, 
 		purchasing.status_payment as status_payment, 
