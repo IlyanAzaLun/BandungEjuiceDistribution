@@ -66,8 +66,8 @@ class Payment extends MY_Controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = $postData['startDate'];
-		$dateFinal = $postData['finalDate'];
+		$dateStart = @$postData['startDate'];
+		$dateFinal = @$postData['finalDate'];
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
@@ -172,7 +172,6 @@ class Payment extends MY_Controller
 			"iTotalRecords" => $totalRecords,
 			"iTotalDisplayRecords" => $totalRecordwithFilter,
 			"aaData" => $data,
-			"invoices_code" => $invoices_code
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}

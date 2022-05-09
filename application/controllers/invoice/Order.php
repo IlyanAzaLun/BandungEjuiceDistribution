@@ -367,8 +367,8 @@ class Order extends Invoice_controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = $postData['startDate'];
-		$dateFinal = $postData['finalDate'];
+		$dateStart = @$postData['startDate'];
+		$dateFinal = @$postData['finalDate'];
 		$logged = logged('id');
 		$haspermission = hasPermissions('warehouse_order_list');
 
