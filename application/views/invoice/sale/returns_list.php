@@ -148,7 +148,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           if(data['is_cancelled'] == true){
               $(row).addClass('bg-danger');
               $(row).find('a').addClass('text-light');
-              <?php if(!hasPermissions('permissions_list')):?>
+              
+              <?php if(!hasPermissions('backup_db')):?>
               $(row).css('display', 'none');
               <?php endif;?>
           }

@@ -109,6 +109,7 @@ class Returns extends Sale
 				$this->create_or_update_invoice($payment);
 				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
+				// update_fifo_items
 				$this->create_or_update_list_item_transcation($items);
 				echo '</pre>';
 			} catch (\Throwable $th) {
@@ -221,6 +222,8 @@ class Returns extends Sale
 				$this->create_or_update_invoice($payment);
 				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
+				// update_fifo_items
+
 				$this->create_or_update_list_item_transcation($items);
 				// echo '<hr>';
 				// var_dump($this->db->get_compiled_insert());
@@ -396,7 +399,7 @@ class Returns extends Sale
 		return false;
 	}
 
-	// RETURN SELLING 
+	// RETURN SELLING
 	protected function update_items($data)
 	{
 		$item = array();
@@ -404,17 +407,8 @@ class Returns extends Sale
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 			$request[$key]['item_code'] = $item[$key]->item_code;
 			$request[$key]['item_name'] = $value['item_name'];
-			// if ($value['id']) {
-			// 	//EDIT
-			// 	$request[$key]['quantity'] = ($item[$key]->quantity - $value['item_order_quantity_current']) + ($value['item_order_quantity'] + $value['item_order_quantity_current']);
-			// 	$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
-			// } else {
-			// 	$request[$key]['quantity'] = ($item[$key]->quantity + $value['item_order_quantity']);
-			// 	$request[$key]['capital_price'] = (setCurrency($value['item_capital_price']) > $item[$key]->capital_price) ? setCurrency($value['item_capital_price']) : $item[$key]->capital_price;
-			// }
 			if($value['status_return']){
 				if ($value['id']) {
-					//EDIT
 					$request[$key]['quantity'] = ($item[$key]->quantity - $value['item_order_quantity_current']) + ($value['item_order_quantity'] + $value['item_order_quantity_current']);
 				} else {
 					$request[$key]['quantity'] = ($item[$key]->quantity + $value['item_order_quantity']);

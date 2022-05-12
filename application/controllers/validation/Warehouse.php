@@ -82,8 +82,6 @@ class Warehouse extends MY_Controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'note' => post('note'),
 				'created_by' => logged('id'),
 			);
@@ -137,11 +135,10 @@ class Warehouse extends MY_Controller
 			$request[$key]['item_total_price'] = setCurrency($value['total_price']);
 			$request[$key]['item_description'] = $value['item_description'];
 			$request[$key]['customer_code'] = $value['customer_code'];
-			if ($value['id']) {
+			if (isset($value['id'])) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
-				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$request[$key]['status_available'] = $value['status_available'];
 				$data_positif[] = $request[$key];
 			} else {
@@ -168,7 +165,7 @@ class Warehouse extends MY_Controller
 
 		$request['note'] = $data['note'];
 		if ($response) {
-			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['is_cancelled'] = @$data['is_cancelled'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//

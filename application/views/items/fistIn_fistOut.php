@@ -76,49 +76,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php echo form_close(); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
-                <tr>
-                    <th>No.</th>
-                    <th><?= lang('created_at') ?></th>
-                    <th><?= lang('date') ?></th>
-                    <th><?= lang('updated_at') ?></th>
-                    <th><?= lang('invoice_reference') ?></th>
-                    <th><?= lang('customer') ?></th>
-                    <th><?= lang('item_code') ?></th>
-                    <th><?= lang('item_name') ?></th>
-                    <th><?= lang('item_quantity_in') ?></th>
-                    <th><?= lang('item_quantity_out') ?></th>
-                    <th><?= lang('status_transaction') ?></th>
-                    <th><?= lang('item_quantity') ?></th>
-                    <th><?= lang('item_capital_price') ?></th>
-                    <th><?= lang('item_selling_price') ?></th>
-                    <th><?= lang('item_discount') ?></th>
-                    <th><?= lang('total_price') ?></th>
-                    <th><?= lang('item_description') ?></th>
-                    <th><?= lang('created_by') ?></th>
-                    <th><?= lang('updated_by') ?></th>
-                </tr>
+                    <tr>
+                        <th><?= lang('date') ?></th>
+                        <th><?= lang('invoice_code') ?></th>
+                        <th><?= lang('item_code') ?></th>
+                        <th><?= lang('item_name') ?></th>
+                        <th><?= lang('item_quantity') ?></th>
+                        <th><?= lang('item_discount') ?></th>
+                        <th><?= lang('total_price') ?></th>
+                        <th><?= lang('created_by') ?></th>
+                        <th><?= lang('updated_by') ?></th>
+                    </tr>
                 </thead>
                 <tbody>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>No.</th>
-                        <th><?= lang('created_at') ?></th>
                         <th><?= lang('date') ?></th>
-                        <th><?= lang('updated_at') ?></th>
-                        <th><?= lang('invoice_reference') ?></th>
-                        <th><?= lang('customer') ?></th>
+                        <th><?= lang('invoice_code') ?></th>
                         <th><?= lang('item_code') ?></th>
                         <th><?= lang('item_name') ?></th>
-                        <th><?= lang('item_quantity_in') ?></th>
-                        <th><?= lang('item_quantity_out') ?></th>
-                        <th><?= lang('status_transaction') ?></th>
                         <th><?= lang('item_quantity') ?></th>
-                        <th><?= lang('item_capital_price') ?></th>
-                        <th><?= lang('item_selling_price') ?></th>
                         <th><?= lang('item_discount') ?></th>
                         <th><?= lang('total_price') ?></th>
-                        <th><?= lang('item_description') ?></th>
                         <th><?= lang('created_by') ?></th>
                         <th><?= lang('updated_by') ?></th>
                     </tr>
@@ -171,12 +151,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         responsive: true,
         autoWidth: false,
         lengthMenu: [
-        [10, 25, 50, 100, 200, <?=$this->db->get('invoice_transaction_list_item')->num_rows()?>], 
-        [10, 25, 50, 100, 200, "All"]
+            [10, 25, 50, 100, 200, <?=$this->db->get('fifo_items')->num_rows()?>], 
+            [10, 25, 50, 100, 200, "All"]
         ],
-        order: [[ 2, "desc" ]],
         ajax: {
-        "url": "<?php echo url('items/serverside_datatables_data_items_transaction') ?>",
+        "url": "<?php echo url('items/serverside_datatabels_data_items_fifo') ?>",
         "type": "POST",
         "data": function(d) {
             d.startDate = startdate;
@@ -187,61 +166,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             d.getCustomer = "<?= $this->input->get('customer') ?>";
             }
         },
-        rowCallback: function(row, data, index){
-            if(data['is_cancelled'] == true){
-                $(row).addClass('bg-danger');
-                $(row).find('a').addClass('text-light');
-                
-                <?php if(!hasPermissions('backup_db')):?>
-                $(row).css('display', 'none');
-                <?php endif;?>
-            }
-        },
-        columns: [{
-                data: "transaction_id"
-            },
+        columns: [
             {
-                visible: false,
-                data: "transaction_created_at"
-            },
-            {
-                data: "transaction_date_at",
-                render: function(data, type, row){
-                    return row['transaction_date_at']
-                }
-            },
-            {
-                visible: false,
-                data: "transaction_updated_at"
+                data: "fifo_date_at",
             },
             {
                 data: "invoice_code",
-                render: function(data, type, row) {
-                    let url =  '';
-                    if(data.match(/ORDER/)){
-                        url = 'order';
-                    }else if(data.match(/PURCHASE/)){
-                        url = 'purchase';
-                    }else{
-                        url = 'sale';
-                    }
-                    if (data) {
-                        return `<a href="${location.base}invoice/${url}/info?id=${data}">${data}</a>`;
-                    }
-                    return '';
-                }
-            },
-            {
-                data: "customer_code",
-                render: function(data, type, row){
-                    if(row['supplier_name']){
-                        return `${row['supplier_name']}`;
-                    }else if(row['customer_name']){
-                        return `${row['customer_name']}`;
-                    }else{
-                        return data;
-                    }
-                }
             },
             {
                 data: "item_code",
@@ -252,72 +182,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 visible: false,
             },
             {
-                data: "item_in",
-                render: function(data, type, row) {
-                    let result = `${data} ${row['item_unit']}`
-                    return `${(data)?result: ''}`
-                }
-            },
-            {
-                data: "item_out",
-                render: function(data, type, row) {
-                    let result = `${data} ${row['item_unit']}`
-                    return `${(data)?result: ''}`
-                }
-            },
-            {
-                data: "item_status"
-            },
-            {
-                data: "item_current_quantity",
-                render: function(data, type, row){
-                    return parseInt(data)
-                }
-            },
-            {
-                data: "item_capital_price",
-                visible: false,
-                render: function(data, type, row) {
-                    return data ? currency(data) : 0;
-                }
-            },
-            {
-                data: "item_selling_price",
-                visible: false,
-                render: function(data, type, row) {
-                    return data ? currency(data) : 0;
-                }
+                data: "item_quantity",
             },
             {
                 data: "item_discount",
-                visible: false,
-                render: function(data, type, row) {
-                    return data ? currency(data) : 0;
+                render: function(data, type, row){
+                    return currency(data);
                 }
             },
             {
                 data: "total_price",
-                visible: false,
-                render: function(data, type, row) {
-                    return data ? currency(data) : 0;
+                render: function(data, type, row){
+                    return currency(data);
                 }
             },
             {
-                data: "item_description",
-                visible: false
+                data: "created_by",
             },
             {
-                data: "transaction_created_by",
-                render: function(data, type, row) {
-                    return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`
-                }
-            },
-            {
-                data: "transaction_updated_by",
-                visible: false,
-                render: function(data, type, row) {
-                    return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`
-                }
+                data: "updated_by",
             }
         ],
         buttons: [{

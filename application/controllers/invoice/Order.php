@@ -68,17 +68,16 @@ class Order extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
 			// CREATE
 			$result = $this->validation_items($items);
-			$error = $result['error'];
-			$success = $result['success'];
-			$items = array_values($success);
-			$error = array_column(array_values($error), 'item_name');
+			$error = @$result['error'];
+			$success = @$result['success'];
+			$items = @array_values($success);
+			$failed = @array_values($error);
+			$error = @array_column($failed, 'item_name');
 
 			if(!$items){
 				$this->session->set_flashdata('alert-type', 'danger');
@@ -275,7 +274,7 @@ class Order extends Invoice_controller
 			$request[$key]['item_total_price'] = setCurrency($value['total_price']);
 			$request[$key]['item_description'] = $value['item_description'];
 			$request[$key]['customer_code'] = $value['customer_code'];
-			if ($value['id']) {
+			if (isset($value['id'])) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['item_quantity'] = $item[$key]->quantity + $value['item_order_quantity_current'];
 				$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
@@ -293,7 +292,7 @@ class Order extends Invoice_controller
 			}
 		}
 		if (@$data_negatif) {
-			if ($this->order_list_item_model->create_batch($data_negatif) && $this->order_list_item_model->update_batch($data_positif, 'id')) {
+			if ($this->order_list_item_model->create_batch($data_negatif) || $this->order_list_item_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
 		} else {

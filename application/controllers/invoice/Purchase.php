@@ -91,7 +91,7 @@ class Purchase extends Invoice_controller
 				$this->create_or_update_invoice($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
-				$this->create_or_update_item_fifo($items);
+				$this->create_or_update_list_item_fifo($items);
 				echo "</pre>";
 				// die();
 			} catch (\Throwable $th) {
@@ -187,11 +187,12 @@ class Purchase extends Invoice_controller
 				'is_consignment' => post('is_consignment'),
 			);
 			try {
+				// EDIT
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
-				$this->create_or_update_item_fifo($items);
+				$this->create_or_update_list_item_fifo($items);
 			} catch (\Throwable $th) {
 				echo "<pre>";
 				var_dump($th);
@@ -350,11 +351,12 @@ class Purchase extends Invoice_controller
 		$payment['is_cancelled'] = 1;
 		$payment['cancel_note'] = $this->input->post('note');
 		try {
+			// CANCEL
 			$this->create_item_history( $items, ['CANCELED', 'CANCELED']);
 			$this->create_or_update_invoice($payment);
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
-			$this->create_or_update_item_fifo($items);
+			$this->create_or_update_list_item_fifo($items);
 		} catch (\Throwable $th) {
 			echo "<pre>";
 			var_dump($th);
@@ -392,7 +394,8 @@ class Purchase extends Invoice_controller
 			$request[$key]['created_by'] = logged('id');
 			$this->items_history_model->create($request[$key]);
 		}
-		return $request;
+		return true;
+		// return $request;
 		// // return $this->items_history_model->create_batch($request); // NOT USED HERE...  DIFFERENT CONDITION TO USE HERE...
 	}
 
@@ -444,9 +447,10 @@ class Purchase extends Invoice_controller
 		return false;
 	}
 
-	protected function create_or_update_item_fifo($data)
+	protected function create_or_update_list_item_fifo($data)
 	{
 		$item = array();
+		$item_fifo = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
@@ -454,20 +458,24 @@ class Purchase extends Invoice_controller
 			$request[$key]['item_code'] = $item[$key]->item_code;
 			$request[$key]['item_name'] = $value['item_name'];
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
-			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['customer_code'] = $value['customer_code'];
 			if (isset($value['id'])) {
+				array_push($item_fifo, $this->db->get_where('fifo_items', ['id' => $value['id']])->row()); // Primary for find items with code item
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
+				
+				$request[$key]['item_quantity'] = $item_fifo[$key]->item_quantity + ($value['item_order_quantity'] - $value['item_order_quantity_current']);
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
 				$data_positif[] = $request[$key];
 			} else {
 				$request[$key]['created_at'] = $value['created_at'];
+				
+				$request[$key]['item_quantity'] = $value['item_order_quantity'];
 				$request[$key]['created_by'] = logged('id');
 				// $this->purchase_model->create($request);
 				$data_negatif[] = $request[$key];
@@ -502,8 +510,8 @@ class Purchase extends Invoice_controller
 		$request['created_at'] = $data['created_at'];
 		$request['is_consignment'] = $data['is_consignment'];
 		if ($response) {
-			$request['is_cancelled'] = $data['is_cancelled'];
-			$request['cancel_note'] = $data['cancel_note'];
+			$request['is_cancelled'] = @$data['is_cancelled'];
+			$request['cancel_note'] = @$data['cancel_note'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//

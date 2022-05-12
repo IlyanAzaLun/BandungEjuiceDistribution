@@ -149,7 +149,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-sm-3" style="display:none">
+                            <div class="col-sm" style="display:<?php echo !hasPermissions('backup_db')?'none':''?>">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('item_quantity') ?></label>

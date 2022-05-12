@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
       <div class="form-group">
         <label for="description"> <?php echo lang('item_description') ?></label>
-        <textarea type="text" class="form-control" name="description" id="description" placeholder="Enter Description"></textarea>
+        <textarea type="text" class="form-control" name="description" id="description" placeholder="Enter Description"><?php echo $permission->description ?></textarea>
       </div>
 
     </div>

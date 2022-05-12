@@ -277,6 +277,7 @@ $lang['broken'] = "Broken";
 $lang['item_list'] = "List item";
 $lang['item_list_information'] = "List item information";
 $lang['item_list_information_transaction'] = "Transaction item information";
+$lang['item_list_information_fifo'] = "First In Fisrt Out, Item information";
 $lang['item_add'] = "Add item";
 $lang['item_update'] = "Update item";
 $lang['item_code'] = "Item code";

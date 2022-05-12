@@ -257,6 +257,23 @@ class Items extends MY_Controller
         $this->load->view('items/transaction', $this->page_data);
     }
 
+    public function info_fifo()
+    {
+        ifPermissions('list_fifo');
+        
+        $this->page_data['page']->submenu = 'list';
+        $this->page_data['title'] = 'item_list_information_fifo';
+
+        $this->page_data['item'] = $this->items_model->getByCodeItem(get('id'));
+        if (!$this->page_data['item']) {
+            $this->load->view('errors/html/error_404');
+            return false;
+        }
+        $this->page_data['customer'] = $this->customer_model->get();
+        $this->page_data['supplier'] = $this->supplier_model->get();
+        $this->load->view('items/fistIn_fistOut', $this->page_data);
+    }
+
     public function delete()
     {
         ifPermissions('items_delete');
@@ -455,7 +472,131 @@ class Items extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    
+    public function serverside_datatabels_data_items_fifo()
+    {
+        ifPermissions('backup_db');
+        /**
+         * Information items fisrt in fisrt out
+         **/
+        $response = array();
+
+        $postData = $this->input->post();
+
+        ## Read value
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+        $item_code = $postData['id'];
+        $dateStart = @$postData['startDate'];
+        $dateFinal = @$postData['finalDate'];    
+        $getCustomer = $postData['getCustomer'];
+        $customer = @$postData['DCustomer'];
+        $supplier = @$postData['DSupplier'];
+
+        ## Total number of records without filtering
+        $this->db->select('count(*) as allcount');
+        $this->db->where('item_code', $item_code);
+        $this->db->where('is_cancelled', 0);
+        if ($customer || $supplier) {
+            $this->db->where('customer_code', $customer);
+            $this->db->or_where('customer_code', $supplier);
+        }
+        $records = $this->db->get('fifo_items')->result();
+        $totalRecords = $records[0]->allcount;
+
+        ## Total number of record with filtering
+        $this->db->select('count(*) as allcount');
+        if ($searchValue != '') {
+            $this->db->like('item_name', $searchValue, 'both');
+            $this->db->or_like('item_code', $searchValue, 'both');
+            $this->db->or_like('customer_code', $searchValue, 'both');
+        }
+        $this->db->where('item_code', $item_code);
+        $this->db->where('is_cancelled', 0);
+        if ($dateStart != '') {
+            $this->db->where("created_at >=", $dateStart);
+            $this->db->where("created_at <=", $dateFinal);
+        }
+        if ($customer || $supplier) {
+            $this->db->where('customer_code', $customer);
+            $this->db->or_where('customer_code', $supplier);
+        }
+        $records = $this->db->get('fifo_items')->result();
+        $totalRecordwithFilter = $records[0]->allcount;
+
+        ## Fetch records
+        $this->db->select('
+             fifo_items.id
+            ,fifo_items.invoice_code
+            ,fifo_items.item_code
+            ,fifo_items.item_name
+            ,fifo_items.item_quantity
+            ,fifo_items.item_discount
+            ,fifo_items.total_price
+            ,fifo_items.customer_code
+            ,fifo_items.is_cancelled
+            ,fifo_items.parent
+            ,user_created.name as created_by
+            ,user_updated.name as updated_by
+            ,IF(fifo_items.updated_at, fifo_items.updated_at, fifo_items.created_at) as fifo_date_at
+        ');
+        $this->db->join('users user_created', 'user_created.id=fifo_items.created_by', 'left');
+        $this->db->join('users user_updated', 'user_updated.id=fifo_items.updated_by', 'left');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = fifo_items.customer_code', 'left');
+        $this->db->join('customer_information customer', 'customer.customer_code = fifo_items.customer_code', 'left');
+        $this->db->where('item_code', $item_code);
+        $this->db->where('is_cancelled', 0);
+        if ($searchValue != '') {
+            $this->db->like('item_name', $searchValue, 'both');
+            $this->db->or_like('fifo_items.customer_code', $searchValue, 'both');
+        }
+        if ($customer || $supplier) {
+            $this->db->where("(fifo_items.customer_code = '$customer' OR fifo_items.customer_code = '$supplier')");
+        }
+        if($dateStart != '') {
+            $this->db->where("((fifo_items.created_at >= '$dateStart' AND fifo_items.created_at <= '$dateFinal') OR (fifo_items.updated_at >= '$dateStart' AND fifo_items.updated_at <= '$dateFinal'))");
+        }
+        $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->limit($rowperpage, $start);
+        $records = $this->db->get("fifo_items")->result();
+        $data = array();
+        
+        // echo '<pre>';
+        // var_dump($this->db->last_query());
+        // echo '</pre>';
+        // die();
+
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "invoice_code" => $record->invoice_code,
+                "item_code" => $record->item_code,
+                "item_name" => $record->item_name,
+                "item_quantity" => $record->item_quantity,
+                "item_discount"=>$record->item_discount,
+                "total_price"=>$record->total_price,
+                "customer_code"=>$record->customer_code,
+                "is_cancelled"=>$record->is_cancelled,
+                "parent"=>$record->parent,
+                "created_by"=>$record->created_by,
+                "updated_by"=>$record->updated_by,
+                "fifo_date_at"=>$record->fifo_date_at,
+            );
+        }
+
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data,
+        );
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
 
     public function serverside_datatables_data_items_transaction()
     {
@@ -463,7 +604,7 @@ class Items extends MY_Controller
          * List item transcation
          * Schedule: Order, show to list transaction, and removed if created invoice is done. 
          *  
-         * **/
+         **/
         ifPermissions('items_list');
         try {
             $response = array();

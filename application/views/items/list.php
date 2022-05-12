@@ -165,6 +165,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <a target="_blank" href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-tw fa-edit text-primary"></i></a>
                 <a target="_blank" href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History items"><i class="fa fa-tw fa-history text-primary"></i></a>
                 <a target="_blank" href="<?= url('items') ?>/info_transaction?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History transaction items"><i class="fa fa-tw fa-layer-group text-primary"></i></a>
+                <?php if(hasPermissions('list_fifo')):?>
+                <a target="_blank" href="<?= url('items') ?>/info_fifo?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Fifo items"><i class="fa fa-tw fa-book text-primary"></i></a>
+                <?php endif;?>
                 </div>`;
           }
         },

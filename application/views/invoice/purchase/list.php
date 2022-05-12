@@ -127,6 +127,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           api.rows( {page:'current'} ).data().each(function(index, i){
             if(index['is_cancelled'] == true){
               $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
+              <?php if(!hasPermissions('backup_db')):?>
+              $(rows).eq(i).remove();
+              <?php endif;?>
             }
           })
       },

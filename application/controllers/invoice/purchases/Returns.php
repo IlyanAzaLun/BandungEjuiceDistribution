@@ -44,8 +44,7 @@ class Returns extends Purchase
 			$items = array();
 			$item = array();
 			foreach (post('item_code') as $key => $value) {
-				var_dump($value);
-				array_push($item, $this->db->get_where('items', ['item_code' => $value])->row()); // Primary for find items with code item
+				// array_push($item, $this->db->get_where('items', ['item_code' => $value])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
@@ -161,7 +160,7 @@ class Returns extends Purchase
 			$items = array();
 			$item = array();
 			foreach (post('item_code') as $key => $value) {
-				array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+				array_push($item, $this->db->get_where('items', ['item_code' => post('item_code')[$key]])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
@@ -221,6 +220,7 @@ class Returns extends Purchase
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				var_dump($this->create_or_update_item_fifo($items));
+				var_dump($this->db->last_query());
 				echo '</pre>';
 			} catch (\Throwable $th) {
 				echo "<pre>";
@@ -379,24 +379,24 @@ class Returns extends Purchase
 				$request[$key]['item_quantity'] = $value['item_order_quantity']+$value['item_order_quantity_current'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
-				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+				$this->items_fifo_model->update($value['id'], $request[$key]);
 				$data_positif[] = $request[$key];
 			} else {
 				$request[$key]['item_quantity'] = $value['item_order_quantity'];
 				$request[$key]['created_at'] = @$value['created_at'];
 				$request[$key]['created_by'] = logged('id');
-				// $this->purchase_model->create($request);
+				$this->items_fifo_model->create($request[$key]);
 				$data_negatif[] = $request[$key];
 			}
 		}
-		if (@$data_negatif) {
-			if ($this->items_fifo_model->create_batch($data_negatif) || $this->items_fifo_model->update_batch($data_positif, 'id')) {
-				return true;
-			}
-		} else {
-			$this->items_fifo_model->update_batch($data_positif, 'id');
-			return true;
-		}
+		// if (@$data_negatif) {
+		// 	if ($this->items_fifo_model->create_batch($data_negatif) || $this->items_fifo_model->update_batch($data_positif, 'id')) {
+		// 		return true;
+		// 	}
+		// } else {
+		// 	$this->items_fifo_model->update_batch($data_positif, 'id');
+		// 	return true;
+		// }
 		return $request;
 	}
 
