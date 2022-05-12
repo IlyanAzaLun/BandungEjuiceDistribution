@@ -245,7 +245,7 @@ class Customer extends MY_Controller
         if (ifPermissions('order_create') || ifPermissions('warehouse_order_validation_available')) {
             $search = (object) post('search');
             $this->db->limit(5);
-            if ($search->value) {
+            if (isset($search->value)) {
                 $this->db->like('customer_information.customer_code', $search->value, 'both');
                 $this->db->or_like('customer_information.store_name', $search->value, 'both');
                 $this->db->or_like('customer_information.owner_name', $search->value, 'both');

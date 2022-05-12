@@ -550,6 +550,7 @@ class Items extends MY_Controller
         $this->db->join('customer_information customer', 'customer.customer_code = fifo_items.customer_code', 'left');
         $this->db->where('item_code', $item_code);
         $this->db->where('is_cancelled', 0);
+        $this->db->where('is_readable', 1);
         if ($searchValue != '') {
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('fifo_items.customer_code', $searchValue, 'both');

@@ -44,7 +44,7 @@ class Returns extends Purchase
 			$items = array();
 			$item = array();
 			foreach (post('item_code') as $key => $value) {
-				// array_push($item, $this->db->get_where('items', ['item_code' => $value])->row()); // Primary for find items with code item
+				// array_push($item, $this->db->get_where('items', ['item_code' => post('item_code')[$key]])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
@@ -103,7 +103,7 @@ class Returns extends Purchase
 				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
-				var_dump($this->create_or_update_item_fifo($items));
+				$this->create_or_update_item_fifo($items);
 				echo '</pre>';
 			} catch (\Throwable $th) {
 				echo "<pre>";
@@ -160,7 +160,7 @@ class Returns extends Purchase
 			$items = array();
 			$item = array();
 			foreach (post('item_code') as $key => $value) {
-				array_push($item, $this->db->get_where('items', ['item_code' => post('item_code')[$key]])->row()); // Primary for find items with code item
+				// array_push($item, $this->db->get_where('items', ['item_code' => post('item_code')[$key]])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
 				$items[$key]['index_list'] = post('index_list')[$key];
 				$items[$key]['item_id'] = post('item_id')[$key];
@@ -347,18 +347,9 @@ class Returns extends Purchase
 				// unset($data_negatif[$key]['id']);
 			}
 		}
-		// if (@$data_negatif) {
-		// 	if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
-		// 		return true;
-		// 	}
-		// } else {
-		// 	$this->transaction_item_model->update_batch($data_positif, 'id');
-		// 	return true;
-		// }
 		return $request;
 	}
 	
-
 	protected function create_or_update_item_fifo($data)
 	{
 		$item = array();
@@ -389,14 +380,6 @@ class Returns extends Purchase
 				$data_negatif[] = $request[$key];
 			}
 		}
-		// if (@$data_negatif) {
-		// 	if ($this->items_fifo_model->create_batch($data_negatif) || $this->items_fifo_model->update_batch($data_positif, 'id')) {
-		// 		return true;
-		// 	}
-		// } else {
-		// 	$this->items_fifo_model->update_batch($data_positif, 'id');
-		// 	return true;
-		// }
 		return $request;
 	}
 

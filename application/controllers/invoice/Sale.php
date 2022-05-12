@@ -90,7 +90,7 @@ class Sale extends Invoice_controller
 			);
 			try {
 				// // CREATE
-				$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
+				var_dump($this->update_item_fifo($items)); // UPDATE ON PURCHASE QUANTITY
 				$this->order_model->update_by_code(get('id'), array('is_created' => 1));
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
@@ -371,14 +371,16 @@ class Sale extends Invoice_controller
 			$this->create_or_update_invoice($payment);
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
+
 			// UPDATE FIFO ITEMS CANCEL
-			// $this->create_or_update_list_item_fifo($items);
 			// update list_item_fifo only cancel..
+			var_dump($this->update_list_item_fifo_on_cancel($items)); // PREPARE TOO FOR CANCEL CHILD 
 
 			$this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Cancel Sale Invoice Successfully');	
 			echo '</pre>';
+			die();
 			
 			redirect('invoice/sale/list');
 	}
@@ -449,32 +451,6 @@ class Sale extends Invoice_controller
 		}
 		return $request;
 	}
-
-	protected function update_item_fifo($data)
-	{
-		$item = array();
-		foreach ($data as $key => $value) {
-			$a = 1;
-			// in development mode error is showed, but nothing worng
-			if (isset($value['id'])) {				
-				$status = ($value['item_order_quantity'] - $value['item_order_quantity_current'] <= 0)? true : false;
-				while ($a <= abs($value['item_order_quantity'] - $value['item_order_quantity_current'])) {
-					$item[$a] = $this->items_fifo_model->select_fifo_by_item_code($value['item_code']); // Primary for find items with code item
-					//'Edit';
-					$result[$a] = $this->items_fifo_model->update_fifo_by_item_code($item[$a], $status);
-					$a++;
-				}
-			} else {
-				while ($a <= $value['item_order_quantity']) {
-					$item[$a] = $this->items_fifo_model->select_fifo_by_item_code($value['item_code']); // Primary for find items with code item
-					//'Create';
-					$result[$a] = $this->items_fifo_model->update_fifo_by_item_code($item[$a]);
-					$a++;
-				}
-			}
-		}
-		return $item;
-	}
 	
 	protected function create_or_update_list_item_transcation($data)
 	{
@@ -526,8 +502,12 @@ class Sale extends Invoice_controller
 	protected function create_or_update_list_item_fifo($data)
 	{
 		$item = array();
+		$item_fifo = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			// 
+			array_push($item_fifo, $this->items_fifo_model->select_fifo_by_item_code($value['item_code']));
+			// 
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
@@ -538,14 +518,16 @@ class Sale extends Invoice_controller
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['customer_code'] = $value['customer_code'];
-			$request[$key]['is_cancelled'] = 1;
+			$request[$key]['is_readable'] = 0;
 			if (isset($value['id'])) {
+				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
 				$data_positif[] = $request[$key];
 			} else {
+				$request[$key]['reference_purchase'] = $item_fifo[$key]->invoice_code;
 				$request[$key]['created_at'] = $value['created_at'];
 				$request[$key]['created_by'] = logged('id');
 				// $this->purchase_model->create($request);
@@ -581,6 +563,38 @@ class Sale extends Invoice_controller
 		}
 		return $request;
 		// return $this->items_model->update_batch($request, 'item_code');
+	}
+	
+	protected function update_item_fifo($data)
+	{
+		$item = array();
+		foreach ($data as $key => $value) {
+			$a = 1;
+			// in development mode error is showed, but nothing worng
+			if (isset($value['id'])) {				
+				$status = ($value['item_order_quantity'] - $value['item_order_quantity_current'] <= 0)? true : false;
+				while ($a <= abs($value['item_order_quantity'] - $value['item_order_quantity_current'])) {
+					// 'Edit';
+					$item[$a] = $this->items_fifo_model->select_fifo_by_item_code($value['item_code']); // Primary for find items with code item
+					$result[$a] = $this->items_fifo_model->update_fifo_by_item_code($item[$a], $status);
+					$a++;
+				}
+			} else {
+				while ($a <= $value['item_order_quantity']) {
+					// 'Create';
+					$item[$a] = $this->items_fifo_model->select_fifo_by_item_code($value['item_code']); // Primary for find items with code item
+					$result[$a] = $this->items_fifo_model->update_fifo_by_item_code($item[$a]);
+					$a++;
+				}
+			}
+		}
+		return $item;
+	}
+
+	// PREPARE TOO FOR CANCEL CHILD
+	protected function update_list_item_fifo_on_cancel($data)
+	{
+		return $data;
 	}
 
 	public function serverside_datatables_data_sale()

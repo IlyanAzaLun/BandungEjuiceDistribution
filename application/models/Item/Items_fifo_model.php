@@ -15,6 +15,7 @@ class Items_fifo_model extends MY_Model
     {
         $this->db->where('invoice_code', $data);
         $this->db->where('is_cancelled', 0);
+        $this->db->where('is_readable', 1);
         return $this->db->get($this->table)->result();
     }
 
@@ -36,9 +37,10 @@ class Items_fifo_model extends MY_Model
                     , `item_discount`
                     , `total_price`
                     , (total_price IS NOT TRUE) AS is_free
+                    , `is_readable`
                     , `is_cancelled`
             FROM fifo_items
-            WHERE item_code = '$data' AND is_cancelled = 0
+            WHERE item_code = '$data' AND (is_cancelled = 0 AND is_readable = 1)
             GROUP BY invoice, is_free)
             SELECT * FROM RECURSIVES
             WHERE RECURSIVES.item_quantity > 0")->row();

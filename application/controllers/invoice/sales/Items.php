@@ -12,6 +12,7 @@ class Items extends MY_Controller
 	public function remove_item_from_list_order_transcaction()
 	{
 		$order = $this->transaction_item_model->getById(post('id'));
+		$fifo_list_item = $this->items_fifo_model->getById(post('id'));
 		$item  = $this->items_model->getById($order->item_id);
 		$history = array(
 			'item_id' => $order->item_id, 
