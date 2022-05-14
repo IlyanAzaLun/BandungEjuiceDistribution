@@ -88,23 +88,14 @@ class Sale extends Invoice_controller
 				'note' => post('note'),
 				'reference_order' => get('id'),
 			);
-			try {
-				// // CREATE
-				var_dump($this->update_item_fifo($items)); // UPDATE ON PURCHASE QUANTITY
-				$this->order_model->update_by_code(get('id'), array('is_created' => 1));
-				$this->create_item_history($items, ['CREATE', 'UPDATE']);
-				$this->create_or_update_invoice($payment);
-				$this->create_or_update_list_item_transcation($items);
-				
-				// UPDATE FIFO ITEMS CREATE
-				$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
-				// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
-				die();
-			}
+			// // CREATE
+			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
+			$this->order_model->update_by_code(get('id'), array('is_created' => 1));
+			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
+			// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			
 			$this->activity_model->add("Create Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
@@ -197,25 +188,22 @@ class Sale extends Invoice_controller
 				'reference_order' => get('id'),
 			);// Check
 			
-			try {
-				// EDIT
-				$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
-				$this->create_item_history($items, ['CREATE', 'UPDATE']);
-				$this->create_or_update_invoice($payment);
-				$this->update_items($items);
-				$this->create_or_update_list_item_transcation($items);
-				
-				// UPDATE FIFO ITEMS EDIT
-				$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
+			echo '<pre>';
+			// // EDIT
+			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
+			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
+			// die();
+			
+			echo '</pre>';
+			$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Edit Sale Invoice Successfully');
 
-				$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
-				$this->session->set_flashdata('alert-type', 'success');
-				$this->session->set_flashdata('alert', 'Edit Sale Invoice Successfully');
-
-				redirect('invoice/sale/list');
-			} catch (\Throwable $th) {
-				var_dump( $th );
-			}
+			redirect('invoice/sale/list');
 		}
 	}
 
@@ -375,8 +363,9 @@ class Sale extends Invoice_controller
 			// UPDATE FIFO ITEMS CANCEL
 			// update list_item_fifo only cancel..
 			var_dump($this->update_list_item_fifo_on_cancel($items)); // PREPARE TOO FOR CANCEL CHILD 
+			var_dump($this->db->last_query()); 
 
-			$this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
+			// $this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Cancel Sale Invoice Successfully');	
 			echo '</pre>';
@@ -396,10 +385,12 @@ class Sale extends Invoice_controller
 			$request[$key]['item_id'] = $item[$key]->id;
 			$request[$key]['item_code'] = $value['item_code'];
 			$request[$key]['item_name'] = $value['item_name'];
-			if (isset($value['id'])) {
+			if ($value['id']) {
 				$request[$key]['item_quantity'] = $item[$key]->quantity;
+				$request[$key]['status_type'] = $status_type[1];
 			} else {
 				$request[$key]['item_quantity'] = $item[$key]->quantity + $value['item_order_quantity'];
+				$request[$key]['status_type'] = $status_type[0];
 			}
 			$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
@@ -407,7 +398,6 @@ class Sale extends Invoice_controller
 			$request[$key]['item_selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
-			$request[$key]['status_type'] = isset($value['id']) ? $status_type[1] : $status_type[0];
 			$request[$key]['status_transaction'] = __CLASS__;
 			$request[$key]['created_by'] = logged('id');
 			$this->items_history_model->create($request[$key]);
@@ -476,7 +466,7 @@ class Sale extends Invoice_controller
 			}
 			$request[$key]['item_description'] = $value['item_description'];
 			$request[$key]['customer_code'] = $value['customer_code'];
-			if (isset($value['id'])) {
+			if ($value['id']) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
@@ -519,18 +509,18 @@ class Sale extends Invoice_controller
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['customer_code'] = $value['customer_code'];
 			$request[$key]['is_readable'] = 0;
-			if (isset($value['id'])) {
+			if ($value['id']) {
 				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
-				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+				// $this->items_fifo_model->update_by_code($this->data['invoice_code'], $request[$key]);
 				$data_positif[] = $request[$key];
 			} else {
 				$request[$key]['reference_purchase'] = $item_fifo[$key]->invoice_code;
 				$request[$key]['created_at'] = $value['created_at'];
 				$request[$key]['created_by'] = logged('id');
-				// $this->purchase_model->create($request);
+				// $this->items_fifo_model->create($request[$key]);
 				$data_negatif[] = $request[$key];
 			}
 		}
@@ -565,13 +555,16 @@ class Sale extends Invoice_controller
 		// return $this->items_model->update_batch($request, 'item_code');
 	}
 	
+	/*
+	 * @param $data Type array data items to update fifo quantity, where purchase
+	 */
 	protected function update_item_fifo($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {
 			$a = 1;
 			// in development mode error is showed, but nothing worng
-			if (isset($value['id'])) {				
+			if ($value['id']) {				
 				$status = ($value['item_order_quantity'] - $value['item_order_quantity_current'] <= 0)? true : false;
 				while ($a <= abs($value['item_order_quantity'] - $value['item_order_quantity_current'])) {
 					// 'Edit';
@@ -591,10 +584,24 @@ class Sale extends Invoice_controller
 		return $item;
 	}
 
-	// PREPARE TOO FOR CANCEL CHILD
+	/*
+	 * PREPARE TOO FOR CANCEL CHILD
+	 * @data Type array Description: list item
+	 * 
+	 */
 	protected function update_list_item_fifo_on_cancel($data)
 	{
-		return $data;
+		$items = array();
+		$request = array();
+		// update list_item_fifo where return
+		$this->items_fifo_model->update_batch($data, 'id');
+		// prepare data
+		foreach ($data as $key => $value) {
+			array_push($items, $this->items_fifo_model->select_fifo_by_item_code($value['item_code']));
+			$request[$key]['id'] = $items[$key]->id;
+			$request[$key]['item_quantity'] = $items[$key]->item_quantity - $value['item_order_quantity'];
+		}
+		return $this->items_fifo_model->update_batch($request, 'id');
 	}
 
 	public function serverside_datatables_data_sale()

@@ -19,6 +19,53 @@ class Items_fifo_model extends MY_Model
         return $this->db->get($this->table)->result();
     }
 
+    /*
+     * Invoice Selected with item is decrese with return invoice
+     */ 
+    public function select_fifo_by_items($data)
+    {
+        $this->db->trans_start();
+        $this->db->trans_strict(FALSE);
+        // // UPDATE INVOICE PURCHASE
+        $result = $this->db->query(
+            "WITH RECURSIVES AS (SELECT 
+                `id`
+                , SUBSTRING(`invoice_code`, 5) AS invoice
+                , `created_at`
+                , `updated_at`
+                , `invoice_code`
+                , `item_code`
+                , `item_name`
+                , `item_quantity`
+                , `item_discount`
+                , `total_price`
+                , (total_price IS NOT TRUE) AS is_free
+                , `is_readable`
+                , `is_cancelled`
+            FROM fifo_items
+            WHERE item_code = '$data' AND (is_cancelled = 0 AND is_readable = 1) AND parent IS NULL
+            GROUP BY invoice, is_free)
+            SELECT * FROM RECURSIVES
+            WHERE RECURSIVES.item_quantity > 0")->row();
+        
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            # Something went wrong.
+            $this->db->trans_rollback();
+            return FALSE;
+        } 
+        else {
+            # Everything is Perfect. 
+            # Committing data to the database.
+            $this->db->trans_commit();
+            return $result;
+        }
+    }
+
+    /*
+     * Invoice Selected with item is decrese with return invoice
+     */ 
     public function select_fifo_by_item_code($data)
     {
         $this->db->trans_start();
@@ -26,19 +73,19 @@ class Items_fifo_model extends MY_Model
         // // UPDATE INVOICE PURCHASE
         $result = $this->db->query(
             "WITH RECURSIVES AS (SELECT 
-                    `id`
-                    , SUBSTRING(`invoice_code`, 5) AS invoice
-                    , `created_at`
-                    , `updated_at`
-                    , `invoice_code`
-                    , `item_code`
-                    , `item_name`
-                    , SUM( IF(parent IS NULL, `item_quantity`, item_quantity*-1)) AS item_quantity
-                    , `item_discount`
-                    , `total_price`
-                    , (total_price IS NOT TRUE) AS is_free
-                    , `is_readable`
-                    , `is_cancelled`
+                `id`
+                , SUBSTRING(`invoice_code`, 5) AS invoice
+                , `created_at`
+                , `updated_at`
+                , `invoice_code`
+                , `item_code`
+                , `item_name`
+                , SUM( IF(parent IS NULL, `item_quantity`, item_quantity*-1)) AS item_quantity
+                , `item_discount`
+                , `total_price`
+                , (total_price IS NOT TRUE) AS is_free
+                , `is_readable`
+                , `is_cancelled`
             FROM fifo_items
             WHERE item_code = '$data' AND (is_cancelled = 0 AND is_readable = 1)
             GROUP BY invoice, is_free)
@@ -60,6 +107,12 @@ class Items_fifo_model extends MY_Model
         }
     }
 
+    
+	/*
+	 * @param $data Type array data items to update fifo quantity, where purchase
+	 * @param $request Type boolean status decrese or ingrese value
+     * this one by one to update quantity
+	 */
     public function update_fifo_by_item_code($data, $request = false)
     {
         $this->db->trans_start();

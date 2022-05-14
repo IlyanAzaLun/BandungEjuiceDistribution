@@ -324,7 +324,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="col-lg col-sm-12">
                                     <div class="form-group">
                                         <label for="note"><?= lang('note') ?></label>
-                                        <textarea name="note" id="note" class="form-control"><?= $order->note ?></textarea>
+                                        <textarea name="note" id="note" class="form-control"><?= $invoice->note ?></textarea>
                                     </div>
                                 </div>
                             </div>

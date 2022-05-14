@@ -102,24 +102,19 @@ class Returns extends Sale
 				'is_child' => 1,
 				'is_cancelled' => 0,
 			);
-			try {
-				echo '<pre>';
-				// CREATE
-				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				$this->create_or_update_invoice($payment);
-				// $this->create_or_update_invoice_parent($payment);
-				$this->update_items($items);
-				$this->create_or_update_list_item_transcation($items);
-				var_dump($this->create_or_update_item_fifo($items));
-				var_dump($this->db->last_query());
-				echo '</pre>';
-				die();
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
-				die();
-			}
+			echo '<pre>';
+			// CREATE
+			$this->create_item_history($items, ['RETURNS', 'RETURNS']);
+			$this->create_or_update_invoice($payment);
+			// $this->create_or_update_invoice_parent($payment); // ADD AND UPDATE PARENT INVOICE, INFORMATION 
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+
+			$this->create_or_update_list_item_fifo($items);
+			var_dump($this->update_item_fifo($items));
+			// var_dump($this->db->get_compiled_insert());
+			var_dump($this->db->last_query());
+			echo '</pre>';
 			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Return Purchasing Successfully');
@@ -217,27 +212,22 @@ class Returns extends Sale
 				'is_cancelled' => 0,
 
 			);
-			try {
-				// EDIT
-				echo '<pre>';
-				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				$this->create_or_update_invoice($payment);
-				// $this->create_or_update_invoice_parent($payment);
-				$this->update_items($items);
-				$this->create_or_update_list_item_transcation($items);
-				var_dump($this->create_or_update_item_fifo($items));
-				var_dump($this->db->last_query());
-				// echo '<hr>';
-				// var_dump($this->db->get_compiled_insert());
-				// echo '<hr>';
-				// var_dump($this->db->last_query());
-				echo '</pre>';
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
-				die();
-			}
+			// EDIT
+			echo '<pre>';
+			$this->create_item_history($items, ['RETURNS', 'RETURNS']);
+			$this->create_or_update_invoice($payment);
+			// $this->create_or_update_invoice_parent($payment); // ADD AND UPDATE PARENT INVOICE, INFORMATION 
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+
+			var_dump($this->create_or_update_list_item_fifo($items));
+			var_dump($this->update_item_fifo($items));
+			$this->db->last_query();
+			// echo '<hr>';
+			// var_dump($this->db->get_compiled_insert());
+			// echo '<hr>';
+			// var_dump($this->db->last_query());
+			echo '</pre>';
 			$this->activity_model->add("Create Returns Sales, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Returns Sales Successfully');
@@ -279,7 +269,6 @@ class Returns extends Sale
 			$request[$key]['status_type'] = ($value['id']) ? $status_type[1] : $status_type[0];
 			$request[$key]['status_transaction'] = __CLASS__;
 			$request[$key]['created_by'] = logged('id');
-			$request[$key]['id'] = $value['id'];
 			$this->items_history_model->create($request[$key]);
 		}
 		return $request;
@@ -400,37 +389,53 @@ class Returns extends Sale
 		}
 		return false;
 	}
-	
-	protected function create_or_update_item_fifo($data)
+
+	protected function create_or_update_list_item_fifo($data)
 	{
 		$item = array();
+		$item_fifo = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			array_push($item_fifo, $this->items_fifo_model->select_fifo_by_item_code($value['item_code']));
+
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
 			$request[$key]['item_name'] = $value['item_name'];
 			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
+			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['customer_code'] = $value['customer_code'];
-			$request[$key]['parent'] = $this->data['invoice_code_parents'];
 			$request[$key]['is_readable'] = 0;
 			if ($value['id']) {
+				echo 'Edit';
+				$request[$key]['is_cancelled'] = $value['is_cancelled'];
 				$request[$key]['id'] = $value['id'];
-				$request[$key]['item_quantity'] = $value['item_order_quantity']+$value['item_order_quantity_current'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
-				// $this->items_fifo_model->update($value['id'], $request[$key]);
+				// $this->items_fifo_model->update($value['id'], $request);
 				$data_positif[] = $request[$key];
-			} else {
-				$request[$key]['item_quantity'] = $value['item_order_quantity'];
-				$request[$key]['created_at'] = @$value['created_at'];
+			}
+			else {
+				echo 'Create';
+
+				$request[$key]['reference_purchase'] = $item_fifo[$key]->invoice_code;
+				$request[$key]['created_at'] = $value['created_at'];
 				$request[$key]['created_by'] = logged('id');
-				// $this->items_fifo_model->create($request[$key]);
+				// $this->items_fifo_model->create($request);
 				$data_negatif[] = $request[$key];
 			}
+		}
+		if (@$data_negatif) {
+			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id') ) {
+				return true;
+			}
+		}
+		else {
+			$this->items_fifo_model->update_batch($data_positif, 'id');
+			return true;
 		}
 		return $request;
 	}
@@ -446,13 +451,16 @@ class Returns extends Sale
 			if($value['status_return']){
 				if ($value['id']) {
 					$request[$key]['quantity'] = ($item[$key]->quantity - $value['item_order_quantity_current']) + ($value['item_order_quantity'] + $value['item_order_quantity_current']);
-				} else {
+				} 
+				else {
 					$request[$key]['quantity'] = ($item[$key]->quantity + $value['item_order_quantity']);
 				}
-			}else{
+			}
+			else{
 				if($value['id']){
 					$request[$key]['broken'] = ($item[$key]->broken - $value['item_order_quantity_current']) + ($value['item_order_quantity'] + $value['item_order_quantity_current']);
-				}else{
+				}
+				else{
 					$request[$key]['broken'] = ($item[$key]->broken + $value['item_order_quantity']);
 				}
 			}
@@ -462,5 +470,29 @@ class Returns extends Sale
 		}
 		return $request;
 		// return $this->items_model->update_batch($request, 'item_code');
+	}
+	
+	/*
+	 * in development mode error is showed, but nothing worng
+	 * @param $data Type array data items to update fifo quantity, where purchase
+	 */
+	protected function update_item_fifo($data)
+	{
+		$item = array();
+		$request = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->items_fifo_model->select_fifo_by_items($value['item_code'])); // Primary for find items with code item
+			if($value['status_return']){
+				if ($value['id']) {
+					$request[$key]['quantity'] = ($item[$key]->item_quantity - $value['item_order_quantity_current']) + ($value['item_order_quantity'] + $value['item_order_quantity_current']);
+					$request[$key]['result'] = $this->items_fifo_model->update($item[$key]->id, array('item_quantity' => $request[$key]['quantity'] ));
+				}
+				else {
+					$request[$key]['quantity'] = ($item[$key]->item_quantity + $value['item_order_quantity']);
+					$request[$key]['result'] = $this->items_fifo_model->update($item[$key]->id, array('item_quantity' => $request[$key]['quantity'] ));
+				}
+			}
+		}
+		return $request;
 	}
 }

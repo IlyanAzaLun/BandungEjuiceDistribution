@@ -103,7 +103,7 @@ class Returns extends Purchase
 				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
-				$this->create_or_update_item_fifo($items);
+				$this->create_or_update_list_item_fifo($items);
 				echo '</pre>';
 			} catch (\Throwable $th) {
 				echo "<pre>";
@@ -219,7 +219,7 @@ class Returns extends Purchase
 				// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
-				var_dump($this->create_or_update_item_fifo($items));
+				var_dump($this->create_or_update_list_item_fifo($items));
 				var_dump($this->db->last_query());
 				echo '</pre>';
 			} catch (\Throwable $th) {
@@ -350,7 +350,7 @@ class Returns extends Purchase
 		return $request;
 	}
 	
-	protected function create_or_update_item_fifo($data)
+	protected function create_or_update_list_item_fifo($data)
 	{
 		$item = array();
 		foreach ($data as $key => $value) {

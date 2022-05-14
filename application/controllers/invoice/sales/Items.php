@@ -11,8 +11,10 @@ class Items extends MY_Controller
 
 	public function remove_item_from_list_order_transcaction()
 	{
+
 		$order = $this->transaction_item_model->getById(post('id'));
 		$fifo_list_item = $this->items_fifo_model->getById(post('id'));
+		$parent_fifo_item = $this->items_fifo_model->select_fifo_by_items($fifo_list_item->item_code);
 		$item  = $this->items_model->getById($order->item_id);
 		$history = array(
 			'item_id' => $order->item_id, 
@@ -41,6 +43,9 @@ class Items extends MY_Controller
 		$this->items_history_model->create($history);
 		$this->items_model->update($item->id, $item_update);
 		$this->transaction_item_model->delete($order->id);
+
+		$this->items_fifo_model->update($parent_fifo_item->id, array('item_quantity'=> $parent_fifo_item->item_quantity+$fifo_list_item->item_quantity));
+		$this->items_fifo_model->update($fifo_list_item->id, array('is_cancelled'=> 1));
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}
 

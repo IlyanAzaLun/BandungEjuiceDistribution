@@ -274,7 +274,7 @@ class Order extends Invoice_controller
 			$request[$key]['item_total_price'] = setCurrency($value['total_price']);
 			$request[$key]['item_description'] = $value['item_description'];
 			$request[$key]['customer_code'] = $value['customer_code'];
-			if (isset($value['id'])) {
+			if ($value['id']) {
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['item_quantity'] = $item[$key]->quantity + $value['item_order_quantity_current'];
 				$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
@@ -482,7 +482,7 @@ class Order extends Invoice_controller
 	public function is_confirmation()
 	{
 		ifPermissions('warehouse_order_list');
-		$request = array('is_confirmed' => 1 );
+		$request = array( 'is_confirmed' => 1, 'updated_by' =>  logged('id'));
 		$this->db->where('order_code', post('id'));
 		$result = $this->db->update('order_sale', $request);
 		if($result){
