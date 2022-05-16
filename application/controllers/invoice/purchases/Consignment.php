@@ -30,6 +30,43 @@ class Consignment extends Purchase
 
 	public function info()
 	{
+		function cmp($a, $b)
+		{
+			# sort array
+			return strcmp(@$a->id, @$b->id);
+		}
+		
+		echo '<pre>';
+		ifPermissions('purchase_list');
+		// DATA PURCHASE ITEM AND INFORMATION
+		$this->data_purchase();
+		$item_on_invoice = $this->page_data['_data_item_invoice_parent'];
+		$data_on_invoice = $this->page_data['_data_invoice_parent'];
+
+		// DATA FIFO ITEM
+		$this->page_data['item_on_fifo'] = $this->items_fifo_model->get_items_fifo(get('id'));
+		uksort($this->page_data['item_on_fifo'], "cmp");
+
+		
+		echo '</pre>';
+		$this->page_data['title'] = 'purchase_info';
+		$this->page_data['modals'] = (object) array(
+			'id' => 'exampleModal',
+			'title' => 'Modals confirmation',
+			'link' => 'invoice/purchase/consignment/cancel?id='.get('id'),
+			'content' => 'delete',
+			'btn' => 'btn-danger',
+			'submit' => 'Yes do it',
+		);
+
+		$this->load->view('invoice/purchase/consignment/info', $this->page_data);
+		$this->load->view('includes/modals');
+
+
+	}
+	
+	public function infox()
+	{
 		ifPermissions('purchase_list');
 		$this->data_purchase();
 
@@ -54,8 +91,6 @@ class Consignment extends Purchase
 		$this->db->where_in('item_code', array_unique(array_column($item_on_invoice, 'item_code')));
 		$this->db->where('is_cancelled', 0);
 		
-		$this->db->where("created_at >=", $data_on_invoice->created_at);
-		$this->db->where("created_at <=", $data_on_invoice->status_payment == 'payed'? $data_on_invoice->updated_at: date("Y-m-d H:i:s"));
 		$this->db->like('invoice_code', '/SALE/', 'both');
 		// $this->db->group_by('item_code');
 		$this->page_data['sale_out'] = $this->db->get('invoice_transaction_list_item')->result();
@@ -63,7 +98,6 @@ class Consignment extends Purchase
 		// var_dump($item_on_invoice);
 		// var_dump($this->db->last_query());
 		// var_dump($this->page_data['sale_out']);
-		// die();
 		echo '</pre>';
 
 		$this->page_data['title'] = 'purchase_info';
@@ -76,7 +110,7 @@ class Consignment extends Purchase
 			'submit' => 'Yes do it',
 		);
 
-		$this->load->view('invoice/purchase/consignment/info', $this->page_data);
+		$this->load->view('invoice/purchase/consignment/info_x', $this->page_data);
 		$this->load->view('includes/modals');
 	}
 

@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); 
-$i = 0;$j = 0; ?>
+$i = 0;$j = 0; $total_price = 0;?>
 <!-- Theme style -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
@@ -74,23 +74,7 @@ $i = 0;$j = 0; ?>
                 <!-- /.card-body -->
             </div>
             <!-- Information customer END -->
-            <pre>
-<?php var_dump($_data_invoice_child_);?>
-
-<?php
-while(list($key, $value) = @each($_data_item_invoice_parent)){
-var_dump($_data_item_invoice_parent[$key]->item_code);
-var_dump($_data_item_invoice_parent[$key]->item_quantity);
-echo '<hr>';
-var_dump($item_on_fifo[$key]->item_code);
-var_dump($item_on_fifo[$key]->item_quantity);
-echo '<hr>';
-echo 'IS SOLD: ';
-echo(($_data_item_invoice_parent[$key]->item_quantity - ($item_on_fifo[$key]->item_quantity)) * $_data_item_invoice_parent[$key]->item_capital_price);
-echo '<hr>';
-}
-?>
-            </pre>
+            <pre><?php var_dump($_data_invoice_child_);?></pre>
             <!-- Information Items START -->
             <div class="card">
                 <div class="card-header with-border">
@@ -117,22 +101,92 @@ echo '<hr>';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($_data_item_invoice_parent as $key => $value):?>
-                                    <tr class="input-<?= $key ?>">
-                                        <td><?=$key+1?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_code?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_name?></td>
-                                        <td style="display:none"><?= $this->items_model->getByCodeItem($_data_item_invoice_parent[$key]->item_code, 'quantity') ?> <?= $_data_item_invoice_parent[$key]->item_unit ?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_unit?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_unit?></td>
-                                        <td><?=$item_on_fifo[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
-                                        <td style="display:none"><?= lang('item_selling_price') ?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_capital_price?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_discount?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->total_price?></td>
-                                    </tr>
-                                    <?php endforeach;?>
+                                    <?php foreach ($_data_item_invoice_parent as $key => $value) : ?>
+                                        <?php $total_price += $value->total_price;?>
+                                        <?php if(@$value->item_code == @$intersect_codex_item[$key] && @$value->index_list == @$intersect_index_item[$key]):?>
+                                        <tr class="input-<?= $key ?>">
+                                            <td><?= $key+1 ?>.</td>
+                                            <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
+                                            <td><?= $value->item_name ?></td>
+                                            <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
+                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td><?= $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td></td>
+                                            <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_capital_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format($_data_item_invoice_child_[$i]->item_selling_price) ?></td>
+                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_discount) ?></td>
+                                            <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->total_price) ?></td>
+                                        </tr>
+                                        <!-- SALE OUT -->
+                                        <tr>
+                                            <?php if($value->item_code == $sale_out[$j]->item_code):?>
+                                            <?php $item_sold = $sale_out[$j]->item_is_sold > $value->item_quantity-$sale_out[$j]->item_in?$value->item_quantity-$sale_out[$j]->item_in:$sale_out[$j]->item_is_sold;?>
+                                            <td></td>
+                                            <td><?=$sale_out[$j]->item_code;  // item_code?></td>
+                                            <td><?=$sale_out[$j]->item_name;  // item_name?></td>
+                                            <td></td>
+                                            <td><?=$sale_out[$j]->item_in;  // item_retur?></td>
+                                            <td><?=$item_sold;  // item_sold?></td>
+                                            <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity-$item_sold-$sale_out[$j]->item_in ?></td>
+                                            <td>Rp.<?=number_format($sale_out[$j]->item_capital_price);  // item_price?></td>
+                                            <td></td>
+                                            <td><b>Rp.<?=number_format($sale_out[$j]->item_capital_price * $item_sold);  // item_total_price?></b></td>
+                                            <?php $j++;?>
+                                            <?php endif; ?>
+                                        </tr>
+                                        <!-- SALE OUT -->
+                                        <?php if((strlen($_data_item_invoice_child_[$i]->item_description)) >= 1):?>
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
+                                        </tr>
+                                        <?php endif;?>
+                                        <!-- <pre>Item INDEX RETUR:<?=$_data_item_invoice_child_[$i]->index_list?> | Item CODE PURCH:<?=$_data_item_invoice_child_[$i]->item_code?> | Item Quantity PURCH:<?=$_data_item_invoice_child_[$i]->item_quantity?></pre> -->
+                                        <?php $i++;?>
+                                        <?php else: $item_sold?>     
+                                        <tr class="input-<?= $key ?>">
+                                            <td><?= $key+1 ?>.</td>
+                                            <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
+                                            <td><?= $value->item_name ?></td>
+                                            <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
+                                            <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Rp.<?= number_format($value->item_capital_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
+                                            <td>Rp.<?= number_format($value->item_discount) ?></td>
+                                            <td>Rp.<?= number_format($value->total_price) ?></td>
+                                        </tr>
+                                        <!-- SALE OUT -->
+                                        <tr>
+                                            <?php if($value->item_code == $sale_out[$j]->item_code):?>
+                                            <?php $item_sold = $sale_out[$j]->item_is_sold > $value->item_quantity-$sale_out[$j]->item_in?$value->item_quantity-$sale_out[$j]->item_in:$sale_out[$j]->item_is_sold;?>
+                                            <td></td>
+                                            <td><?=$sale_out[$j]->item_code;  // item_retur?></td>
+                                            <td><?=$sale_out[$j]->item_name;  // item_retur?></td>
+                                            <td></td>
+                                            <td><?=$sale_out[$j]->item_in;  // item_retur?></td>
+                                            <td><?=$item_sold;  // item_sold?></td>
+                                            <td><?= $value->item_quantity-$item_sold-$sale_out[$j]->item_in; ?></td>
+                                            <td>Rp.<?=number_format($sale_out[$j]->item_capital_price);  // item_price?></td>
+                                            <td></td>
+                                            <td><b>Rp.<?=number_format($sale_out[$j]->item_capital_price * $item_sold);  // item_total_price?></b></td>
+                                            <?php $j++;?>
+                                            <?php endif; ?>
+                                        </tr>
+                                        <!-- SALE OUT -->
+
+                                        <?php if((strlen($value->item_description)) >= 1):?>
+                                        <tr>
+                                            <td></td>
+                                            <td colspan="8"><b style="font-size: 14px;"><?= $value->item_description?></b></td>
+                                        </tr>
+                                        <?php endif;?>
+                                        <!-- <pre>Item INDEX PURCH:<?=$value->index_list?> | Item CODE ORDER:<?=$value->item_code?> | Item Quantity ORDER:<?=$value->item_quantity?></pre> -->
+                                        <?php endif;?>
+                                    <?php endforeach ?>
                                 </tbody>
                             </table>
                         </div>
