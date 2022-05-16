@@ -74,7 +74,9 @@ $i = 0;$j = 0; $total_price = 0;?>
                 <!-- /.card-body -->
             </div>
             <!-- Information customer END -->
-            <pre><?php var_dump($_data_invoice_child_);?></pre>
+            <pre>
+            <?php var_dump($_data_invoice_child_);?>
+            </pre>
             <!-- Information Items START -->
             <div class="card">
                 <div class="card-header with-border">
@@ -119,7 +121,7 @@ $i = 0;$j = 0; $total_price = 0;?>
                                             <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->total_price) ?></td>
                                         </tr>
                                         <!-- SALE OUT -->
-                                        <tr>
+                                        <tr class="input-<?= $key ?>">
                                             <?php if($value->item_code == $sale_out[$j]->item_code):?>
                                             <?php $item_sold = $sale_out[$j]->item_is_sold > $value->item_quantity-$sale_out[$j]->item_in?$value->item_quantity-$sale_out[$j]->item_in:$sale_out[$j]->item_is_sold;?>
                                             <td></td>
@@ -160,7 +162,7 @@ $i = 0;$j = 0; $total_price = 0;?>
                                             <td>Rp.<?= number_format($value->total_price) ?></td>
                                         </tr>
                                         <!-- SALE OUT -->
-                                        <tr>
+                                        <tr class="input-<?= $key ?>">
                                             <?php if($value->item_code == $sale_out[$j]->item_code):?>
                                             <?php $item_sold = $sale_out[$j]->item_is_sold > $value->item_quantity-$sale_out[$j]->item_in?$value->item_quantity-$sale_out[$j]->item_in:$sale_out[$j]->item_is_sold;?>
                                             <td></td>

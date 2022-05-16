@@ -45,10 +45,11 @@ class Consignment extends Purchase
 
 		// DATA FIFO ITEM
 		$this->page_data['item_on_fifo'] = $this->items_fifo_model->get_items_fifo(get('id'));
+		// var_dump($this->db->last_query());
 		uksort($this->page_data['item_on_fifo'], "cmp");
 
-		
 		echo '</pre>';
+
 		$this->page_data['title'] = 'purchase_info';
 		$this->page_data['modals'] = (object) array(
 			'id' => 'exampleModal',

@@ -240,6 +240,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             let html = ``;
             let drop = ``;
+            let drops = ``;
             if(row['have_a_child'] == null && row['is_cancelled'] == false){
               html += `
                 <a target="_blank" href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
@@ -258,6 +259,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <a target="_blank" href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
                 `;
               drop += `
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                `;
+              // 
+              drops += `
                 <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
                 <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
                 <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
@@ -268,7 +275,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></button>
                 <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></button>
                 `;
+                
               drop += `
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                `;
+              // 
+              drops += `
                 <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
                 <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/print_PDF?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
                 <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchases/consignment') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
