@@ -19,14 +19,6 @@ class Items_fifo_model extends MY_Model
         return $this->db->get($this->table)->result();
     }
 
-    public function get_item_fifo($data)
-    {
-        $this->db->where('invoice_code', $data);
-        $this->db->where('is_cancelled', 0);
-        $this->db->where('is_readable', 1);
-        return $this->db->get($this->table)->result();
-    }
-
     /*
      * Invoice Selected with item is decrese with return invoice
      */ 

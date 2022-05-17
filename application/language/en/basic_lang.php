@@ -271,24 +271,25 @@ $lang['status_active'] = "This data will not be displayed if the status is turne
 /*
  * Items
  */
-$lang['item'] = "item";
+$lang['item'] = "Item";
+$lang['items'] = "Items";
 $lang['unit'] = "Unit";
 $lang['broken'] = "Broken";
-$lang['item_list'] = "List item";
+$lang['item_list'] = "List Item";
 $lang['item_list_information'] = "List item information";
 $lang['item_list_information_transaction'] = "Transaction item information";
 $lang['item_list_information_fifo'] = "First In Fisrt Out, Item information";
-$lang['item_add'] = "Add item";
-$lang['item_update'] = "Update item";
+$lang['item_add'] = "Add Item";
+$lang['item_update'] = "Update Item";
 $lang['item_code'] = "Item code";
 $lang['item_name'] = "Item name";
 $lang['item_quantity'] = "Item quantity";
 $lang['item_capital_price'] = "Capital price";
 $lang['item_selling_price'] = "Selling price";
 $lang['item_info_add'] = "Add more information data items";
-$lang['item_info_edit'] = "Edit information data item";
-$lang['category_item'] = "Category item";
-$lang['select_category_item'] = "Select category item";
+$lang['item_info_edit'] = "Edit information data Item";
+$lang['category_item'] = "Category Item";
+$lang['select_category_item'] = "Select Category Item";
 $lang['current_stock'] = "Curent stock";
 $lang['sub_category'] = "Sub category";
 $lang['is_active'] = "Is Active";
@@ -298,6 +299,8 @@ $lang['status_transaction'] = "Status transaction";
 $lang['invoice_reference'] = "Invoice reference";
 $lang['item_quantity_in'] = "Item In";
 $lang['item_quantity_out'] = "Item Out";
+$lang['item_report'] = "Report Item";
+$lang['report_generate_message'] = "Generate & Download Report";
 
 /*
  * Customer
@@ -323,6 +326,7 @@ $lang['customer_category_distributor'] = "Distributor";
 $lang['customer_category_other'] = "Other";
 $lang['customer_type'] = "Customer type";
 $lang['customer_category_other'] = "Other";
+$lang['customer_report'] = "Report Customer";
 
 /*
  * Supplier
@@ -348,6 +352,8 @@ $lang['supplier_category_distribution'] = "Distribution";
 $lang['supplier_category_other'] = "Other";
 $lang['supplier_type'] = "supplier type";
 $lang['supplier_category_other'] = "Other";
+$lang['supplier_report'] = "Report Supplier";
+
 
 
 /*

@@ -30,9 +30,9 @@ class Consignment extends Purchase
 
 	public function info()
 	{
+		# sort array
 		function cmp($a, $b)
 		{
-			# sort array
 			return strcmp(@$a->id, @$b->id);
 		}
 		
@@ -45,7 +45,6 @@ class Consignment extends Purchase
 
 		// DATA FIFO ITEM
 		$this->page_data['item_on_fifo'] = $this->items_fifo_model->get_items_fifo(get('id'));
-		// var_dump($this->db->last_query());
 		uksort($this->page_data['item_on_fifo'], "cmp");
 
 		echo '</pre>';

@@ -113,14 +113,14 @@ $i = 0;$j = 0; $total_price = 0;?>
                                         <td><a href="<?=url('items/info_transaction?id='.$_data_item_invoice_parent[$key]->item_code)?>"><?= $_data_item_invoice_parent[$key]->item_code ?></a></td>
                                         <td><?=$_data_item_invoice_parent[$key]->item_name?></td>
                                         <td style="display:none"><?= $this->items_model->getByCodeItem($_data_item_invoice_parent[$key]->item_code, 'quantity') ?> <?= $_data_item_invoice_parent[$key]->item_unit ?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
-                                        <td><?=$_data_item_invoice_child_[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_unit?></td>
+                                        <td><?=$_data_item_invoice_parent[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit // is parent?></td>
+                                        <td><?=$_data_item_invoice_child_[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit // is return?></td>
+                                        <td><?=$_data_item_invoice_parent[$key]->item_quantity - $_data_item_invoice_child_[$key]->item_quantity - ($item_on_fifo[$key]->item_quantity - $_data_item_invoice_child_[$key]->item_quantity) // is saleout?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
                                         <td><?=$item_on_fifo[$key]->item_quantity - $_data_item_invoice_child_[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
                                         <td style="display:none"><?= lang('item_selling_price') ?></td>
                                         <td>Rp.<?=number_format($_data_item_invoice_parent[$key]->item_capital_price)?></td>
                                         <td>Rp.<?=number_format($_data_item_invoice_child_[$key]->item_discount)?></td>
-                                        <td>Rp.<?=number_format(!empty($_data_item_invoice_parent[$key]->total_price) * ($_data_item_invoice_parent[$key]->item_capital_price *($_data_item_invoice_parent[$key]->item_quantity - ($item_on_fifo[$key]->item_quantity - $_data_item_invoice_child_[$key]->item_quantity))))?></td>
+                                        <td>Rp.<b><?=number_format(!empty($_data_item_invoice_parent[$key]->total_price) * ($_data_item_invoice_parent[$key]->item_capital_price *($_data_item_invoice_parent[$key]->item_quantity - $_data_item_invoice_child_[$key]->item_quantity - ($item_on_fifo[$key]->item_quantity - $_data_item_invoice_child_[$key]->item_quantity))))?></b></td>
                                     </tr>
 
                                     <?php if((strlen($_data_item_invoice_child_[$key]->item_description)) >= 1):?>
@@ -137,14 +137,14 @@ $i = 0;$j = 0; $total_price = 0;?>
                                         <td><a href="<?=url('items/info_transaction?id='.$_data_item_invoice_parent[$key]->item_code)?>"><?= $_data_item_invoice_parent[$key]->item_code ?></a></td>
                                         <td><?=$_data_item_invoice_parent[$key]->item_name?></td>
                                         <td style="display:none"><?= $this->items_model->getByCodeItem($_data_item_invoice_parent[$key]->item_code, 'quantity') ?> <?= $_data_item_invoice_parent[$key]->item_unit ?></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
+                                        <td><?=$_data_item_invoice_parent[$key]->item_quantity // is parent?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
                                         <td></td>
-                                        <td><?=$_data_item_invoice_parent[$key]->item_unit?></td>
+                                        <td><?=$_data_item_invoice_parent[$key]->item_quantity - $item_on_fifo[$key]->item_quantity // is saleout?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
                                         <td><?=$item_on_fifo[$key]->item_quantity?> <?=$_data_item_invoice_parent[$key]->item_unit?></td>
                                         <td style="display:none"><?= lang('item_selling_price') ?></td>
                                         <td>Rp.<?=number_format($_data_item_invoice_parent[$key]->item_capital_price)?></td>
                                         <td>Rp.<?=number_format($_data_item_invoice_parent[$key]->item_discount)?></td>
-                                        <td>Rp.<?=number_format(!empty($_data_item_invoice_parent[$key]->total_price) * ($_data_item_invoice_parent[$key]->item_capital_price *($_data_item_invoice_parent[$key]->item_quantity-$item_on_fifo[$key]->item_quantity)))?></td>
+                                        <td>Rp.<b><?=number_format(!empty($_data_item_invoice_parent[$key]->total_price) * ($_data_item_invoice_parent[$key]->item_capital_price * ($_data_item_invoice_parent[$key]->item_quantity - $item_on_fifo[$key]->item_quantity)))?></b></td>
                                     </tr>
 
                                     <?php if((strlen($_data_item_invoice_parent[$key]->item_description)) >= 1):?>

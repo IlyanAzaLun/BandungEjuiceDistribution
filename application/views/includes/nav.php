@@ -125,6 +125,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <p> <?php echo lang('item_add') ?> </p>
           </a>
         </li>
+        
+        <li class="nav-item">
+          <a href="<?php echo url('items/report') ?>" class="nav-link <?php echo ($page->submenu == 'report_item') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('item_report') ?> </p>
+          </a>
+        </li>
+
       </ul>
     </li>
 
@@ -154,6 +162,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <p> <?php echo lang('customer_add') ?> </p>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/customer/report') ?>" class="nav-link <?php echo ($page->submenu == 'report_customer') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('customer_report') ?> </p>
+          </a>
+        </li>
       </ul>
     </li>
   <?php endif ?>
@@ -180,6 +194,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <a href="<?php echo url('master_information/supplier/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>
             <p> <?php echo lang('supplier_add') ?> </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/supplier/report') ?>" class="nav-link <?php echo ($page->submenu == 'report_supplier') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('supplier_report') ?> </p>
           </a>
         </li>
       </ul>
