@@ -114,6 +114,16 @@ class Warehouse extends MY_Controller
 		$this->load->view('validation/warehouse/report', $this->page_data);
 		$this->load->view('includes/modals', $this->page_data);
 	}
+
+	public function is_confirmation()
+	{
+		ifPermissions('warehouse_order_is_confirmation');
+		$this->page_data['title'] = 'order_list_item_available';
+		$this->page_data['page']->submenu = 'order_list';
+		$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
+		$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+		$this->load->view('validation/warehouse/report_confirmation', $this->page_data);
+	}
 	
 
 	protected function create_or_update_list_item_order_sale($data)

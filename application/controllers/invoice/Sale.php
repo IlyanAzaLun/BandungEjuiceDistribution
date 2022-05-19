@@ -666,8 +666,10 @@ class Sale extends Invoice_controller
 		sale.cancel_note as cancel_note,
 		customer.customer_code as customer_code, 
 		customer.store_name as store_name, 
-		user.id as user_id, 
-		user.name as user_sale_create_by');
+		user_created.id as user_id, 
+		user_created.name as user_sale_create_by,
+		user_updated.id as user_id_updated, 
+		user_updated.name as user_sale_update_by, ');
 		if ($searchValue != '') {
 			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
@@ -675,7 +677,8 @@ class Sale extends Invoice_controller
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
 		}
-		$this->db->join('users user', 'user.id = sale.created_by', 'left');
+		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
+		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
 			$this->db->where("sale.created_at >=", $dateStart);
@@ -713,9 +716,11 @@ class Sale extends Invoice_controller
 				'created_at' => $record->created_at,
 				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,
+				'user_id_updated' => $record->user_id_updated,
 				'is_cancelled' => $record->is_cancelled,
 				'cancel_note' => $record->cancel_note,
 				'user_sale_create_by' => $record->user_sale_create_by,
+				'user_sale_update_by' => $record->user_sale_update_by,
 			);
 		}
 

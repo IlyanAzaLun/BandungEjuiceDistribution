@@ -1,8 +1,5 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 class Customer extends MY_Controller
 {
@@ -105,65 +102,6 @@ class Customer extends MY_Controller
 
             redirect('master_information/customer/list');
         }
-    }
-
-    public function report()
-    {
-        $this->page_data['title'] = 'customer';
-        $this->page_data['page']->submenu = 'report_customer';
-        $this->load->view('customer/report', $this->page_data);
-    }
-
-    public function report_download()
-    {
-        ifPermissions('download_file');
-        // (C) CREATE A NEW SPREADSHEET + WORKSHEET
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle("Customer");
-        $this->db->join('address_information', 'address_information.customer_code=customer_information.customer_code', 'left');
-        $data = $this->db->get('customer_information')->result();
-        $i = 2;
-
-        $sheet->setCellValue("A1", "customer_code");
-        $sheet->setCellValue("B1", "store_name");
-        $sheet->setCellValue("C1", "owner_name");
-        $sheet->setCellValue("D1", "customer_type");
-        $sheet->setCellValue("E1", "is_active");
-        $sheet->setCellValue("F1", "note");
-        $sheet->setCellValue("G1", "created_at");
-        $sheet->setCellValue("H1", "address");
-        $sheet->setCellValue("I1", "village");
-        $sheet->setCellValue("J1", "sub_district");
-        $sheet->setCellValue("K1", "city");
-        $sheet->setCellValue("L1", "province");
-        $sheet->setCellValue("M1", "zip");
-        $sheet->setCellValue("N1", "contact_phone");
-        $sheet->setCellValue("O1", "contact_mail");
-        foreach ($data as $key => $value) {
-            $sheet->setCellValue("A".$i, $value->customer_code);
-            $sheet->setCellValue("B".$i, $value->store_name);
-            $sheet->setCellValue("C".$i, $value->owner_name);
-            $sheet->setCellValue("D".$i, $value->customer_type);
-            $sheet->setCellValue("E".$i, $value->is_active);
-            $sheet->setCellValue("F".$i, $value->note);
-            $sheet->setCellValue("G".$i, $value->created_at);
-            $sheet->setCellValue("H".$i, $value->address);
-            $sheet->setCellValue("I".$i, $value->village);
-            $sheet->setCellValue("J".$i, $value->sub_district);
-            $sheet->setCellValue("K".$i, $value->city);
-            $sheet->setCellValue("L".$i, $value->province);
-            $sheet->setCellValue("M".$i, $value->zip);
-            $sheet->setCellValue("N".$i, $value->contact_phone);
-            $sheet->setCellValue("O".$i, $value->contact_mail);
-            $i++;
-        }
-        // (E) SAVE FILE
-        $writer = new Xlsx($spreadsheet);
-		$fileName = 'customer-'. date("Y-m-d-His") .'.xlsx';
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
-        $writer->save('php://output');
     }
 
     public function upload()

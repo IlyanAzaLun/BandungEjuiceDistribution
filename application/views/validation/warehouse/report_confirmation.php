@@ -86,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card-body">
           <div class="row" id="order_item">
             <div class="col-12">
-              <table class="table table-sm table-hover">
+              <table class="table table-sm">
                 <thead>
                   <tr>
                     <th width="2%">No.</th>
@@ -96,11 +96,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
                     <th style="display:none"><?= lang('item_selling_price') ?></th>
                     <th width="5%"><?= lang('note') ?></th>
-                    <th width="11%"><?= lang('item_order_quantity') ?></th>
+                    <th width="13%"><?= lang('item_order_quantity') ?></th>
                     <th style="display:none"><?= lang('discount') ?></th>
                     <th style="display:none"><?= lang('total_price') ?></th>
                     <th width="10%" class="text-center"><?= lang('status_available') ?></th>
-                    <th width="10%"><?= lang('option') ?></th>
+                    <th width="15%" class="text-center"><?= lang('updated_by') ?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -147,20 +147,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <td style="display:none"><input class="form-control form-control-sm currency" type="hidden" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->item_total_price ?>" readonly></td>
                             <td class="text-center">
                               <div class="btn-group" role="group" aria-label="Basic example">
-                                <input type="hidden" name="status_available[<?=$key?>]" value="0">
-                                <input type="checkbox" name="status_available[<?=$key?>]"<?=($value->status_available)?' checked':''?> data-bootstrap-switch data-off-color="danger" data-off-text="<i class='fa fa-fw fa-times'>" data-on-color="success" data-on-text="<i class='fa fa-fw fa-check'></i>" value="1">
+                                <input disabled type="hidden" name="status_available[<?=$key?>]" value="0">
+                                <input disabled type="checkbox" name="status_available[<?=$key?>]"<?=($value->status_available)?' checked':''?> data-bootstrap-switch data-off-color="danger" data-off-text="<i class='fa fa-fw fa-times'>" data-on-color="success" data-on-text="<i class='fa fa-fw fa-check'></i>" value="1">
                               </div>
                             </td>
-                            <td>
-                                <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-fw fa-ellipsis-h"></i></button>
-                                <?php if (sizeof($items) <= 1) : ?>
-                                    <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-fw fa-times"></i></button>
-                                <?php else : ?>
-                                    <button disabled type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-fw fa-times"></i></button>
-                                <?php endif ?>
-                                </div>
-                            </td>
+                            <td><?=$value->name?></td>
                         </tr>
                         <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
                             <td colspan="8">
@@ -265,7 +256,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="card">
         <div class="card-footer">
           <div class="float-right">
-            <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
+            <button type="button" disabled class="btn btn-info float-right"><?= lang('save') ?></button>
             <button type="button" class="btn btn-default mr-2" onclick="window.close()"><?= lang('cancel') ?></button>
           </div>
         </div>

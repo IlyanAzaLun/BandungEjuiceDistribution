@@ -13,7 +13,9 @@ class Order_list_item_model extends MY_Model
     
     public function get_order_item_by_code_order($data)
     {
+        $this->db->select('order_sale_list_item.*, users.name');
         $this->db->where('order_code', $data);
+        $this->db->join('users', 'order_sale_list_item.updated_by = users.id', 'left');
         return $this->db->get($this->table)->result();
     }
 }

@@ -99,8 +99,8 @@ $lang['read'] = "Read";
 $lang['pages'] = "Pages";
 $lang['invoice'] = "invoice";
 $lang['menus'] = "Menus";
-$lang['purchase'] = "purchase";
-$lang['selling'] = "selling";
+$lang['purchase'] = "Purchase";
+$lang['selling'] = "Selling";
 $lang['ecommerce'] = "E-commerce";
 $lang['projects'] = "Projects";
 $lang['project_add'] = "Project Add";
@@ -299,8 +299,6 @@ $lang['status_transaction'] = "Status transaction";
 $lang['invoice_reference'] = "Invoice reference";
 $lang['item_quantity_in'] = "Item In";
 $lang['item_quantity_out'] = "Item Out";
-$lang['item_report'] = "Report Item";
-$lang['report_generate_message'] = "Generate & Download Report";
 
 /*
  * Customer
@@ -326,7 +324,6 @@ $lang['customer_category_distributor'] = "Distributor";
 $lang['customer_category_other'] = "Other";
 $lang['customer_type'] = "Customer type";
 $lang['customer_category_other'] = "Other";
-$lang['customer_report'] = "Report Customer";
 
 /*
  * Supplier
@@ -352,7 +349,6 @@ $lang['supplier_category_distribution'] = "Distribution";
 $lang['supplier_category_other'] = "Other";
 $lang['supplier_type'] = "supplier type";
 $lang['supplier_category_other'] = "Other";
-$lang['supplier_report'] = "Report Supplier";
 
 
 
@@ -395,8 +391,9 @@ $lang['address_info_edit'] = "Edit information data address";
 $lang['is_open'] = "Is Open";
 
 /*
- * Address
+ * bank
  */
+$lang['bank'] = "Bank";
 $lang['pages_account_bank'] = "Account Bank";
 $lang['account_bank_list'] = "List Account";
 $lang['account_bank_add'] = "Add New Account";
@@ -405,6 +402,22 @@ $lang['bank_name'] = "Bank Name";
 $lang['no_account'] = "No Account Bank";
 $lang['own_by'] = "Own By";
 $lang['select_account'] = "Select Account Bank";
+
+/*
+ * Report
+ */
+$lang['report'] = "Report";
+$lang['report_master'] = "Data Master";
+$lang['report_purchase'] = "Purchase Information";
+$lang['report_sale'] = "Sale Information";
+$lang['page_report_information'] = "Report Information";
+$lang['item_report'] = "Report Item";
+$lang['customer_report'] = "Report Customer";
+$lang['supplier_report'] = "Report Supplier";
+$lang['expedition_report'] = "Report Expedition";
+$lang['bank_report'] = "Report Bank";
+$lang['report_generate_message'] = "Generate & Download Report";
+
 
 /*
  * Invoice
@@ -505,7 +518,7 @@ $lang['returns'] = "Returns";
  * Warehouse
  */
 $lang['menu_validation'] = "Menus Validation";
-
+$lang['confirmation_by'] = "Confiramtion By";
 $lang['order_list_item_available'] = "List Order Item";
 
  

@@ -33,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     <div class="card-body">
 
-    	<a href="<?php echo url('master_information/supplier/report_download') ?>" class="btn btn-lg btn-info"> <i class="fa fa-download"></i> &nbsp;&nbsp;&nbsp; <?php echo lang('report_generate_message') ?></a>
+    	<a href="<?php echo url('master_information/report/download_report_supplier') ?>" class="btn btn-lg btn-info"> <i class="fa fa-download"></i> &nbsp;&nbsp;&nbsp; <?php echo lang('report_generate_message') ?></a>
 
     </div>
     <!-- /.card-body -->

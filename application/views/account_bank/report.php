@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1><?php echo lang('items') ?></h1>
+        <h1><?php echo lang('bank') ?></h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -27,13 +27,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   <!-- Default card -->
   <div class="card">
     <div class="card-header with-border">
-      <h3 class="card-title">Export <?php echo lang('items') ?></h3>
+      <h3 class="card-title">Export <?php echo lang('bank') ?></h3>
 
     </div>
 
     <div class="card-body">
 
-    	<a href="<?php echo url('master_information/report/download_report_items') ?>" class="btn btn-lg btn-info"> <i class="fa fa-download"></i> &nbsp;&nbsp;&nbsp; <?php echo lang('report_generate_message') ?></a>
+    	<a href="<?php echo url('master_information/report/download_report_bank') ?>" class="btn btn-lg btn-info"> <i class="fa fa-download"></i> &nbsp;&nbsp;&nbsp; <?php echo lang('report_generate_message') ?></a>
 
     </div>
     <!-- /.card-body -->

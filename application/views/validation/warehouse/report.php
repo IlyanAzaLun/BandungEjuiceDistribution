@@ -65,18 +65,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th>no.</th>
-                  <th><?= lang('created_at') ?></th>
-                  <th><?= lang('updated_at') ?></th>
-                  <th><?= lang('order_code') ?></th>
+                  <th><?= lang('invoice_code') ?></th>
+                  <th><?= lang('customer_code') ?></th>
                   <th><?= lang('store_name') ?></th>
-                  <th><?= lang('total_price') ?></th>
-                  <th><?= lang('discount') ?></th>
-                  <th><?= lang('shipping_cost') ?></th>
-                  <th><?= lang('other_cost') ?></th>
-                  <th><?= lang('grandtotal') ?></th>
-                  <th><?= lang('payment_type') ?></th>
+                  <th><?= lang('created_at') ?></th>
                   <th><?= lang('note') ?></th>
                   <th><?= lang('created_by') ?></th>
+                  <th><?= lang('updated_by') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </thead>
@@ -128,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       autoWidth: false,
       order: [[ 3, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
+        "url": "<?php echo url('invoice/order/serverside_datatables_data_order_is_created') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -161,65 +156,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "created_at"
-        },
-        {
-          data: "updated_at",
-          visible: false,
-        },
-        {
           data: "order_code"
+        },
+        {
+          data: "customer_code"
         },
         {
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
         {
-          data: "total_price",
-          visible: false,
-          render: function(data, type, row) {
-            return currency(data)
-          }
-        },
-        {
-          data: "discounts",
-          visible: false,
-          render: function(data, type, row) {
-            return currency(data)
-          }
-        },
-        {
-          data: "shipping_cost",
-          visible: false,
-          render: function(data, type, row) {
-            return currency(data)
-          }
-        },
-        {
-          data: "other_cost",
-          visible: false,
-          render: function(data, type, row) {
-            return currency(data)
-          }
-        },
-        {
-          data: "grand_total",
-          visible: false,
-          render: function(data, type, row) {
-            return currency(data)
-          }
-        },
-        {
-          data: "payment_type",
-          orderable: false,
-          visible: false,
-          render: function(data, type, row) {
-            return data
-          }
+          data: "created_at"
         },
         {
           data: "note",
@@ -233,9 +184,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "user_order_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`;
-            return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
+            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
+          }
+        },
+        {
+          data: "user_order_update_by",
+          orderable: false,
+          visible: false,
+          render: function(data, type, row) {
+            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
         },
         {
@@ -244,7 +205,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a target="_blank" href="<?= url('validation/warehouse/is_confirmation?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Detail Items Order"><i class="fa fa-fw fa-info text-primary"></i></a>
                   <button disabled class="btn btn-xs btn-danger confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-times"></i></button>
                 </div>`;
           }

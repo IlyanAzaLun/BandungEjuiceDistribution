@@ -87,6 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th><?= lang('item_name') ?></th>
                     <th><?= lang('item_quantity_in') ?></th>
                     <th><?= lang('item_quantity_out') ?></th>
+                    <th><?= lang('unit') ?></th>
                     <th><?= lang('status_transaction') ?></th>
                     <th><?= lang('item_quantity') ?></th>
                     <th><?= lang('item_capital_price') ?></th>
@@ -112,6 +113,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <th><?= lang('item_name') ?></th>
                         <th><?= lang('item_quantity_in') ?></th>
                         <th><?= lang('item_quantity_out') ?></th>
+                        <th><?= lang('unit') ?></th>
                         <th><?= lang('status_transaction') ?></th>
                         <th><?= lang('item_quantity') ?></th>
                         <th><?= lang('item_capital_price') ?></th>
@@ -255,6 +257,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 data: "item_in",
                 render: function(data, type, row) {
                     let result = `${data} ${row['item_unit']}`
+                    return data;
                     return `${(data)?result: ''}`
                 }
             },
@@ -262,7 +265,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 data: "item_out",
                 render: function(data, type, row) {
                     let result = `${data} ${row['item_unit']}`
+                    return data;
                     return `${(data)?result: ''}`
+                }
+            },
+            {
+                data: "item_unit",
+                render: function(data, type, row) {
+                    return data;
                 }
             },
             {
