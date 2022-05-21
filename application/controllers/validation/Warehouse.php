@@ -124,7 +124,6 @@ class Warehouse extends MY_Controller
 		$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
 		$this->load->view('validation/warehouse/report_confirmation', $this->page_data);
 	}
-	
 
 	protected function create_or_update_list_item_order_sale($data)
 	{
@@ -167,7 +166,6 @@ class Warehouse extends MY_Controller
 		}
 		return false;
 	}
-	
 
 	protected function create_or_update_order($data)
 	{

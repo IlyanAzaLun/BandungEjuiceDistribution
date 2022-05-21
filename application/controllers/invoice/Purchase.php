@@ -251,6 +251,11 @@ class Purchase extends Invoice_controller
 		$this->load->view('includes/modals');
 	}
 
+	public function purchase_items_report()
+	{
+		# code...
+	}
+
 	public function print_PDF()
 	{
 		$this->data_purchase();

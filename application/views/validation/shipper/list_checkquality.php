@@ -15,7 +15,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
-          <li class="breadcrumb-item active"><?php echo lang('page_sale') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('menu_validation') ?></li>
           <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>
       </div>
@@ -76,6 +76,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('payment_type') ?></th>
                   <th width="20%"><?= lang('note') ?></th>
                   <th width="15%"><?= lang('created_by') ?></th>
+                  <th width="15%"><?= lang('updated_by') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </thead>
@@ -112,7 +113,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       locale: {
         format: 'DD/MM/YYYY H:mm'
       }
-    } );
+    });
     var groupColumn = 3;
     $('.ui-buttonset').draggable();
     var table = $("#example2").DataTable({
@@ -125,9 +126,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 2, "desc" ]],
+      order: [[ 3, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
+        "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -146,14 +147,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['is_confirmed'] == 1 || index['is_cancelled'] == 1){
+            if(index['is_controlled_by']){
               $(rows).eq(i).remove();
-              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
+            }
+            if(index['is_delivered']){
+              $(rows).eq(i).remove();
             }
           })
       },
       columns: [{
-          data: "order_code",
+          data: "invoice_code",
           render: function(data, type, row) {
             return row['id']
           }
@@ -162,14 +165,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "created_at"
         },
         {
-          data: "order_code"
+          data: "invoice_code"
         },
         {
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
+            return `${data} <span class="float-right"><a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
         {
@@ -219,12 +222,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 10, true)
+            return shorttext(data, 100, true)
             // return data
           }
         },
         {
-          data: "user_order_create_by",
+          data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
             return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
@@ -233,12 +236,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "order_code",
+          data: "user_sale_update_by",
+          orderable: false,
+          visible: false,
+          render: function(data, type, row) {
+            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
+            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
+          }
+        },
+        {
+          data: "invoice_code",
           orderable: false,
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a target="_blank" href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a target="_blank" href="<?= url('validation/shipper') ?>/quality_control?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Quality Control"><i class="fa fa-fw fa-spell-check text-primary"></i></a>
                   <button class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check"></i></button>
                 </div>`;
           }
@@ -258,12 +271,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           className: 'btn-sm'
         }
       ]
-    } );
-    // $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
+    });
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
-    } );
+    })
     $('#example2 tbody').on( 'click', 'td.group', function () {
         table.search($(this).text()).draw();
         $('input[type="search"]').focus()

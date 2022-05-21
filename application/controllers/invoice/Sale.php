@@ -230,8 +230,6 @@ class Sale extends Invoice_controller
 			$this->page_data['_data_invoice_parent'];
 		$this->page_data['customer'] = $this->customer_model->get_information_customer($this->page_data['invoice_information_transaction']->customer);
 		$this->page_data['bank'] = $this->account_bank_model->getById($this->page_data['invoice_information_transaction']->transaction_destination);
-
-	
 	}
 
 	public function info()
@@ -662,6 +660,8 @@ class Sale extends Invoice_controller
 		sale.created_at as created_at, 
 		sale.updated_at as updated_at, 
 		sale.created_by as created_by, 
+		sale.is_controlled_by as is_controlled_by,  
+		sale.is_delivered as is_delivered,  
 		sale.is_cancelled as is_cancelled,  
 		sale.cancel_note as cancel_note,
 		customer.customer_code as customer_code, 
@@ -717,6 +717,8 @@ class Sale extends Invoice_controller
 				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,
 				'user_id_updated' => $record->user_id_updated,
+				'is_controlled_by' => $record->is_controlled_by,
+				'is_delivered' => $record->is_delivered,
 				'is_cancelled' => $record->is_cancelled,
 				'cancel_note' => $record->cancel_note,
 				'user_sale_create_by' => $record->user_sale_create_by,

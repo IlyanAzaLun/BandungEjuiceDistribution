@@ -322,8 +322,10 @@ $i = 0; ?>
                 <?php if(!$invoice_information_transaction->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-right">
-                        <button type="button" class="btn btn-sm btn-default mr-2"><?= lang('PDF') ?></button>
-                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
+                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information">Cancel</i></button>
+                    </div>
+                    <div class="float-left">
+                        <a target="_blank" href="<?= url("/invoice/sale/print_PDF?id=$invoice_information_transaction->invoice_code") ?>" class="btn btn-md btn-default"><i class="fa fa-fw fa-file-pdf"></i></a>
                     </div>
                 </div>
                 <?php endif?>

@@ -268,7 +268,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/items') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_item') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('item_report') ?> </p>
               </a>
             </li>
@@ -276,7 +276,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/customer') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_customer') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('customer_report') ?> </p>
               </a>
             </li>
@@ -284,7 +284,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/supplier') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_supplier') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('supplier_report') ?> </p>
               </a>
             </li>
@@ -292,7 +292,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/expedition') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_expedition') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('expedition_report') ?> </p>
               </a>
             </li>
@@ -300,7 +300,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/bank') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_bank') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('bank_report') ?> </p>
               </a>
             </li>
@@ -320,8 +320,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <!-- Purchase parent -->
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo url('master_information/report/purchase') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_item') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+              <a href="<?php echo url('master_information/report/purchase') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_purchase_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('purchase') ?> </p>
               </a>
             </li>
@@ -329,8 +329,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <!-- Purchase Returns -->
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo url('master_information/report/purchase_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_customer') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+              <a href="<?php echo url('master_information/report/purchase_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_purchase_returns_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('purchase_returns') ?> </p>
               </a>
             </li>
@@ -349,8 +349,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <!-- Sale Parents -->
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo url('master_information/report/sale') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_item') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+              <a href="<?php echo url('master_information/report/sale') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('selling') ?> </p>
               </a>
             </li>
@@ -358,8 +358,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <!-- Sale Returns -->
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo url('master_information/report/sale_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_customer') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+              <a href="<?php echo url('master_information/report/sale_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_returns_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('sale_returns') ?> </p>
               </a>
             </li>
@@ -413,7 +413,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </a>
         <ul class="nav nav-treeview">
           <li class="nav-item">
-            <a href="<?php echo url('invoice/purchases/consignment/') ?>" class="nav-link <?php echo (@@$page->submenu_child == 'consignment_report') ? 'active' : '' ?>">
+            <a href="<?php echo url('invoice/purchases/consignment/') ?>" class="nav-link <?php echo (@$page->submenu_child == 'consignment_report') ? 'active' : '' ?>">
               <i class="far fa-dot-circle nav-icon"></i>
               <p><?php echo lang('consignment_list') ?></p>
             </a>
@@ -421,7 +421,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </ul>
         <ul class="nav nav-treeview">
           <li class="nav-item">
-            <a href="<?php echo url('invoice/purchases/consignments/returns/') ?>" class="nav-link <?php echo (@@$page->submenu_child == 'consignment_return_report') ? 'active' : '' ?>">
+            <a href="<?php echo url('invoice/purchases/consignments/returns/') ?>" class="nav-link <?php echo (@$page->submenu_child == 'consignment_return_report') ? 'active' : '' ?>">
               <i class="far fa-dot-circle nav-icon"></i>
               <p><?php echo lang('consignment_return_list') ?></p>
             </a>
@@ -516,15 +516,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="<?php echo url('validation/shipper/list') ?>" class="nav-link <?php echo ($page->submenu == 'list_shipper') ? 'active' : '' ?>">
+        <a href="<?php echo url('validation/shipper/list') ?>" class="nav-link <?php echo ($page->submenu == 'list_quality_control') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('shipping_list') ?> </p>
+          <p> <?php echo lang('quality_control') ?> </p>
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo url('validation/shipper/report') ?>" class="nav-link <?php echo ($page->submenu == 'report_shipper') ? 'active' : '' ?>">
+        <a href="<?php echo url('validation/shipper/report_packing') ?>" class="nav-link <?php echo ($page->submenu == 'report_packing') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('shipping_report') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('validation/shipper/report_delivered') ?>" class="nav-link <?php echo ($page->submenu == 'report_delivered') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('delivered_report') ?> </p>
         </a>
       </li>
     </ul>

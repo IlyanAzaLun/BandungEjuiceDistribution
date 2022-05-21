@@ -617,17 +617,24 @@ class Order extends Invoice_controller
 	public function is_confirmation()
 	{
 		ifPermissions('warehouse_order_list');
-		$request = array( 'is_confirmed' => 1, 'updated_by' =>  logged('id'));
-		$this->db->where('order_code', post('id'));
-		$result = $this->db->update('order_sale', $request);
-		if($result){
-			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'Successfully');
+		$this->form_validation->set_rules('id', lang('id_order'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Failed, need id Order to send this request!');
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}else{
-			$this->session->set_flashdata('alert-type', 'danger');
-			$this->session->set_flashdata('alert', 'Failed');
-			header('Location: ' . $_SERVER['HTTP_REFERER']);
+			$request = array( 'is_confirmed' => 1, 'updated_by' =>  logged('id'));
+			$this->db->where('order_code', post('id'));
+			$result = $this->db->update('order_sale', $request);
+			if($result){
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'Successfully');
+				header('Location: ' . $_SERVER['HTTP_REFERER']);
+			}else{
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Failed');
+				header('Location: ' . $_SERVER['HTTP_REFERER']);
+			}
 		}
 	}
 }

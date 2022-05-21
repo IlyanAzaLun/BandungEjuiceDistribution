@@ -526,9 +526,11 @@ $lang['order_list_item_available'] = "List Order Item";
  * Validation
  * Shipping
  */
+$lang['quality_control'] = "Quality Control";
 $lang['page_shipping'] = "Page Shipping";
 $lang['shipping_list'] = "Shipping List";
 $lang['shipping_report'] = "Report Shipping";
+$lang['delivered_report'] = "Report Delivered";
 
 
 /**

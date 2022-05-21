@@ -286,33 +286,33 @@ class Report extends MY_Controller
     public function purchase()
     {
         $this->page_data['title'] = 'purchase';
-        $this->page_data['page']->submenu = 'report_master';
-        $this->page_data['page']->submenu_child = 'report_purchase';
-        $this->load->view('account_bank/report', $this->page_data);
+        $this->page_data['page']->submenu = 'report_purchase';
+        $this->page_data['page']->submenu_child = 'report_purchase_list';
+        $this->load->view('invoice/purchase/report_items_purchase', $this->page_data);
     }    
-    // Report Purchase
-    public function purchase_return()
+    // Report Purchase Returns
+    public function purchase_returns()
     {
-        $this->page_data['title'] = 'purchase';
-        $this->page_data['page']->submenu = 'report_master';
-        $this->page_data['page']->submenu_child = 'report_purchase';
-        $this->load->view('account_bank/report', $this->page_data);
+        $this->page_data['title'] = 'purchase_returns';
+        $this->page_data['page']->submenu = 'report_purchase';
+        $this->page_data['page']->submenu_child = 'report_purchase_returns_list';
+        $this->load->view('invoice/purchase/report_items_purchase_returns', $this->page_data);
     }
     // Report sale
     public function sale()
     {
         $this->page_data['title'] = 'sale';
-        $this->page_data['page']->submenu = 'report_master';
-        $this->page_data['page']->submenu_child = 'report_sale';
-        $this->load->view('account_bank/report', $this->page_data);
+        $this->page_data['page']->submenu = 'report_sale';
+        $this->page_data['page']->submenu_child = 'report_sale_list';
+        $this->load->view('invoice/sale/report_items_sale', $this->page_data);
     }
-    // Report sale
-    public function sale()
+    // Report sale Returns
+    public function sale_returns()
     {
-        $this->page_data['title'] = 'sale';
-        $this->page_data['page']->submenu = 'report_master';
-        $this->page_data['page']->submenu_child = 'report_sale';
-        $this->load->view('account_bank/report', $this->page_data);
+        $this->page_data['title'] = 'sale_returns';
+        $this->page_data['page']->submenu = 'report_sale';
+        $this->page_data['page']->submenu_child = 'report_sale_returns_list';
+        $this->load->view('invoice/sale/report_items_sale_returns', $this->page_data);
     }
     public function download_report_transaction_items()
     {
@@ -321,25 +321,113 @@ class Report extends MY_Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle("Account Bank");
-        $data = $this->account_bank_model->get();
-        $i = 2;
+        $dates = preg_split('/[-]/', $this->input->post('min'));
+        $this->data['date'] = array(
+            'date_start' => trim(str_replace('/', '-', $dates[0])), 
+            'date_due'	 => trim(str_replace('/', '-', $dates[1]))
+        );
+        // $data = $this->account_bank_model->get();
+        switch (post('params')) {
+            case 'purchase':
+                # code...
+                $this->data['params'] = 'INV/PURCHASE/';
+                break;
+            
+            case 'purchase_returns':
+                # code...
+                $this->data['params'] = 'RET/PURCHASE/';
+                break;
 
-        $sheet->setCellValue("A1", "bank_name");
-        $sheet->setCellValue("B1", "no_account");
-        $sheet->setCellValue("C1", "own_by");
-        $sheet->setCellValue("D1", "created_at");
-        $sheet->setCellValue("E1", "created_by");
+            case 'sale':
+                # code...
+                $this->data['params'] = 'INV/SALE/';
+                break;
+
+            case 'sale_returns':
+                $this->data['params'] = 'RET/SALE/';
+                # code...
+                break;
+                
+            default:
+                $this->session->set_flashdata('alert-type', 'danger');
+                $this->session->set_flashdata('alert', 'Failed, Need parameter code invoice...');
+        
+                redirect('master_information/report/'.get('params'));    
+                die();
+                break;
+        }
+        $data = $this->transaction_item_model->get_report_items_transaction($this->data);
+        echo '<pre>';
+        var_dump($data);
+        echo '<hr>';
+        var_dump($this->db->last_query());
+        echo '</pre>';
+        die();
+        $i = 2;
+        $sheet->setCellValue("A1", "invoice_code");
+        $sheet->setCellValue("B1", "item_code");
+        $sheet->setCellValue("C1", "item_name");
+        $sheet->setCellValue("D1", "item_capital_price");
+        $sheet->setCellValue("E1", "item_selling_price");
+        $sheet->setCellValue("F1", "item_quantity");
+        $sheet->setCellValue("G1", "item_unit");
+        $sheet->setCellValue("H1", "item_discount");
+        $sheet->setCellValue("I1", "total_price");
+        $sheet->setCellValue("J1", "item_status");
+        $sheet->setCellValue("K1", "item_description");
+        $sheet->setCellValue("L1", "customer_code");
+        $sheet->setCellValue("M1", "is_cancelled");
+        $sheet->setCellValue("N1", "created_at");
+        $sheet->setCellValue("O1", "updated_at");
+        $sheet->setCellValue("P1", "store_name");
+        $sheet->setCellValue("Q1", "owner_name");
+        $sheet->setCellValue("R1", "type");
+        $sheet->setCellValue("S1", "address");
+        $sheet->setCellValue("T1", "village");
+        $sheet->setCellValue("U1", "sub_district");
+        $sheet->setCellValue("V1", "city");
+        $sheet->setCellValue("W1", "province");
+        $sheet->setCellValue("Z1", "zip");
+        $sheet->setCellValue("Y1", "contact_phone");
+        $sheet->setCellValue("Z1", "contact_mail");
+        $sheet->setCellValue("AA1", "user_created");
+        $sheet->setCellValue("AB1", "user_updated");
+        $sheet->setCellValue("AC1", "user_updated");
         foreach ($data as $key => $value) {
-            $sheet->setCellValue("A".$i, $value->name);
-            $sheet->setCellValue("B".$i, $value->no_account);
-            $sheet->setCellValue("C".$i, $value->own_by);
-            $sheet->setCellValue("D".$i, $value->created_at);
-            $sheet->setCellValue("E".$i, $value->created_by);
+            $sheet->setCellValue("A".$i, $value->invoice_code);
+            $sheet->setCellValue("B".$i, $value->item_code);
+            $sheet->setCellValue("C".$i, $value->item_name);
+            $sheet->setCellValue("D".$i, $value->item_capital_price);
+            $sheet->setCellValue("E".$i, $value->item_selling_price);
+            $sheet->setCellValue("F".$i, $value->item_quantity);
+            $sheet->setCellValue("G".$i, $value->item_unit);
+            $sheet->setCellValue("H".$i, $value->item_discount);
+            $sheet->setCellValue("I".$i, $value->total_price);
+            $sheet->setCellValue("J".$i, $value->item_status);
+            $sheet->setCellValue("K".$i, $value->item_description);
+            $sheet->setCellValue("L".$i, $value->customer_code);
+            $sheet->setCellValue("M".$i, $value->is_cancelled);
+            $sheet->setCellValue("N".$i, $value->created_at);
+            $sheet->setCellValue("O".$i, $value->updated_at);
+            $sheet->setCellValue("P".$i, $value->store_name);
+            $sheet->setCellValue("Q".$i, $value->owner_name);
+            $sheet->setCellValue("R".$i, $value->type);
+            $sheet->setCellValue("S".$i, $value->address);
+            $sheet->setCellValue("T".$i, $value->village);
+            $sheet->setCellValue("U".$i, $value->sub_district);
+            $sheet->setCellValue("V".$i, $value->city);
+            $sheet->setCellValue("W".$i, $value->province);
+            $sheet->setCellValue("Z".$i, $value->zip);
+            $sheet->setCellValue("Y".$i, $value->contact_phone);
+            $sheet->setCellValue("Z".$i, $value->contact_mail);
+            $sheet->setCellValue("AA".$i, $value->user_created);
+            $sheet->setCellValue("AB".$i, $value->user_updated);
+            $sheet->setCellValue("AC".$i, $value->user_updated);
             $i++;
         }
         // (E) SAVE FILE
         $writer = new Xlsx($spreadsheet);
-		$fileName = 'account_bank-'. date("Y-m-d-His") .'.xlsx';
+		$fileName = post('params').'-'. date("Y-m-d-His") .'.xlsx';
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
         $writer->save('php://output');

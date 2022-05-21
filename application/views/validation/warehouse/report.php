@@ -139,7 +139,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         })
       },      
       drawCallback: function ( settings ) {
-        console.log()
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
@@ -229,7 +228,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
-        console.log($(this))
     })
     $('#example2 tbody').on( 'click', 'td.group', function () {
         table.search($(this).text()).draw();

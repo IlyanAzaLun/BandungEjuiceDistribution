@@ -237,6 +237,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       } else {
         // Open this row
         row.child(format(row.data())).show();
+        console.log(row.data());
         tr.addClass('shown');
       }
     });

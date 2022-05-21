@@ -144,15 +144,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         })
       },      
       drawCallback: function ( settings ) {
-        console.log()
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['is_confirmed'] == false){
-              $(rows).eq(i).remove();
-              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
-            }
             if(index['invoice_code'].match(/RET/) != null){
+              $(rows).eq(i).remove();
+            }
+            if(!index['is_controlled_by']){
+              $(rows).eq(i).remove();
+            }
+            if(index['is_delivered']){
               $(rows).eq(i).remove();
             }
           })
@@ -253,8 +254,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a target="_blank" href="<?= url('validation/shipper') ?>/quality_control?id=${row['invoice_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Quality Control"><i class="fa fa-fw fa-spell-check text-primary"></i></a>
-                  <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}" class="btn btn-xs btn-default bg-primary" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print"></i></a>
+                  <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
+                  <button class="btn btn-xs btn-primary confirmation" data-id="${row['invoice_code']}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check-double"></i></button>
                 </div>`;
           }
         },
@@ -277,7 +278,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
-        console.log($(this))
     })
     $('#example2 tbody').on( 'click', 'td.group', function () {
         table.search($(this).text()).draw();
