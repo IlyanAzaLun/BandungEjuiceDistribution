@@ -357,12 +357,6 @@ class Report extends MY_Controller
                 break;
         }
         $data = $this->transaction_item_model->get_report_items_transaction($this->data);
-        echo '<pre>';
-        var_dump($data);
-        echo '<hr>';
-        var_dump($this->db->last_query());
-        echo '</pre>';
-        die();
         $i = 2;
         $sheet->setCellValue("A1", "invoice_code");
         $sheet->setCellValue("B1", "item_code");

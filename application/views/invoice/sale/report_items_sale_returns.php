@@ -33,19 +33,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="card-body">
-      <div class="row">
-        <div class="col-4">
-          <div class="input-group">
-            <input class="form-control" type="text" id="min" name="min">
-            <div class="input-group-append">
-              <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+      
+    <?php echo form_open_multipart('master_information/report/download_report_transaction_items', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+        <div class="row">
+          <div class="col-4">
+            <div class="input-group">
+              <input type="hidden" name="params" id="params" value="sale_returns">
+              <input class="form-control" type="text" id="min" name="min">
+              <div class="input-group-append">
+                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+              </div>
             </div>
           </div>
+          <div class="col-8">
+            <button class="btn btn-lg btn-info" type="submit"> <i class="fa fa-download"></i> <?php echo lang('report_generate_message') ?></button>
+          </div>
         </div>
-        <div class="col-8">
-          <a href="<?php echo url('master_information/report/download_report_transaction_items?params=sale_returns') ?>" class="btn btn-lg btn-info"> <i class="fa fa-download"></i> &nbsp;&nbsp;&nbsp; <?php echo lang('report_generate_message') ?></a>
-        </div>
-      </div>
+      <?php echo form_close(); ?>
+
     </div>
     <!-- /.card-body -->
 
@@ -63,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       timePicker24Hour: true,
       timePickerIncrement: 30,
       locale: {
-        format: 'DD/MM/YYYY H:mm'
+        format: 'YYYY/MM/DD H:mm'
       }
     });
 </script>
