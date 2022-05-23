@@ -93,7 +93,12 @@ class Items extends MY_Controller
 
         $data = $this->uploadlib->uploadFile();
         $request = [];
+        $items_fifo = [];
+        $items_transaction = [];
         $i = 0;
+        // RESET VALUE PREVIOUS QUANTITY TO ZERO
+        $this->items_fifo_model->update(true, array('item_quantity' => 0));
+
         foreach ($data as $key => $value) {
             if ($key == 1) {
                 continue;
@@ -117,11 +122,60 @@ class Items extends MY_Controller
                     'note' => $value['P'],
                     'created_by' => logged('id'),
                 ]);
+                
+                //transaction
+                array_push($items_fifo, [
+                    'invoice_code' => 'IMPORT',
+                    'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
+                    'item_code' => $value['A'],
+                    'item_name' => $value['B'],
+                    'item_quantity' => $value['I'],
+                    'item_unit' => $value['J'],
+                    'item_capital_price' => $value['K'],
+                    'item_discount' => 0,
+                    'customer_code' => 0,
+                    'total_price' => 0,
+                    'created_by' => logged('id'),
+                ]);
+                array_push($items_transaction, [
+                    'invoice_code' => 'IMPORT',
+                    'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
+                    'item_code' => $value['A'],
+                    'item_name' => $value['B'],
+                    'item_current_quantity' => 0, // not used on fifo
+                    'item_quantity' => $value['I'],
+                    'item_unit' => $value['J'],
+                    'item_capital_price' => $value['K'],
+                    'item_selling_price' => $value['L'], // not used on fifo
+                    'item_status' => 'IN', // not used on fifo
+                    'item_discount' => 0,
+                    'item_description' => 0, // not used on fifo
+                    'index_list' => 0, // not used on fifo
+                    'customer_code' => 0,
+                    'total_price' => 0,
+                    'created_by' => logged('id'),
+                ]);
+                if($this->items_model->getByCodeItem($value['A'], 'item_code')){
+                    $data_positif[] = $request[$i];
+                }else{
+                    $data_negatif[] = $request[$i];
+                }
                 $this->activity_model->add("New Item Upload, #" . $value['A'] . ", Created by User: #" . logged('id'), $request[$i]);
                 $i++;
             }
         }
-        $item = $this->items_model->create_batch($request);
+        // UPDATE OR CREATE ITEMS
+        if (@$data_negatif) {
+            if ($this->items_model->create_batch($data_negatif) && $this->items_model->update_batch($data_positif, 'item_code')) {
+				return true;
+			}
+        }else{
+            $this->items_model->update_batch($data_positif, 'item_code');
+        }
+        // CREATE NEW VALUE QUANTITY OF FIFO AND TRANSACTION.
+        $this->items_fifo_model->create_batch($items_fifo);
+        $this->transaction_item_model->create_batch($items_transaction);
+
         $this->create_item_history($request, 'IN');
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Item Upload Successfully');
