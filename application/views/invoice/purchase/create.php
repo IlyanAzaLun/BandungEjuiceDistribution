@@ -109,7 +109,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                     </td>
                     <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
-                    <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note"></td>
                     <td style="display:none" >
                       <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>

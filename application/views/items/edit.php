@@ -138,7 +138,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="form-group">
                                     <label><?= lang('item_code') ?></label>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control form-control-sm" name="item_code" id="item_code" value="<?= $item->item_code ?>" required readonly>
+                                        <input type="text" class="form-control form-control-sm" name="item_code" id="item_code" value="<?= $item->item_code ?>" required>
                                         <div class="input-group-append">
                                             <select class="input-group-text custom-select custom-select-sm" name="unit" id="unit" required>
                                                 <option value="PCS" <?= ($item->unit == 'PCS') ? ' selected' : '' ?>>PCS</option>

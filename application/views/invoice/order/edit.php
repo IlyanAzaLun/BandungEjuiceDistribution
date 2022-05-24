@@ -112,8 +112,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" readonly required>
                             </td>
-                            <td><input class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" readonly required></td>
-                            <td><input class="form-control form-control-sm" type="text" data-id="note" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'note') ?>"></td>
+                            <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" readonly required><?= $value->item_name ?></textarea></td>
+                            <td><input class="form-control form-control-sm" type="text" data-id="note" value="<?= $this->items_model->getByCodeItem($value->item_code, 'note') ?>"></td>
                             <td style="display: none">
                                 <div class=" input-group input-group-sm">
                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
@@ -126,7 +126,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </td>
                             <td>
                                 <div class=" input-group input-group-sm">
-                                    <span class="input-group-prepend">
+                                    <span class="input-group-prepend" style="display: none">
                                         <span class="input-group-text" data-id="item_quantity"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?></span>
                                     </span>
                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_order_quantity?>" required value="<?= (int)$value->item_order_quantity ?>">

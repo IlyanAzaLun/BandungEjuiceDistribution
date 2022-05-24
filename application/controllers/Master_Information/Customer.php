@@ -193,9 +193,9 @@ class Customer extends MY_Controller
         ## Fetch records
         $this->db->select('*, customer_information.id as customer_id');
         if ($searchQuery != '') {
-            $this->db->like('store_name', $searchValue, 'both');
-            $this->db->or_like('owner_name', $searchValue, 'both');
-            $this->db->or_like('customer_code', $searchValue, 'both');
+            $this->db->like('customer_information.store_name', $searchValue, 'both');
+            $this->db->or_like('customer_information.owner_name', $searchValue, 'both');
+            $this->db->or_like('customer_information.customer_code', $searchValue, 'both');
         }
         $this->db->join('address_information', 'address_information.customer_code=customer_information.customer_code', 'left');
         $this->db->order_by($columnName, $columnSortOrder);

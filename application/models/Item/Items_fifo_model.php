@@ -25,7 +25,7 @@ class Items_fifo_model extends MY_Model
     public function select_fifo_by_items($data)
     {
         $this->db->trans_start();
-        $this->db->trans_strict(FALSE);
+        $this->db->trans_strict(TRUE);
         // // UPDATE INVOICE PURCHASE
         $result = $this->db->query(
             "WITH RECURSIVES AS (SELECT 
@@ -116,7 +116,7 @@ class Items_fifo_model extends MY_Model
     public function update_fifo_by_item_code($data, $request = false)
     {
         $this->db->trans_start();
-        $this->db->trans_strict(FALSE);
+        $this->db->trans_strict(TRUE);
         // UPDATE INVOICE PURCHASE
         if ($request) {
             $this->db->set('item_quantity', 'item_quantity+1', false);

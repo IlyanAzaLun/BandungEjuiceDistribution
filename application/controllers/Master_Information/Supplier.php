@@ -198,9 +198,9 @@ class Supplier extends MY_Controller
         ## Fetch records
         $this->db->select('*, supplier_information.id as customer_id');
         if ($searchQuery != '') {
-            $this->db->like('store_name', $searchValue, 'both');
-            $this->db->or_like('owner_name', $searchValue, 'both');
-            $this->db->or_like('customer_code', $searchValue, 'both');
+            $this->db->like('supplier_information.store_name', $searchValue, 'both');
+            $this->db->or_like('supplier_information.owner_name', $searchValue, 'both');
+            $this->db->or_like('supplier_information.customer_code', $searchValue, 'both');
         }
         $this->db->join('address_information', 'address_information.customer_code=supplier_information.customer_code', 'left');
         $this->db->order_by($columnName, $columnSortOrder);

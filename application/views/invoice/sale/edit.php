@@ -89,7 +89,7 @@ $i = 0; ?>
                             <table class="table table-sm" style="">
                                 <thead>
                                     <tr>
-                                        <th width="2%">No.</th>
+                                        <th width="3%">No.</th>
                                         <th width="10%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>

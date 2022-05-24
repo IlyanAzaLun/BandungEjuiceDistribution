@@ -497,6 +497,7 @@ $lang['status_available'] = "Status Available";
 $lang['order_info_create'] = "Add more information data order";
 $lang['order_info_edit'] = "Edit information data order ";
 $lang['order_info_info'] = "Information data order ";
+$lang['import_order'] = "Import Order Items ";
 
 /*
  * Invoice

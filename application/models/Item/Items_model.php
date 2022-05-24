@@ -13,12 +13,15 @@ class Items_model extends MY_Model
 
 	public function getByCodeItem($data, $field = false)
 	{
+		$this->db->trans_start();
 		$this->db->where('item_code', $data);
 		if ($field) {
-			return $this->db->get($this->table)->row()->$field;
+			$data = $this->db->get($this->table)->row()->$field;
 		} else {
-			return $this->db->get($this->table)->row();
+			$data = $this->db->get($this->table)->row();
 		}
+		$this->db->trans_complete();
+		return $data;
 	}
 }
 

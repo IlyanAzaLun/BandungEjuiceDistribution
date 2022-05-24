@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
 require_once APPPATH . 'controllers/Items.php';
 require_once APPPATH . 'controllers/invoice/Invoice_controller.php';
 class Order extends Invoice_controller
@@ -36,7 +40,16 @@ class Order extends Invoice_controller
 		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
+			$this->page_data['modals'] = (object) array(
+				'id' => 'import_order_items',
+				'title' => 'Modals Import Order Items',
+				'link' => "invoice/order/create_import",
+				'content' => 'upload',
+				'btn' => 'btn-primary',
+				'submit' => 'Yes do it',
+			);
 			$this->load->view('invoice/order/create', $this->page_data);
+			$this->load->view('includes/modals', $this->page_data);
 		}else{
 			$this->data['order_code'] = $this->order_model->get_code_order_sale();
 			foreach (post('item_code') as $key => $value) {
@@ -101,6 +114,32 @@ class Order extends Invoice_controller
 			$this->session->set_flashdata('alert', 'Create Order Successfully');
 			redirect('invoice/order/list');
 		}
+	}
+
+	public function create_import()
+	{
+		ifPermissions('upload_file');
+        if ($_FILES['file']['name'] == "") {
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Empty File, Please select file to import');
+            redirect('invoice/order/create');
+			die();
+        }
+		$this->page_data['data'] = $this->uploadlib->uploadFile();
+		$this->page_data['title'] = 'order_create';
+		$this->page_data['page']->submenu = 'order_list';
+		
+		$this->page_data['modals'] = (object) array(
+			'id' => 'import_order_items',
+			'title' => 'Modals Import Order Items',
+			'link' => "invoice/order/create_import",
+			'content' => 'upload',
+			'btn' => 'btn-primary',
+			'submit' => 'Yes do it',
+		);
+		$this->load->view('invoice/order/create_import_items', $this->page_data);
+		$this->load->view('includes/modals', $this->page_data);
+
 	}
 
 	private function validation_items($data)
