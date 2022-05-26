@@ -126,13 +126,11 @@ $i = 0; ?>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <?php if((strlen($_data_item_invoice_child_[$i]->item_description)) >= 1):?>
-                                        <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
+                                        <tr class="description input-<?=$key?>" style="display:<?=(strlen($value->item_description) >=0 )?'none':''?>">
                                             <td colspan="8">
                                                 <textarea class="form-control form-control-sm" name="description[]"><?= $value->item_description?></textarea>
                                             </td>
                                         </tr>
-                                        <?php endif;?>
                                         <!-- <pre>Item INDEX RETUR:<?=$_data_item_invoice_child_[$i]->index_list?> | Item CODE PURCH:<?=$_data_item_invoice_child_[$i]->item_code?> | Item Quantity PURCH:<?=$_data_item_invoice_child_[$i]->item_quantity?></pre> -->
                                         <?php $i++;?>
                                         <?php else:?>
@@ -180,13 +178,11 @@ $i = 0; ?>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <?php if((strlen($value->item_description)) >= 1):?>
-                                        <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
+                                        <tr class="description input-<?=$key?>" style="display:<?=(strlen($value->item_description)>= 0)?'none':''?>">
                                             <td colspan="8">
                                                 <textarea class="form-control form-control-sm" name="description[]"><?= $value->item_description?></textarea>
                                             </td>
                                         </tr>
-                                        <?php endif;?>
                                         <!-- <pre>Item INDEX PURCH:<?=$value->index_list?> | Item CODE ORDER:<?=$value->item_code?> | Item Quantity ORDER:<?=$value->item_quantity?></pre> -->
                                         <?php endif;?>
                                     <?php endforeach ?>

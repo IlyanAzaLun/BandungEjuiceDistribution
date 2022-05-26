@@ -197,7 +197,19 @@ class Users extends MY_Controller {
 		$this->users_model->update($id, ['status' => get('status') == 'true' ? 1 : 0 ]);
 		echo 'done';
 	}
-
+	
+	public function data_user()
+    {
+		$search = (object) post('search');
+		$this->db->limit(5);
+		if (isset($search->value)) {
+			$this->db->like('users.name', $search->value, 'both');
+			$this->db->or_like('users.username', $search->value, 'both');
+			$this->db->or_like('users.email', $search->value, 'both');
+		}
+		$response = $this->db->get('users')->result();
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
 }
 
 /* End of file Users.php */

@@ -57,6 +57,57 @@ class Transaction_item_model extends MY_Model {
         return $this->db->get('invoice_transaction_list_item transaction')->result();   
     }
 
+    public function get_report_items_profit($data = '')
+    {
+        $this->db->select("
+            transaction.created_at
+            ,transaction.updated_at
+            ,DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
+            ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+            ,SUM(transaction.item_capital_price) AS item_capital_price
+            ,SUM(transaction.item_selling_price) AS item_selling_price
+            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit
+            ,transaction.customer_code
+            ,transaction.created_by
+            ,users.name
+            ,customer.store_name");
+        $this->db->join("users", "transaction.created_by = users.id", "left");
+        $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
+        $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
+        $this->db->where('transaction.is_cancelled', 0);
+        if(@$data['customer_code'] != ''){
+            $this->db->where("transaction.customer_code", $data['customer_code']);
+        }
+        if(@$data['user_id'] != ''){
+            $this->db->where("transaction.created_by", $data['user_id']);
+        }
+        if(@$data['date']['date_start'] != '') {
+            $this->db->where("transaction.created_at >=", $data['date']['date_start']);
+            $this->db->where("transaction.created_at <=", $data['date']['date_due']);
+        }
+        else{
+            $this->db->like("transaction.created_at", date("Y-m"), 'after');
+        }
+        switch (@$data['group_by']) {
+            case 'monthly':
+                # code...
+                $this->db->group_by("yearmount");
+                break;
+                
+            case 'daily':
+                # code...
+                $this->db->group_by("yearmountday");
+                break;
+            
+            default:
+                # code...
+                $this->db->select('transaction.invoice_code');
+                $this->db->group_by("invoice_code");
+                break;
+        }
+        return $this->db->get('invoice_transaction_list_item transaction')->result();
+    }
+
 }
 
 /* End of file Transaction_item_model.php */

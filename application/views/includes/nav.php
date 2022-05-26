@@ -351,7 +351,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/sale') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_list') ? 'active' : '' ?>">
                 <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('selling') ?> </p>
+                <p> <?php echo lang('report_sale_items') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <!-- Sale Profit -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/sale_profit') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_profit') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('report_sale_profit') ?> </p>
               </a>
             </li>
           </ul>

@@ -8,14 +8,14 @@ $lang['info'] = [
 ];
 
 /**
- * Masuk, Profil & Halaman Lain seperti reset kata sandi
+ * Masuk, Profil Halaman & Lain seperti reset kata sandi
  */
 $lang['sign_in_session'] = "Masuk Untuk Memulai Sesi Anda";
 $lang['username_or_email'] = "Nama Pengguna Atau Email";
 $lang['remember_me'] = "Ingat Saya";
 $lang['signin'] = "Masuk";
 $lang['forget_password_?'] = "Lupa kata sandi Anda ?";
-$lang['reset_Status_is_loged_?'] = "Pasti Untuk mereset akun Yang ter-log ?";
+$lang['reset_status_is_loged_?'] = "Pasti Untuk mereset akun Yang ter-log ?";
 $lang['message_how_forget_reset'] = "Beranda";
 $lang['message_how_forget_reset'] = "Anda lupa kata sandi Anda? Di Sini Anda Dapat dengan mudah mengambil kata sandi Baru.";
 $lang['message_how_loggin_reset'] = "Anda masih login di perangkat Lain, Anda Dapat mengatur ulang Status log ke brute forst login.";
@@ -32,13 +32,13 @@ $lang['change_password'] = "Ubah Kata Sandi";
 $lang['message_login_again_after_password'] = "Anda harus login lagi setelah password diUbah !";
 $lang['message_password_atleast_long'] = "Password mInimal harus 6 karakter !";
 $lang['old_password'] = "Kata Sandi Lama";
-$lang['leave_without_logout'] = "Apakah Anda ingin meninggalkan halaman Ini tanpa logout?";
+$lang['leave_without_logout'] = "Apakah Anda ingin halaman meninggalkan Ini tanpa logout?";
 
 
 /**
- * Halaman Kesalahan
+Halaman * Kesalahan
  */
-$lang['not_allowed_403'] = "Anda Tidak diperbOlehkan mengakses halaman Ini.";
+$lang['not_allowed_403'] = "Anda Tidak diperbOlehkan halaman mengakses Ini.";
 $lang['error_worng_information'] = "Kesalahan, Informasi usang.";
 $lang['sorry_not_allowed_msg'] = "Maaf, Anda Tidak Dapat mengakses bagian/halaman web Ini.
 Sementara itu, Anda Dapat <a href='" . url('/') . "'>kembali ke dasbor</a> Atau Coba gunAkan formulir pencarian.";
@@ -54,9 +54,9 @@ $lang['company_setings'] = "Pengaturan Perusahaan";
 $lang['login_settings'] = "Pengaturan Masuk";
 $lang['manage_email_template'] = "Kelola Template Email";
 $lang['ci_examples'] = "Contoh Codeigniter";
-$lang['Datatables'] = "DataTables";
-$lang['basic_Datatables'] = "Tabel Data Dasar";
-$lang['serverside_Datatables'] = "DataTable Sisi Server";
+$lang['datatables'] = "DataTables";
+$lang['basic_datatables'] = "Tabel Data Dasar";
+$lang['serverside_datatables'] = "DataTable Sisi Server";
 $lang['form_validation'] = "Validasi Formulir";
 $lang['file_upload'] = "Unggah File";
 $lang['multi_file_upload'] = "Unggah Multi File";
@@ -189,7 +189,7 @@ $lang['dashboard_todo_design'] = "Desain Tema Yang Bagus";
 $lang['dashboard_todo_responsive'] = "Jadikan Tema responsif";
 $lang['dashboard_todo_theme'] = "Biarkan Tema bersinar seperti bintang";
 $lang['dashboard_checK_notify'] = "Periksa pesan dan notifikasi Anda";
-$lang['dashboard_add_Barang'] = "Tambah Barang";
+$lang['dashboard_add_item'] = "Tambah Barang";
 $lang['dashboard_visitors'] = "Pengunjung";
 $lang['dashboard_online'] = "Online";
 $lang['dashboard_mail_orders'] = "Pesanan Surat";
@@ -213,7 +213,7 @@ $lang['edit_user'] = "Ubah Pengguna";
 $lang['view_user'] = "Lihat Pengguna";
 $lang['delete_user'] = "Hapus Pengguna";
 $lang['delete_user_cannot'] = "Anda Tidak Dapat Menghapus Pengguna Ini";
-$lang['user_unable_change_Status'] = "Tidak Dapat Mengubah Status ! Coba Lagi";
+$lang['user_unable_change_status'] = "Tidak Dapat Mengubah Status ! Coba Lagi";
 $lang['user_basic'] = "Detail Dasar";
 $lang['user_name'] = "Nama";
 $lang['user_enter_name'] = "Masukkan Nama";
@@ -237,7 +237,7 @@ $lang['user_address'] = "Alamat";
 $lang['user_enter_address'] = "Masukkan Alamat";
 $lang['user_role'] = "Peran";
 $lang['user_select_role'] = "Pilih Peran";
-$lang['user_Status'] = "Status";
+$lang['user_status'] = "Status";
 $lang['user_active'] = "Aktif";
 $lang['user_inactive'] = "Tidak Aktif";
 $lang['user_profile_image'] = "Gambar Profil";
@@ -252,9 +252,9 @@ $lang['overview'] = "Ringkasan";
 $lang['master'] = "Master";
 $lang['option'] = "Opsi";
 $lang['add_more'] = "Tambah Lagi";
-$lang['add_Data'] = "Tambah Data";
-$lang['edit_Data'] = "Ubah Data";
-$lang['delete_Data'] = "Hapus Data";
+$lang['add_data'] = "Tambah Data";
+$lang['edit_data'] = "Ubah Data";
+$lang['delete_data'] = "Hapus Data";
 $lang['note'] = "Catatan";
 $lang['save'] = "Simpan";
 $lang['cancel'] = "Batal";
@@ -266,39 +266,39 @@ $lang['updated_at'] = "DiperBarui Pada";
 $lang['date'] = "Tanggal";
 $lang['day'] = "Hari";
 $lang['number_of_day'] = "Jumlah hari";
-$lang['Status_active'] = "Data Ini Tidak Akan Ditampilkan Jika Status dimatikan";
+$lang['status_active'] = "Data Ini Tidak Akan Ditampilkan Jika Status dimatikan";
 
 /*
  * Barang
  */
-$lang['Barang'] = "Barang";
-$lang['Barangs'] = "Barang";
+$lang['item'] = "Barang";
+$lang['items'] = "Barang";
 $lang['unit'] = "Satuan";
 $lang['broken'] = "Rusak";
-$lang['Barang_list'] = "Barang Daftar";
-$lang['Barang_list_information'] = "Daftar Informasi Barang";
-$lang['Barang_list_information_transaction'] = "Informasi Barang Transaksi";
-$lang['Barang_list_information_fifo'] = "Masuk Pertama Keluar, Informasi Barang";
-$lang['Barang_add'] = "Tambah Barang";
-$lang['Barang_update'] = "PerBarui Barang";
-$lang['Barang_code'] = "Kode Barang";
-$lang['Barang_name'] = "Nama Barang";
-$lang['Barang_quantity'] = "Jumlah Barang";
-$lang['Barang_capital_price'] = "Harga modal";
-$lang['Barang_selling_price'] = "Harga jual";
-$lang['Barang_info_add'] = "Tambahkan Barang Data Informasi Lainnya";
-$lang['Barang_info_edit'] = "Edit Informasi Data Barang";
-$lang['category_Barang'] = "Barang Kategori";
-$lang['select_category_Barang'] = "Pilih Barang Kategori";
+$lang['item_list'] = "Daftar Barang";
+$lang['item_list_information'] = "Daftar Informasi Barang";
+$lang['item_list_information_transaction'] = "Informasi Barang Transaksi";
+$lang['item_list_information_fifo'] = "Masuk Pertama Keluar, Informasi Barang";
+$lang['item_add'] = "Tambah Barang";
+$lang['item_update'] = "PerBarui Barang";
+$lang['item_code'] = "Kode Barang";
+$lang['item_name'] = "Nama Barang";
+$lang['item_quantity'] = "Jumlah Barang";
+$lang['item_capital_price'] = "Harga modal";
+$lang['item_selling_price'] = "Harga jual";
+$lang['item_info_add'] = "Tambahkan Barang Data Informasi Lainnya";
+$lang['item_info_edit'] = "Edit Informasi Data Barang";
+$lang['category_item'] = "Barang Kategori";
+$lang['select_category_item'] = "Pilih Barang Kategori";
 $lang['current_stock'] = "Stok saat Ini";
 $lang['sub_category'] = "Sub kategori";
 $lang['is_active'] = "Aktif";
 $lang['is_inactive'] = "Tidak Aktif";
-$lang['Barang_discount'] = "Diskon";
-$lang['Status_transaction'] = "Status Transaksi";
+$lang['item_discount'] = "Diskon";
+$lang['status_transaction'] = "Status Transaksi";
 $lang['invoice_reference'] = "Referensi faktur";
-$lang['Barang_quantity_in'] = "Barang Masuk";
-$lang['Barang_quantity_out'] = "Barang Keluar";
+$lang['item_quantity_in'] = "Barang Masuk";
+$lang['item_quantity_out'] = "Barang Keluar";
 
 /*
  * Pelanggan
@@ -394,7 +394,7 @@ $lang['is_open'] = "Terbuka";
  *bank
  */
 $lang['bank'] = "Bank";
-$lang['pages_account_bank'] = "Bank Rekening";
+$lang['pages_account_bank'] = "Rekening Bank";
 $lang['account_bank_list'] = "Daftar Akun";
 $lang['account_bank_add'] = "Tambah Akun Baru";
 $lang['info_add'] = "Tambahkan Informasi lebih lanjut";
@@ -410,23 +410,28 @@ $lang['report'] = "Laporkan";
 $lang['report_master'] = "Master Data";
 $lang['report_purchase'] = "Informasi Pembelian";
 $lang['report_sale'] = "Informasi Penjualan";
+$lang['report_sale_items'] = "Informasi Barang";
+$lang['report_sale_profit'] = "Informasi Laba";
 $lang['page_report_information'] = "Informasi Laporan";
-$lang['Barang_report'] = "Laporkan Barang";
+$lang['item_report'] = "Laporkan Barang";
 $lang['customer_report'] = "Laporkan Pelanggan";
 $lang['supplier_report'] = "Laporkan Pemasok";
 $lang['expedition_report'] = "Laporkan Ekspedisi";
 $lang['bank_report'] = "Bank Laporan";
 $lang['report_generate_message'] = "Buat & Unduh Laporan";
-
-
+$lang['daily'] = "Harian";
+$lang['monthly'] = "Bulanan";
+$lang['select_group_by'] = "Pilih Pengelompokan";
+$lang['profit'] = "Laba";
+$lang['name'] = "Nama";
 /*
  * Faktur
  * pembelian
  */
-$lang['menu_invoice'] = "Faktur Menu";
+$lang['menu_invoice'] = "Menu Faktur";
 $lang['invoice_code'] = "Kode faktur";
 
-$lang['page_purchase'] = "Pembelian Halaman";
+$lang['page_purchase'] = "Halaman Pembelian";
 $lang['purchase_list'] = "Daftar Pembelian";
 $lang['find_supplier_code'] = "Temukan Kode pemasok ...";
 $lang['find_store_name'] = "Temukan nama toko ...";
@@ -441,11 +446,11 @@ $lang['purchase_info_info'] = "Informasi Data pembelian ";
 $lang['purchase_info_returns'] = "Pengembalian Data Informasi pembelian ";
 $lang['information_supplier'] = "Informasi Pemasok";
 $lang['information_customer'] = "Informasi Pelanggan";
-$lang['information_Barangs'] = "Informasi Barang";
-$lang['find_Barangs'] = "Temukan Barang...";
-$lang['Barang_order_quantity'] = "Jumlah Pesanan Barang";
-$lang['Barang_order_quantity_returns'] = "Pengembalian Kuantitas Pesanan Barang";
-$lang['Barang_returns_quantity'] = "Barang Pengembalian kuantitas";
+$lang['information_items'] = "Informasi Barang";
+$lang['find_items'] = "Temukan Barang...";
+$lang['item_order_quantity'] = "Jumlah Pesanan Barang";
+$lang['item_order_quantity_returns'] = "Pengembalian Kuantitas Pesanan Barang";
+$lang['item_returns_quantity'] = "Barang Pengembalian kuantitas";
 $lang['subtotal'] = "Subtotal";
 $lang['total_price'] = "Total harga Barang";
 $lang['discount'] = "Diskon";
@@ -454,12 +459,12 @@ $lang['other_cost'] = "Biaya Lain";
 $lang['grandtotal'] = "Total keseluruhan";
 $lang['information_payment'] = "Informasi Pembayaran";
 $lang['payment_type'] = "Ketik Pembayaran";
-$lang['Status_payment'] = "Pembayaran Status";
-$lang['is_Status_payment'] = "Apakah Status Pembayaran ?";
+$lang['status_payment'] = "Pembayaran Status";
+$lang['is_status_payment'] = "Apakah Status Pembayaran ?";
 $lang['date_due'] = "Tanggal jatuh tempo";
 $lang['date_due_start'] = "Tanggal jatuh tempo mulai";
 $lang['date_due_end'] = "Tanggal jatuh tempo";
-$lang['Barang_description'] = "Deskripsi";
+$lang['item_description'] = "Deskripsi";
 $lang['debt'] = "Hutang";
 $lang['cash'] = "Uang";
 $lang['payed'] = "Dibayar";
@@ -486,13 +491,13 @@ $lang['is_consignment'] = 'Apakah Transaksi konsinyasi ?';
  * Memesan
  */
 $lang['order'] = "Pesan";
-$lang['page_order'] = "Pesanan Halaman";
-$lang['order_list'] = "Pesanan Daftar";
+$lang['page_order'] = "Halaman Pesanan";
+$lang['order_list'] = "Daftar Pesanan";
 $lang['order_report'] = "Laporkan Pesanan";
 $lang['order_create'] = "Buat Pesanan";
 $lang['order_edit'] = "Ubah Pesanan";
 $lang['order_code'] = "Kode Pesanan";
-$lang['Status_available'] = "Status Tersedia";
+$lang['status_available'] = "Status Tersedia";
 
 $lang['order_info_create'] = "Tambahkan Informasi lebih lanjut Data Pesanan";
 $lang['order_info_edit'] = "Mengedit Informasi Data Pesanan";
@@ -503,7 +508,7 @@ $lang['import_order'] = "Impor Barang Pesanan ";
  * Faktur
  * Penjualan
  */
-$lang['page_sale'] = "Penjualan Halaman";
+$lang['page_sale'] = "Halaman Penjualan";
 
 $lang['sale_list'] = "Daftar Penjualan";
 $lang['sale_create'] = "Buat Penjualan";
@@ -518,9 +523,9 @@ $lang['returns'] = "Pengembalian";
  * Validasi
  * Gudang
  */
-$lang['menu_validation'] = "Validasi Menu";
+$lang['menu_validation'] = "Menu Validasi";
 $lang['confirmation_by'] = "Konfirmasi Oleh";
-$lang['order_list_Barang_available'] = "Daftar Barang Pesanan";
+$lang['order_list_item_available'] = "Daftar Barang Pesanan";
 
  
 /*
@@ -528,7 +533,7 @@ $lang['order_list_Barang_available'] = "Daftar Barang Pesanan";
  * Pengiriman
  */
 $lang['quality_control'] = "Kontrol Kualitas";
-$lang['page_shipping'] = "Pengiriman Halaman";
+$lang['page_shipping'] = "Halaman Pengiriman";
 $lang['shipping_list'] = "Daftar Pengiriman";
 $lang['shipping_report'] = "Laporkan Pengiriman";
 $lang['delivered_report'] = "Laporan Terkirim";

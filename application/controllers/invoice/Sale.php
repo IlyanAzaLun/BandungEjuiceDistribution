@@ -64,6 +64,7 @@ class Sale extends Invoice_controller
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => post('customer_code'),
+					'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				);
 			}
 			//information payment
@@ -456,6 +457,7 @@ class Sale extends Invoice_controller
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
+			$request[$key]['created_at'] = $value['created_at'];
 			if ($value['item_order_quantity'] <= 0) {
 				$request[$key]['item_status'] = 'IN';
 			}else{

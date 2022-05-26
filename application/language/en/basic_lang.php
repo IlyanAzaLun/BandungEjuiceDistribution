@@ -410,6 +410,8 @@ $lang['report'] = "Report";
 $lang['report_master'] = "Data Master";
 $lang['report_purchase'] = "Purchase Information";
 $lang['report_sale'] = "Sale Information";
+$lang['report_sale_items'] = "Items Information";
+$lang['report_sale_profit'] = "Profit Information";
 $lang['page_report_information'] = "Report Information";
 $lang['item_report'] = "Report Item";
 $lang['customer_report'] = "Report Customer";
@@ -417,6 +419,12 @@ $lang['supplier_report'] = "Report Supplier";
 $lang['expedition_report'] = "Report Expedition";
 $lang['bank_report'] = "Report Bank";
 $lang['report_generate_message'] = "Generate & Download Report";
+$lang['daily'] = "Daily";
+$lang['monthly'] = "Monthly";
+$lang['select_group_by'] = "Select Group By";
+$lang['profit'] = "Profit";
+$lang['name'] = "Name";
+
 
 
 /*

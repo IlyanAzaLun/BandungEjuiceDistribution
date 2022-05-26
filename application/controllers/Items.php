@@ -160,7 +160,7 @@ class Items extends MY_Controller
                 }else{
                     $data_negatif[] = $request[$i];
                 }
-                $this->activity_model->add("New Item Upload, #" . $value['A'] . ", Created by User: #" . logged('id'), $request[$i]);
+                $this->activity_model->add("New Item Upload, #" . $value['A'] . ", Created by User: #" . logged('id'));
                 $i++;
             }
         }

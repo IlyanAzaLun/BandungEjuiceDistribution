@@ -427,4 +427,138 @@ class Report extends MY_Controller
         $writer->save('php://output');
     }
 
+    //sales profit information
+    public function sale_profit()
+    {
+        $this->form_validation->set_rules('params', 'Parameter', 'required|trim');
+        $this->form_validation->set_rules('download', 'Parameter', 'required|trim');
+        if ($this->form_validation->run() == false) {
+            $this->page_data['title'] = 'sale_profit';
+            $this->page_data['page']->submenu = 'report_sale';
+            $this->page_data['page']->submenu_child = 'report_sale_profit';
+            $this->page_data['data'] = $this->transaction_item_model->get_report_items_profit();
+            $this->load->view('invoice/sale/report_items_sale_profit', $this->page_data);
+        }else{
+
+        }
+    }
+
+    public function serverside_datatables_data_sale_items_profit()
+    {
+        $response = array();
+
+		$postData = $this->input->post();
+
+		## Read value
+		$draw = $postData['draw'];
+		$start = $postData['start'];
+		$rowperpage = $postData['length']; // Rows display per page
+		$columnIndex = $postData['order'][0]['column']; // Column index
+		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+		$searchValue = $postData['search']['value']; // Search value
+		$dateStart = @$postData['startDate'];
+		$dateFinal = @$postData['finalDate'];
+		$customer = @$postData['customer'];
+		$user = @$postData['users'];
+		$group_by = @$postData['group_by'];
+		$logged = logged('id');
+
+		## Total number of records without filtering
+		$this->db->select('count(*) as allcount');
+        $this->db->like('invoice_code', 'INV/SALE/', 'after');
+        $this->db->where('is_cancelled', 0);
+        $this->db->group_by('invoice_code');
+		$records = $this->db->get('invoice_transaction_list_item')->result();
+		$totalRecords = $records[0]->allcount;
+
+		## Total number of record with filtering
+		$this->db->select('count(*) as allcount');
+        $this->db->like('invoice_code', 'INV/SALE/', 'after');
+        $this->db->where('transaction.is_cancelled', 0);
+		if ($dateStart != '') {
+            $this->db->where("transaction.created_at >=", $dateStart);
+			$this->db->where("transaction.created_at <=", $dateFinal);
+		}else{
+            $this->db->like("transaction.created_at", date("Y-m"), 'after');
+		}
+        $this->db->group_by('transaction.invoice_code');
+		$records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		$totalRecordwithFilter = $records[0]->allcount;
+		
+        ## Fetch records
+		$this->db->select("
+            ,transaction.created_at
+            ,transaction.updated_at
+            ,DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
+            ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+            ,SUM(transaction.item_capital_price) AS item_capital_price
+            ,SUM(transaction.item_selling_price) AS item_selling_price
+            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit
+            ,transaction.customer_code
+            ,transaction.created_by
+            ,users.name
+            ,customer.store_name");
+		$this->db->join("users", "transaction.created_by = users.id", "left");
+        $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
+        $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
+        $this->db->where('transaction.is_cancelled', 0);
+        if($customer != ''){
+            $this->db->where("transaction.customer_code", $customer);
+        }
+        if($user != ''){
+            $this->db->where("transaction.created_by", $user);
+        }
+		if ($dateStart != '') {
+			$this->db->where("transaction.created_at >=", $dateStart);
+			$this->db->where("transaction.created_at <=", $dateFinal);
+		}else{
+			$this->db->like("transaction.created_at", date("Y-m"), 'after');
+		}
+        
+        switch ($group_by) {
+            case 'monthly':
+                # code...
+                $this->db->group_by("yearmount");
+                break;
+                
+            case 'daily':
+                # code...
+                $this->db->group_by("yearmountday");
+                break;
+            
+            default:
+                # code...
+                $this->db->select('transaction.invoice_code');
+                $this->db->group_by("invoice_code");
+                break;
+        }
+		$this->db->order_by($columnName, $columnSortOrder);
+		$this->db->limit($rowperpage, $start);
+		$records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		$data = array();
+		foreach ($records as $record) {
+
+			$data[] = array(
+				'created_at' => $record->created_at,
+				'updated_at' => $record->updated_at,
+				'invoice_code' => $record->invoice_code,
+				'customer_code' => $record->customer_code,
+				'store_name' => $record->store_name,
+				'item_capital_price' => $record->item_capital_price,
+				'item_selling_price' => $record->item_selling_price,
+				'profit' => $record->profit,
+				'name' => $record->name,
+			);
+		}
+		## Response
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $totalRecords,
+			"iTotalDisplayRecords" => $totalRecordwithFilter,
+			"aaData" => $data,
+		);
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
 }

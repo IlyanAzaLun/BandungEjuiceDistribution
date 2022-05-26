@@ -168,7 +168,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
@@ -226,7 +226,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "user_order_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
@@ -238,20 +238,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let html = ``;
             if(row['is_cancelled'] == 1){
               html = `
-              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
+              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
               <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></button>`;
+              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></button>`;
             }else if(row['is_confirmed'] == 0){
               html = `
-              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
+              <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
               <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
             }else{
               {
               html = `
-              <a target="_blank" href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
+              <a target="_blank" href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
               <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
             }
             }
             return `

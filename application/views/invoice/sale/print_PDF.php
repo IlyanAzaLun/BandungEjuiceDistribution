@@ -20,10 +20,10 @@ $i = 0;
 
             /** Define now the real margins of every page in the PDF **/
             body {
-                margin-top: 2px;
-                margin-left: 2px;
-                margin-right: 2px;
-                margin-bottom: 2px;
+                margin-top: 4px;
+                margin-left: 20px;
+                margin-right: 20px;
+                margin-bottom: 4px;
             }
 
             /** Define the footer rules **/

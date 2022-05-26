@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Daterange picker -->
-<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
 <?php include viewPath('includes/header'); ?>
 
@@ -109,7 +108,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         format: 'DD/MM/YYYY H:mm'
       }
     });
-    var groupColumn = 3;
     $('.ui-buttonset').draggable();
     var table = $("#example2").DataTable({
       dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
@@ -151,23 +149,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         })
       },
-      columns: [{
+      columns: [
+        {
           data: "invoice_code",
           render: function(data, type, row) {
             return row['id']
           }
-        },
-        {
+        },{
           data: "created_at"
-        },
-        {
+        },{
           data: "updated_at"
-        },
-        {
+        },{
           visible: false,
           data: "invoice_code_reference"
-        },
-        {
+        },{
           data: "invoice_code",
           render: function(data, type, row){
             let html = '';
@@ -177,66 +172,57 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               //<span class="badge badge-danger">RETURNS</span>
             }
             return `${data} ${html}`;
-          }},
-        {
+          }},{
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
             return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
-        },
-        {
+        },{
           data: "total_price",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "discounts",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "shipping_cost",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "other_cost",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "grand_total",
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "payment_type",
           orderable: false,
           visible: false,
           render: function(data, type, row) {
             return data
           }
-        },
-        {
+        },{
           data: "note",
           orderable: false,
           render: function(data, type, row) {
             return shorttext(data, 100, true)
             // return data
           }
-        },
-        {
+        },{
           data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
@@ -244,8 +230,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
-        },
-        {
+        },{
           data: "invoice_code",
           orderable: false,
           visible: <?=(hasPermissions('purchase_list')==true)?1:0?>,

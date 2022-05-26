@@ -10,14 +10,17 @@ class Activity_model extends MY_Model {
 		parent::__construct();
 	}
 
-	public function add($message, $data, $user_id = 0, $ip_address = false)
+	public function add($message, $data = false, $user_id = 0, $ip_address = false)
 	{
-		
-		$details = implode(', ', array_map(
-			function ($value, $key) { return sprintf("%s='%s'", $key, $value); },
-			$data,
-			array_keys($data)
-		));
+		if($data){
+			$details = implode(', ', array_map(
+				function ($value, $key) { return sprintf("%s='%s'", $key, $value); },
+				$data,
+				array_keys($data)
+			));
+		}else{
+			$details = false;
+		}
 		
 		return $this->create([
 			'title' => $message,
