@@ -438,6 +438,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </ul>
       </li>
       <!--  -->
+      
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/entry') ?>" class="nav-link <?php echo ($page->submenu == 'entry_items') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('entry_items') ?> </p>
+        </a>
+      </li>
     </ul>
   </li>
     <?php endif ?>
@@ -475,6 +482,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
           <i class="far fa-times-circle nav-icon"></i>
           <p> <?php echo lang('sale_payment') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/sale/drop') ?>" class="nav-link <?php echo ($page->submenu == 'drop_items') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('drop_items') ?> </p>
         </a>
       </li>
     </ul>

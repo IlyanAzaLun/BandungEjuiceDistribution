@@ -362,7 +362,6 @@ class Sale extends Invoice_controller
 			// UPDATE FIFO ITEMS CANCEL
 			// update list_item_fifo only cancel..
 			$this->update_list_item_fifo_on_cancel($items); // PREPARE TOO FOR CANCEL CHILD 
-			var_dump($this->db->last_query()); 
 
 			// $this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
@@ -601,6 +600,87 @@ class Sale extends Invoice_controller
 			$request[$key]['item_quantity'] = $items[$key]->item_quantity - $value['item_order_quantity'];
 		}
 		return $this->items_fifo_model->update_batch($request, 'id');
+	}
+
+	
+	/*
+	 * drop stock item without invoice code
+	*/
+	public function drop()
+	{
+		ifPermissions('sale_create');
+		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
+		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
+
+		if ($this->form_validation->run() == false) {
+			$this->page_data['order'] = $this->order_model->get_order_selling_by_code(get('id'));
+			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['bank'] = $this->account_bank_model->get();
+			$this->page_data['title'] = 'sale_create';
+			$this->page_data['page']->submenu = 'sale_list';
+			$this->load->view('invoice/sale/drop', $this->page_data);
+		}else{
+			$this->data['invoice_code'] = 'DROP';
+			$date = preg_split('/[-]/', $this->input->post('date_due'));
+			$this->data['date'] = array(
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
+			);
+			//information items
+			$items = array();
+			foreach (post('item_code') as $key => $value) {
+				$items[] = array(
+					"item_id" => post('item_id')[$key],
+					"item_code" => post('item_code')[$key],
+					"item_name" => post('item_name')[$key],
+					"item_quantity" => post('item_quantity')[$key],
+					"item_order_quantity" => post('item_order_quantity')[$key],
+					"item_unit" => post('item_unit')[$key],
+					"item_capital_price" => post('item_capital_price')[$key],
+					"item_selling_price" => post('item_selling_price')[$key],
+					"item_discount" => post('item_discount')[$key],
+					"total_price" => post('total_price')[$key],
+					"item_description" => post('description')[$key],
+					"customer_code" => 0,
+				);
+			}
+			//information payment
+			$payment = array(
+				'customer' => 0,
+				'transaction_destination' => 0,
+				'store_name' => 0,
+				'contact_phone' => 0,
+				'address' => 0,
+				'total_price' => 0,
+				'discounts' => 0,
+				'shipping_cost' => 0,
+				'other_cost' => 0,
+				'grand_total' => 0,
+				'expedition_name' => 0,
+				'services_expedition' => 0,
+				'payment_type' => 0,
+				'status_payment' => 0,
+				'date_start' => 0,
+				'date_due' => 0,
+				'note' => post('note'),
+				'reference_order' => 0,
+			);
+			// // CREATE
+			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
+			$this->order_model->update_by_code(get('id'), array('is_created' => 1));
+			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
+			$this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
+			
+			$this->activity_model->add("Create Drop Items, #" . $this->data['invoice_code'], (array) $payment);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'New Information add, Successfully');
+
+			redirect('invoice/sale/list');
+		}
 	}
 
 	public function serverside_datatables_data_sale()

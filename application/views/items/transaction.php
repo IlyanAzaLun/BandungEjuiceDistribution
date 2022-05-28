@@ -189,15 +189,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             d.getCustomer = "<?= $this->input->get('customer') ?>";
             }
         },
-        rowCallback: function(row, data, index){
-            if(data['is_cancelled'] == true){
-                $(row).addClass('bg-danger');
-                $(row).find('a').addClass('text-light');
+        // rowCallback: function(row, data, index){
+        //     if(data['is_cancelled'] == true){
+        //         $(row).addClass('bg-danger');
+        //         $(row).find('a').addClass('text-light');
                 
+        //         <?php if(!hasPermissions('backup_db')):?>
+        //         $(row).css('display', 'none');
+        //         <?php endif;?>
+        //     }
+        // },
+        drawCallback: function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            let regex = /RET/;
+            api.rows( {page:'current'} ).data().each(function(index, i){
+                if(index['is_cancelled'] == 1){
+                $(rows).eq(i).addClass('bg-danger');
                 <?php if(!hasPermissions('backup_db')):?>
-                $(row).css('display', 'none');
+                    $(rows).eq(i).remove();
                 <?php endif;?>
-            }
+                }
+            })
         },
         columns: [{
                 data: "transaction_id"

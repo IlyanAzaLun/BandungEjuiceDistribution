@@ -59,49 +59,97 @@ class Transaction_item_model extends MY_Model {
 
     public function get_report_items_profit($data = '')
     {
+        if($data != ''){
+            $date = preg_split('/[-]/', trim($data["min"]));
+            $data['date'] = array(
+                'date_start' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[0]))), "Y-m-d"), 
+                'date_finish' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[1]))), "Y-m-d")
+            );
+        }
         $this->db->select("
-            transaction.created_at
+            ,transaction.created_at
             ,transaction.updated_at
             ,DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
             ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
             ,SUM(transaction.item_capital_price) AS item_capital_price
             ,SUM(transaction.item_selling_price) AS item_selling_price
-            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit
-            ,transaction.customer_code
-            ,transaction.created_by
-            ,users.name
-            ,customer.store_name");
-        $this->db->join("users", "transaction.created_by = users.id", "left");
+            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit");
+		$this->db->join("users", "transaction.created_by = users.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
         $this->db->where('transaction.is_cancelled', 0);
-        if(@$data['customer_code'] != ''){
+        if($data['customer_code'] != ''){
+            $this->db->select('
+            transaction.customer_code
+           ,customer.store_name');
             $this->db->where("transaction.customer_code", $data['customer_code']);
         }
-        if(@$data['user_id'] != ''){
+        if($data['user_id'] != ''){
+            $this->db->select('
+            transaction.created_by
+           ,users.name');
             $this->db->where("transaction.created_by", $data['user_id']);
         }
-        if(@$data['date']['date_start'] != '') {
-            $this->db->where("transaction.created_at >=", $data['date']['date_start']);
-            $this->db->where("transaction.created_at <=", $data['date']['date_due']);
-        }
-        else{
-            $this->db->like("transaction.created_at", date("Y-m"), 'after');
-        }
-        switch (@$data['group_by']) {
+		if ($data['date']['date_start'] != '') {
+            $this->db->group_start();
+			$this->db->where("transaction.created_at >=", $data['date']['date_start']);
+			$this->db->where("transaction.created_at <=", $data['date']['date_finish']);
+            $this->db->group_end();
+		}else{
+			$this->db->like("transaction.created_at", date("Y-m"), 'after');
+		}
+        
+        switch ($group_by) {
             case 'monthly':
                 # code...
                 $this->db->group_by("yearmount");
                 break;
-                
+
+            case 'monthly_by_customer':
+                # code...
+                $this->db->select('
+                 transaction.customer_code
+                ,customer.store_name');
+                $this->db->group_by("yearmount, transaction.customer_code");
+                break;
+            
+            case 'monthly_by_user':
+                # code...
+                $this->db->select('
+                 transaction.created_by
+                ,users.name');
+                $this->db->group_by("yearmount, transaction.created_by");
+                break;
+                    
             case 'daily':
                 # code...
                 $this->db->group_by("yearmountday");
                 break;
             
+                case 'daily_by_user':
+                # code...
+                $this->db->select('
+                 transaction.created_by
+                 ,users.name');
+                $this->db->group_by("yearmountday, transaction.created_by");
+                break;
+
+            case 'daily_by_customer':
+                # code...
+                $this->db->select('
+                 transaction.customer_code
+                ,customer.store_name');
+                $this->db->group_by("yearmountday, transaction.customer_code");
+                break;
+            
             default:
                 # code...
-                $this->db->select('transaction.invoice_code');
+                $this->db->select('
+                 transaction.invoice_code
+                ,transaction.created_by
+                ,users.name
+                ,transaction.customer_code
+                ,customer.store_name');
                 $this->db->group_by("invoice_code");
                 break;
         }

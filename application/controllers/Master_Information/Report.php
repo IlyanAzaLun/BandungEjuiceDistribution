@@ -431,7 +431,6 @@ class Report extends MY_Controller
     public function sale_profit()
     {
         $this->form_validation->set_rules('params', 'Parameter', 'required|trim');
-        $this->form_validation->set_rules('download', 'Parameter', 'required|trim');
         if ($this->form_validation->run() == false) {
             $this->page_data['title'] = 'sale_profit';
             $this->page_data['page']->submenu = 'report_sale';
@@ -439,7 +438,9 @@ class Report extends MY_Controller
             $this->page_data['data'] = $this->transaction_item_model->get_report_items_profit();
             $this->load->view('invoice/sale/report_items_sale_profit', $this->page_data);
         }else{
-
+            echo '<pre>';
+            var_dump($this->transaction_item_model->get_report_items_profit($this->input->post()));
+            echo '</pre>';
         }
     }
 
@@ -494,19 +495,21 @@ class Report extends MY_Controller
             ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
             ,SUM(transaction.item_capital_price) AS item_capital_price
             ,SUM(transaction.item_selling_price) AS item_selling_price
-            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit
-            ,transaction.customer_code
-            ,transaction.created_by
-            ,users.name
-            ,customer.store_name");
+            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
         $this->db->where('transaction.is_cancelled', 0);
         if($customer != ''){
+            $this->db->select('
+            transaction.customer_code
+           ,customer.store_name');
             $this->db->where("transaction.customer_code", $customer);
         }
         if($user != ''){
+            $this->db->select('
+            transaction.created_by
+           ,users.name');
             $this->db->where("transaction.created_by", $user);
         }
 		if ($dateStart != '') {
@@ -521,15 +524,52 @@ class Report extends MY_Controller
                 # code...
                 $this->db->group_by("yearmount");
                 break;
-                
+
+            case 'monthly_by_customer':
+                # code...
+                $this->db->select('
+                 transaction.customer_code
+                ,customer.store_name');
+                $this->db->group_by("yearmount, transaction.customer_code");
+                break;
+            
+            case 'monthly_by_user':
+                # code...
+                $this->db->select('
+                 transaction.created_by
+                ,users.name');
+                $this->db->group_by("yearmount, transaction.created_by");
+                break;
+                    
             case 'daily':
                 # code...
                 $this->db->group_by("yearmountday");
                 break;
             
+                case 'daily_by_user':
+                # code...
+                $this->db->select('
+                 transaction.created_by
+                 ,users.name');
+                $this->db->group_by("yearmountday, transaction.created_by");
+                break;
+
+            case 'daily_by_customer':
+                # code...
+                $this->db->select('
+                 transaction.customer_code
+                ,customer.store_name');
+                $this->db->group_by("yearmountday, transaction.customer_code");
+                break;
+            
             default:
                 # code...
-                $this->db->select('transaction.invoice_code');
+                $this->db->select('
+                 transaction.invoice_code
+                ,transaction.created_by
+                ,users.name
+                ,transaction.customer_code
+                ,customer.store_name');
                 $this->db->group_by("invoice_code");
                 break;
         }

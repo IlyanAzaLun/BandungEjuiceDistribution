@@ -86,11 +86,11 @@ class Order extends Invoice_controller
 			);
 			// CREATE
 			$result = $this->validation_items($items);
-			$error = @$result['error'];
-			$success = @$result['success'];
-			$items = @array_values($success);
-			$failed = @array_values($error);
-			$error = @array_column($failed, 'item_name');
+			$error = $result['error'];
+			$success = $result['success'];
+			$items = array_values($success);
+			$failed = array_values($error);
+			$error = array_column($failed, 'item_name');
 
 			if(!$items){
 				$this->session->set_flashdata('alert-type', 'danger');
@@ -278,7 +278,12 @@ class Order extends Invoice_controller
 			array_push($item, $this->db->get_where('items', ['item_code' => $value->item_code])->row());
 			$request[$key]['id'] = $item[$key]->id;
 			$request[$key]['quantity'] = $item[$key]->quantity + $value->item_order_quantity;
+			$items_order[$key]->is_cancelled = 1;
+			$items_order[$key]->updated_at = date('Y-m-d H:i:s');
+			$items_order[$key]->updated_by = logged('id');
+			unset($items_order[$key]->name);
 		}
+		$this->order_list_item_model->update_batch($items_order, 'id');
 		$response = $this->items_model->update_batch($request, 'id');
 		if ($response) {
 			$this->activity_model->add("Delete Order, #" . get('id'), (array) $order);
@@ -294,7 +299,7 @@ class Order extends Invoice_controller
 			return false;
 			die();
 		}
-		echo '</pre>';
+		echo '</hr>';
 	}
 
 	protected function create_or_update_list_item_order_sale($data)

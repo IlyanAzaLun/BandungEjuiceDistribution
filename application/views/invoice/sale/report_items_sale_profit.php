@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <div class="card-body">
       <?php echo validation_errors();?>
-      <?php echo form_open('master_information/report/download_report_profit_items', ['method' => 'GET', 'autocomplete' => 'off']); ?>
+      <?php echo form_open('master_information/report/sale_profit', ['method' => 'POST', 'autocomplete' => 'off']); ?>
 
         <div class="row">
           <div class="col-4">
@@ -55,15 +55,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <div class="col-2">
               <label for="users">Users</label>
               <div class="input-group">
-                  <input type="text" name="users" id="users" class="form-control" placeholder="<?= lang('select_group_by') ?>" autocomplete="false" required>
-                  <input type="text" name="user_id" id="user_id" class="form-control" required>
+                  <input type="text" name="users" id="users" class="form-control" placeholder="<?= lang('select_group_by') ?>" autocomplete="false">
+                  <input type="text" name="user_id" id="user_id" class="form-control">
               </div>
           </div>
           <div class="col-2">
               <label for="customer">Customer</label>
               <div class="input-group">
-                  <input type="text" name="customer" id="customer" class="form-control" placeholder="<?= lang('select_group_by') ?>" autocomplete="false" required>
-                  <input type="text" name="customer_code" id="customer_code" class="form-control" required>
+                  <input type="text" name="customer" id="customer" class="form-control" placeholder="<?= lang('select_group_by') ?>" autocomplete="false">
+                  <input type="text" name="customer_code" id="customer_code" class="form-control">
               </div>
           </div>
           <div class="col-3">
@@ -74,7 +74,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <select class="form-control" name="group_by" id="group_by">
                             <option value="" selected><?=lang('select_group_by')?></option>
                             <option value="daily"><?=lang('daily')?></option>
+                            <option value="daily_by_customer"><?=lang('daily_by_customer')?></option>
+                            <option value="daily_by_user"><?=lang('daily_by_user')?></option>
                             <option value="monthly"><?=lang('monthly')?></option>
+                            <option value="monthly_by_customer"><?=lang('monthly_by_customer')?></option>
+                            <option value="monthly_by_user"><?=lang('monthly_by_user')?></option>
                         </select>
                     </div>
                 </div>
@@ -128,11 +132,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         var group_by;
         //Date range picker
         $('#min').daterangepicker({
-            timePicker: true,
+            timePicker: false,
             timePicker24Hour: true,
             timePickerIncrement: 30,
             locale: {
-                format: 'DD/MM/YYYY H:mm'
+                format: 'DD/MM/YYYY'
             }
         });
         $('.ui-buttonset').draggable();

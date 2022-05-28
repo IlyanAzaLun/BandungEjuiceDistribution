@@ -557,6 +557,81 @@ class Purchase extends Invoice_controller
 		return true;
 		// return $this->items_model->update_batch($request, 'item_code');
 	}
+
+	/*
+	 * entry stock item without invoice code
+	*/
+	public function entry()
+	{
+		ifPermissions('purchase_create');
+		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
+		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->page_data['title'] = 'entry_items';
+			$this->page_data['page']->submenu = 'entry_items';
+			$this->load->view('invoice/purchase/entry', $this->page_data);
+		} else {
+			// information invoice
+			$this->data['invoice_code'] = 'ENTRY';
+			$date = preg_split('/[-]/', $this->input->post('date_due'));
+			$this->data['date'] = array(
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_due'	 => trim(str_replace('/', '-', $date[1]))
+			);
+			//information items
+			$items = array();
+			foreach (post('item_code') as $key => $value) {
+				$items[] = array(
+					"item_id" => post('item_id')[$key],
+					"item_code" => post('item_code')[$key],
+					"item_name" => post('item_name')[$key],
+					"item_quantity" => post('item_quantity')[$key],
+					"item_order_quantity" => post('item_order_quantity')[$key],
+					"item_unit" => post('item_unit')[$key],
+					"item_capital_price" => post('item_capital_price')[$key],
+					"item_capital_price_is_change" => post('item_capital_price_is_change')[$key],
+					"item_selling_price" => post('item_selling_price')[$key],
+					"item_discount" => post('item_discount')[$key],
+					"total_price" => post('total_price')[$key],
+					"item_description" => post('description')[$key],
+					"customer_code" => 0,
+					'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
+				);
+			}
+			//information payment
+			$payment = array(
+				'supplier' => 0,
+				'store_name' => 0,
+				'contact_phone' => 0,
+				'address' => 0,
+				'total_price' => 0,
+				'discounts' => 0,
+				'shipping_cost' => 0,
+				'other_cost' => 0,
+				'grand_total' => 0,
+				'payment_type' => 0,
+				'status_payment' => 0,
+				'date_start' => 0,
+				'date_due' => 0,
+				'created_at' => 0,
+				'note' => post('note'),
+				'is_consignment' => 0,
+			);
+			echo '<pre>';
+			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items);
+			echo "</pre>";
+			// die();
+			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'New Purchase Successfully');
+
+			redirect('invoice/purchase/list');
+		}
+	}
 	
 	public function serverside_datatables_data_purchase()
 	{

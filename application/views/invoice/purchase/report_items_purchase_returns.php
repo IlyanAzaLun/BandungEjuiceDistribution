@@ -31,11 +31,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="card-header with-border">
       <h3 class="card-title">Export <?php echo lang('purchase_returns') ?></h3>
     </div>
+    <div class="card-body">
       <?php echo form_open_multipart('master_information/report/download_report_transaction_items', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
           <div class="col-4">
+            <input type="hidden" name="params" id="params" value="purchase_returns">
             <div class="input-group">
-              <input type="hidden" name="params" id="params" value="purchase_returns">
               <input class="form-control" type="text" id="min" name="min">
               <div class="input-group-append">
                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>

@@ -68,6 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
                   <th><?= lang('order_code') ?></th>
+                  <th><?= lang('customer_code') ?></th>
                   <th><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
@@ -126,7 +127,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 1, "desc" ]],
+      order: [[4, 'desc']],
       ajax: {
         "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
         "type": "POST",
@@ -138,6 +139,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       drawCallback: function ( settings ) {
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
+        var last = null;
+        //GroupingRow By Spesific Column
+        api.column(5, { page: 'current' }).data().each(function (group, i) {
+          if (last !== group) {
+              $(rows).eq(i).before('<tr class="group"><td colspan="15">' + group + '</td></tr>');
+            }
+          last = group;
+          });
+
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['is_created'] == true){
             $(rows).eq(i).remove();
@@ -146,6 +156,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['is_cancelled'] == true){
             $(rows).eq(i).addClass('bg-danger');
+            <?php if(!hasPermissions('backup_db')):?>
+              $(rows).eq(i).remove();
+            <?php endif;?>
           }
         });
       },
@@ -165,8 +178,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "order_code"
         },
         {
+          data: "customer_code",
+          visible: false 
+        },
+        {
           data: "store_name",
-          orderable: false,
           render: function(data, type, row) {
             return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
@@ -313,6 +329,5 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
-
   });
 </script>
