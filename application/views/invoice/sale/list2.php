@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Daterange picker -->
-<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
 <?php include viewPath('includes/header'); ?>
 
@@ -14,7 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
+          <li class="breadcrumb-item"><a target="_blank" href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
           <li class="breadcrumb-item active"><?php echo lang('page_sale') ?></li>
           <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>

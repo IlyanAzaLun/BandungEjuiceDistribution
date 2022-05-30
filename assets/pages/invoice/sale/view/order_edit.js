@@ -68,7 +68,7 @@ const main = () => {
             })
         })
         // Find Items // limit.. this overload
-        $(document).on('keyup', 'input[data-id="item_code"], input[data-id="item_name"]', function () {
+        $(document).on('keyup', 'input[data-id="item_code"], textarea[data-id="item_name"]', function () {
             function getFieldNo(type) {
                 var fieldNo;
                 switch (type) {
@@ -93,7 +93,7 @@ const main = () => {
                         item_code, item_name, quantity, unit, capital_price, selling_price, id, note
                     ]
                 );
-                $('input[data-id="item_code"], input[data-id="item_name"]').autocomplete({
+                $('input[data-id="item_code"], textarea[data-id="item_name"]').autocomplete({
                     source: result,
                     focus: function (event, ui) {
                         $(`.${parentElement}`).find('input[data-id="item_id"]').val(ui.item[6])

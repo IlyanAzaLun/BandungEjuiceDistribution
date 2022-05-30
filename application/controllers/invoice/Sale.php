@@ -818,4 +818,45 @@ class Sale extends Invoice_controller
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
+	public function test()
+	{
+		$user = logged('id');
+        $haspermission = hasPermissions('dashboard_staff');
+		$this->db->select("
+            ,transaction.created_at
+            ,transaction.updated_at
+            ,DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
+            ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+            ,SUM(transaction.item_capital_price) AS item_capital_price
+            ,SUM(transaction.item_selling_price) AS item_selling_price
+            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit
+			");
+		$this->db->join("users", "transaction.created_by = users.id", "left");
+        $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
+        $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
+        $this->db->where('transaction.is_cancelled', 0);
+        if(!$haspermission){
+            $this->db->select('
+            transaction.created_by
+           ,users.name');
+            $this->db->where("transaction.created_by", $user);
+        }
+		$this->db->group_by("yearmount");
+        
+		$this->db->order_by($columnName, $columnSortOrder);
+		$this->db->limit($rowperpage, $start);
+		$records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		$data['labels'] = array();
+		$data['datasets'][]['data'] = array();
+		foreach ($records as $key => $record) {
+			array_push($data['labels'], $record->yearmount);
+			
+			$data['datasets'][0]['label'] = 'Profit';
+			array_push($data['datasets'][0]['data'], $record->profit);
+		}
+		## Response
+		$this->output->set_content_type('application/json')->set_output(json_encode($data));
+		
+	}
+
 }

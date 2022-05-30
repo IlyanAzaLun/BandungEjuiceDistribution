@@ -11,6 +11,23 @@ class Order_model extends MY_Model
         parent::__construct();
     }
 
+    public function get_num_rows_order_sale($data = false)
+    {
+        $logged = logged('id');
+        $haspermission = hasPermissions('dashboard_staff');
+        
+        if($data['is_cancelled']){
+            $this->db->where('is_cancelled', 1);
+        }else{
+            $this->db->where('is_cancelled', 0);
+        }
+		$this->db->where('is_created', 0);
+        if(!$haspermission){
+            $this->db->where('created_by', $logged);
+        }
+		return $this->db->get($this->table)->num_rows();
+    }
+
     public function get_order_selling_by_code($data)
     {
         $this->db->where('order_code', $data);

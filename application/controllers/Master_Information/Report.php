@@ -438,9 +438,41 @@ class Report extends MY_Controller
             $this->page_data['data'] = $this->transaction_item_model->get_report_items_profit();
             $this->load->view('invoice/sale/report_items_sale_profit', $this->page_data);
         }else{
-            echo '<pre>';
-            var_dump($this->transaction_item_model->get_report_items_profit($this->input->post()));
-            echo '</pre>';
+            ifPermissions('download_file');
+            // (C) CREATE A NEW SPREADSHEET + WORKSHEET
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setTitle("Account Bank");
+
+            $data = $this->transaction_item_model->get_report_items_profit($this->input->post());
+            $i = 2;
+            $sheet->setCellValue("A1", "created_at");
+            $sheet->setCellValue("B1", "updated_at");
+            $sheet->setCellValue("C1", "invoice_code");
+            $sheet->setCellValue("D1", "customer_code");
+            $sheet->setCellValue("E1", "store_name");
+            $sheet->setCellValue("F1", "item_capital_price");
+            $sheet->setCellValue("G1", "item_selling_price");
+            $sheet->setCellValue("H1", "profit");
+            $sheet->setCellValue("H1", "name");
+            foreach ($data as $key => $value) {
+                $sheet->setCellValue("A".$i, $value->created_at);
+                $sheet->setCellValue("B".$i, $value->updated_at);
+                $sheet->setCellValue("C".$i, $value->invoice_code);
+                $sheet->setCellValue("D".$i, $value->customer_code);
+                $sheet->setCellValue("E".$i, $value->store_name);
+                $sheet->setCellValue("F".$i, $value->item_capital_price);
+                $sheet->setCellValue("G".$i, $value->item_selling_price);
+                $sheet->setCellValue("H".$i, $value->profit);
+                $sheet->setCellValue("I".$i, $value->name);
+                $i++;
+            }
+            // (E) SAVE FILE
+            $writer = new Xlsx($spreadsheet);
+            $fileName = post('params').'-'. date("Y-m-d-His") .'.xlsx';
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
+            $writer->save('php://output');
         }
     }
 
@@ -458,11 +490,11 @@ class Report extends MY_Controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = @$postData['startDate'];
-		$dateFinal = @$postData['finalDate'];
-		$customer = @$postData['customer'];
-		$user = @$postData['users'];
-		$group_by = @$postData['group_by'];
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
+		$customer = $postData['customer'];
+		$user = $postData['users'];
+		$group_by = $postData['group_by'];
 		$logged = logged('id');
 
 		## Total number of records without filtering

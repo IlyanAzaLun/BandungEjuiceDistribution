@@ -17,6 +17,20 @@ class Sale_model extends MY_Model
         return $this->db->get($this->table)->row();
     }
 
+    public function get_num_rows_sale()
+    {
+        $logged = logged('id');
+        $haspermission = hasPermissions('dashboard_staff');
+
+        $this->db->where('is_cancelled', 0);
+		$this->db->where('is_child', 0);
+        if(!$haspermission){
+            $this->db->where('created_by', $logged);
+        }
+        $this->db->like("created_at", date("Y-m-d"), 'after');
+		return $this->db->get($this->table)->num_rows();
+    }
+
     public function get_code_invoice_sale()
     {
         $now = date('ym');

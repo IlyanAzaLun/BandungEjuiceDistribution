@@ -126,11 +126,11 @@ class Transaction_item_model extends MY_Model {
                 $this->db->group_by("yearmountday");
                 break;
             
-                case 'daily_by_user':
+            case 'daily_by_user':
                 # code...
                 $this->db->select('
-                 transaction.created_by
-                 ,users.name');
+                    transaction.created_by
+                    ,users.name');
                 $this->db->group_by("yearmountday, transaction.created_by");
                 break;
 
