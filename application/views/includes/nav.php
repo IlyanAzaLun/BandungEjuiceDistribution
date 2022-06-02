@@ -150,12 +150,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <p> <?php echo lang('customer_list') ?> </p>
           </a>
         </li>
+        <?php if(hasPermissions('customer_add')):?>
         <li class="nav-item">
           <a href="<?php echo url('master_information/customer/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>
             <p> <?php echo lang('customer_add') ?> </p>
           </a>
         </li>
+        <?php endif ?>
       </ul>
     </li>
   <?php endif ?>
@@ -206,12 +208,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <p> <?php echo lang('expedition_list') ?> </p>
           </a>
         </li>
+        <?php if(hasPermissions('expedition_create')):?>
         <li class="nav-item">
           <a href="<?php echo url('master_information/expedition/add') ?>" class="nav-link <?php echo ($page->submenu == 'expedition_add') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>
             <p> <?php echo lang('expedition_add') ?> </p>
           </a>
         </li>
+        <?php endif?>
       </ul>
     </li>
   <?php endif ?>
@@ -589,6 +593,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php endif ?>
     <!-- END Shipping -->
     <!-- END validation -->
+<?php if(hasPermissions('exaple')):?>    
 <li class="nav-header text-danger"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>
 </li>
@@ -1164,5 +1169,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <p><?php echo lang('informational') ?></p>
   </a>
 </li>
+
+<?php endif ?>
 
 </ul>
