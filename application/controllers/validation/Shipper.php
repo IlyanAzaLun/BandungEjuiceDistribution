@@ -59,7 +59,7 @@ class Shipper extends MY_Controller
 	
 	}
 
-	//LIST QUALITY
+	//LIST QUALITY CONTROL
 	public function list()
 	{
 		ifPermissions('shipper_transaction_list');

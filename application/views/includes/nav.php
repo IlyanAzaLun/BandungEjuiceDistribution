@@ -119,12 +119,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <p> <?php echo lang('item_list') ?> </p>
           </a>
         </li>
+        <?php if(hasPermissions('items_add')):?>
         <li class="nav-item">
           <a href="<?php echo url('items/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>
             <p> <?php echo lang('item_add') ?> </p>
           </a>
         </li>
+        <?php endif ?>
       </ul>
     </li>
 
@@ -245,12 +247,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <!-- end Account Bank -->
   <!-- Report -->
   <?php if (hasPermissions('download_file')) : ?>
-    <!-- <li class="nav-header"><strong>  <?php echo lang('menus_account_bank')?> </strong> &nbsp; -->
+    <!-- <li class="nav-header"><strong>  <?php echo lang('page_report_information')?> </strong> &nbsp; -->
     <li class="nav-item has-treeview <?php echo ($page->menu == 'report') ? 'menu-open' : '' ?>">
       <a href="#" class="nav-link  <?php echo ($page->menu == 'report') ? 'active' : '' ?>">
         <i class="nav-icon fas fa-database"></i>
         <p>
-          <?php echo lang('page_report_information') ?>
+          <?php echo lang('pages_report_information') ?>
           <i class="right fas fa-angle-left"></i>
         </p>
       </a>
@@ -382,8 +384,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
   
   <!-- Invoice -->
     <!-- Purchase -->
-    <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
     <?php if (hasPermissions('purchase_list')) : ?>
+  <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
       <i class="nav-icon fas fa-shopping-cart"></i>
@@ -397,12 +399,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <a href="<?php echo url('invoice/purchase/list') ?>" class="nav-link <?php echo ($page->submenu == 'list_purchase') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('purchase_list') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'payment_purchase') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('purchase_payment') ?> </p>
         </a>
       </li>
       <li class="nav-item">
@@ -495,12 +491,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php endif ?>
     <!-- end Sale -->
   <!-- end Invoice -->
-
   
+  <!-- Payment -->
+  
+  <?php if (hasPermissions('payment')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Payment') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Payment') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-money-bill-wave"></i>
+      <p>
+        <?php echo lang('page_payment') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/payment') ?>" class="nav-link <?php echo ($page->submenu == 'purchase_payment') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('payment_purchases') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/sale/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('payment_sales') ?> </p>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <?php endif ?>
+  <!-- End Payment -->
+
     <!-- Validation -->
     <li class="nav-header"><strong> <?php echo lang('menu_validation') ?> </strong> &nbsp;
     <!-- Warehouse -->
-    <?php if (hasPermissions('warehouse_order_list')) : ?>
+  <?php if (hasPermissions('warehouse_order_list')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Warehouse') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Warehouse') ? 'active' : '' ?>">
       <i class="nav-icon fas fa-clipboard-check"></i>
@@ -543,18 +567,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <p> <?php echo lang('quality_control') ?> </p>
         </a>
       </li>
+      <?php if(hasPermissions('report_packing')):?>
       <li class="nav-item">
         <a href="<?php echo url('validation/shipper/report_packing') ?>" class="nav-link <?php echo ($page->submenu == 'report_packing') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('shipping_report') ?> </p>
         </a>
       </li>
+      <?php endif ?>
+      
+      <?php if(hasPermissions('report_delivered')):?>
       <li class="nav-item">
         <a href="<?php echo url('validation/shipper/report_delivered') ?>" class="nav-link <?php echo ($page->submenu == 'report_delivered') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('delivered_report') ?> </p>
         </a>
       </li>
+      <?php endif ?>
     </ul>
   </li>
     <?php endif ?>

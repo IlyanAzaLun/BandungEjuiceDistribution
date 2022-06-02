@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); 
-$i = 0; ?>
+$i = 0; $total_items = 0;?>
 <!-- Theme style -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
@@ -142,7 +142,7 @@ $i = 0; ?>
                                                     </span>
                                                 </div>
                                                 <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
-                                                <?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity?>
+                                                <?php $item_quantity = $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity; echo $item_quantity;?>
                                             </td>
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $_data_item_invoice_child_[$i]->item_capital_price ?>"></td>
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $_data_item_invoice_child_[$i]->item_selling_price ?>"></td>
@@ -208,7 +208,7 @@ $i = 0; ?>
                                                     </span>
                                                 </div>
                                                 <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
-                                                <?= (int)$value->item_quantity ?>
+                                                <?php $item_quantity = $value->item_quantity; echo $value->item_quantity; ?>
                                             </td>
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
@@ -235,8 +235,14 @@ $i = 0; ?>
                                         </tr>
                                         <!-- <pre>Item INDEX PURCH:<?=$value->index_list?> | Item CODE ORDER:<?=$value->item_code?> | Item Quantity ORDER:<?=$value->item_quantity?></pre> -->
                                         <?php endif;?>
+                                        <?php $total_items += $item_quantity?>
                                     <?php endforeach ?>
                                     <!-- TO -->
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td><b>Total Items:</b></td>
+                                            <td colspan="3"><?=$total_items?></td>
+                                        </tr>
                                 </tbody>
                             </table>
                             <div class="float-left ml-1" style="display:none">

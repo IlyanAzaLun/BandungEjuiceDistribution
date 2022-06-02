@@ -175,7 +175,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
+                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" readonly required>
                     </div>
                   </div>
                 </div>
@@ -204,6 +204,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
               </div>
               <div class="row">
+
                 <div class="col-lg-3 col-sm-12" style="display: none">
                   <div class="form-group">
                     <h6><?= lang('other_cost') ?> :</h6>
@@ -215,6 +216,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                 </div>
+
                 <div class="col-lg-6 col-sm-12">
                   <div class="form-group">
                     <h6><b><?= lang('grandtotal') ?> :</b></h6>
@@ -222,21 +224,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text"><b>Rp</b></span>
                       </div>
-                      <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required>
+                      <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" readonly required>
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-1 col-sm-12">
-                  <div class="form-group">
-                    <h6><?= lang('payment_type') ?></h6>
-                    <select class="custom-select" name="payment_type">
-                      <option value="cash"><?= lang('cash') ?></option>
-                      <option value="credit"><?= lang('credit') ?></option>
-                      <option value="consignment"><?= lang('consignment') ?></option>
-                    </select>
-                  </div>
-                </div>
-                
+
                 <div class="col-lg-2 col-sm-12">
                   <div class="form-group">
                     <h6><?=lang('date')?></h6>
@@ -247,30 +239,62 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                       </div>
                   </div>
-                </div>            
-                <div class="col-lg-3 col-sm-12">
-                  <div class="form-group">
-                    <h6><?= lang('date_due') ?></h6>
-                    <div class="input-group mb-3">
-                      <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
-                      <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+
+                <div class="col-lg-4 col-sm-12">
+                  <div class="row">
+                    <div class="col-lg-9 col-sm-12">
+                      <div class="form-group">
+                        <h6><?= lang('date_due') ?></h6>
+                        <div class="input-group mb-3">
+                          <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
+                          <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-12">
+                      <h6><?=lang('number_of_day')?></h6>
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="numberdays" disabled>
                       </div>
                     </div>
                   </div>
                 </div>
+                
+                <!-- Transaction Source -->
+                <div class="col-lg-1 col-sm-12">
+                  <div class="form-group">
+                    <h6><?= lang('payment_type') ?></h6>
+                    <select class="custom-select" name="payment_type">
+                      <option value="cash"><?= lang('cash') ?></option>
+                      <option value="credit"><?= lang('credit') ?></option>
+                      <option value="consignment"><?= lang('consignment') ?></option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-12">
+                  <div class="form-group">
+                        <h6><?=lang('bank_name')?></h6>
+                        <div class="input-group">
+                            <select name="transaction_source" id="source" class="custom-select" required>
+                                <option value="" disabled selected><?=lang('select_account')?></option>
+                                <?php foreach ($bank as $key => $value):?>
+                                <option value="<?=$value->id?>"><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
+                                <?php endforeach?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
               </div>
+              <!-- Endrow -->
               <div class="row">
-                <div class="col-lg-11 col-sm-12">
+                <div class="col-lg-12 col-sm-12">
                   <div class="form-group">
                     <label for="note"><?= lang('note') ?></label>
                     <textarea name="note" id="note" class="form-control"></textarea>
-                  </div>
-                </div>
-                <div class="col-lg-1 col-sm-12">
-                  <h6><?=lang('number_of_day')?></h6>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="numberdays" disabled>
                   </div>
                 </div>
               </div>
@@ -321,7 +345,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     opens: "center",
     drops: "up",
     locale: {
-      format: 'DD/MM/YYYY H:mm:s'
+      format: 'DD/MM/YYYY'
     },
     ranges: {
         'Today': [moment(), moment()],

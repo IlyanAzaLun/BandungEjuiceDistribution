@@ -96,6 +96,7 @@ class Expedition extends MY_Controller
 
     public function delete()
     {
+        ifPermissions('expedition_delete');
         # code...
     }
 

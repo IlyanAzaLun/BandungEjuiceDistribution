@@ -58,8 +58,8 @@ class Account_bank extends MY_Controller
     public function update()
     {
         ifPermissions('account_bank_edit');
-        $this->page_data['page']->submenu = 'account_bank_add';
-        $this->page_data['title'] = 'account_bank_add';
+        $this->page_data['page']->submenu = 'account_bank_edit';
+        $this->page_data['title'] = 'account_bank_edit';
 
         $this->form_validation->set_rules('name', lang('bank_name'), 'required|trim');
         $this->form_validation->set_rules('no_account', lang('no_account'), 'required|trim|is_natural');
@@ -85,6 +85,67 @@ class Account_bank extends MY_Controller
 
             redirect('master_information/account_bank/list');
         }
+    }
+
+    public function balance()
+    {
+        ifPermissions('update_balance');
+        $this->page_data['page']->submenu = 'account_bank_edit';
+        $this->page_data['title'] = 'transaction';
+
+        $this->form_validation->set_rules('name', lang('bank_name'), 'required|trim');
+        $this->form_validation->set_rules('no_account', lang('no_account'), 'required|trim|is_natural');
+        $this->form_validation->set_rules('own_by', lang('own_by'), 'required|trim');
+
+        $status = $this->input->get('status');
+        if(!$status){
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Update Failed, worng information');
+            redirect('master_information/account_bank/list');
+        }
+        if ($this->form_validation->run() == false) {
+            $this->page_data['bank'] = $this->account_bank_model->getById(get('id'));
+            $this->load->view('account_bank/balance', $this->page_data);
+        } else {
+            $data = [
+                'updated_by' => logged('id'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+            $invoice_payment = [
+                'created_by' => logged('id'),
+                'payup' => setCurrency(post('nominal')),
+                'status_payment' => get('status') == 'increse'?0:1, //
+                'bank_id' => get('id'),
+                'description'=> strtoupper(post('note')),
+            ];
+            $nominal = $status == "increse"? 'balance+' : 'balance-';
+            $this->db->trans_start(); // UPDATE BALANCE
+            $this->db->set('balance', $nominal.setCurrency(post('nominal')), FALSE);
+            $this->db->where('id', get('id'));
+            $account = $this->db->update('bank_information');
+            $this->payment_model->create($invoice_payment);
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE){
+                $this->session->set_flashdata('alert-type', 'danger');
+                $this->session->set_flashdata('alert', 'Update Balance');
+                redirect('master_information/account_bank/list');
+                return false;   
+            }
+
+            $this->activity_model->add(" Account Bank #$account, Created by User: #" . logged('id'), (array)$data);
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Update Balance');
+
+            redirect('master_information/account_bank/update?id='.get('id'));
+        }
+    }
+
+    public function cashflow()
+    {
+        ifPermissions('cashflow');
+        $this->page_data['page']->submenu = 'account_bank_edit';
+        $this->page_data['title'] = 'transaction';
+        $this->load->view('account_bank/cashflow', $this->page_data);
     }
 
     public function serverside_datatables_data()

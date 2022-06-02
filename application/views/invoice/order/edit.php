@@ -192,7 +192,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="sub_total" id="sub_total" class="form-control currency" value="<?=$invoice->total_price?>" min="1" required>
+                      <input readonly type="text" name="sub_total" id="sub_total" class="form-control currency" value="<?=$invoice->total_price?>" min="1" required>
                     </div>
                   </div>
                 </div>
@@ -227,7 +227,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text"><b>Rp</b></span>
                       </div>
-                      <input type="text" name="grand_total" id="grand_total" class="form-control currency" value="<?=$invoice->grand_total?>" min="1" required>
+                      <input readonly type="text" name="grand_total" id="grand_total" class="form-control currency" value="<?=$invoice->grand_total?>" min="1" required>
                     </div>
                   </div>
                 </div>

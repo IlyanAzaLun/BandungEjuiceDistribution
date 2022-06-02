@@ -36,7 +36,7 @@ $lang['leave_without_logout'] = "Apakah Anda ingin halaman meninggalkan Ini tanp
 
 
 /**
-Halaman * Kesalahan
+ * Halaman * Kesalahan
  */
 $lang['not_allowed_403'] = "Anda Tidak diperbOlehkan halaman mengakses Ini.";
 $lang['error_worng_information'] = "Kesalahan, Informasi usang.";
@@ -97,7 +97,7 @@ $lang['inbox masuk'] = "Kotak Masuk";
 $lang['compose'] = "Tulis";
 $lang['read'] = "Baca";
 $lang['pages'] = "Halaman";
-$lang['invoice'] = "faktur";
+$lang['invoice'] = "Faktur";
 $lang['menus'] = "Menu";
 $lang['purchase'] = "Beli";
 $lang['selling'] = "Jual";
@@ -263,8 +263,8 @@ $lang['cancel'] = "Batal";
 $lang['update'] = "PerBarui";
 $lang['created_by'] = "Dibuat Oleh";
 $lang['created_at'] = "Dibuat Pada";
-$lang['updated_by'] = "DiperBarui Oleh";
-$lang['updated_at'] = "DiperBarui Pada";
+$lang['updated_by'] = "Diperbarui Oleh";
+$lang['updated_at'] = "Diperbarui Pada";
 $lang['date'] = "Tanggal";
 $lang['day'] = "Hari";
 $lang['number_of_day'] = "Jumlah hari";
@@ -298,7 +298,7 @@ $lang['is_active'] = "Aktif";
 $lang['is_inactive'] = "Tidak Aktif";
 $lang['item_discount'] = "Diskon";
 $lang['status_transaction'] = "Status Transaksi";
-$lang['invoice_reference'] = "Referensi faktur";
+$lang['invoice_reference'] = "Referensi Faktur";
 $lang['item_quantity_in'] = "Barang Masuk";
 $lang['item_quantity_out'] = "Barang Keluar";
 
@@ -399,11 +399,21 @@ $lang['bank'] = "Bank";
 $lang['pages_account_bank'] = "Rekening Bank";
 $lang['account_bank_list'] = "Daftar Akun";
 $lang['account_bank_add'] = "Tambah Akun Baru";
+$lang['account_bank_edit'] = "Ubah Informasi Akun";
 $lang['info_add'] = "Tambahkan Informasi lebih lanjut";
+$lang['info_edit'] = "Ubah Informasi lebih lanjut";
 $lang['bank_name'] = "Nama Bank";
-$lang['no_account'] = "Tidak Ada Rekening Bank";
+$lang['no_account'] = "Nomor Rekening Bank";
 $lang['own_by'] = "Dimiliki Oleh";
+$lang['balance_total'] = "Total Saldo";
 $lang['select_account'] = "Pilih Bank Rekening";
+$lang['note_transaction'] = "Catatan Transaksi";
+$lang['transaction'] = "Transaksi";
+$lang['info_balance'] = "Ubah Informasi Saldo, dengan menambahkan informasi Transaksi";
+$lang['balance'] = "Saldo";
+$lang['nominal'] = "Nominal";
+$lang['reduce'] = "Keluar";
+$lang['increse'] = "Masuk";
 
 /*
  * Laporan
@@ -414,7 +424,7 @@ $lang['report_purchase'] = "Informasi Pembelian";
 $lang['report_sale'] = "Informasi Penjualan";
 $lang['report_sale_items'] = "Informasi Barang";
 $lang['report_sale_profit'] = "Informasi Laba";
-$lang['page_report_information'] = "Informasi Laporan";
+$lang['pages_report_information'] = "Informasi Laporan";
 $lang['item_report'] = "Laporkan Barang";
 $lang['entry_items'] = "Barang Masuk";
 $lang['drop_items'] = "Barang Keluar";
@@ -432,12 +442,13 @@ $lang['monthly_by_customer'] = "Bulanan Pelanggan";
 $lang['select_group_by'] = "Pilih Pengelompokan";
 $lang['profit'] = "Laba";
 $lang['name'] = "Nama";
+
 /*
  * Faktur
  * pembelian
  */
 $lang['menu_invoice'] = "Menu Faktur";
-$lang['invoice_code'] = "Kode faktur";
+$lang['invoice_code'] = "Kode Faktur";
 
 $lang['page_purchase'] = "Halaman Pembelian";
 $lang['purchase_list'] = "Daftar Pembelian";
@@ -448,7 +459,7 @@ $lang['purchase_edit'] = "Ubah Pembelian";
 $lang['purchase_info'] = "Informasi pembelian";
 $lang['purchase_returns'] = " Pengembalian Pembelian";
 $lang['purchase_returns_edit'] = "Edit Pengembalian Pembelian";
-$lang['purchase_info_create'] = "Tambahkan lebih banyak Informasi Data pembelian";
+$lang['purchase_info_create'] = "Tambahkan informasi lebih lanjut tentang data pembelian. Semua informasi akan disimpan di item transaksi, Faktur pembelian, pembayaran, item histori, dan akan memperbaharui nilai informasi bank, FIFO, dan item.";
 $lang['purchase_info_edit'] = "Edit Informasi Data pembelian";
 $lang['purchase_info_info'] = "Informasi Data pembelian ";
 $lang['purchase_info_returns'] = "Pengembalian Data Informasi pembelian ";
@@ -480,8 +491,7 @@ $lang['credit'] = "Kredit";
 $lang['deposit'] = "Setoran";
 $lang['online'] = "Daring";
 $lang['returns_failed'] = "Pengembalian Gagal, Ubah Jumlah Barang Yang Dikembalikan";
-$lang['invoice_code_reference'] = "Referensi Kode faktur";
-$lang['purchase_payment'] = "Beli Untuk membayar";
+$lang['invoice_code_reference'] = "Referensi Kode Faktur";
 $lang['purchase_return_list'] = "Daftar Pengembalian Pembelian";
 
 /*

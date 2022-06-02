@@ -34,6 +34,7 @@ class Purchase extends Invoice_controller
 		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
+			$this->page_data['bank'] = $this->account_bank_model->get();
 			$this->page_data['title'] = 'purchase_create';
 			$this->page_data['page']->submenu = 'list_purchase';
 			$this->load->view('invoice/purchase/create', $this->page_data);
@@ -77,29 +78,31 @@ class Purchase extends Invoice_controller
 				'other_cost' => post('other_cost'),
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
-				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'status_payment' => (post('payment_type') == 'cash') ? true : false,
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'is_consignment' => post('is_consignment'),
+				'transaction_source' => post('transaction_source'),
 			);
-			try {
 				//Create
 				echo '<pre>';
+				$this->db->trans_start();
 				$this->create_item_history($items, ['CREATE', 'UPDATE']);
 				$this->create_or_update_invoice($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				$this->create_or_update_list_item_fifo($items);
+				$this->create_or_update_list_chart_cash($payment);
+				$this->db->trans_complete();
 				echo "</pre>";
-				// die();
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
-				die();
-			}
+				if($this->db->trans_status() === FALSE){
+					$this->session->set_flashdata('alert-type', 'danger');
+					$this->session->set_flashdata('alert', 'Creating Purchase Failed');	
+					redirect('invoice/purchase/list');
+					die();
+				}
 			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Purchase Successfully');
@@ -118,6 +121,7 @@ class Purchase extends Invoice_controller
 		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
+			$this->page_data['bank'] = $this->account_bank_model->get();
 			$this->page_data['title'] = 'purchase_edit';
 			$this->page_data['page']->submenu = 'edit';
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
@@ -185,23 +189,29 @@ class Purchase extends Invoice_controller
 				'note' => post('note'),
 				'created_by' => logged('id'),
 				'is_consignment' => post('is_consignment'),
+				'transaction_source' => post('transaction_source'),
 			);
-			try {
-				// EDIT
-				$this->create_item_history($items, ['CREATE', 'UPDATE']);
-				$this->create_or_update_invoice($payment);
-				$this->update_items($items);
-				$this->create_or_update_list_item_transcation($items);
-				$this->create_or_update_list_item_fifo($items);
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
+
+			// EDIT
+			echo '<pre>';
+			$this->db->trans_start();
+			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items);
+			$this->create_or_update_list_chart_cash($payment);
+			$this->db->trans_complete();
+			echo "</pre>";
+			if($this->db->trans_status() === FALSE){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Updating Purchase Failed');	
+				redirect('invoice/purchase/list');
 				die();
 			}
 			$this->activity_model->add("Edit Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'Edit Purchase Successfully');
+			$this->session->set_flashdata('alert', 'Updating Purchase Successfully');
 
 			redirect('invoice/purchase/list');
 		}
@@ -251,11 +261,6 @@ class Purchase extends Invoice_controller
 		$this->load->view('includes/modals');
 	}
 
-	public function purchase_items_report()
-	{
-		# code...
-	}
-
 	public function print_PDF()
 	{
 		$this->data_purchase();
@@ -279,6 +284,7 @@ class Purchase extends Invoice_controller
 		$this->data['invoice_code'] = get('id');
 		$this->data['invoice_code_child'] = str_replace('INV','RET', $this->data['invoice_code']);;
 		if(preg_match('/INV/', get('id'))){
+			//REDUCE QUANTITY, IN ITEM TABLES
 			$purchase_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$purchase_return_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(str_replace('INV','RET',$this->input->get('id')));
 			$items_code = array_column($purchase_, 'item_code');
@@ -325,8 +331,8 @@ class Purchase extends Invoice_controller
 				$this->db->where('invoice_code', $this->data['invoice_code_child']);
 				$this->db->update('invoice_purchasing');
 			}
-			//DIKURANGI
 		}else{
+			//INCRESE QUANTITY, IN ITEM TABLES
 			$purchase_ = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$purchase_parent_code = str_replace('RET','INV',$this->input->get('id'));
 			$this->purchase_model->update_by_code($purchase_parent_code, array('have_a_child'=> null));
@@ -348,7 +354,6 @@ class Purchase extends Invoice_controller
 				$items[$key]['is_cancelled'] = 1;
 				$items[$key]['item_order_quantity'] = ($value->item_quantity);
 			}
-			//DITAMBAH
 		}
 		// HELL YEAH DUDE, FELL DIZZY HERE..
 		// IF INVOICE HAVE INVOICE_RETUR, THE INVOICE WANT TO CANCEL. MUST INVOICE_RETUR FIRST TO CANCEL..
@@ -362,6 +367,7 @@ class Purchase extends Invoice_controller
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items);
+			$this->create_or_update_list_chart_cash($payment);
 		} catch (\Throwable $th) {
 			echo "<pre>";
 			var_dump($th);
@@ -376,6 +382,9 @@ class Purchase extends Invoice_controller
 		redirect('invoice/purchase/list');
 	}
 
+	/**
+	 * @param Type array Description: create histori item, with quantity, name and previous quantity.
+	 * */ 
 	protected function create_item_history($data, $status_type)
 	{
 		$item = array();
@@ -408,6 +417,9 @@ class Purchase extends Invoice_controller
 		// // return $this->items_history_model->create_batch($request); // NOT USED HERE...  DIFFERENT CONDITION TO USE HERE...
 	}
 
+	/**
+	 * @param Type array Description: create or update list transaction item.
+	 * */ 
 	protected function create_or_update_list_item_transcation($data)
 	{
 		$item = array();
@@ -456,6 +468,9 @@ class Purchase extends Invoice_controller
 		return false;
 	}
 
+	/**
+	 * @param Type array Description: create or update list item on table ``item_fifo``,
+	 * */ 
 	protected function create_or_update_list_item_fifo($data)
 	{
 		$item = array();
@@ -479,14 +494,14 @@ class Purchase extends Invoice_controller
 				$request[$key]['item_quantity'] = $item_fifo[$key]->item_quantity + ($value['item_order_quantity'] - $value['item_order_quantity_current']);
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				$request[$key]['is_cancelled'] = $value['is_cancelled'];
-				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request);
+				// $this->purchase_model->update_by_code($this->data['invoice_code'], $request); // each data directed
 				$data_positif[] = $request[$key];
 			} else {
 				$request[$key]['created_at'] = $value['created_at'];
 				
 				$request[$key]['item_quantity'] = $value['item_order_quantity'];
 				$request[$key]['created_by'] = logged('id');
-				// $this->purchase_model->create($request);
+				// $this->purchase_model->create($request); // each data directed
 				$data_negatif[] = $request[$key];
 			}
 		}
@@ -501,6 +516,10 @@ class Purchase extends Invoice_controller
 		return $request;
 	}
 
+	
+	/**
+	 * @param Type array Description: create or update invoices,
+	 * */ 
 	protected function create_or_update_invoice($data)
 	{
 		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
@@ -518,6 +537,7 @@ class Purchase extends Invoice_controller
 		$request['note'] = $data['note'];
 		$request['created_at'] = $data['created_at'];
 		$request['is_consignment'] = $data['is_consignment'];
+		$request['transaction_source'] = $data['transaction_source'];
 		if ($response) {
 			$request['is_cancelled'] = @$data['is_cancelled'];
 			$request['cancel_note'] = @$data['cancel_note'];
@@ -534,6 +554,50 @@ class Purchase extends Invoice_controller
 		return $request;
 	}
 
+	/**
+	 * @param Type array Description: information for payment information, and balance on account bank
+	 * */ 
+	private function create_or_update_list_chart_cash($data)
+	{
+		$response = $this->payment_model->get_payment_information_by_invoice_code($this->data['invoice_code']);
+		$request['invoice_code'] = $this->data['invoice_code'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['customer_code'] = $data['supplier'];
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		
+		//
+		$request['payment_type'] = $data['payment_type'];
+		if($data['payment_type'] == 'cash'){
+			$request['payup'] = setCurrency($data['grand_total']); // want to pay
+			$request['leftovers'] = 0; // remaind
+		}else{
+			$request['payup'] = 0; // want to pay
+			$request['leftovers'] = setCurrency($data['grand_total']); // remaind
+		}
+		$request['status_payment'] = 1; // "withdraw, come out"
+		$request['bank_id'] = $data['transaction_source'];
+		$request['description'] = $data['description'];
+		if ($response) {
+			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['cancel_note']  = $data['cancel_note'];
+			$request['updated_by'] = logged('id');
+			$request['updated_at'] = date('Y-m-d H:i:s');
+			//
+			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request);
+		} else {
+			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['created_by'] = logged('id');
+			//	
+			return $this->payment_model->create($request);
+		}
+		return $request;
+	}
+
+	
+	/**
+	 * @param Type array Description: update quantity items,
+	 * */ 
 	protected function update_items($data)
 	{
 		$item = array();
@@ -733,7 +797,7 @@ class Purchase extends Invoice_controller
 				'shipping_cost' => $record->shipping_cost,
 				'other_cost' => $record->other_cost,
 				'payment_type' => lang($record->payment_type),
-				'status_payment' => lang($record->status_payment),
+				'status_payment' => (boolean) $record->status_payment,
 				'grand_total' => $record->grand_total,
 				'purchase_note' => $record->purchase_note,
 				'created_at' => $record->created_at,

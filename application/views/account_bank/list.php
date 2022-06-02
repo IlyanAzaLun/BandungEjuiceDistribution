@@ -129,7 +129,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row){
             return `
             <div class="btn-group d-flex justify-content-center">
-            <a href="<?= url('master_information/account_bank') ?>/update?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+            <a href="<?= url('master_information/account_bank') ?>/cashflow?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Transaction Bank"><i class="fa fa-fw fa-info-circle text-primary"></i></a>
+            <a href="<?= url('master_information/account_bank') ?>/update?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Information Bank"><i class="fa fa-fw fa-edit text-primary"></i></a>
+            <a href="<?= url('master_information/account_bank') ?>/balance?id=${data}&status=increse" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Increse Balance"><i class="fa fa-fw fa-plus-square text-primary"></i></a>
+            <a href="<?= url('master_information/account_bank') ?>/balance?id=${data}&status=reduce" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Reduce Balance"><i class="fa fa-fw fa-minus-square text-primary"></i></a>
             </div>
             `
           }

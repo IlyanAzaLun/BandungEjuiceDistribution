@@ -266,16 +266,6 @@ $i = 0; ?>
                         </div>
                         <div class="col-lg-6 col-sm-12">
                             <div class="row">
-                                <div class="col-lg-2 col-sm-12">
-                                    <div class="form-group">
-                                        <h6><?= lang('payment_type') ?></h6>
-                                        <select class="custom-select" name="payment_type" id="payment_type">
-                                            <option value="cash" <?= ($_data_invoice_parent->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
-                                            <option value="credit" <?= ($_data_invoice_parent->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
-                                            <option value="consignment" <?= ($_data_invoice_parent->payment_type == 'consignment') ? ' selected' : '' ?>><?= lang('consignment') ?></option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-lg-4 col-sm-12">
                                     <!-- Date -->
                                     <div class="form-group">
@@ -299,6 +289,39 @@ $i = 0; ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-2 col-sm-12">
+                                    <h6><?=lang('number_of_day')?></h6>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="numberdays" value="<?=date("d/m/Y H:i:s",strtotime($_data_invoice_parent->date_due))-date("d/m/Y H:i:s",strtotime($_data_invoice_parent->date_start))?>" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-lg-2 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('payment_type') ?></h6>
+                                        <select class="custom-select" name="payment_type" id="payment_type">
+                                            <option value="cash" <?= ($_data_invoice_parent->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
+                                            <option value="credit" <?= ($_data_invoice_parent->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
+                                            <option value="consignment" <?= ($_data_invoice_parent->payment_type == 'consignment') ? ' selected' : '' ?>><?= lang('consignment') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?=lang('bank_name')?></h6>
+                                        <div class="input-group">
+                                            <select name="transaction_source" id="source" class="custom-select" required>
+                                                <option value="" disabled selected><?=lang('select_account')?></option>
+                                                <?php foreach ($bank as $key => $value):?>
+                                                    <option value="<?=$value->id?>"<?=($value->id==$_data_invoice_parent->transaction_destination)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
+                                                <?php endforeach?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-12 col-sm-12">
@@ -318,8 +341,8 @@ $i = 0; ?>
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
-                                <input type="hidden" name="status_payment" value="credit">
-                                <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment=='payed'?'checked':'' ?> value='payed'>
+                                <input type="hidden" name="status_payment" value=0>
+                                <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment?'checked':'' ?> value=1>
                                 <label for="status_payment" class="custom-control-label"><?=strtolower(lang('is_status_payment'))?></label>
                                 </div>
                             </div>
@@ -371,7 +394,7 @@ $i = 0; ?>
         opens: "center",
         drops: "up",
         locale: {
-        format: 'DD/MM/YYYY H:mm:ss'
+            format: 'DD/MM/YYYY'
         },
         ranges: {
             'Today': [moment(), moment()],

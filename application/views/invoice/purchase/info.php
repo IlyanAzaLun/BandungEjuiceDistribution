@@ -226,14 +226,40 @@ $i = 0; $total_price = 0;?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-12">
+                        
+                        <div class="col-lg-1 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('payment_type') ?></h6>
                                 <input readonly type="text" class="form-control" value="<?= lang($invoice_information_transaction->payment_type) ?>" required>
                             </div>
                         </div>
+                        
+                        <div class="col-lg-2 col-sm-12">
+                            <!-- Date -->
+                            <div class="form-group">
+                                <h6><?=lang('date')?></h6>
+                                <div class="input-group">
+                                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($_data_invoice_parent->created_at))?>">
+                                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-12">
+                            <div class="form-group">
+                                <h6><?= lang('date_due') ?></h6>
+                                <div class="input-group mb-3">
+                                <input type="text" id="date_due" name="date_due" class="form-control" value="<?=date("d/m/Y H:i:s",strtotime($_data_invoice_parent->date_start))?> - <?=date("d/m/Y H:i:s",strtotime($_data_invoice_parent->date_due))?>">
+                                <dv class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-tw fa-calendar"></i></span>
+                                </dv>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <?php if($intersect_codex_item):?>
-                        <div class="col-lg-3 col-sm-12 text-danger">
+                        <div class="col-lg-1 col-sm-12 text-danger">
                             <div class="form-group">
                                 <h6><b><?= lang('deposit') ?></b></h6>
                                 <input readonly type="text" class="form-control" value="<?= number_format((int)$_data_invoice_parent->grand_total - (int)$_data_invoice_child_->grand_total) ?>" required>
@@ -255,18 +281,29 @@ $i = 0; $total_price = 0;?>
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                <input type="hidden" name="status_payment" value=0>
+                                <input disabled class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment?'checked':'' ?> value=1>
+                                <label for="status_payment" class="custom-control-label"><?=strtolower(lang('is_status_payment'))?></label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /.card-body -->
+            </div>
+            <div class="card">
                 <!-- /card-footer -->
                 <?php if(!$invoice_information_transaction->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-right">
-                        <button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
                     </div>
                 </div>
                 <?php endif?>
-                <!-- /.card-body -->
             </div>
             <!-- Information payment END -->
             <!-- /.card -->

@@ -70,7 +70,6 @@ class Sale extends Invoice_controller
 			//information payment
 			$payment = array(
 				'customer' => post('customer_code'),
-				'transaction_destination' => post('transaction_destination'),
 				'store_name' => post('store_name'),
 				'contact_phone' => post('contact_phone'),
 				'address' => post('address'),
@@ -82,22 +81,30 @@ class Sale extends Invoice_controller
 				'expedition_name' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'payment_type' => post('payment_type'),
-				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'status_payment' => (post('payment_type') == 'cash') ? true : false,
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-				'note' => post('note'),
+				'note' => strtoupper(post('note')),
 				'reference_order' => get('id'),
+				'transaction_destination' => post('transaction_destination'),
 			);
 			// // CREATE
+			echo '<pre>';
+			$this->db->trans_start();
 			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
-			$this->order_model->update_by_code(get('id'), array('is_created' => 1));
+			$this->order_model->update_by_code(get('id'), array('is_created' => 1)); // UPDATE STATUS ORDER IS CREATED TO INVOICE
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
+			// Transaction Payment
+			$this->create_or_update_list_chart_cash($payment);
 			// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			
+			$this->db->trans_complete();
+			echo '</pre>';
+			// die();
 			$this->activity_model->add("Create Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Sale Invoice Successfully');
@@ -181,25 +188,29 @@ class Sale extends Invoice_controller
 				'expedition_name' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'payment_type' => post('payment_type'),
-				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'status_payment' => (post('payment_type') == 'cash') ? true : false,
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-				'note' => post('note'),
+				'note' => strtoupper(post('note')),
 				'reference_order' => get('id'),
 			);// Check
 			
 			echo '<pre>';
 			// // EDIT
+			$this->db->trans_start();
 			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
 			$this->create_or_update_invoice($payment);
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
-			// die();
+			// Tranasction Payment
+			$this->create_or_update_list_chart_cash($payment);
 			
+			$this->db->trans_complete();
 			echo '</pre>';
+			// die();
 			$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Edit Sale Invoice Successfully');
@@ -532,6 +543,46 @@ class Sale extends Invoice_controller
 		}
 		return $request;
 	}
+
+	/**
+	 * @param Type array Description: information for payment information, and balance on account bank
+	 * */ 
+	private function create_or_update_list_chart_cash($data)
+	{
+		$response = $this->payment_model->get_payment_information_by_invoice_code($this->data['invoice_code']);
+		$request['invoice_code'] = $this->data['invoice_code'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['customer_code'] = $data['customer'];
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		
+		//
+		$request['payment_type'] = $data['payment_type'];
+		if($data['payment_type'] == 'cash'){
+			$request['payup'] = setCurrency($data['grand_total']); // want to pay
+			$request['leftovers'] = 0; // remaind
+		}else{
+			$request['payup'] = 0; // want to pay
+			$request['leftovers'] = setCurrency($data['grand_total']); // remaind
+		}
+		$request['status_payment'] = 0; // "deposit, come in"
+		$request['bank_id'] = $data['transaction_destination'];
+		$request['description'] = $data['note'];
+		if ($response) {
+			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['cancel_note']  = $data['cancel_note'];
+			$request['updated_by'] = logged('id');
+			$request['updated_at'] = date('Y-m-d H:i:s');
+			//
+			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request);
+		} else {
+			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['created_by'] = logged('id');
+			//	
+			return $this->payment_model->create($request);
+		}
+		return $request;
+	}
 	
 	protected function update_items($data)
 	{
@@ -608,7 +659,7 @@ class Sale extends Invoice_controller
 	*/
 	public function drop()
 	{
-		ifPermissions('sale_create');
+		ifPermissions('drop_items');
 		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
 		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
 
@@ -697,9 +748,10 @@ class Sale extends Invoice_controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = @$postData['startDate'];
-		$dateFinal = @$postData['finalDate'];
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
+		// $haspermission = hasPermissions('data_information_invoice_sale');
 		$haspermission = hasPermissions('warehouse_order_list');
 
 		## Total number of records without filtering

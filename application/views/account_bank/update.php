@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
-<pre><?php var_dump($bank)?></pre>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <div class="container-fluid">
@@ -58,6 +57,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <?=form_error('own_by', '<small class="text-danger">','</small>')?>
                             </div>
                         </div>
+                        <div class="col-sm-3">
+                        <!-- text input -->
+                            <div class="form-group">
+                                <label><?=lang('balance_total')?></label>
+                                <input type="text" class="form-control currency" name="balance" id="balance" value="<?=$bank->balance?>" readonly>
+                                <?=form_error('balance', '<small class="text-danger">','</small>')?>
+                            </div>
+                        </div>
                         <div class="col-12">
                         <!-- text input -->
                             <div class="form-group">
@@ -90,3 +97,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- /.content -->
 
 <?php include viewPath('includes/footer'); ?>
+<script>
+  $(document).ready(function(){
+    $('.currency').each(function (index, field) {
+        $(field).val(currency(currencyToNum($(field).val())));
+    });
+
+    $(document).on('keyup', '.currency', function () {
+        $(this).val(currency(currencyToNum($(this).val())));
+    })
+  })
+</script>

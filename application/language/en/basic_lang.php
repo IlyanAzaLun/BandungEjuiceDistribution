@@ -30,7 +30,7 @@ $lang['member_since'] = "Member Since";
 $lang['change_profile_image'] = "Change Profile Image";
 $lang['change_password'] = "Change Password";
 $lang['message_login_again_after_password'] = "You will need to login again after password is changed !";
-$lang['message_password_atleast_long'] = "Password must be atleast 6 characters long !";
+$lang['message_password_atleast_long'] = "Password must be Atleast 6 characters long !";
 $lang['old_password'] = "Old Password";
 $lang['leave_without_logout'] = "Do you want to leave this page without logout?";
 
@@ -39,7 +39,7 @@ $lang['leave_without_logout'] = "Do you want to leave this page without logout?"
  * Error Pages
  */
 $lang['not_allowed_403'] = "You are not allowed to access this page.";
-$lang['error_worng_information'] = "Error, worng information.";
+$lang['error_worng_Information'] = "Error, worng Information.";
 $lang['sorry_not_allowed_msg'] = "Sorry, you cannot access this section/webpage.
 Meanwhile, you may <a href='" . url('/') . "'>return to dashboard</a> or try using the search form.";
 
@@ -127,7 +127,7 @@ $lang['level'] = "Level";
 $lang['labels'] = "Labels";
 $lang['important'] = "Important";
 $lang['warning'] = "Warning";
-$lang['informational'] = "Informational";
+$lang['Informational'] = "Informational";
 
 $lang['id'] = "ID";
 $lang['action'] = "Action";
@@ -261,13 +261,13 @@ $lang['note'] = "Note";
 $lang['save'] = "Save";
 $lang['cancel'] = "Cancel";
 $lang['update'] = "Update";
-$lang['created_by'] = "Created by";
-$lang['created_at'] = "Created at";
-$lang['updated_by'] = "Updated by";
-$lang['updated_at'] = "Updated at";
+$lang['created_by'] = "Created By";
+$lang['created_at'] = "Created At";
+$lang['updated_by'] = "Updated By";
+$lang['updated_at'] = "Updated At";
 $lang['date'] = "Date";
 $lang['day'] = "Days";
-$lang['number_of_day'] = "Number of days";
+$lang['number_of_day'] = "Total Days";
 $lang['status_active'] = "This data will not be displayed if the status is turned off";
 
 /*
@@ -278,9 +278,9 @@ $lang['items'] = "Items";
 $lang['unit'] = "Unit";
 $lang['broken'] = "Broken";
 $lang['item_list'] = "List Item";
-$lang['item_list_information'] = "List item information";
-$lang['item_list_information_transaction'] = "Transaction item information";
-$lang['item_list_information_fifo'] = "First In Fisrt Out, Item information";
+$lang['item_list_Information'] = "List item Information";
+$lang['item_list_Information_transaction'] = "Transaction item Information";
+$lang['item_list_Information_fifo'] = "First In Fisrt Out, Item Information";
 $lang['item_add'] = "Add Item";
 $lang['item_update'] = "Update Item";
 $lang['item_code'] = "Item code";
@@ -288,8 +288,8 @@ $lang['item_name'] = "Item name";
 $lang['item_quantity'] = "Item quantity";
 $lang['item_capital_price'] = "Capital price";
 $lang['item_selling_price'] = "Selling price";
-$lang['item_info_add'] = "Add more information data items";
-$lang['item_info_edit'] = "Edit information data Item";
+$lang['item_info_add'] = "Add More Information data items";
+$lang['item_info_edit'] = "Edit Information data Item";
 $lang['category_item'] = "Category Item";
 $lang['select_category_item'] = "Select Category Item";
 $lang['current_stock'] = "Curent stock";
@@ -315,8 +315,8 @@ $lang['address_destination'] = "Address Destination";
 $lang['select_store_name'] = "Select Store Name";
 $lang['customer_owner'] = "Owner Name";
 $lang['category_customer'] = "Customer Category";
-$lang['customer_info_add'] = "Add more information data customers";
-$lang['customer_info_edit'] = "Edit information data customer";
+$lang['customer_info_add'] = "Add More Information data customers";
+$lang['customer_info_edit'] = "Edit Information data customer";
 $lang['select_category_customer'] = "Select category customer";
 $lang['customer_category_ws'] = "Wholesale";
 $lang['customer_category_reseller'] = "Reseller";
@@ -341,8 +341,8 @@ $lang['address_destination'] = "Address destination";
 $lang['select_store_name'] = "Select store name";
 $lang['supplier_owner'] = "Owner name";
 $lang['category_supplier'] = "Supplier category";
-$lang['supplier_info_add'] = "Add more information data suppliers";
-$lang['supplier_info_edit'] = "Edit information data supplier";
+$lang['supplier_info_add'] = "Add More Information data suppliers";
+$lang['supplier_info_edit'] = "Edit Information data supplier";
 $lang['select_category_supplier'] = "Select category supplier";
 $lang['supplier_category_ws'] = "Wholesale";
 $lang['supplier_category_agent'] = "Agent";
@@ -366,8 +366,8 @@ $lang['expedition_edit'] = "Edit Expedition";
 $lang['expedition_code'] = "Expedition code";
 $lang['expedition_name'] = "Expedition name";
 $lang['expedition_services'] = "Expedition services";
-$lang['expedition_info_add'] = "Add more information data Expeditions";
-$lang['expedition_info_edit'] = "Edit information data Expedition";
+$lang['expedition_info_add'] = "Add More Information data Expeditions";
+$lang['expedition_info_edit'] = "Edit Information data Expedition";
 $lang['select_category_expedition'] = "Select category Expedition";
 $lang['ground_shipping'] = "Ground Shipping";
 $lang['air_shipping'] = "Air Shipping";
@@ -388,8 +388,8 @@ $lang['zip'] = "Zip";
 $lang['contact_phone'] = "Contact phone";
 $lang['contact_mail'] = "Contact email";
 $lang['address_update'] = "Update address";
-$lang['address_info_add'] = "Add more information data address";
-$lang['address_info_edit'] = "Edit information data address";
+$lang['address_info_add'] = "Add More Information data address";
+$lang['address_info_edit'] = "Edit Information data address";
 $lang['is_open'] = "Is Open";
 
 /*
@@ -399,11 +399,22 @@ $lang['bank'] = "Bank";
 $lang['pages_account_bank'] = "Account Bank";
 $lang['account_bank_list'] = "List Account";
 $lang['account_bank_add'] = "Add New Account";
-$lang['info_add'] = "Add more information";
+$lang['account_bank_edit'] = "Edit Information Account";
+$lang['info_add'] = "Add More Information";
+$lang['info_edit'] = "Change More Information";
 $lang['bank_name'] = "Bank Name";
 $lang['no_account'] = "No Account Bank";
 $lang['own_by'] = "Own By";
+$lang['balance_total'] = "Balance Total";
 $lang['select_account'] = "Select Account Bank";
+$lang['note_transaction'] = "Notes Transaction";
+$lang['info_balance'] = "Change Information Balance, with add information transaction";
+$lang['transaction'] = "Transaction";
+$lang['balance'] = "Balance";
+$lang['nominal'] = "Nominal";
+$lang['reduce'] = "Out";
+$lang['increse'] = "In";
+
 
 /*
  * Report
@@ -414,7 +425,7 @@ $lang['report_purchase'] = "Purchase Information";
 $lang['report_sale'] = "Sale Information";
 $lang['report_sale_items'] = "Items Information";
 $lang['report_sale_profit'] = "Profit Information";
-$lang['page_report_information'] = "Report Information";
+$lang['pages_report_information'] = "Report Information";
 $lang['item_report'] = "Report Item";
 $lang['entry_items'] = "Entry Items";
 $lang['drop_items'] = "Drop Items";
@@ -434,7 +445,6 @@ $lang['profit'] = "Profit";
 $lang['name'] = "Name";
 
 
-
 /*
  * Invoice
  * purchase
@@ -448,16 +458,16 @@ $lang['find_supplier_code'] = "Find supplier code ...";
 $lang['find_store_name'] = "Find store name ...";
 $lang['purchase_create'] = "Create Purchase";
 $lang['purchase_edit'] = "Edit Purchase";
-$lang['purchase_info'] = "Purchase information";
+$lang['purchase_info'] = "Purchase Information";
 $lang['purchase_returns'] = " Returns Purchase";
 $lang['purchase_returns_edit'] = "Edit Returns Purchase";
-$lang['purchase_info_create'] = "Add more information data purchase";
-$lang['purchase_info_edit'] = "Edit information data purchase ";
+$lang['purchase_info_create'] = "Add More Information on data purchase. All Information will be saved on transaction items, invoice purchase, payment, history items, and will be updating value of bank Information, FIFO, and items.";
+$lang['purchase_info_edit'] = "Edit Information data purchase ";
 $lang['purchase_info_info'] = "Information data purchase ";
-$lang['purchase_info_returns'] = "Returns information data purchase ";
-$lang['information_supplier'] = "Supplier Information";
-$lang['information_customer'] = "Customer Information";
-$lang['information_items'] = "Items Information";
+$lang['purchase_info_returns'] = "Returns Information data purchase ";
+$lang['Information_supplier'] = "Supplier Information";
+$lang['Information_customer'] = "Customer Information";
+$lang['Information_items'] = "Items Information";
 $lang['find_items'] = "Find items...";
 $lang['item_order_quantity'] = "Item Order Quantity";
 $lang['item_order_quantity_returns'] = "Item Order Quantity Returns";
@@ -468,7 +478,7 @@ $lang['discount'] = "Discount";
 $lang['shipping_cost'] = "Shipping cost";
 $lang['other_cost'] = "Other cost";
 $lang['grandtotal'] = "Grand total";
-$lang['information_payment'] = "Payment Information";
+$lang['Information_payment'] = "Payment Information";
 $lang['payment_type'] = "Type Payment";
 $lang['status_payment'] = "Status Payment";
 $lang['is_status_payment'] = "Is Status Payment ?";
@@ -484,7 +494,6 @@ $lang['deposit'] = "Deposit";
 $lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
 $lang['invoice_code_reference'] = "Invoice code reference";
-$lang['purchase_payment'] = "Purchase to pay";
 $lang['purchase_return_list'] = "List Returns Purchase";
 
 /*
@@ -510,8 +519,8 @@ $lang['order_edit'] = "Edit Order";
 $lang['order_code'] = "Order Code";
 $lang['status_available'] = "Status Available";
 
-$lang['order_info_create'] = "Add more information data order";
-$lang['order_info_edit'] = "Edit information data order ";
+$lang['order_info_create'] = "Add More Information data order";
+$lang['order_info_edit'] = "Edit Information data order ";
 $lang['order_info_info'] = "Information data order ";
 $lang['import_order'] = "Import Order Items ";
 
@@ -529,6 +538,14 @@ $lang['sale_returns'] = "Returns Sale";
 $lang['sale_return_list'] = "List Returns Sale";
 $lang['returns'] = "Returns";
 
+/*
+ * Payment
+ */
+$lang['page_payment'] = "Page Payment";
+
+$lang['payment'] = "Payment";
+$lang['payment_purchases'] = "Purchases Payment";
+$lang['payment_sales'] = "Sales Payment";
 
 /*
  * Validation

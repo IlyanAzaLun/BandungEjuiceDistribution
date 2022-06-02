@@ -79,7 +79,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo $url->assets ?>js/demo.js"></script>
 <script src="<?php echo $url->assets ?>js/attribute.js"></script>
-
 <script>
   $(document).ready(function(e) {
 
@@ -101,6 +100,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
     $('form').submit(function() {
       disableConfirmation = true;
+      $('.loading').css({"display":"block"})
     });
 
   })
