@@ -40,7 +40,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="form-group">
                                     <label><?= ucwords(lang('supplier_code')) ?></label>
                                     <input type="hidden" class="form-control" name="id" id="id" readonly value="<?= $supplier->id ?>">
-                                    <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" readonly value="<?= $supplier->customer_code ?>">
+                                    <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" value="<?= $supplier->customer_code ?>">
                                 </div>
                             </div>
 

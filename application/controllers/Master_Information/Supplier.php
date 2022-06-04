@@ -94,7 +94,7 @@ class Supplier extends MY_Controller
                 'note' => post('note'),
             ];
             $supplier = $this->supplier_model->update(POST('id'), $data);
-
+            $this->address_model->updateByCustomerCode(get('id'), array('customer_code' => post('customer_code') ));
             $this->activity_model->add("Update supplier #$supplier, Update by User: #" . logged('id'), (array)$this->page_data['supplier']);
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Update supplier Successfully');

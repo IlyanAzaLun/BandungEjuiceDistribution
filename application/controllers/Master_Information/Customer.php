@@ -95,7 +95,7 @@ class Customer extends MY_Controller
                 'note' => post('note'),
             ];
             $customer = $this->customer_model->update(post('id'), $data);
-
+            $this->address_model->updateByCustomerCode(get('id'), array('customer_code' => post('customer_code') ));
             $this->activity_model->add("Update Customer #$customer, Update by User: #" . logged('id'), (array)$this->page_data['customer']);
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Update Customer Successfully');
@@ -242,7 +242,7 @@ class Customer extends MY_Controller
 
     public function data_customer()
     {
-        if (ifPermissions('order_create') || ifPermissions('warehouse_order_validation_available')) {
+        if (hasPermissions('requst_data_customer')) {
             $search = (object) post('search');
             $this->db->limit(5);
             if (isset($search->value)) {
@@ -258,7 +258,9 @@ class Customer extends MY_Controller
             $this->db->join('address_information', 'address_information.customer_code=customer_information.customer_code', 'left');
             $response = $this->db->get('customer_information')->result();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
-        };
+        }else{
+            ifPermissions('order_create');
+        }
     }
 }
 

@@ -71,7 +71,7 @@ $contact = "$customer->contact_phone $customer->contact_mail";
             <table>
                 <thead>
                     <tr class="text-right">
-                        <th rowspan="3" class="text-center"><img src="https://external-preview.redd.it/6l63BffeDoLRZw5EiCuApqXRMrViJK5RhHjnD1eEQ0M.jpg?auto=webp&s=34697fb3fc0b37b6d78c4859f99472bf5ac2b50e" alt="" width="50px"></th>
+                        <th rowspan="4" class="text-center"><img src="https://external-preview.redd.it/6l63BffeDoLRZw5EiCuApqXRMrViJK5RhHjnD1eEQ0M.jpg?auto=webp&s=34697fb3fc0b37b6d78c4859f99472bf5ac2b50e" alt="" width="50px"></th>
                         <th>Nama Toko</th>
                         <th>Nama Pemilik</th>
                     </tr>
@@ -85,6 +85,12 @@ $contact = "$customer->contact_phone $customer->contact_mail";
                         <th colspan="2" class="text-top text-left">
                             Alamat: <?=$destination?><br>
                             Kontak: <?=$contact?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-top text-left">
+                            Ekspedisi: <?= "$invoice->expedition - $invoice->services_expedition"; ?><br>
+                            Koli: <?=$invoice->pack?>
                         </th>
                     </tr>
                 </tbody>

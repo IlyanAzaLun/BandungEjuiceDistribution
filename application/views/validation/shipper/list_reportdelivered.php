@@ -249,7 +249,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
-                  <button class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check-double"></i></button>
+                  <button disabled class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check-double"></i></button>
                 </div>`;
           }
         },

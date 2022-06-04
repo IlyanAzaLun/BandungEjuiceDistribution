@@ -194,6 +194,8 @@ class Sale extends Invoice_controller
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => strtoupper(post('note')),
 				'reference_order' => get('id'),
+				'is_controlled_by' => null,
+				'is_delivered' => null,
 			);// Check
 			
 			echo '<pre>';
@@ -437,6 +439,8 @@ class Sale extends Invoice_controller
 			$request['created_at'] = $data['created_at'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
+			$request['is_controlled_by'] = null;
+			$request['is_delivered'] = null;
 			//
 			return $this->sale_model->update_by_code($this->data['invoice_code'], $request);
 		} else {
@@ -751,8 +755,7 @@ class Sale extends Invoice_controller
 		$dateStart = $postData['startDate'];
 		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
-		// $haspermission = hasPermissions('data_information_invoice_sale');
-		$haspermission = hasPermissions('warehouse_order_list');
+		$haspermission = hasPermissions('fetch_all_invoice_sales');
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
@@ -888,9 +891,6 @@ class Sale extends Invoice_controller
         $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
         $this->db->where('transaction.is_cancelled', 0);
         if(!$haspermission){
-            $this->db->select('
-            transaction.created_by
-           ,users.name');
             $this->db->where("transaction.created_by", $user);
         }
 		$this->db->group_by("yearmount");

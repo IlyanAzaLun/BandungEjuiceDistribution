@@ -486,13 +486,13 @@ function supported_languages()
 {
 
 	$supported_languages = json_decode('{
-		"en":{
-			"name":"English",
-			"nativeName":"english"
-		},
 		"id":{
 			"name":"Indonesian",
 			"nativeName":"Bahasa Indonesia"
+		},
+		"en":{
+			"name":"English",
+			"nativeName":"english"
 		}
 	}');
 

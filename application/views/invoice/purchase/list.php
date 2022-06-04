@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
-                  <th>no.</th>
+                  <th width="2%">no.</th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
                   <th><?= lang('invoice_code_reference') ?></th>
@@ -216,6 +216,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "status_payment",
           orderable: false,
+          visible: false,
           render: function(data, type, row) {
             return data
           }

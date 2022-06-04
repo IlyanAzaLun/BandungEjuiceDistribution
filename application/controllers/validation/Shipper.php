@@ -16,9 +16,36 @@ class Shipper extends MY_Controller
         $this->list();
     }
 
+	public function pack()
+	{
+		ifPermissions('shipper_transaction_list');	
+		$this->form_validation->set_rules('pack', lang('pack'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
+			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->load->view('validation/shipper/pack', $this->page_data);
+		}else{
+			$this->data['invoice_code'] = get('invoice');
+			$information = array(
+				'pack' => post('pack'),
+			);
+			if($this->sale_model->update_by_code($this->data['invoice_code'], $information)){
+				$this->activity_model->add("Delevered, #" . $this->data['invoice_code'], (array) $payment);
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'Delevered is Saved');
+			}else{
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Delevered Failed, need ID Invoice information!');
+			}
+			redirect('validation/shipper/report_packing');
+		}
+	}
+
 	public function destination()
 	{	
+		ifPermissions('shipper_transaction_list');	
 		$customer = $this->customer_model->get_information_customer(get('id'));
+		$data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
 		$data['customer'] = $customer;
 	
 		$this->load->library('pdf');
@@ -62,7 +89,7 @@ class Shipper extends MY_Controller
 	//LIST QUALITY CONTROL
 	public function list()
 	{
-		ifPermissions('shipper_transaction_list');
+		ifPermissions('quality_control');
 		$this->page_data['title'] = 'shipping_list';
 		$this->page_data['page']->submenu = 'list_quality_control';
 		$this->page_data['modals'] = (object) array(

@@ -210,7 +210,6 @@
                                                 <select class="custom-select" name="payment_type">
                                                     <option value="cash" <?= ($order->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
                                                     <option value="credit" <?= ($order->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
-                                                    <option value="online" <?= ($order->payment_type == 'online') ? ' selected' : '' ?>><?= lang('credit') ?></option>
                                                 </select>
                                             </div>
                                         </div>

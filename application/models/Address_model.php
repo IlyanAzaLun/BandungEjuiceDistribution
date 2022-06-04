@@ -15,6 +15,12 @@ class Address_model extends MY_Model {
 		$this->db->where('customer_code', $data);
 		return $this->db->get($this->table)->row();
 	}
+
+	public function updateByCustomerCode($id, $data)
+	{
+		$this->db->where('customer_code', $id);
+		return $this->db->update($this->table, $data);
+	}
 }
 
 /* End of file Items_model.php */

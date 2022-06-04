@@ -84,6 +84,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row" id="order_item">
+            <div class="col-12 mb-2">
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import_purchase_items"><i class="fa fa-fw fa-file-import"></i>&nbsp;<?=lang('import_purchase')?></button>
+            </div>
             <div class="col-12">
               <table class="table table-sm">
                 <thead>

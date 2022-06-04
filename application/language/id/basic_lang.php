@@ -449,6 +449,7 @@ $lang['name'] = "Nama";
  */
 $lang['menu_invoice'] = "Menu Faktur";
 $lang['invoice_code'] = "Kode Faktur";
+$lang['import_purchase'] = "Import Barang Pembelian";
 
 $lang['page_purchase'] = "Halaman Pembelian";
 $lang['purchase_list'] = "Daftar Pembelian";
@@ -550,11 +551,13 @@ $lang['order_list_item_available'] = "Daftar Barang Pesanan";
  * Validasi
  * Pengiriman
  */
+$lang['pack'] = "Koli";
 $lang['quality_control'] = "Kontrol Kualitas";
 $lang['page_shipping'] = "Halaman Pengiriman";
 $lang['shipping_list'] = "Daftar Pengiriman";
 $lang['shipping_report'] = "Laporkan Pengiriman";
 $lang['delivered_report'] = "Laporan Terkirim";
+$lang['weight_shipping_information'] = "Tambahkan Informasi Berat Barang";
 
 
 /**

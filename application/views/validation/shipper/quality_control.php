@@ -157,7 +157,6 @@ $i = 0; $total_items = 0;?>
                                             <td>
                                                 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
-                                                    <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                                                     <?php if (sizeof($list_item_sale) <= 1) : ?>
                                                     <button disabled type="button" class="btn btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                                     <?php else : ?>
@@ -223,7 +222,6 @@ $i = 0; $total_items = 0;?>
                                             <td>
                                                 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
-                                                    <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                                                     <button disabled type="button" class="btn btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                                 </div>
                                             </td>

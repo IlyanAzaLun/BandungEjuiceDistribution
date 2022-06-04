@@ -140,6 +140,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "item_capital_price",
+          <?php if(!hasPermissions('items_edit')):?>
+          visible: false,
+          <?php endif ?>
           orderable: false,
           render: function(data, type, row) {
             return (data) ? currency(data) : 0
@@ -204,6 +207,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           action: function(e, dt, node, config) {
             $('#modal-import').modal('show');
           }
+        },
+        {
+          text: 'Column visibility',
+          extend: 'colvis',
+          className: 'btn-sm'
         },
         {
           text: '<?= lang('add_data') ?>',

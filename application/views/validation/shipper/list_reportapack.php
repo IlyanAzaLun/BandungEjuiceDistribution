@@ -61,7 +61,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
             <?php echo form_close(); ?>
-            <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
+            <table id="example2" class="table table-bordered table-hover table-sm dataTable dtr-inline" style="font-size: 12px;" data-resizable="true">
               <thead>
                 <tr>
                   <th width="2%">no.</th>
@@ -254,7 +254,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
+                  <a target="_blank" href="<?= url('validation/shipper') ?>/pack?invoice=${row['invoice_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-weight text-primary"></i></a>
+                  <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}&invoice=${row['invoice_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
                   <button class="btn btn-xs btn-primary confirmation" data-id="${row['invoice_code']}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check-double"></i></button>
                 </div>`;
           }

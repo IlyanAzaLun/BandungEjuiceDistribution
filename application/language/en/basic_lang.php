@@ -279,8 +279,8 @@ $lang['unit'] = "Unit";
 $lang['broken'] = "Broken";
 $lang['item_list'] = "List Item";
 $lang['item_list_Information'] = "List item Information";
-$lang['item_list_Information_transaction'] = "Transaction item Information";
-$lang['item_list_Information_fifo'] = "First In Fisrt Out, Item Information";
+$lang['item_list_information_transaction'] = "Transaction item Information";
+$lang['item_list_information_fifo'] = "First In Fisrt Out, Item Information";
 $lang['item_add'] = "Add Item";
 $lang['item_update'] = "Update Item";
 $lang['item_code'] = "Item code";
@@ -451,6 +451,8 @@ $lang['name'] = "Name";
  */
 $lang['menu_invoice'] = "Menus Invoice";
 $lang['invoice_code'] = "Invoice code";
+$lang['import_purchase'] = "Import Items Purchase";
+
 
 $lang['page_purchase'] = "Page Purchase";
 $lang['purchase_list'] = "List Purchase";
@@ -465,9 +467,9 @@ $lang['purchase_info_create'] = "Add More Information on data purchase. All Info
 $lang['purchase_info_edit'] = "Edit Information data purchase ";
 $lang['purchase_info_info'] = "Information data purchase ";
 $lang['purchase_info_returns'] = "Returns Information data purchase ";
-$lang['Information_supplier'] = "Supplier Information";
-$lang['Information_customer'] = "Customer Information";
-$lang['Information_items'] = "Items Information";
+$lang['information_supplier'] = "Supplier Information";
+$lang['information_customer'] = "Customer Information";
+$lang['information_items'] = "Items Information";
 $lang['find_items'] = "Find items...";
 $lang['item_order_quantity'] = "Item Order Quantity";
 $lang['item_order_quantity_returns'] = "Item Order Quantity Returns";
@@ -478,7 +480,7 @@ $lang['discount'] = "Discount";
 $lang['shipping_cost'] = "Shipping cost";
 $lang['other_cost'] = "Other cost";
 $lang['grandtotal'] = "Grand total";
-$lang['Information_payment'] = "Payment Information";
+$lang['information_payment'] = "Payment Information";
 $lang['payment_type'] = "Type Payment";
 $lang['status_payment'] = "Status Payment";
 $lang['is_status_payment'] = "Is Status Payment ?";
@@ -560,11 +562,13 @@ $lang['order_list_item_available'] = "List Order Item";
  * Validation
  * Shipping
  */
+$lang['pack'] = "Koli";
 $lang['quality_control'] = "Quality Control";
 $lang['page_shipping'] = "Page Shipping";
 $lang['shipping_list'] = "Shipping List";
 $lang['shipping_report'] = "Report Shipping";
 $lang['delivered_report'] = "Report Delivered";
+$lang['weight_shipping_information'] = "Append Weight Information";
 
 
 /**

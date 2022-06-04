@@ -37,7 +37,18 @@ class Purchase extends Invoice_controller
 			$this->page_data['bank'] = $this->account_bank_model->get();
 			$this->page_data['title'] = 'purchase_create';
 			$this->page_data['page']->submenu = 'list_purchase';
+			$this->page_data['modals'] = (object) array(
+				'id' => 'import_purchase_items',
+				'title' => 'Modals Import Purchase Items',
+				'link' => "invoice/purchase/create_import",
+				'content' => 'upload',
+				'btn' => 'btn-primary',
+				'submit' => 'Yes do it',
+			);
+
 			$this->load->view('invoice/purchase/create', $this->page_data);
+			$this->load->view('includes/modals', $this->page_data);
+
 		} else {
 			// information invoice
 			$this->data['invoice_code'] = $this->purchase_model->get_code_invoice_purchase();
@@ -109,6 +120,33 @@ class Purchase extends Invoice_controller
 
 			redirect('invoice/purchase/list');
 		}
+	}
+
+	public function create_import()
+	{
+		ifPermissions('upload_file');
+        if ($_FILES['file']['name'] == "") {
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Empty File, Please select file to import');
+            redirect('invoice/purchase/create');
+			die();
+        }
+		$this->page_data['data'] = $this->uploadlib->uploadFile();
+		$this->page_data['bank'] = $this->account_bank_model->get();
+		$this->page_data['title'] = 'purchase_create';
+		$this->page_data['page']->submenu = 'list_purchase';
+
+		$this->page_data['modals'] = (object) array(
+			'id' => 'import_purchase_items',
+			'title' => 'Modals Import Purchase Items',
+			'link' => "invoice/purchase/create_import",
+			'content' => 'upload',
+			'btn' => 'btn-primary',
+			'submit' => 'Yes do it',
+		);
+		$this->load->view('invoice/purchase/create_import_items', $this->page_data);
+		$this->load->view('includes/modals', $this->page_data);
+
 	}
 
 	public function edit()

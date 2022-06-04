@@ -316,7 +316,7 @@ $i = 0; ?>
                                             <select name="transaction_source" id="source" class="custom-select" required>
                                                 <option value="" disabled selected><?=lang('select_account')?></option>
                                                 <?php foreach ($bank as $key => $value):?>
-                                                    <option value="<?=$value->id?>"<?=($value->id==$_data_invoice_parent->transaction_destination)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
+                                                    <option value="<?=$value->id?>"<?=($value->id==$_data_invoice_parent->transaction_source)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
                                                 <?php endforeach?>
                                             </select>
                                         </div>
