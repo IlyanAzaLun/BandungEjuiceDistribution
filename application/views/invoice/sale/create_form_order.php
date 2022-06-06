@@ -273,11 +273,17 @@
                 </div>
                 <!-- /.card-body -->
             </div>
+            <?php if ($order->is_created):?>
+            <div class="callout callout-warning">
+                <h5><i class="fas fa-exlamation"></i> Note:</h5>
+                <b class="text-danger"><?= lang('order_invoice_has_created') ?></b>
+            </div>
+            <?php endif ?>
             <!-- Information payment END -->
             <div class="card">
                 <div class="card-footer">
                     <div class="float-right">
-                        <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
+                        <button type="submit" class="btn btn-info float-right" <?php echo $order->is_created?'disabled':'';?>><?= lang('save') ?></button>
                         <button type="button" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
                     </div>
                 </div>

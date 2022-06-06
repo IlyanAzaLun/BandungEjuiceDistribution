@@ -151,10 +151,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </td>
                   </tr>
                 </tbody>
+                <tfooter>
+                  <tr>
+                    <th colspan="3"><div class="float-right" id="total-items">Total Items</div></th>
+                    <th colspan="2"><div class="float-right" id="total-items">0</div></th>
+                  </tr>
+                </tfooter>
               </table>
               <div class="float-left ml-1">
                 <button type="button" class="btn btn-sm btn-info" id="add_more"><?= lang('add_more') ?></button>
-              </div>
+              </div>              
             </div>
           </div>
         </div>

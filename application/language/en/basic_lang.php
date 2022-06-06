@@ -525,6 +525,9 @@ $lang['order_info_create'] = "Add More Information data order";
 $lang['order_info_edit'] = "Edit Information data order ";
 $lang['order_info_info'] = "Information data order ";
 $lang['import_order'] = "Import Order Items ";
+$lang['order_creating_sale_invoice'] = "Tryig To Create Invoice Sale Using Order Code:";
+$lang['order_invoice_has_created'] = "This Order Has Been Created!, Try To Check Sale Invoice";
+
 
 /*
  * Invoice

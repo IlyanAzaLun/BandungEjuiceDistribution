@@ -522,6 +522,8 @@ $lang['order_info_create'] = "Tambahkan Informasi lebih lanjut Data Pesanan";
 $lang['order_info_edit'] = "Mengedit Informasi Data Pesanan";
 $lang['order_info_info'] = "Informasi Data Pesanan ";
 $lang['import_order'] = "Impor Barang Pesanan ";
+$lang['order_invoice_has_created'] = "Pesanan Ini Sudah Pernah Dibuat!, Coba Cek Invoice Penjualan";
+$lang['order_creating_sale_invoice'] = "Membuat Invoice Penjualan Berdasarkan Kode Pemesanan:";
 
 /*
  * Faktur
@@ -536,6 +538,15 @@ $lang['sale_payment'] = "Menjual Untuk membayar";
 $lang['sale_returns'] = "Pengembalian Penjualan";
 $lang['sale_return_list'] = "Daftar Pengembalian Penjualan";
 $lang['returns'] = "Pengembalian";
+
+/*
+ * Payment
+ */
+$lang['page_payment'] = "Halaman Pembayaran";
+
+$lang['payment'] = "Pembayaran";
+$lang['payment_purchases'] = "Pembelian";
+$lang['payment_sales'] = "Penjualan";
 
 
 /*
