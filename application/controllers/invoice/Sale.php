@@ -168,7 +168,7 @@ class Sale extends Invoice_controller
 					"customer_code" => post('customer_code'),
 					"is_cancelled" => 0,
 				);
-				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
+				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current'] && setCurrency($items[$key]['item_selling_price']) == $this->transaction_item_model->getRowById($items[$key]['id'], 'item_selling_price')){	
 					unset($items[$key]);
 				}
 			}

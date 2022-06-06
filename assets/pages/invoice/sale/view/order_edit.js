@@ -6,8 +6,15 @@ const data_custommer = new DataCustomer();
 const data_items = new DataItems();
 
 const main = () => {
+    function getTotalItemOnInvoice() {
+        var sum_amount = 0;
+        $('input[name="item_order_quantity[]"]').each(function () {
+            sum_amount += +$(this).val();
+            $('#total_items').text(`Total Items: ${sum_amount}`);
+        })
+    }
     $(document).ready(function () {
-
+        getTotalItemOnInvoice();
         data_custommer.user_info_search($('input#customer_code').val(), function (output) {
             $('input#customer_code').val(output[0]['customer_code'])
             $('input#store_name').val(output[0]['store_name'])
@@ -136,6 +143,66 @@ const main = () => {
         })
 
         // Add item to list
+        //ShortCut Shift + Enter
+        document.onkeyup = function (e) {
+            if (e.shiftKey && e.which == 78) {
+                let input_id = parseInt($('tbody tr:nth-child(n)').last().attr('class').split('-')[1]) + 1;
+                let html = `
+                <tr class="input-${input_id}" id="main">
+                    <td class="text-center"><div class="form-control form-control-sm">${input_id + 1}.</div></td>
+                    <td>
+                        <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
+                        <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
+                    </td>
+                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required ></textarea></td>
+                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
+                    <td style="display:none">
+                        <div class="input-group input-group-sm">
+                            <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
+                            <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
+                            <span class="input-group-append">
+                                <span class="input-group-text" data-id="item_unit"></span>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-prepend">
+                                <span class="input-group-text" data-id="item_quantity"></span>
+                            </span>
+                            <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required>
+                            <span class="input-group-append">
+                                <span class="input-group-text" data-id="item_unit"></span>
+                            </span>
+                        </div>
+                    </td>
+                    <td style="display: none;"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>                
+                    <td class="text-center">
+                        <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
+                            <button type="button" class="btn bg-secondary" disabled id="status_availabel" ><i class="fas fa-tw fa-times"></i></button>
+                            <button type="button" class="btn bg-secondary" disabled id="status_availabel" ><i class="fas fa-tw fa-check"></i></button>
+                            </div>
+                        </td>
+                    </td>
+                    <td>
+                        <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
+                            <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                            <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
+                            <button type="button" id="remove" class="btn btn-block btn-danger"><i class="fa fa-tw fa-times"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="description input-${input_id}" style="display:none">
+                    <td colspan="8">
+                        <textarea class="form-control form-control-sm" name="description[]"></textarea>
+                    </td>
+                </tr>`;
+                $('tbody').append(html)
+            }
+        }
         $('button#add_more').on('click', function () {
             let input_id = parseInt($('tbody tr:nth-child(n)').last().attr('class').split('-')[1]) + 1;
             let html = `
@@ -212,6 +279,9 @@ const main = () => {
             $('input#sub_total').val(currency(sum_sub_total()));
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
+
+            // total items
+            getTotalItemOnInvoice();
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));

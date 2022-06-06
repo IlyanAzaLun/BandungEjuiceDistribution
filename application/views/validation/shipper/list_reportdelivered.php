@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       autoWidth: false,
       order: [[ 3, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
+        "url": "<?php echo url('validation/shipper/serverside_datatables_data_list_reportdelivered') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -136,19 +136,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       },
       fnInitComplete: function(oSettings, json){
-        $('.confirmation').on('click', function(){
-            let id = $(this).data('id');
-            $('#modal-confirmation-order').on('shown.bs.modal', function(){
-                $(this).find('input#id').val(id);
-            })
-        })
+        // FUNCTION AFTER LOAD TABELS
       },      
       drawCallback: function ( settings ) {
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            if(!index['is_delivered']){
-              $(rows).eq(i).remove();
+          // DON'T REMOVE OR DELETE FETCH DATA, ONLY MARKING DATA
+            if(index['invoice_code'].match(/RET/) != null){
+              $(rows).eq(i).remove(); // DON'T DO THIS
             }
           })
       },
@@ -268,6 +264,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           className: 'btn-sm'
         }
       ]
+    });
+    table.on('draw', function(){
+      $('.confirmation').on('click', function(){
+          let id = $(this).data('id');
+          $('#modal-confirmation-order').on('shown.bs.modal', function(){
+              $(this).find('input#id').val(id);
+          })
+      })
     });
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();

@@ -169,6 +169,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="float-left ml-1">
                 <button type="button" class="btn btn-sm btn btn-info" id="add_more"><?= lang('add_more') ?></button>
               </div>
+              <!-- Total Items -->
+              <div class="float-right ml-1">
+                <div class="input-group input-group-sm">
+                  <h6 id="total_items">Total Items: 0</h6>
+                </div>
+              </div>              
+              <!--  -->
             </div>
           </div>
         </div>
@@ -235,8 +242,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="form-group">
                     <h6><?= lang('payment_type') ?></h6>
                     <select class="custom-select" name="payment_type">
-                      <option value="cash"><?= lang('cash') ?></option>
-                      <option value="credit"><?= lang('credit') ?></option>
+                      <option value="cash" <?=($invoice->payment_type == "credit")?'selected':''?>><?= lang('cash') ?></option>
+                      <option value="credit" <?=($invoice->payment_type == "credit")?'selected':''?>><?= lang('credit') ?></option>
                     </select>
                   </div>
                 </div>

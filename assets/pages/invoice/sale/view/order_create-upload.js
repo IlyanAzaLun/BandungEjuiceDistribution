@@ -6,8 +6,15 @@ const data_customer = new DataCustomer();
 const data_items = new DataItems();
 
 const main = () => {
+    function getTotalItemOnInvoice() {
+        var sum_amount = 0;
+        $('input[name="item_order_quantity[]"]').each(function () {
+            sum_amount += +$(this).val();
+            $('#total_items').text(`Total Items: ${sum_amount}`);
+        })
+    }
     $(document).ready(function () {
-
+        getTotalItemOnInvoice();
         $('.currency').each(function (index, field) {
             $(field).val(currency(currencyToNum($(field).val())));
         });
@@ -205,6 +212,9 @@ const main = () => {
             $('input#sub_total').val(currency(sum_sub_total()));
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
+
+            //total items
+            getTotalItemOnInvoice()
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));

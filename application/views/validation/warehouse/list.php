@@ -64,19 +64,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
-                  <th width="2%">no.</th>
-                  <th width="13%"><?= lang('created_at') ?></th>
-                  <th width="10%"><?= lang('order_code') ?></th>
-                  <th><?= lang('store_name') ?></th>
+                  <th width="1%">no.</th>
+                  <th width="8%"><?= lang('created_at') ?></th>
+                  <th width="6%"><?= lang('order_code') ?></th>
+                  <th width="15%"><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
                   <th><?= lang('shipping_cost') ?></th>
                   <th><?= lang('other_cost') ?></th>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
-                  <th width="20%"><?= lang('note') ?></th>
-                  <th width="15%"><?= lang('created_by') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="25%"><?= lang('note') ?></th>
+                  <th width="7%"><?= lang('created_by') ?></th>
+                  <th width="7%"><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -127,7 +127,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       autoWidth: false,
       order: [[ 2, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
+        "url": "<?php echo url('validation/warehouse/serverside_datatables_list_data_order_warehouse') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -141,10 +141,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['is_confirmed'] == 1 || index['is_cancelled'] == 1){
-              $(rows).eq(i).remove();
+            <?php if(hasPermissions('back_up')):?>
+            if(index['is_cancelled'] == 1){
               $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
             }
+            <?php endif ?>
           })
       },
       columns: [{
@@ -154,7 +155,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "created_at"
+          data: "created_at",
+          render: function(data, type, row){
+            return formatDate(data)
+          }
         },
         {
           data: "order_code"
@@ -163,7 +167,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 30, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
@@ -214,15 +218,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 10, true)
-            // return data
+            return shorttext(data, 80, true)
+            return data
           }
         },
         {
           data: "user_order_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }

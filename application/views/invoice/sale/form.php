@@ -39,6 +39,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if ($order && get('id')) {
                 include viewPath('invoice/sale/create_form_order');
             }else{
+                redirect('invoice/order/create');
                 include viewPath('invoice/sale/create');
             }
             ?>

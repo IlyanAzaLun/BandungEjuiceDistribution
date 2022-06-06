@@ -11,3 +11,6 @@ function shorttextfromback(text, count, insertDots) {
     var dot = (insertDots) ? '...' : '';
     return `${dot} ${text.slice(text.length - count)}`;
 }
+function formatDate(text) {
+    return moment(text).format('DD-MM-YYYY HH:mm:ss');
+}

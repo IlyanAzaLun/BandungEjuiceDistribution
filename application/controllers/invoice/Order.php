@@ -210,7 +210,7 @@ class Order extends Invoice_controller
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
 				$items[$key]['customer_code'] = post('supplier_code');
-				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current']){
+				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current'] && setCurrency($items[$key]['item_selling_price']) == $this->order_list_item_model->getRowById($items[$key]['id'], 'item_selling_price')){
 					unset($items[$key]);
 				}
 			}
@@ -233,7 +233,7 @@ class Order extends Invoice_controller
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'created_by' => logged('id'),
-				'is_confirmed' => 0,
+				'is_confirmed' => null,
 			);
 			// EDIT
 			echo '<pre>';
@@ -246,7 +246,8 @@ class Order extends Invoice_controller
 			$this->activity_model->add("Update Order, #" . $this->data['order_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Update Order Successfully');
-			redirect('invoice/order/edit?id='.get('id'));
+			// redirect('invoice/order/edit?id='.get('id'));
+			redirect('invoice/order/list');
 		}
 	}
 
@@ -398,8 +399,6 @@ class Order extends Invoice_controller
 	
 	public function serverside_datatables_data_order()
 	{
-		try {
-			//code...
 		$response = array();
 
 		$postData = $this->input->post();
@@ -412,8 +411,8 @@ class Order extends Invoice_controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = @$postData['startDate'];
-		$dateFinal = @$postData['finalDate'];
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
 		$haspermission = hasPermissions('warehouse_order_list');
 
@@ -519,19 +518,10 @@ class Order extends Invoice_controller
 			"aaData" => $data,
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
-		
-		} catch (\Throwable $th) {
-			//throw $th;
-			echo '<pre>';
-			var_dump($th);
-			echo '</pre>';
-		}
 	}
 
 	public function serverside_datatables_data_order_is_created()
 	{
-		try {
-			//code...
 		$response = array();
 
 		$postData = $this->input->post();
@@ -651,13 +641,6 @@ class Order extends Invoice_controller
 			"aaData" => $data,
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
-		
-		} catch (\Throwable $th) {
-			//throw $th;
-			echo '<pre>';
-			var_dump($th);
-			echo '</pre>';
-		}
 	}
 
 	public function is_confirmation()

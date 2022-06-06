@@ -52,12 +52,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
-                  <th>no.</th>
-                  <th><?= lang('created_at') ?></th>
-                  <th><?= lang('updated_at') ?></th>
-                  <th><?= lang('invoice_code') ?></th>
-                  <th><?= lang('supplier_name') ?></th>
-                  <th><?= lang('total_price') ?></th>
+                  <th width="1%">no.</th>
+                  <th width="11%"><?= lang('created_at') ?></th>
+                  <th width="11%"><?= lang('updated_at') ?></th>
+                  <th width="9%"><?= lang('invoice_code') ?></th>
+                  <th width="11%"><?= lang('supplier_name') ?></th>
+                  <th width="11%"><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
                   <th><?= lang('shipping_cost') ?></th>
                   <th><?= lang('other_cost') ?></th>
@@ -65,8 +65,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('payment_type') ?></th>
                   <th><?= lang('status_payment') ?></th>
                   <th><?= lang('note') ?></th>
-                  <th><?= lang('created_by') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="9%"><?= lang('created_by') ?></th>
+                  <th width="7%"><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>

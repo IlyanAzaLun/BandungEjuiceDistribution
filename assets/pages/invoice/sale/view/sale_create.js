@@ -255,7 +255,7 @@ const main = () => {
             $(`tr.${row}`).remove();
         })
         // get sub total items
-        $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="discount"]', function () {
+        $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_selling_price"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item(row);
 

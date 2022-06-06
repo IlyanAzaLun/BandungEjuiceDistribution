@@ -64,20 +64,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm dataTable dtr-inline" style="font-size: 12px;" data-resizable="true">
               <thead>
                 <tr>
-                  <th width="2%">no.</th>
-                  <th width="13%"><?= lang('created_at') ?></th>
-                  <th width="10%"><?= lang('order_code') ?></th>
-                  <th><?= lang('store_name') ?></th>
+                  <th width="1%">no.</th>
+                  <th width="7%"><?= lang('created_at') ?></th>
+                  <th width="7%"><?= lang('order_code') ?></th>
+                  <th width="15%"><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
                   <th><?= lang('shipping_cost') ?></th>
                   <th><?= lang('other_cost') ?></th>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
-                  <th width="20%"><?= lang('note') ?></th>
-                  <th width="15%"><?= lang('created_by') ?></th>
-                  <th width="15%"><?= lang('updated_by') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="25%"><?= lang('note') ?></th>
+                  <th width="7%"><?= lang('created_by') ?></th>
+                  <th width="7%"><?= lang('updated_by') ?></th>
+                  <th width="7%"><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       autoWidth: false,
       order: [[ 3, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
+        "url": "<?php echo url('validation/shipper/serverside_datatables_data_list_reportapack') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -136,25 +136,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       },
       fnInitComplete: function(oSettings, json){
-        $('.confirmation').on('click', function(){
-            let id = $(this).data('id');
-            $('#modal-confirmation-order').on('shown.bs.modal', function(){
-                $(this).find('input#id').val(id);
-            })
-        })
+        // FUNCTION AFTER LOAD DATATABELS
       },      
       drawCallback: function ( settings ) {
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
+            // DON'T REMOVE OR DELETE FETCH DATA, ONLY MARKING DATA
             if(index['invoice_code'].match(/RET/) != null){
-              $(rows).eq(i).remove();
-            }
-            if(!index['is_controlled_by']){
-              $(rows).eq(i).remove();
-            }
-            if(index['is_delivered']){
-              $(rows).eq(i).remove();
+              $(rows).eq(i).remove(); // DON'T DO THIS
             }
           })
       },
@@ -233,7 +223,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
@@ -243,7 +233,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           visible: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
@@ -276,6 +266,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
+    table.on('draw', function(){
+      $('.confirmation').on('click', function(){
+          let id = $(this).data('id');
+          $('#modal-confirmation-order').on('shown.bs.modal', function(){
+              $(this).find('input#id').val(id);
+          })
+      });
+    })
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
