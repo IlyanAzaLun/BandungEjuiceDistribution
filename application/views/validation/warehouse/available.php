@@ -171,6 +171,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </tbody>
               </table>
             </div>
+            <div class="col-12">
+              <div class="float-right">
+                <div class="form-group">
+                  <input type="hidden" name="is_completey_clear" value=0>
+                  <input class="custom-cotrol-input" type="checkbox" id="is_completey_clear" name="is_completey_clear">
+                  <label for="is_completey_clear" class="custom-cotrol-label"><?=lang('is_completey_clear')?></label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <!-- /.card-body -->

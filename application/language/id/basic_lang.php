@@ -545,6 +545,7 @@ $lang['returns'] = "Pengembalian";
 $lang['menu_validation'] = "Menu Validasi";
 $lang['confirmation_by'] = "Konfirmasi Oleh";
 $lang['order_list_item_available'] = "Daftar Barang Pesanan";
+$lang['is_completey_clear'] = "Semua Barang Sudah Sesuai";
 
  
 /*

@@ -248,16 +248,12 @@ class Supplier extends MY_Controller
     {
         if (ifPermissions('purchase_create') or ifPermissions('selling_create')) {
             $search = (object) post('search');
+            //SELECT ONLY NEED
             $this->db->limit(5);
             if (isset($search->value)) {
                 $this->db->like('supplier_information.customer_code', $search->value, 'both');
                 $this->db->or_like('supplier_information.store_name', $search->value, 'both');
                 $this->db->or_like('supplier_information.owner_name', $search->value, 'both');
-                $this->db->or_like('address_information.address', $search->value, 'both');
-                $this->db->or_like('address_information.village', $search->value, 'both');
-                $this->db->or_like('address_information.sub_district', $search->value, 'both');
-                $this->db->or_like('address_information.city', $search->value, 'both');
-                $this->db->or_like('address_information.province', $search->value, 'both');
             }
             $this->db->join('address_information', 'address_information.customer_code=supplier_information.customer_code', 'left');
             $response = $this->db->get('supplier_information')->result();

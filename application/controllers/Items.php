@@ -846,6 +846,15 @@ class Items extends MY_Controller
     {
         if (ifPermissions('items_list')) {
             $search = (object) post('search');
+            $this->db->select(
+                'id
+                ,item_code
+                ,item_name
+                ,quantity
+                ,note
+                ,selling_price
+                ,capital_price');
+            $this->db->where('is_active', 1);
             $this->db->limit(15);
             if ($search->value) {
                 $this->db->like('item_code', $search->value, 'both');

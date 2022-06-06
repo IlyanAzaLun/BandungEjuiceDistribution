@@ -86,9 +86,16 @@ class Warehouse extends MY_Controller
 				'created_by' => logged('id'),
 			);
 			echo '<pre>';
-			var_dump($this->create_or_update_list_item_order_sale($items));
-			echo '<hr>';
-			var_dump($this->create_or_update_order($payment));
+			$this->create_or_update_list_item_order_sale($items);
+			$this->create_or_update_order($payment);
+
+			if(post('is_completey_clear')){
+				$this->db->trans_start();
+				$request = array( 'is_confirmed' => 1, 'updated_by' =>  logged('id'));
+				$this->db->where('order_code', $this->data['order_code']);
+				$this->db->update('order_sale', $request);
+				$this->db->trans_complete();
+			}
 			echo '</pre>';
 		
 			$this->activity_model->add("Update Status Available, #" . $this->data['order_code'], (array) $items);

@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       autoWidth: false,
       order: [[ 1, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
+        "url": "<?php echo url('validation/shipper/serverside_datatables_data_list_checkquality') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -136,24 +136,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       },
       fnInitComplete: function(oSettings, json){
-        $('.confirmation').on('click', function(){
-            let id = $(this).data('id');
-            $('#modal-confirmation-order').on('shown.bs.modal', function(){
-                $(this).find('input#id').val(id);
-            })
-        })
+        // FUNCTION AFTER LOAD DATATABELS
       },      
       drawCallback: function ( settings ) {
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            if(index['is_controlled_by']){
-              $(rows).eq(i).remove();
-            }
-            if(index['is_delivered']){
-              $(rows).eq(i).remove();
-            }
-          })
+          // DON'T REMOVE OR DELETE FETCH DATA, ONLY MARKING DATA
+        })
       },
       columns: [{
           data: "invoice_code",
@@ -171,7 +161,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${data} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },
@@ -230,9 +220,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
-            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
+            return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`;
+            return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
         },
         {
@@ -240,9 +230,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           visible: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
-            return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
+            return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`;
+            return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
         },
         {
@@ -251,7 +241,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a target="_blank" href="<?= url('validation/shipper') ?>/quality_control?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Quality Control"><i class="fa fa-fw fa-spell-check text-primary"></i></a>
+                  <a href="<?= url('validation/shipper') ?>/quality_control?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Quality Control"><i class="fa fa-fw fa-spell-check text-primary"></i></a>
                   <button class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check"></i></button>
                 </div>`;
           }
@@ -272,6 +262,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
+    table.on('draw', function(){
+      $('.confirmation').on('click', function(){
+          let id = $(this).data('id');
+          $('#modal-confirmation-order').on('shown.bs.modal', function(){
+              $(this).find('input#id').val(id);
+          })
+      })
+    })
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()

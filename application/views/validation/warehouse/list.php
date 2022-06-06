@@ -135,12 +135,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       },
       fnInitComplete: function(oSettings, json){
-        $('.confirmation').on('click', function(){
-            let id = $(this).data('id');
-            $('#modal-confirmation-order').on('shown.bs.modal', function(){
-                $(this).find('input#id').val(id);
-            })
-        })
+        // FUNCTION AFTER LOAD DATATABELS
       },      
       drawCallback: function ( settings ) {
         var api = this.api();
@@ -259,6 +254,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     } );
+    table.on('draw', function(){
+      $('.confirmation').on('click', function(){
+          let id = $(this).data('id');
+          $('#modal-confirmation-order').on('shown.bs.modal', function(){
+              $(this).find('input#id').val(id);
+          })
+      })
+    })
     // $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
