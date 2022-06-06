@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <div class="col-12">
       <div class="callout callout-info">
         <h5><i class="fas fa-info"></i> Note:</h5>
-        <?= lang('order_info_create') ?>
+        <?=lang('order_info_create') ?>
       </div>
       <?php echo form_open_multipart('invoice/order/create', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information customer START -->
