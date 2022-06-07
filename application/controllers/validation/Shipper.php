@@ -131,14 +131,18 @@ class Shipper extends MY_Controller
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
 		if ($searchValue != '') {
-			$this->db->like('sale.invoice_code', $searchValue, 'both');
+			$this->db->group_start();
+			$this->db->like('sale.invoice_code', "INV/SALE/$searchValue", 'after');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
@@ -176,25 +180,28 @@ class Shipper extends MY_Controller
 		user_updated.id as user_id_updated, 
 		user_updated.name as user_sale_update_by, ');
 		if ($searchValue != '') {
-			$this->db->like('sale.invoice_code', $searchValue, 'both');
+			$this->db->group_start();
+			$this->db->like('sale.invoice_code', "INV/SALE/$searchValue", 'after');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
 			$this->db->where("sale.created_by", $logged);
 		}
-		$this->db->like("sale.invoice_code", 'INV/SALE/', 'after');
 		$this->db->where("sale.is_controlled_by", null);
 		$this->db->where("sale.is_delivered", null);
 		$this->db->order_by($columnName, $columnSortOrder);
@@ -332,18 +339,22 @@ class Shipper extends MY_Controller
 		user_updated.id as user_id_updated, 
 		user_updated.name as user_sale_update_by, ');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
@@ -488,18 +499,22 @@ class Shipper extends MY_Controller
 		user_updated.id as user_id_updated, 
 		user_updated.name as user_sale_update_by, ');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}

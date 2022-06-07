@@ -2,12 +2,12 @@ import DataCustomer from "../data/DataCustomer.js";
 import DataItems from "../data/DataItems.js";
 import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./order_create-calcualtion.js";
 
-const data_custommer = new DataCustomer();
+const data_customer = new DataCustomer();
 const data_items = new DataItems();
 
 const main = () => {
     $(document).ready(function () {
-        data_custommer.user_info_search($('input#customer_code').val(), function (output) {
+        data_customer.user_info_search($('input#customer_code').val(), function (output) {
             $('input#customer_code').val(output[0]['customer_code'])
             $('input#store_name').val(output[0]['store_name'])
             $('input#contact_phone').val(`${output[0]['contact_phone']} (${output[0]['owner_name']})`)
@@ -36,7 +36,7 @@ const main = () => {
                 }
                 return fieldNo;
             }
-            data_custommer.user_info_search(valueElement, function (data) {
+            data_customer.user_info_search(valueElement, function (data) {
                 let result = data.map(({
                     customer_id, customer_code, store_name, owner_name, address, village,
                     sub_district, city, province, zip, contact_phone, contact_mail,

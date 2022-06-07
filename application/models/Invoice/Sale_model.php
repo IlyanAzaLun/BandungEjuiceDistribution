@@ -33,11 +33,19 @@ class Sale_model extends MY_Model
 
     public function get_code_invoice_sale()
     {
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $random = substr(str_shuffle($permitted_chars), 0, 4);
+        $this->db->trans_start();
         $now = date('ym');
         $this->db->like('invoice_code', "INV/SALE/$now/", 'after');
         $this->db->order_by('id', 'DESC');
         $data = $this->db->get($this->table)->num_rows();
-        return sprintf("INV/SALE/$now/%06s", (int)$data + 1);
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE)
+        {
+            return die();
+        }
+        return sprintf("INV/SALE/$now/$random/%06s", (int)$data + 1);
     }
 
     public function update_by_code($id, $data)

@@ -418,25 +418,29 @@ class Order extends Invoice_controller
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
-		$records = $this->db->get('order_sale')->result();
 		$this->db->where('is_created', 0);
+		$records = $this->db->get('order_sale')->result();
 		$totalRecords = $records[0]->allcount;
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('order.order_code', $searchValue, 'both');
 			$this->db->or_like('order.customer', $searchValue, 'both');
 			$this->db->or_like('order.note', $searchValue, 'both');
 			$this->db->or_like('order.created_at', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
-		$this->db->where('is_created', 0);
+		$this->db->where('order.is_created', 0);
 		$records = $this->db->get('order_sale order')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 		## Fetch records
@@ -462,25 +466,29 @@ class Order extends Invoice_controller
 		user_created.name as user_order_create_by,
 		user_updated.name as user_order_update_by');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('order.order_code', $searchValue, 'both');
 			$this->db->or_like('order.customer', $searchValue, 'both');
 			$this->db->or_like('order.note', $searchValue, 'both');
 			$this->db->or_like('order.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		$this->db->join('users user_created', 'user_created.id = order.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = order.updated_by', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = order.customer', 'left');
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
 			$this->db->where("order.created_by", $logged);
 		}
-		$this->db->where('is_created', 0);
+		$this->db->where('order.is_created', 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('order_sale order')->result();
@@ -534,32 +542,36 @@ class Order extends Invoice_controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = @$postData['startDate'];
-		$dateFinal = @$postData['finalDate'];
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
 		$haspermission = hasPermissions('warehouse_order_list');
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->where('is_created', 1);
 		$records = $this->db->get('order_sale')->result();
-		$this->db->where('is_created', 0);
 		$totalRecords = $records[0]->allcount;
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('order.order_code', $searchValue, 'both');
 			$this->db->or_like('order.customer', $searchValue, 'both');
 			$this->db->or_like('order.note', $searchValue, 'both');
 			$this->db->or_like('order.created_at', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
-		$this->db->where('is_created', 0);
+		$this->db->where('order.is_created', 1);
 		$records = $this->db->get('order_sale order')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 		## Fetch records
@@ -585,25 +597,29 @@ class Order extends Invoice_controller
 		user_created.name as user_order_create_by,
 		user_updated.name as user_order_update_by');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('order.order_code', $searchValue, 'both');
 			$this->db->or_like('order.customer', $searchValue, 'both');
 			$this->db->or_like('order.note', $searchValue, 'both');
 			$this->db->or_like('order.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		$this->db->join('users user_created', 'user_created.id = order.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = order.updated_by', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = order.customer', 'left');
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
 			$this->db->where("order.created_by", $logged);
 		}
-		$this->db->where('is_created', 1);
+		$this->db->where('order.is_created', 1);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('order_sale order')->result();

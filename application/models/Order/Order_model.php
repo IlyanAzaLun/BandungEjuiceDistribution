@@ -36,11 +36,19 @@ class Order_model extends MY_Model
 
     public function get_code_order_sale()
     {
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $random = substr(str_shuffle($permitted_chars), 0, 4);
+        $this->db->trans_start();
         $now = date('ym');
         $this->db->like('order_code', "ORDER/SALE/$now/", 'after');
         $this->db->order_by('id', 'DESC');
         $data = $this->db->get($this->table)->num_rows();
-        return sprintf("ORDER/SALE/$now/%06s", (int)$data + 1);
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE)
+        {
+            return die();
+        }
+        return sprintf("ORDER/SALE/$now/$random/%06s", (int)$data + 1);
     }
 
     public function update_by_code($id, $data)

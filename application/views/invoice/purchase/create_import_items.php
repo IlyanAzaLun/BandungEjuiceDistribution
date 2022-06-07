@@ -45,9 +45,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <div class="row">
             <div class="col-sm-4">
               <div class="form-group">
-                <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
-                <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
+                <label for="store_name"><?= lang('supplier_code') ?></label>
+                <input type="text" name="supplier_code" id="supplier_code" class="form-control" placeholder="<?= lang('find_supplier_code') ?>" autocomplete="false" required>
+                <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
 
@@ -85,7 +85,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card-body">
           <div class="row" id="order_item">
             <div class="col-12 mb-2">
-              <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import_order_items"><i class="fa fa-fw fa-file-import"></i>&nbsp;<?=lang('import_order')?></button>
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import_order_items"><i class="fa fa-fw fa-file-import"></i>&nbsp;<?=lang('import_order')?></button>
             </div>
             <div class="col-12">
               <table class="table table-sm">
@@ -131,13 +131,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <span class="input-group-prepend">
                           <span class="input-group-text" data-id="item_quantity"><?= ($this->items_model->getByCodeItem($value["B"], 'quantity'));?></span>
                       </span>
-                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= (int)$this->items_model->getByCodeItem($value["B"], 'quantity')?>" value="<?=(int)$value["F"]?>" required>
+                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="<?=(int)$value["F"]?>" required>
                       <div class="input-group-append">
                         <span class="input-group-text" data-id="item_unit"><?= ($this->items_model->getByCodeItem($value["B"], 'unit'));?></span>
                       </div>
                     </div>
-                    <td style="display:none"><input readonly class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= explode(',',$value["H"])[0]?>" required></td>
+                    <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?= explode(',',$value["H"])[0]?>" required></td>
+                    <td style="display:none"><input readonly  class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= ($this->items_model->getByCodeItem($value["B"], 'selling_price'));?>" required></td>
                     </td>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?= explode(',',$value["I"])[0]?>" required></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?= explode(',',$value["J"])[0]?>" required></td>
@@ -162,6 +162,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="float-left ml-1">
                 <button type="button" class="btn btn-sm btn-info" id="add_more"><?= lang('add_more') ?></button>
               </div>
+              
+              <!-- Total Items -->
+              <div class="float-right ml-1">
+                <div class="input-group input-group-sm">
+                  <h6 id="total_items">Total Items: 0</h6>
+                </div>
+              </div>
+              <!--  -->
             </div>
           </div>
         </div>

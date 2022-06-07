@@ -6,8 +6,15 @@ const data_supplier = new DataSupplier();
 const data_items = new DataItems();
 
 const main = () => {
+    function getTotalItemOnInvoice() {
+        var sum_amount = 0;
+        $('input[name="item_order_quantity[]"]').each(function () {
+            sum_amount += +$(this).val();
+            $('#total_items').text(`Total Items: ${sum_amount}`);
+        })
+    }
     $(document).ready(function () {
-
+        getTotalItemOnInvoice();
         data_supplier.user_info_search($('input#supplier_code').val(), function (output) {
             $('input#supplier_code').val(output[0]['customer_code'])
             $('input#store_name').val(output[0]['store_name'])
@@ -19,7 +26,7 @@ const main = () => {
             $(field).val(currency(currencyToNum($(field).val())));
         });
 
-        $(document).on('keyup', 'input#store_name, input#supplier_code', function (event) {
+        $(document).on('keyup', 'input#store_name, input#supplier_code', function () {
             let valueElement = $(this).val();
             let selfElement = $(this);
             function getFieldNo(type) {
@@ -45,7 +52,7 @@ const main = () => {
                         sub_district, city, province, zip, contact_phone, contact_mail,
                     ]
                 );
-                $('input#store_name, input#supplier_code').autocomplete({
+                $(`input#${selfElement.attr('id')}`).autocomplete({
                     source: result,
                     focus: function (event, ui) {
                         $('input#supplier_code').val(ui.item[1])
@@ -172,10 +179,10 @@ const main = () => {
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                     <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
+                        <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                             <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                             <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
-                            <button type="button" id="remove" class="btn btn-block btn-danger"><i class="fa fa-tw fa-times"></i></button>
+                            <button type="button" id="remove" class="btn btn-danger"><i class="fa fa-tw fa-times"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -227,10 +234,10 @@ const main = () => {
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                 <td>
-                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
-                        <button type="button" id="remove" class="btn btn-block btn-danger"><i class="fa fa-tw fa-times"></i></button>
+                        <button type="button" id="remove" class="btn btn-danger"><i class="fa fa-tw fa-times"></i></button>
                     </div>
                 </td>
             </tr>
@@ -262,6 +269,8 @@ const main = () => {
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
 
+            // Total items
+            getTotalItemOnInvoice();
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));
@@ -310,34 +319,25 @@ const main = () => {
                 $('input#is_consignment').prop('checked', false)
             }
         })
+        //consignment();
         $(document).on('change', 'input#is_consignment', function (event) {
+            //consignment();
+        })
+        function consignmnet() {
             if ($('input#is_consignment').is(':checked')) {
                 $('input#sub_total, input#grand_total').val(0);
 
                 // Grand Total
                 $('input#grand_total').val(currency(sum_grand_total()));
-                $('select[name=payment_type] option[value=consignment]').prop('selected', true);
             } else {
                 //Sub total
                 $('input#sub_total').val(currency(sum_sub_total()));
 
                 // Grand Total
                 $('input#grand_total').val(currency(sum_grand_total()));
-                $('select[name=payment_type] option[value=credit]').prop('selected', true);
             }
-        })
-        if ($('input#is_consignment').is(':checked')) {
-            $('input#sub_total, input#grand_total').val(0);
-
-            // Grand Total
-            $('input#grand_total').val(currency(sum_grand_total()));
-        } else {
-            //Sub total
-            $('input#sub_total').val(currency(sum_sub_total()));
-
-            // Grand Total
-            $('input#grand_total').val(currency(sum_grand_total()));
         }
+
     });
 }
 export default main;

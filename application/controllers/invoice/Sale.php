@@ -43,6 +43,7 @@ class Sale extends Invoice_controller
 			$this->load->view('invoice/sale/form', $this->page_data);
 		}else{
 			$this->data['invoice_code'] = $this->sale_model->get_code_invoice_sale();
+			$this->data['order_code'] = $this->input->get('id');
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
 				'date_start' => trim(str_replace('/', '-', $date[0])), 
@@ -86,14 +87,14 @@ class Sale extends Invoice_controller
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => strtoupper(post('note')),
-				'reference_order' => get('id'),
+				'reference_order' => $this->data['order_code'],
 				'transaction_destination' => post('transaction_destination'),
 			);
 			// // CREATE
 			echo '<pre>';
 			$this->db->trans_start();
 			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
-			$this->order_model->update_by_code(get('id'), array('is_created' => 1)); // UPDATE STATUS ORDER IS CREATED TO INVOICE
+			$this->order_model->update_by_code($this->data['order_code'], array('is_created' => 1)); // UPDATE STATUS ORDER IS CREATED TO INVOICE
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
@@ -103,7 +104,7 @@ class Sale extends Invoice_controller
 			// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			
 			$this->db->trans_complete();
-			echo '</pre>';
+			echo '</hr>';
 			// die();
 			$this->activity_model->add("Create Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
@@ -676,7 +677,10 @@ class Sale extends Invoice_controller
 			$this->page_data['page']->submenu = 'sale_list';
 			$this->load->view('invoice/sale/drop', $this->page_data);
 		}else{
-			$this->data['invoice_code'] = 'DROP';
+			$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			$random = substr(str_shuffle($permitted_chars), 0, 5);
+			$now = date('ym');
+			$this->data['invoice_code'] = "DROP/$random/$now";
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
 				'date_start' => trim(str_replace('/', '-', $date[0])), 
@@ -724,11 +728,11 @@ class Sale extends Invoice_controller
 			// // CREATE
 			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
 			$this->order_model->update_by_code(get('id'), array('is_created' => 1));
-			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_item_history($items, ['DROP', 'DROP']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
-			$this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
+			$this->update_items($items); // CHANGE VALUE QUANTITY ITEMS
 			
 			$this->activity_model->add("Create Drop Items, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');

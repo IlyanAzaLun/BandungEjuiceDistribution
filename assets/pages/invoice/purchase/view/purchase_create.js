@@ -7,6 +7,13 @@ const data_items = new DataItems();
 
 const main = () => {
     $(document).ready(function () {
+        function getTotalItemOnInvoice() {
+            var sum_amount = 0;
+            $('input[name="item_order_quantity[]"]').each(function () {
+                sum_amount += +$(this).val();
+                $('#total_items').text(`Total Items: ${sum_amount}`);
+            })
+        }
         // Find Supplier // limit.. this overload
         $(document).on('keyup', 'input#store_name, input#supplier_code', function () {
             let valueElement = $(this).val();
@@ -263,6 +270,9 @@ const main = () => {
 
             // Grand Total
             $('input#grand_total').val(currency(sum_grand_total()));
+
+            // Total Items
+            getTotalItemOnInvoice();
         })
         // get sub total
         $(document).on('focus keyup', 'input#sub_total', function (event) {
@@ -311,22 +321,24 @@ const main = () => {
                 $('input#is_consignment').prop('checked', false)
             }
         })
+        //consignment();
         $(document).on('change', 'input#is_consignment', function (event) {
-            if ($(this).is(':checked')) {
+            //consignment();
+        })
+        function consignmnet() {
+            if ($('input#is_consignment').is(':checked')) {
                 $('input#sub_total, input#grand_total').val(0);
 
                 // Grand Total
                 $('input#grand_total').val(currency(sum_grand_total()));
-                $('select[name=payment_type] option[value=consignment]').prop('selected', true);
             } else {
                 //Sub total
                 $('input#sub_total').val(currency(sum_sub_total()));
 
                 // Grand Total
                 $('input#grand_total').val(currency(sum_grand_total()));
-                $('select[name=payment_type] option[value=credit]').prop('selected', true);
             }
-        })
+        }
     });
 }
 export default main;

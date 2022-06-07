@@ -149,9 +149,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           });
 
         api.rows( {page:'current'} ).data().each(function(index, i){
-          if(index['is_created'] == true){
-            $(rows).eq(i).remove();
-          }
+          // DON'T REMOVE FETH DATA
         });
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['is_cancelled'] == true){
@@ -185,7 +183,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "store_name",
           render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 15, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },{

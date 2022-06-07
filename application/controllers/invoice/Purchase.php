@@ -674,7 +674,10 @@ class Purchase extends Invoice_controller
 			$this->load->view('invoice/purchase/entry', $this->page_data);
 		} else {
 			// information invoice
-			$this->data['invoice_code'] = 'ENTRY';
+			$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			$random = substr(str_shuffle($permitted_chars), 0, 5);
+			$now = date('ym');
+			$this->data['invoice_code'] = "ENTRY/$random/$now";
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
 				'date_start' => trim(str_replace('/', '-', $date[0])), 
@@ -715,7 +718,6 @@ class Purchase extends Invoice_controller
 				'status_payment' => 0,
 				'date_start' => 0,
 				'date_due' => 0,
-				'created_at' => 0,
 				'note' => post('note'),
 				'is_consignment' => 0,
 			);

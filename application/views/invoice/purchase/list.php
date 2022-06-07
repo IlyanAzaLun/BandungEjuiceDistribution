@@ -53,15 +53,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th width="1%">no.</th>
-                  <th width="11%"><?= lang('created_at') ?></th>
-                  <th width="11%"><?= lang('updated_at') ?></th>
+                  <th width="10%"><?= lang('created_at') ?></th>
+                  <th width="10%"><?= lang('updated_at') ?></th>
                   <th width="9%"><?= lang('invoice_code') ?></th>
                   <th width="11%"><?= lang('supplier_name') ?></th>
-                  <th width="2%"><?= lang('total_price') ?></th>
-                  <th width="2%"><?= lang('discount') ?></th>
-                  <th width="2%"><?= lang('shipping_cost') ?></th>
-                  <th width="2%"><?= lang('other_cost') ?></th>
-                  <th width="10%"><?= lang('grandtotal') ?></th>
+                  <th><?= lang('total_price') ?></th>
+                  <th><?= lang('discount') ?></th>
+                  <th><?= lang('shipping_cost') ?></th>
+                  <th><?= lang('other_cost') ?></th>
+                  <th width="7%"><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
                   <th><?= lang('status_payment') ?></th>
                   <th><?= lang('note') ?></th>
@@ -147,10 +147,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "created_at"
+          data: "created_at",
+          render: function(data, type, row){
+            return data?formatDate(data):data;
+          }
         },
         {
-          data: "updated_at"
+          data: "updated_at",
+          render: function(data, type, row){
+            return data?formatDate(data):data;
+          }
         },
         {
           data: "invoice_code",
@@ -220,14 +226,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "purchase_note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 30, true)
+            return shorttext(data, 80, true)
           }
         },
         {
           data: "user_purchasing_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
