@@ -40,12 +40,14 @@ class Items extends MY_Controller
 			'selling_price' => $item->capital_price, 
 			'updated_by' => logged('id'), 
 		);
+		$this->db->trans_start();
 		$this->items_history_model->create($history);
 		$this->items_model->update($item->id, $item_update);
-		$this->transaction_item_model->delete($order->id);
-
+		$this->transaction_item_model->update($order->id, array('is_cancelled'=> 1));
+		
 		$this->items_fifo_model->update($parent_fifo_item->id, array('item_quantity'=> $parent_fifo_item->item_quantity+$fifo_list_item->item_quantity));
 		$this->items_fifo_model->update($fifo_list_item->id, array('is_cancelled'=> 1));
+		$this->db->trans_complete();
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}
 

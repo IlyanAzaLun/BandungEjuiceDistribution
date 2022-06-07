@@ -103,6 +103,14 @@
                                     <?php endforeach ?>
                                 </tbody>
                             </table>
+                            
+                            <!-- Total Items -->
+                            <div class="float-right ml-1">
+                                <div class="input-group input-group-sm">
+                                <h6 id="total_items">Total Items: 0</h6>
+                                </div>
+                            </div>              
+                            <!--  -->
                         </div>
                     </div>
                 </div>

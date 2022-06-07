@@ -740,7 +740,6 @@ class Sale extends Invoice_controller
 
 	public function serverside_datatables_data_sale()
 	{
-
 		$response = array();
 
 		$postData = $this->input->post();
@@ -806,7 +805,7 @@ class Sale extends Invoice_controller
 		user_created.id as user_id, 
 		user_created.name as user_sale_create_by,
 		user_updated.id as user_id_updated, 
-		user_updated.name as user_sale_update_by, ');
+		user_updated.name as user_sale_update_by');
 		if ($searchValue != '') {
 			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');

@@ -6,7 +6,15 @@ const data_custommer = new DataCustomer();
 const data_items = new DataItems();
 
 const main = () => {
+    function getTotalItemOnInvoice() {
+        var sum_amount = 0;
+        $('input[name="item_order_quantity[]"]').each(function () {
+            sum_amount += +$(this).val();
+            $('#total_items').text(`Total Items: ${sum_amount}`);
+        })
+    }
     $(document).ready(function () {
+        getTotalItemOnInvoice();
         let customer_code = $('input#customer_code').val();
         if (isNaN(customer_code)) {
             data_custommer.user_info_search(customer_code, function (output) {
@@ -263,6 +271,8 @@ const main = () => {
             $('input#sub_total').val(currency(sum_sub_total()));
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
+            //
+            getTotalItemOnInvoice();
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));
