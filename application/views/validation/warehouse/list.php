@@ -102,6 +102,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    function format(d) {
+        return (
+            'Full name: ' +
+            d.first_name +
+            ' ' +
+            d.last_name +
+            '<br>' +
+            'Salary: ' +
+            d.salary +
+            '<br>' +
+            'The child row can contain any data you wish, including links, images, inner tables etc.'
+        );
+    }
     var startdate;
     var enddate;
     //Date range picker
@@ -141,7 +154,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            <?php if(hasPermissions('back_up')):?>
+            <?php if(hasPermissions('backup_db')):?>
             if(index['is_cancelled'] == 1){
               $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
             }
@@ -243,21 +256,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
       ],
-      buttons: [{
-          text: 'Export',
-          extend: 'excelHtml5',
-          className: 'btn-sm',
-          customize: function(xlsx) {
-            var sheet = xlsx.xl.worksheets['sheet1.xml'];
-          }
-        },
+      buttons: [
+        <?php if(hasPermissions('backup_db')):?>
         {
-          text: 'Column visibility',
-          extend: 'colvis',
-          className: 'btn-sm'
-        }
-      ]
-    } );
+            text: 'Export',
+            extend: 'excelHtml5',
+            className: 'btn-sm',
+            customize: function(xlsx) {
+              var sheet = xlsx.xl.worksheets['sheet1.xml'];
+            }
+          },
+          {
+            text: 'Column visibility',
+            extend: 'colvis',
+            className: 'btn-sm'
+          }
+          <?php endif ?>
+        ]
+      } );
     table.on('draw', function(){
       $('.confirmation').on('click', function(){
           let id = $(this).data('id');
