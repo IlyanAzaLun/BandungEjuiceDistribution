@@ -572,6 +572,7 @@ class Order extends Invoice_controller
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		$this->db->where('order.is_created', 1);
+		$this->db->where('order.is_cancelled', 0);
 		$records = $this->db->get('order_sale order')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 		## Fetch records
@@ -620,6 +621,7 @@ class Order extends Invoice_controller
 			$this->db->where("order.created_by", $logged);
 		}
 		$this->db->where('order.is_created', 1);
+		$this->db->where('order.is_cancelled', 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('order_sale order')->result();

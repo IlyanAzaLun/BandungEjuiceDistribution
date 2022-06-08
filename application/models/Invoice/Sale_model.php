@@ -11,6 +11,11 @@ class Sale_model extends MY_Model
         parent::__construct();
     }
 
+    public function sales_is_created($id_order)
+    {
+        return $this->db->get_where($this->table, array('reference_order' => $id_order))->num_rows();
+    }
+
     public function get_invoice_selling_by_code($data)
     {
         $this->db->where('invoice_code', $data);

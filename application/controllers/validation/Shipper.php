@@ -148,6 +148,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->where("sale.is_controlled_by", null);
 		$this->db->where("sale.is_delivered", null);
+		$this->db->where("sale.is_cancelled", 0);
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -190,7 +191,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
-		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'right');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
@@ -204,6 +205,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->where("sale.is_controlled_by", null);
 		$this->db->where("sale.is_delivered", null);
+		$this->db->where("sale.is_cancelled", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_selling sale')->result();
@@ -307,6 +309,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->where("sale.is_controlled_by !=", null);
 		$this->db->where("sale.is_delivered", null);
+		$this->db->where("sale.is_cancelled", 0);
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -349,7 +352,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
-		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'right');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
@@ -363,6 +366,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->where("sale.is_controlled_by !=", null);
 		$this->db->where("sale.is_delivered", null);
+		$this->db->where("sale.is_cancelled", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_selling sale')->result();
@@ -467,6 +471,7 @@ class Shipper extends MY_Controller
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		$this->db->where("sale.is_delivered !=", null);
+		$this->db->where("sale.is_cancelled", 0);
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -509,7 +514,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
-		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'right');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
@@ -522,6 +527,7 @@ class Shipper extends MY_Controller
 			$this->db->where("sale.created_by", $logged);
 		}
 		$this->db->where("sale.is_delivered !=", null);
+		$this->db->where("sale.is_cancelled", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_selling sale')->result();

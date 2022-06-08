@@ -510,8 +510,10 @@ class Report extends MY_Controller
         $this->db->like('invoice_code', 'INV/SALE/', 'after');
         $this->db->where('transaction.is_cancelled', 0);
 		if ($dateStart != '') {
+            $this->db->group_start();
             $this->db->where("transaction.created_at >=", $dateStart);
 			$this->db->where("transaction.created_at <=", $dateFinal);
+            $this->db->group_end();
 		}else{
             $this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}
@@ -545,8 +547,10 @@ class Report extends MY_Controller
             $this->db->where("transaction.created_by", $user);
         }
 		if ($dateStart != '') {
+            $this->db->group_start();
 			$this->db->where("transaction.created_at >=", $dateStart);
 			$this->db->where("transaction.created_at <=", $dateFinal);
+            $this->db->group_end();
 		}else{
 			$this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}

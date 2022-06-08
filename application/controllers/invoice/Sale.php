@@ -42,8 +42,15 @@ class Sale extends Invoice_controller
 			$this->page_data['page']->submenu = 'sale_list';
 			$this->load->view('invoice/sale/form', $this->page_data);
 		}else{
+			$this->data['order_code'] = $this->input->get('id')?$this->input->get('id'):false;
+			$is_created = $this->sale_model->sales_is_created($this->data['order_code']);
+			if($is_created){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'New Sale Invoice Are Fail Created');
+				redirect('invoice/sale/list');	
+				die();
+			}
 			$this->data['invoice_code'] = $this->sale_model->get_code_invoice_sale();
-			$this->data['order_code'] = $this->input->get('id');
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
 				'date_start' => trim(str_replace('/', '-', $date[0])), 
@@ -601,7 +608,6 @@ class Sale extends Invoice_controller
 			} else {
 				$request[$key]['quantity'] = $item[$key]->quantity - $value['item_order_quantity'];
 			}
-			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
 			$this->items_model->update($item[$key]->id, $request[$key]);
 		}
@@ -725,9 +731,8 @@ class Sale extends Invoice_controller
 				'note' => post('note'),
 				'reference_order' => 0,
 			);
-			// // CREATE
+			// // DROP
 			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
-			$this->order_model->update_by_code(get('id'), array('is_created' => 1));
 			$this->create_item_history($items, ['DROP', 'DROP']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
