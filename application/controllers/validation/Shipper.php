@@ -62,32 +62,6 @@ class Shipper extends MY_Controller
 		$this->pdf->load_view('validation/shipper/destination', $data);
 	}
 
-	private function data_sales()
-	{
-		$_invoice_parent_code = str_replace('RET','INV',$this->input->get('id'), $is_replace);
-		$_invoice_child__code = str_replace('INV','RET',$this->input->get('id'));
-		$this->page_data['_data_item_invoice_parent'] = $this->transaction_item_model->get_transaction_item_by_code_invoice($_invoice_parent_code);
-		$this->page_data['_data_item_invoice_child_'] = $this->transaction_item_model->get_transaction_item_by_code_invoice($_invoice_child__code);
-
-		$parent_items_codex = array_column($this->page_data['_data_item_invoice_parent'], 'item_code');
-		$parent_items_index = array_column($this->page_data['_data_item_invoice_parent'], 'index_list');
-		$childs_items_codex = array_column($this->page_data['_data_item_invoice_child_'], 'item_code');
-		$childs_items_index = array_column($this->page_data['_data_item_invoice_child_'], 'index_list');
-
-		$this->page_data['intersect_codex_item'] = array_intersect($parent_items_codex, $childs_items_codex);
-		$this->page_data['intersect_index_item'] = array_intersect($parent_items_index, $childs_items_index);
-		
-		$this->page_data['_data_invoice_parent'] = $this->sale_model->get_invoice_selling_by_code($_invoice_parent_code);
-		$this->page_data['_data_invoice_child_'] = $this->sale_model->get_invoice_selling_by_code($_invoice_child__code);
-
-		$this->page_data['invoice_information_transaction'] = $this->page_data['intersect_codex_item']? 
-			$this->page_data['_data_invoice_child_']:
-			$this->page_data['_data_invoice_parent'];
-		$this->page_data['customer'] = $this->customer_model->get_information_customer($this->page_data['invoice_information_transaction']->customer);
-		$this->page_data['bank'] = $this->account_bank_model->getById($this->page_data['invoice_information_transaction']->transaction_destination);
-	
-	}
-
 	//LIST QUALITY CONTROL
 	public function list()
 	{
@@ -191,7 +165,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
-		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'right');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
@@ -352,7 +326,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
-		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'right');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
@@ -514,7 +488,7 @@ class Shipper extends MY_Controller
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
-		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'right');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
@@ -580,7 +554,6 @@ class Shipper extends MY_Controller
 		ifPermissions('quality_control');
 		$this->form_validation->set_rules('id[]', lang('id'), 'required|trim');
 		if ($this->form_validation->run() == false) {
-			$this->data_sales();
 			$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
 			$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$this->page_data['expedition'] = $this->expedition_model->get();

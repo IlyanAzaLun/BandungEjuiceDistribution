@@ -11,7 +11,7 @@ class Sale_model extends MY_Model
         parent::__construct();
     }
 
-    public function sales_is_created($id_order)
+    public function is_created_sales_($id_order)
     {
         return $this->db->get_where($this->table, array('reference_order' => $id_order))->num_rows();
     }

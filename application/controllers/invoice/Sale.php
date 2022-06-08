@@ -43,7 +43,7 @@ class Sale extends Invoice_controller
 			$this->load->view('invoice/sale/form', $this->page_data);
 		}else{
 			$this->data['order_code'] = $this->input->get('id')?$this->input->get('id'):false;
-			$is_created = $this->sale_model->sales_is_created($this->data['order_code']);
+			$is_created = $this->sale_model->is_created_sales_($this->data['order_code']);
 			if($is_created){
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'New Sale Invoice Are Fail Created');
