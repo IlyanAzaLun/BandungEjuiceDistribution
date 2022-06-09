@@ -680,7 +680,7 @@ class Sale extends Invoice_controller
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->page_data['bank'] = $this->account_bank_model->get();
 			$this->page_data['title'] = 'sale_create';
-			$this->page_data['page']->submenu = 'sale_list';
+			$this->page_data['page']->submenu = 'drop_items';
 			$this->load->view('invoice/sale/drop', $this->page_data);
 		}else{
 			$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

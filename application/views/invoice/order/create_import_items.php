@@ -131,7 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <span class="input-group-prepend">
                           <span class="input-group-text" data-id="item_quantity"><?= ($this->items_model->getByCodeItem($value["B"], 'quantity'));?></span>
                       </span>
-                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= (int)$this->items_model->getByCodeItem($value["B"], 'quantity')?>" value="<?=(int)$value["F"]?>" required>
+                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= (int)$this->items_model->getByCodeItem($value["B"], 'quantity')?>" value="<?=setCurrency(explode(',', $value["F"])[0])?>" required>
                       <div class="input-group-append">
                         <span class="input-group-text" data-id="item_unit"><?= ($this->items_model->getByCodeItem($value["B"], 'unit'));?></span>
                       </div>

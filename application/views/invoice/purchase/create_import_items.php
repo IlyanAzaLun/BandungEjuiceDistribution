@@ -85,7 +85,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card-body">
           <div class="row" id="order_item">
             <div class="col-12 mb-2">
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import_order_items"><i class="fa fa-fw fa-file-import"></i>&nbsp;<?=lang('import_order')?></button>
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import_purchase_items"><i class="fa fa-fw fa-file-import"></i>&nbsp;<?=lang('import_purchase')?></button>
             </div>
             <div class="col-12">
               <table class="table table-sm">
@@ -131,7 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <span class="input-group-prepend">
                           <span class="input-group-text" data-id="item_quantity"><?= ($this->items_model->getByCodeItem($value["B"], 'quantity'));?></span>
                       </span>
-                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="<?=(int)$value["F"]?>" required>
+                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="<?=setCurrency(explode(',', $value["F"])[0])?>" required>
                       <div class="input-group-append">
                         <span class="input-group-text" data-id="item_unit"><?= ($this->items_model->getByCodeItem($value["B"], 'unit'));?></span>
                       </div>
