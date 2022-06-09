@@ -370,7 +370,9 @@ $lang['expedition_info_add'] = "Tambah Data Informasi Ekspedisi Lainnya";
 $lang['expedition_info_edit'] = "Mengedit Data Informasi Ekspedisi";
 $lang['select_category_expedition'] = "Pilih kategori Ekspedisi";
 $lang['ground_shipping'] = "Pengiriman Darat";
+$lang['ground'] = "Darat";
 $lang['air_shipping'] = "Pengiriman Udara";
+$lang['air'] = "Udara";
 $lang['shipping_services'] = "Layanan pengiriman";
 
 /*
@@ -426,7 +428,9 @@ $lang['report_sale_items'] = "Informasi Barang";
 $lang['report_sale_profit'] = "Informasi Laba";
 $lang['pages_report_information'] = "Informasi Laporan";
 $lang['item_report'] = "Laporkan Barang";
+$lang['list_entry'] = "Daftar Barang Masuk";
 $lang['entry_items'] = "Barang Masuk";
+$lang['list_drop'] = "Daftar Barang Keluar";
 $lang['drop_items'] = "Barang Keluar";
 $lang['customer_report'] = "Laporkan Pelanggan";
 $lang['supplier_report'] = "Laporkan Pemasok";
@@ -448,6 +452,7 @@ $lang['name'] = "Nama";
  * pembelian
  */
 $lang['menu_invoice'] = "Menu Faktur";
+$lang['menu_notinvoice'] = "Menu Bukan Faktur";
 $lang['invoice_code'] = "Kode Faktur";
 $lang['import_purchase'] = "Import Barang Pembelian";
 

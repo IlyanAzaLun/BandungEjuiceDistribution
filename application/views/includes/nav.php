@@ -387,9 +387,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <!-- end Report -->
   
   <!-- Invoice -->
-  <!-- Purchase -->
   <?php if (hasPermissions('purchase_list') || hasPermissions('sale_list')) : ?>
   <li class="nav-header"><strong> <?php echo lang('menu_invoice') ?> </strong> &nbsp;
+  <!-- Purchase -->
   <?php if (hasPermissions('purchase_list')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
@@ -439,13 +439,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </ul>
       </li>
       <!--  -->
-      
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/purchase/entry') ?>" class="nav-link <?php echo ($page->submenu == 'entry_items') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('entry_items') ?> </p>
-        </a>
-      </li>
     </ul>
   </li>
   <?php endif ?>
@@ -481,23 +474,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </a>
       </li>
       <?php endif ?>
-      <?php if(hasPermissions('drop_items')):?>
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/sale/drop') ?>" class="nav-link <?php echo ($page->submenu == 'drop_items') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('drop_items') ?> </p>
-        </a>
-      </li>
-      <?php endif ?>
     </ul>
   </li>
   <?php endif ?>
   <!-- end Sale -->
-  <?php endif ?>
-  <!-- end Invoice -->
-  
   <!-- Payment -->
-  
   <?php if (hasPermissions('payment')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Payment') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Payment') ? 'active' : '' ?>">
@@ -524,6 +505,71 @@ defined('BASEPATH') or exit('No direct script access allowed');
   </li>
   <?php endif ?>
   <!-- End Payment -->
+  <?php endif ?>
+  <!-- end Invoice -->
+  
+  <!-- NOT Invoice -->
+  <?php if (hasPermissions('purchase_list') || hasPermissions('sale_list')) : ?>
+    <!-- Item IN -->
+  <li class="nav-header"><strong> <?php echo lang('menu_notinvoice') ?> </strong> &nbsp;
+  <!-- Purchase -->
+  <?php if (hasPermissions('purchase_list')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-file-download"></i>
+      <p>
+        <?php echo lang('entry_items') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/list_entry') ?>" class="nav-link <?php echo ($page->submenu == 'list_entry') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('list_entry') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchase/entry') ?>" class="nav-link <?php echo ($page->submenu == 'entry_items') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('entry_items') ?> </p>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <?php endif ?>
+    <!-- END Purchase -->
+    <!-- Item Out -->
+  <?php if (hasPermissions('sale_list')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Sale') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Sale') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-file-upload"></i>
+      <p>
+        <?php echo lang('drop_items') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/order/list_drop_items') ?>" class="nav-link <?php echo ($page->submenu == 'list_drop_items') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('list_drop') ?> </p>
+        </a>
+      </li>
+      <?php if(hasPermissions('drop_items')):?>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/sale/drop') ?>" class="nav-link <?php echo ($page->submenu == 'drop_items') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('drop_items') ?> </p>
+        </a>
+      </li>
+      <?php endif ?>
+    </ul>
+  </li>
+  <?php endif ?>
+  <!-- end Sale -->
+  <?php endif ?>
+  <!-- end END Invoice -->
 
     <!-- Validation -->
   <?php if (hasPermissions('warehouse_order_list')) : ?>

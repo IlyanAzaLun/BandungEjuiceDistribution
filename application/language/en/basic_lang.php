@@ -370,7 +370,9 @@ $lang['expedition_info_add'] = "Add More Information data Expeditions";
 $lang['expedition_info_edit'] = "Edit Information data Expedition";
 $lang['select_category_expedition'] = "Select category Expedition";
 $lang['ground_shipping'] = "Ground Shipping";
+$lang['ground'] = "Ground";
 $lang['air_shipping'] = "Air Shipping";
+$lang['air'] = "Air";
 $lang['shipping_services'] = "Shipping services";
 
 /*
@@ -427,8 +429,10 @@ $lang['report_sale_items'] = "Items Information";
 $lang['report_sale_profit'] = "Profit Information";
 $lang['pages_report_information'] = "Report Information";
 $lang['item_report'] = "Report Item";
+$lang['list_entry'] = "List Entry Items";
 $lang['entry_items'] = "Entry Items";
-$lang['drop_items'] = "Drop Items";
+$lang['list_drop'] = "List Out Items";
+$lang['drop_items'] = "Out Items";
 $lang['customer_report'] = "Report Customer";
 $lang['supplier_report'] = "Report Supplier";
 $lang['expedition_report'] = "Report Expedition";
@@ -450,6 +454,7 @@ $lang['name'] = "Name";
  * purchase
  */
 $lang['menu_invoice'] = "Menus Invoice";
+$lang['menu_notinvoice'] = "Menus Not Invoice";
 $lang['invoice_code'] = "Invoice code";
 $lang['import_purchase'] = "Import Items Purchase";
 

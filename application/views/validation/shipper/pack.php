@@ -102,7 +102,7 @@ $i = 0; $total_items = 0;?>
                                     <div class="form-group">
                                         <h6><?= lang('expedition_services') ?></h6>
                                         <select class="custom-select" name="services_expedition" id="services_expedition" required>
-                                            <option value="<?=$invoice->services_expedition?>"><?=$invoice->services_expedition?></option>
+                                            <option value="<?=$invoice->services_expedition?>"><?=lang("$invoice->services_expedition")?></option>
                                         </select>
                                     </div>
                                 </div>

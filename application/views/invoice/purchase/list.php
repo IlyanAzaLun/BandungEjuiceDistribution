@@ -119,7 +119,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         [5, 50, 100, 200, <?=$this->db->get('invoice_purchasing')->num_rows()?>],
         [5, 50, 100, 200, "All"]
       ],
-      order: [[ 3, "desc" ]],
+      order: [[ 1, "desc" ]],
       drawCallback: function ( settings ) {
           var api = this.api();
           var rows = api.rows( {page:'current'} ).nodes();

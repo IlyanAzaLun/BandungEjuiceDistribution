@@ -124,7 +124,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         [5, 50, 100, 200, <?=$this->db->get('invoice_selling')->num_rows()?>],
         [5, 50, 100, 200, "All"]
       ],
-      order: [[ 3, "desc" ]],
+      order: [[ 1, "desc" ]],
       ajax: {
         "url": "<?php echo url('invoice/sale/serverside_datatables_data_sale') ?>",
         "type": "POST",
