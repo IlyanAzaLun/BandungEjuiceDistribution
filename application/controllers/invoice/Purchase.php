@@ -794,7 +794,7 @@ class Purchase extends Invoice_controller
 		ifPermissions('purchase_create');
 		$this->page_data['title'] = 'entry_items';
 		$this->page_data['page']->menu = 'entry_items';
-		$this->page_data['page']->submenu = 'list_entry_items';
+		$this->page_data['page']->submenu = 'list_entry';
 		$this->load->view('invoice/purchase/entry_list', $this->page_data);
 	}
 	public function serverside_datatables_data_list_entry_items()
