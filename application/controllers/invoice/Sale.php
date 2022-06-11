@@ -664,7 +664,150 @@ class Sale extends Invoice_controller
 		return $this->items_fifo_model->update_batch($request, 'id');
 	}
 
-	
+	public function list_drop_items()
+	{
+		ifPermissions('drop_items');
+		$this->page_data['title'] = 'drop_list';
+		$this->page_data['page']->menu = 'drop_items';
+		$this->page_data['page']->submenu = 'list_drop';
+		$this->load->view('invoice/sale/drop_list', $this->page_data);
+	}
+	public function serverside_datatables_data_list_drop()
+	{
+		$response = array();
+		$postData = $this->input->post();
+		## Read value
+		$draw = $postData['draw'];
+		$start = $postData['start'];
+		$rowperpage = $postData['length']; // Rows display per page
+		$columnIndex = $postData['order'][0]['column']; // Column index
+		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+		$searchValue = $postData['search']['value']; // Search value
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
+		$logged = logged('id');
+		$haspermission = hasPermissions('fetch_all_invoice_sales');
+
+		## Total number of records without filtering
+		$this->db->select('count(*) as allcount');
+		$records = $this->db->get('invoice_selling')->result();
+		$totalRecords = $records[0]->allcount;
+
+		## Total number of record with filtering
+		$this->db->select('count(*) as allcount');
+		$this->db->like('sale.invoice_code', "DROP/$searchValue", 'after');
+		if ($searchValue != '') {
+			$this->db->or_like('sale.customer', $searchValue, 'both');
+			$this->db->or_like('sale.note', $searchValue, 'both');
+			$this->db->or_like('sale.created_at', $searchValue, 'both');
+		}
+		if ($dateStart != '') {
+			$this->db->trans_start();
+			$this->db->where("sale.created_at >=", $dateStart);
+			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->trans_complete();
+		}else{
+			$this->db->like("sale.created_at", date("Y-m"), 'after');
+		}
+		$records = $this->db->get('invoice_selling sale')->result();
+		$totalRecordwithFilter = $records[0]->allcount;
+
+		## Fetch records
+		$this->db->select('
+		sale.id as id, 
+		SUBSTRING(sale.invoice_code, 5) as invoice_code_reference, 
+		sale.invoice_code as invoice_code, 
+		sale.have_a_child as have_a_child, 
+		sale.total_price as total_price, 
+		sale.discounts as discounts, 
+		sale.shipping_cost as shipping_cost, 
+		sale.other_cost as other_cost, 
+		sale.payment_type as payment_type, 
+		sale.grand_total as grand_total, 
+		sale.date_start as date_start, 
+		sale.date_due as date_due, 
+		sale.note as note, 
+		sale.created_at as created_at, 
+		sale.updated_at as updated_at, 
+		sale.created_by as created_by, 
+		sale.is_controlled_by as is_controlled_by,  
+		sale.is_delivered as is_delivered,  
+		sale.is_cancelled as is_cancelled,  
+		sale.cancel_note as cancel_note,
+		customer.customer_code as customer_code, 
+		customer.store_name as store_name, 
+		user_created.id as user_id, 
+		user_created.name as user_sale_create_by,
+		user_updated.id as user_id_updated, 
+		user_updated.name as user_sale_update_by');
+		$this->db->like('sale.invoice_code', "DROP/$searchValue", 'after');
+		if ($searchValue != '') {
+			$this->db->or_like('sale.customer', $searchValue, 'both');
+			$this->db->or_like('sale.note', $searchValue, 'both');
+			$this->db->or_like('sale.created_at', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
+		}
+		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
+		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
+		if ($dateStart != '') {
+			$this->db->group_start();
+			$this->db->where("sale.created_at >=", $dateStart);
+			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
+		}else{
+			$this->db->like("sale.created_at", date("Y-m"), 'after');
+		}
+		if(!$haspermission){
+			$this->db->where("sale.created_by", $logged);
+		}
+		$this->db->order_by($columnName, $columnSortOrder);
+		$this->db->limit($rowperpage, $start);
+		$records = $this->db->get('invoice_selling sale')->result();
+
+		$data = array();
+
+		foreach ($records as $record) {
+
+			$data[] = array(
+				'id' => $record->id,
+				'invoice_code_reference' => $record->invoice_code_reference,
+				'invoice_code' => $record->invoice_code,
+				'have_a_child' => $record->have_a_child,
+				'customer_code' => $record->customer_code,
+				'store_name' => $record->store_name,
+				'total_price' => $record->total_price,
+				'discounts' => $record->discounts,
+				'shipping_cost' => $record->shipping_cost,
+				'other_cost' => $record->other_cost,
+				'payment_type' => lang($record->payment_type),
+				'grand_total' => $record->grand_total,
+				'date_start' => $record->date_start,
+				'date_due' => $record->date_due,
+				'note' => $record->note,
+				'created_at' => $record->created_at,
+				'updated_at' => $record->updated_at,
+				'user_id' => $record->user_id,
+				'user_id_updated' => $record->user_id_updated,
+				'is_controlled_by' => $record->is_controlled_by,
+				'is_delivered' => $record->is_delivered,
+				'is_cancelled' => $record->is_cancelled,
+				'cancel_note' => $record->cancel_note,
+				'user_sale_create_by' => $record->user_sale_create_by,
+				'user_sale_update_by' => $record->user_sale_update_by,
+			);
+		}
+
+		## Response
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $totalRecords,
+			"iTotalDisplayRecords" => $totalRecordwithFilter,
+			"aaData" => $data,
+		);
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+	}
 	/*
 	 * drop stock item without invoice code
 	*/
@@ -680,6 +823,7 @@ class Sale extends Invoice_controller
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->page_data['bank'] = $this->account_bank_model->get();
 			$this->page_data['title'] = 'sale_create';
+			$this->page_data['page']->menu = 'drop_items';
 			$this->page_data['page']->submenu = 'drop_items';
 			$this->load->view('invoice/sale/drop', $this->page_data);
 		}else{
@@ -772,15 +916,17 @@ class Sale extends Invoice_controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->like('sale.invoice_code', "INV/SALE/$searchValue", 'after');
 		if ($searchValue != '') {
-			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
 		}
 		if ($dateStart != '') {
+			$this->db->trans_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->trans_complete();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
@@ -815,8 +961,8 @@ class Sale extends Invoice_controller
 		user_created.name as user_sale_create_by,
 		user_updated.id as user_id_updated, 
 		user_updated.name as user_sale_update_by');
+		$this->db->like('sale.invoice_code', "INV/SALE/$searchValue", 'after');
 		if ($searchValue != '') {
-			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
@@ -826,8 +972,10 @@ class Sale extends Invoice_controller
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}

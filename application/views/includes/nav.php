@@ -541,8 +541,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- END Purchase -->
     <!-- Item Out -->
   <?php if (hasPermissions('sale_list')) : ?>
-  <li class="nav-item has-treeview <?php echo ($page->menu == 'Sale') ? 'menu-open' : '' ?>">
-    <a href="#" class="nav-link  <?php echo ($page->menu == 'Sale') ? 'active' : '' ?>">
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'drop_items') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'drop_items') ? 'active' : '' ?>">
       <i class="nav-icon fas fa-file-upload"></i>
       <p>
         <?php echo lang('drop_items') ?>
@@ -551,7 +551,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="<?php echo url('invoice/order/list_drop_items') ?>" class="nav-link <?php echo ($page->submenu == 'list_drop_items') ? 'active' : '' ?>">
+        <a href="<?php echo url('invoice/sale/list_drop_items') ?>" class="nav-link <?php echo ($page->submenu == 'list_drop') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('list_drop') ?> </p>
         </a>
