@@ -64,15 +64,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
-                  <th>no.</th>
-                  <th><?= lang('invoice_code') ?></th>
+                  <th width="1%">no.</th>
+                  <th width="7"><?= lang('invoice_code') ?></th>
                   <th><?= lang('customer_code') ?></th>
-                  <th><?= lang('store_name') ?></th>
-                  <th><?= lang('created_at') ?></th>
-                  <th><?= lang('note') ?></th>
-                  <th><?= lang('created_by') ?></th>
+                  <th width="15%"><?= lang('store_name') ?></th>
+                  <th width="12%"><?= lang('created_at') ?></th>
+                  <th width="45%"><?= lang('note') ?></th>
+                  <th width="12%"><?= lang('created_by') ?></th>
                   <th><?= lang('updated_by') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="7%"><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -121,7 +121,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
-      order: [[ 3, "desc" ]],
+      order: [[ 4, "desc" ]],
       ajax: {
         "url": "<?php echo url('invoice/order/serverside_datatables_data_order_is_created') ?>",
         "type": "POST",
@@ -155,10 +155,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "order_code"
+          data: "order_code",
         },
         {
-          data: "customer_code"
+          data: "customer_code",
+          visible: false
         },
         {
           data: "store_name",
@@ -169,13 +170,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "created_at"
+          data: "created_at",
+          render: function(data, type, row){
+            return formatDate(data)
+          }
         },
         {
           data: "note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 10, true)
+            return shorttext(data, 80, true)
             // return data
           }
         },
@@ -183,7 +187,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "user_order_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
@@ -193,7 +197,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           visible: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }

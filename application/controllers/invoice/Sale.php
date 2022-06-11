@@ -196,7 +196,7 @@ class Sale extends Invoice_controller
 				'expedition_name' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'payment_type' => post('payment_type'),
-				'status_payment' => (post('payment_type') == 'cash') ? true : false,
+				'status_payment' => post('status_payment'),
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),

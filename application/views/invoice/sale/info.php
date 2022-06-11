@@ -289,7 +289,7 @@ $i = 0; $total_price = 0;?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-sm-12">
+                                <div class="col-lg col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('date_due') ?></h6>
                                         <div class="input-group mb-3">
@@ -301,6 +301,7 @@ $i = 0; $total_price = 0;?>
                                     </div>
                                 </div>
                                 <?php if($intersect_codex_item):?>
+                                <?php if($invoice_information_transaction->status_payment):?>
                                 <div class="col-lg-2 col-sm-12 text-danger">
                                     <div class="form-group">
                                         <h6><b><?= lang('deposit') ?></b></h6>
@@ -308,10 +309,20 @@ $i = 0; $total_price = 0;?>
                                     </div>
                                 </div>
                                 <?php endif;?>
+                                <?php endif;?>
                                 <div class="col-lg-12 col-sm-12">
                                     <div class="form-group">
                                         <label for="note"><?= lang('note') ?></label>
                                         <textarea disabled name="note" id="note" class="form-control"><?= $invoice_information_transaction->note ?></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox">
+                                        <input disabled class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $invoice_information_transaction->status_payment?'checked':'' ?> value=1>
+                                        <label for="status_payment" class="custom-control-label"><?=lang('is_status_payment')?></label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -407,4 +418,4 @@ $i = 0; $total_price = 0;?>
 </script>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainSaleEdit.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainSaleInfo.js"></script>

@@ -514,8 +514,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <li class="nav-header"><strong> <?php echo lang('menu_notinvoice') ?> </strong> &nbsp;
   <!-- Purchase -->
   <?php if (hasPermissions('purchase_list')) : ?>
-  <li class="nav-item has-treeview <?php echo ($page->menu == 'Purchase') ? 'menu-open' : '' ?>">
-    <a href="#" class="nav-link  <?php echo ($page->menu == 'Purchase') ? 'active' : '' ?>">
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'entry_items') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'entry_items') ? 'active' : '' ?>">
       <i class="nav-icon fas fa-file-download"></i>
       <p>
         <?php echo lang('entry_items') ?>
@@ -572,7 +572,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <!-- end END Invoice -->
 
     <!-- Validation -->
-  <?php if (hasPermissions('warehouse_order_list')) : ?>
+  <?php if (hasPermissions('warehouse_order_list')) : $total = $this->order_model->count_new_order()?>
   <li class="nav-header"><strong> <?php echo lang('menu_validation') ?> </strong> &nbsp;
     <!-- Warehouse -->
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Warehouse') ? 'menu-open' : '' ?>">
@@ -581,6 +581,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
       <p>
         <?php echo lang('page_order') ?>
         <i class="right fas fa-angle-left"></i>
+        <?php if($total):?>
+        <span class="badge badge-info right"><?=$total;?></span>
+        <?php endif ?>
       </p>
     </a>
     <ul class="nav nav-treeview">
@@ -588,6 +591,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <a href="<?php echo url('validation/warehouse/list') ?>" class="nav-link <?php echo ($page->submenu == 'order_list') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('order_list') ?> </p>
+          <?php if($total):?>
+          <span class="badge badge-info right"><?=$total;?></span>
+          <?php endif ?>
         </a>
       </li>
       <li class="nav-item">
@@ -1219,5 +1225,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </li>
 
 <?php endif ?>
+<li class="nav-header">MISCELLANEOUS</li>
+<li class="nav-item">
+  <a href="https://ilyanazalun.github.io/projects/7-inventory-management-project" target="_blank" class="nav-link active bg-danger">
+    <i class="nav-icon fas fa-file"></i>
+    <p>Documentation</p>
+  </a>
+</li>
 
 </ul>

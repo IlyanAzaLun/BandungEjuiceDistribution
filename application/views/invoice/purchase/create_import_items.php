@@ -109,6 +109,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <?php $i=1; foreach ($data as $key => $value):?>
                   <?php if ($key == 1):?>
                   <?php continue; else:?>
+                  <?php if (!$value['A']):?>
+                  <?php break; else:?>
                   <tr class="input-<?=$i?>" id="main">
                     <td class="text-center"><div class="form-control form-control-sm"><?=$i?>.</div></td>
                     <td>
@@ -154,7 +156,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           <textarea class="form-control form-control-sm" name="description[]"></textarea>
                       </td>
                   </tr>
-                  <?php $i++; endif;?>
+                  <?php $i++; endif; endif;?>
                   <?php endforeach; ?>
                   <!--  -->
                 </tbody>

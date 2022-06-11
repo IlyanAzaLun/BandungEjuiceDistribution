@@ -11,6 +11,14 @@ class Order_model extends MY_Model
         parent::__construct();
     }
 
+    public function count_new_order()
+    {
+        $this->db->where('is_created', 0);
+        $this->db->where('is_cancelled', 0);
+        $this->db->where('is_confirmed', null);
+        return $this->db->get($this->table)->num_rows();
+    }
+
     public function get_num_rows_order_sale($data = false)
     {
         $logged = logged('id');

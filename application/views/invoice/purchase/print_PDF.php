@@ -92,7 +92,7 @@ $contact = "$supplier->contact_phone $supplier->contact_mail";
             <table class="table border">
                 <thead>
                     <tr>
-                        <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="https://external-preview.redd.it/6l63BffeDoLRZw5EiCuApqXRMrViJK5RhHjnD1eEQ0M.jpg?auto=webp&s=34697fb3fc0b37b6d78c4859f99472bf5ac2b50e" alt=""></th>
+                        <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th>
                         <th class="text-right" colspan="3">Invoice Code: </th>
                         <th class="text-left" colspan="3"><?=$__invoice_code?> </th>
                     </tr>

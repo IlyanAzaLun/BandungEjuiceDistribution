@@ -184,7 +184,7 @@ $lang['dashboard_love_to'] = "Saya ingin.";
 $lang['dashboard_how_been'] = "Bagaimana kabarmu? Aku...";
 
 
-$lang['dashboard_todo_list'] = "Daftar Tugas";
+$lang['dashboard_todo_list'] = "Tugas";
 $lang['dashboard_todo_design'] = "Desain Tema Yang Bagus";
 
 $lang['dashboard_todo_design'] = "Desain Tema Yang Bagus";
@@ -277,8 +277,8 @@ $lang['item'] = "Barang";
 $lang['items'] = "Barang";
 $lang['unit'] = "Satuan";
 $lang['broken'] = "Rusak";
-$lang['item_list'] = "Daftar Barang";
-$lang['item_list_information'] = "Daftar Informasi Barang";
+$lang['item_list'] = "Barang";
+$lang['item_list_information'] = "Informasi Barang";
 $lang['item_list_information_transaction'] = "Informasi Barang Transaksi";
 $lang['item_list_information_fifo'] = "Masuk Pertama Keluar, Informasi Barang";
 $lang['item_add'] = "Tambah Barang";
@@ -306,7 +306,7 @@ $lang['item_quantity_out'] = "Barang Keluar";
  * Pelanggan
  */
 $lang['customer'] = "Pelanggan";
-$lang['customer_list'] = "Daftar Pelanggan";
+$lang['customer_list'] = "Pelanggan";
 $lang['customer_add'] = "Tambah Pelanggan";
 $lang['customer_update'] = "PerBarui Pelanggan";
 $lang['customer_code'] = "Kode Pelanggan";
@@ -331,7 +331,7 @@ $lang['customer_category_other'] = "Lainnya";
  * Pemasok
  */
 $lang['supplier'] = "Pemasok";
-$lang['supplier_list'] = "Daftar pemasok";
+$lang['supplier_list'] = "pemasok";
 $lang['supplier_add'] = "Tambah pemasok";
 $lang['supplier_update'] = "PerBarui pemasok";
 $lang['supplier_code'] = "Kode pemasok";
@@ -360,7 +360,7 @@ $lang['supplier_category_other'] = "Lainnya";
 $lang['expedition'] = "Ekspedisi";
 $lang['pages_expedition'] = "Halaman Ekspedisi";
 
-$lang['expedition_list'] = "Daftar Ekspedisi";
+$lang['expedition_list'] = "Ekspedisi";
 $lang['expedition_add'] = "Tambah Ekspedisi";
 $lang['expedition_edit'] = "Ubah Ekspedisi";
 $lang['expedition_code'] = "Kode ekspedisi";
@@ -379,7 +379,7 @@ $lang['shipping_services'] = "Layanan pengiriman";
  * Alamat
  */
 $lang['address'] = "Alamat";
-$lang['address_list'] = "Daftar alamat";
+$lang['address_list'] = "alamat";
 $lang['address_add'] = "Tambahkan alamat";
 $lang['address_edit'] = "Ubah alamat";
 $lang['village'] = "Desa";
@@ -399,7 +399,7 @@ $lang['is_open'] = "Terbuka";
  */
 $lang['bank'] = "Bank";
 $lang['pages_account_bank'] = "Rekening Bank";
-$lang['account_bank_list'] = "Daftar Akun";
+$lang['account_bank_list'] = "Akun";
 $lang['account_bank_add'] = "Tambah Akun Baru";
 $lang['account_bank_edit'] = "Ubah Informasi Akun";
 $lang['info_add'] = "Tambahkan Informasi lebih lanjut";
@@ -428,9 +428,9 @@ $lang['report_sale_items'] = "Informasi Barang";
 $lang['report_sale_profit'] = "Informasi Laba";
 $lang['pages_report_information'] = "Informasi Laporan";
 $lang['item_report'] = "Laporkan Barang";
-$lang['list_entry'] = "Daftar Barang Masuk";
+$lang['list_entry'] = "Barang Masuk";
 $lang['entry_items'] = "Barang Masuk";
-$lang['list_drop'] = "Daftar Barang Keluar";
+$lang['list_drop'] = "Barang Keluar";
 $lang['drop_items'] = "Barang Keluar";
 $lang['customer_report'] = "Laporkan Pelanggan";
 $lang['supplier_report'] = "Laporkan Pemasok";
@@ -457,7 +457,7 @@ $lang['invoice_code'] = "Kode Faktur";
 $lang['import_purchase'] = "Import Barang Pembelian";
 
 $lang['page_purchase'] = "Halaman Pembelian";
-$lang['purchase_list'] = "Daftar Pembelian";
+$lang['purchase_list'] = "Pembelian";
 $lang['find_supplier_code'] = "Temukan Kode pemasok ...";
 $lang['find_store_name'] = "Temukan nama toko ...";
 $lang['purchase_create'] = "Buat Pembelian";
@@ -483,9 +483,9 @@ $lang['shipping_cost'] = "Biaya pengiriman";
 $lang['other_cost'] = "Biaya Lain";
 $lang['grandtotal'] = "Total keseluruhan";
 $lang['information_payment'] = "Informasi Pembayaran";
-$lang['payment_type'] = "Ketik Pembayaran";
-$lang['status_payment'] = "Pembayaran Status";
-$lang['is_status_payment'] = "Apakah Status Pembayaran ?";
+$lang['payment_type'] = "Pembayaran";
+$lang['status_payment'] = "Status Pembayaran";
+$lang['is_status_payment'] = "Apakah Status Pembayaran Selesai ?";
 $lang['date_due'] = "Tanggal jatuh tempo";
 $lang['date_due_start'] = "Tanggal jatuh tempo mulai";
 $lang['date_due_end'] = "Tanggal jatuh tempo";
@@ -498,15 +498,15 @@ $lang['deposit'] = "Setoran";
 $lang['online'] = "Daring";
 $lang['returns_failed'] = "Pengembalian Gagal, Ubah Jumlah Barang Yang Dikembalikan";
 $lang['invoice_code_reference'] = "Referensi Kode Faktur";
-$lang['purchase_return_list'] = "Daftar Pengembalian Pembelian";
+$lang['purchase_return_list'] = "Pengembalian Pembelian";
 
 /*
 KONSINYASI
 */
 $lang['consignment'] = "Konsinyasi";
-$lang['consignment_list'] = "Daftar Kiriman";
-$lang['consignment_return_list'] = "Daftar Kembali Kiriman";
-$lang['consignment_create'] = "Buat Kiriman";
+$lang['consignment_list'] = "Konsinyasi";
+$lang['consignment_return_list'] = "Pengembalian Barang";
+$lang['consignment_create'] = "Buat Konsinyasi";
 $lang['consignment_report'] = "Laporan Pengiriman";
 $lang['is_consignment'] = 'Apakah Transaksi konsinyasi ?';
 
@@ -516,7 +516,7 @@ $lang['is_consignment'] = 'Apakah Transaksi konsinyasi ?';
  */
 $lang['order'] = "Pesan";
 $lang['page_order'] = "Halaman Pesanan";
-$lang['order_list'] = "Daftar Pesanan";
+$lang['order_list'] = "Pesanan";
 $lang['order_report'] = "Laporkan Pesanan";
 $lang['order_create'] = "Buat Pesanan";
 $lang['order_edit'] = "Ubah Pesanan";
@@ -536,12 +536,12 @@ $lang['order_creating_sale_invoice'] = "Membuat Invoice Penjualan Berdasarkan Ko
  */
 $lang['page_sale'] = "Halaman Penjualan";
 
-$lang['sale_list'] = "Daftar Penjualan";
+$lang['sale_list'] = "Penjualan";
 $lang['sale_create'] = "Buat Penjualan";
 $lang['sale_edit'] = "Edit Penjualan";
 $lang['sale_payment'] = "Menjual Untuk membayar";
 $lang['sale_returns'] = "Pengembalian Penjualan";
-$lang['sale_return_list'] = "Daftar Pengembalian Penjualan";
+$lang['sale_return_list'] = "Pengembalian Penjualan";
 $lang['returns'] = "Pengembalian";
 
 /*
@@ -560,7 +560,7 @@ $lang['payment_sales'] = "Penjualan";
  */
 $lang['menu_validation'] = "Menu Validasi";
 $lang['confirmation_by'] = "Konfirmasi Oleh";
-$lang['order_list_item_available'] = "Daftar Barang Pesanan";
+$lang['order_list_item_available'] = "Barang Pesanan";
 $lang['is_completey_clear'] = "Semua Barang Sudah Sesuai";
 
  
@@ -571,7 +571,7 @@ $lang['is_completey_clear'] = "Semua Barang Sudah Sesuai";
 $lang['pack'] = "Koli";
 $lang['quality_control'] = "Kontrol Kualitas";
 $lang['page_shipping'] = "Halaman Pengiriman";
-$lang['shipping_list'] = "Daftar Pengiriman";
+$lang['shipping_list'] = "Pengiriman";
 $lang['shipping_report'] = "Laporkan Pengiriman";
 $lang['delivered_report'] = "Laporan Terkirim";
 $lang['weight_shipping_information'] = "Tambahkan Informasi Berat Barang";
@@ -587,7 +587,7 @@ $lang['activity_ip_address'] = "Alamat IP";
 $lang['activity_message'] = "Pesan";
 $lang['activity_details'] = "Rincian";
 $lang['activity_datetime'] = "Tanggal Waktu";
-$lang['list_all_activities'] = "Daftar Semua Kegiatan";
+$lang['list_all_activities'] = "Semua Kegiatan";
 $lang['select_user'] = "Pilih Pengguna";
 $lang['filter'] = "Filter";
 $lang['reset'] = "Setel Ulang";
@@ -596,7 +596,7 @@ $lang['reset'] = "Setel Ulang";
  * Peran
  */
 $lang['roles'] = "Peran";
-$lang['list_roles'] = "Daftar Peran";
+$lang['list_roles'] = "Peran";
 $lang['create_role'] = "Buat Peran";
 $lang['role_name'] = "Nama";
 $lang['new_role'] = "Peran Baru";
@@ -606,7 +606,7 @@ $lang['edit_roles'] = "Edit Peran";
  * Izin
  */
 $lang['permissions'] = "Izin";
-$lang['list_all_permissions'] = "Daftar Izin";
+$lang['list_all_permissions'] = "Izin";
 $lang['permission_name'] = "Nama";
 $lang['permission_code'] = "Kode";
 $lang['edit_permission'] = "Izin Edit";

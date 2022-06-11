@@ -174,7 +174,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
       ],
-      buttons: [{
+      buttons: [
+        
+        <?php if(hasPermissions('backup_db')):?>
+        {
           text: 'Export',
           extend: 'excelHtml5',
           className: 'btn-sm',
@@ -220,6 +223,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             location.href = '<?= url('items/add') ?>'
           }
         },
+        <?php endif ?>
       ]
     });
   });

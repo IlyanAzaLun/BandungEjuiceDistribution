@@ -371,6 +371,16 @@ $i = 0; ?>
                                         <textarea name="note" id="note" class="form-control"><?= $_data_invoice_parent->note ?></textarea>
                                     </div>
                                 </div>
+                                
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox">
+                                        <input type="hidden" name="status_payment" value=0>
+                                        <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment?'checked':'' ?> value=1>
+                                        <label for="status_payment" class="custom-control-label"><?=lang('is_status_payment')?></label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -427,13 +437,13 @@ $i = 0; ?>
     }
     $('#date_due').daterangepicker({
         startDate: moment(),
-        timePicker: true,
-        timePicker24Hour: true,
-        timePickerSeconds: true,
+        timePicker: false,
+        timePicker24Hour: false,
+        timePickerSeconds: false,
         opens: "center",
         drops: "up",
         locale: {
-            format: 'DD/MM/YYYY H:mm:s'
+            format: 'DD/MM/YYYY'
         },
         ranges: {
             'Today': [moment(), moment()],

@@ -350,7 +350,7 @@ $i = 0; ?>
                                 <div class="custom-control custom-checkbox">
                                 <input type="hidden" name="status_payment" value=0>
                                 <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment?'checked':'' ?> value=1>
-                                <label for="status_payment" class="custom-control-label"><?=strtolower(lang('is_status_payment'))?></label>
+                                <label for="status_payment" class="custom-control-label"><?=lang('is_status_payment')?></label>
                                 </div>
                             </div>
                         </div>
