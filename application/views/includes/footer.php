@@ -131,6 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   });
   document.addEventListener('DOMContentLoaded', (e) => {
       console.log(`Document is ready!`);
+      $('li.nav-item.has-treeview.menu-open').focus()
   });
 /* //disabeld right click
 document.onkeydown = function(e) {

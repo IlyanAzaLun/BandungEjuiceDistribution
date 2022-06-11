@@ -21,6 +21,8 @@ class Shipper extends MY_Controller
 		ifPermissions('shipper_transaction_list');	
 		$this->form_validation->set_rules('pack', lang('pack'), 'required|trim');
 		if ($this->form_validation->run() == false) {
+			
+			$this->page_data['page']->submenu = 'report_packing';
 			$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->load->view('validation/shipper/pack', $this->page_data);

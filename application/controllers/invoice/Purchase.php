@@ -685,18 +685,23 @@ class Purchase extends Invoice_controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
-		$this->db->like('purchasing.invoice_code', "INV/PURCHASE/".$searchValue, 'both');
 		if ($searchValue != '') {
+			$this->db->group_start();
+			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
 			$this->db->or_like('purchasing.note', $searchValue, 'both');
 			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
+		$this->db->where("purchasing.is_transaction", 1);
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -724,12 +729,14 @@ class Purchase extends Invoice_controller
 		supplier.store_name as store_name, 
 		user.id as user_id, 
 		user.name as user_purchasing_create_by');
-		$this->db->like('purchasing.invoice_code', "INV/PURCHASE/".$searchValue, 'both');
 		if ($searchValue != '') {
+			$this->db->group_start();
+			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
 			$this->db->or_like('purchasing.note', $searchValue, 'both');
 			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
 			$this->db->or_like('supplier.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
 		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
@@ -742,6 +749,7 @@ class Purchase extends Invoice_controller
 		}else{
 			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
+		$this->db->where("purchasing.is_transaction", 1);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
@@ -812,8 +820,8 @@ class Purchase extends Invoice_controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = @$postData['startDate'];
-		$dateFinal = @$postData['finalDate'];
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
@@ -822,11 +830,13 @@ class Purchase extends Invoice_controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
-		$this->db->like('purchasing.invoice_code', "ENTRY/".$searchValue, 'after');
 		if ($searchValue != '') {
+			$this->db->group_start();
+			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
 			$this->db->or_like('purchasing.note', $searchValue, 'both');
 			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		if ($dateStart != '') {
 			$this->db->group_start();
@@ -836,6 +846,7 @@ class Purchase extends Invoice_controller
 		}else{
 			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
+		$this->db->where("purchasing.is_transaction", 0);
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -863,22 +874,27 @@ class Purchase extends Invoice_controller
 		supplier.store_name as store_name, 
 		user.id as user_id, 
 		user.name as user_purchasing_create_by');
-		$this->db->like('purchasing.invoice_code', "ENTRY/".$searchValue, 'after');
 		if ($searchValue != '') {
+			$this->db->group_start();
+			$this->db->like('purchasing.invoice_code', $searchValue, 'after');
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
 			$this->db->or_like('purchasing.note', $searchValue, 'both');
 			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
 			$this->db->or_like('supplier.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
 		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
 		$this->db->where("purchasing.is_child", 0);
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("purchasing.created_at >=", $dateStart);
 			$this->db->where("purchasing.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
+		$this->db->where("purchasing.is_transaction", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
@@ -982,6 +998,7 @@ class Purchase extends Invoice_controller
 				'date_due' => 0,
 				'note' => post('note'),
 				'is_consignment' => 0,
+				'is_transaction' => 0,
 			);
 			echo '<pre>';
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
