@@ -240,13 +240,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
         },{
-          data: "customer_code",
+          data: "invoice_code",
           orderable: false,
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <a target="_blank" href="<?= url('validation/shipper') ?>/pack?invoice=${row['invoice_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-weight text-primary"></i></a>
-                  <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}&invoice=${row['invoice_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
+                  <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${row['customer_code']}&invoice=${row['invoice_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
                   <button class="btn btn-xs btn-primary confirmation" data-id="${row['invoice_code']}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check-double"></i></button>
                 </div>`;
           }

@@ -36,93 +36,102 @@ class Payment extends MY_Controller
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
-		$records = $this->db->get('invoice_purchasing')->result();
+		$records = $this->db->get('invoice_payment')->result();
 		$totalRecords = $records[0]->allcount;
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
 		if ($searchValue != '') {
-			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
-			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
-			$this->db->or_like('purchasing.note', $searchValue, 'both');
-			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+			$this->db->like('payment.invoice_code', $searchValue, 'both');
+			$this->db->or_like('payment.supplier', $searchValue, 'both');
+			$this->db->or_like('payment.note', $searchValue, 'both');
+			$this->db->or_like('payment.created_at', $searchValue, 'both');
 		}
 		if ($dateStart != '') {
-			$this->db->where("purchasing.created_at >=", $dateStart);
-			$this->db->where("purchasing.created_at <=", $dateFinal);
+			$this->db->where("payment.created_at >=", $dateStart);
+			$this->db->where("payment.created_at <=", $dateFinal);
 		}else{
-			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
+			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
-		$records = $this->db->get('invoice_purchasing purchasing')->result();
+		$this->db->group_by('payment.invoice_code');
+		$records = $this->db->get('invoice_payment payment')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
 		## Fetch records
 		$this->db->select('
-		purchasing.id as purchasing_id, 
-		purchasing.invoice_code as invoice_code, 
-		purchasing.have_a_child as have_a_child, 
-		purchasing.created_at as purchasing_create_at, 
-		purchasing.total_price as total_price, 
-		purchasing.discounts as discounts, 
-		purchasing.shipping_cost as shipping_cost, 
-		purchasing.other_cost as other_cost, 
-		purchasing.payment_type as payment_type, 
-		purchasing.status_payment as status_payment, 
-		purchasing.grand_total as grand_total, 
-		purchasing.note as purchase_note, 
-		purchasing.created_at as created_at, 
-		purchasing.updated_at as updated_at, 
-		purchasing.created_by as created_by, 
-		purchasing.is_cancelled as is_cancelled, 
-		purchasing.cancel_note as cancel_note, 
-		supplier.customer_code as supplier_code, 
-		supplier.store_name as store_name, 
-		user.id as user_id, 
-		user.name as user_purchasing_create_by');
+          payment.id
+        , payment.invoice_code
+        , payment.date_start
+        , payment.date_due
+        , payment.customer_code
+        , payment.grand_total
+        , payment.payup
+        , payment.leftovers
+        , payment.status_payment
+        , payment.payment_type
+        , payment.bank_id
+        , payment.is_cancelled
+        , payment.cancel_note
+        , payment.created_by
+        , MAX(payment.created_at)
+        , payment.updated_by
+        , payment.updated_at
+        , payment.description
+        , user_created.id as user_created_id
+        , user_created.name as user_created_by
+        , user_updated.id as user_updated_id
+        , user_updated.name as user_updated_by
+        , IF(payment.updated_at, payment.updated_at, payment.created_at) as payment_date_at
+        ');
 		if ($searchValue != '') {
-			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
-			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
-			$this->db->or_like('purchasing.note', $searchValue, 'both');
-			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+			$this->db->like('payment.invoice_code', $searchValue, 'both');
+			$this->db->or_like('payment.supplier', $searchValue, 'both');
+			$this->db->or_like('payment.note', $searchValue, 'both');
+			$this->db->or_like('payment.created_at', $searchValue, 'both');
 			$this->db->or_like('supplier.store_name', $searchValue, 'both');
 		}
-		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
-		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
-		$this->db->where('purchasing.is_child', 1);
+        $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
+        $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
+        $this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
 		if ($dateStart != '') {
-			$this->db->where("purchasing.created_at >=", $dateStart);
-			$this->db->where("purchasing.created_at <=", $dateFinal);
+			$this->db->where("payment.created_at >=", $dateStart);
+			$this->db->where("payment.created_at <=", $dateFinal);
 		}else{
-			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
+			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
 		$this->db->order_by($columnName, $columnSortOrder);
+		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);
-		$records = $this->db->get('invoice_purchasing purchasing')->result();
-
+		$records = $this->db->get('invoice_payment payment')->result();
 		$data = array();
 
 		foreach ($records as $record) {
 
 			$data[] = array(
-				'id' => $record->purchasing_id,
-				'invoice_code' => $record->invoice_code,
-				'have_a_child' => $record->have_a_child,
-				'supplier_code' => $record->supplier_code,
-				'store_name' => $record->store_name,
-				'total_price' => $record->total_price,
-				'discounts' => $record->discounts,
-				'shipping_cost' => $record->shipping_cost,
-				'other_cost' => $record->other_cost,
-				'payment_type' => lang($record->payment_type),
-				'status_payment' => lang($record->status_payment),
-				'grand_total' => $record->grand_total,
-				'purchase_note' => $record->purchase_note,
-				'created_at' => $record->created_at,
-				'updated_at' => $record->updated_at,
-				'user_id' => $record->user_id,
-				'is_cancelled' => $record->is_cancelled,
-				'cancel_note' => $record->cancel_note,
-				'user_purchasing_create_by' => $record->user_purchasing_create_by,
+				"id"=> $record->id,
+				"invoice_code"=> $record->invoice_code,
+				"date_start"=> $record->date_start,
+				"date_due"=> $record->date_due,
+				"customer_code"=> $record->customer_code,
+				"grand_total"=> $record->grand_total,
+				"payup"=> $record->payup,
+				"leftovers"=> $record->leftovers,
+				"status_payment"=> $record->status_payment,
+				"payment_type"=> lang($record->payment_type),
+				"bank_id"=> $record->bank_id,
+				"is_cancelled"=> $record->is_cancelled,
+				"cancel_note"=> $record->cancel_note,
+				"created_by"=> $record->created_by,
+				"created_at"=> $record->created_at,
+				"updated_by"=> $record->updated_by,
+				"updated_at"=> $record->updated_at,
+				"description"=> $record->description,
+				"user_created_id"=> $record->user_created_id,
+				"user_created_by"=> $record->user_created_by,
+				"user_updated_id"=> $record->user_updated_id,
+				"user_updated_by"=> $record->user_updated_by,
+				"payment_date_at"=> $record->payment_date_at,
 			);
 		}
 

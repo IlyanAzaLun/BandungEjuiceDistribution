@@ -33,7 +33,7 @@ $i = 0; $total_items = 0;?>
                 <h5><i class="fas fa-info"></i> Note:</h5>
                 <?= lang('weight_shipping_information') ?></b>
             </div>
-            <?php echo form_open_multipart('validation/shipper/pack?invoice=' . get('invoice'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('validation/shipper/update_address_destination?invoice=' . get('invoice'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <!-- //content -->
             <!-- Information customer START -->
             <div class="card">
@@ -68,14 +68,32 @@ $i = 0; $total_items = 0;?>
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="address"><?= lang('address_destination') ?></label>
-                                <textarea type="text" name="address" id="address" class="form-control" required readonly><?= set_value('address') ?></textarea>
+                                <textarea type="text" name="address" id="address" class="form-control" required><?= set_value('address') ?></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.card-body -->
+                <div class="card-footer">
+                    <div class="float-right">
+                        <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
+                    </div>
+                </div>
             </div>
+            <?php echo form_close(); ?>
+            <?php echo form_open_multipart('validation/shipper/pack?invoice=' . get('invoice'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <!-- Information customer END -->
+            <div class="card" style="display:none">
+                <div class="card-body">
+                    <div class="row">
+                    <div class="col-sm-12">
+                            <div class="form-group">
+                                <textarea type="text" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- Information payment START -->
             <div class="card">
@@ -217,4 +235,4 @@ $i = 0; $total_items = 0;?>
 </script>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainSaleCreate.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/shipper/packer/MainShipperPacker.js"></script>

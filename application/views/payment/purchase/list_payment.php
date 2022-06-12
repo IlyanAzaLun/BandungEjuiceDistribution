@@ -34,35 +34,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th>No.</th>
-                  <th><?= lang('item_code') ?></th>
-                  <th><?= lang('item_name') ?></th>
-                  <th><?= lang('category_item') ?></th>
-                  <th><?= lang('item_quantity') ?></th>
-                  <th><?= lang('broken') ?></th>
-                  <th><?= lang('unit') ?></th>
-                  <th><?= lang('item_capital_price') ?></th>
-                  <th><?= lang('item_selling_price') ?></th>
-                  <th><?= lang('note') ?></th>
+                  <th><?= lang('invoice_code') ?></th>
+                  <th><?= lang('date_due')?></th>
+                  <th><?= lang('customer_code')?></th>
+                  <th><?= lang('grandtotal')?></th>
+                  <th><?= lang('payup')?></th>
+                  <th><?= lang('leftovers')?></th>
+                  <th><?= lang('status_payment')?></th>
+                  <th><?= lang('payment_type')?></th>
+                  <th><?= lang('bank_id')?></th>
+                  <th><?= lang('note')?></th>
+                  <th><?= lang('created_at')?></th>
+                  <th><?= lang('created_by')?></th>
+                  <th><?= lang('updated_at')?></th>
+                  <th><?= lang('updated_by')?></th>
+                  <th><?= lang('date')?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>
               </tbody>
-              <tfoot>
-                <tr>
-                  <th>No.</th>
-                  <th><?= lang('item_code') ?></th>
-                  <th><?= lang('item_name') ?></th>
-                  <th><?= lang('category_item') ?></th>
-                  <th><?= lang('item_quantity') ?></th>
-                  <th><?= lang('broken') ?></th>
-                  <th><?= lang('unit') ?></th>
-                  <th><?= lang('item_capital_price') ?></th>
-                  <th><?= lang('item_selling_price') ?></th>
-                  <th><?= lang('note') ?></th>
-                  <th><?= lang('option') ?></th>
-                </tr>
-              </tfoot>
             </table>
           </div>
           
@@ -93,83 +84,75 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       responsive: true,
       autoWidth: false,        
 			lengthChange: true,
-      lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('items')?>], [10, 25, 50, 100, 200, "All"]],
+      lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('invoice_payment')?>], [10, 25, 50, 100, 200, "All"]],
       ajax: {
-        "url": "<?php echo url('items/serverside_datatables_data_items') ?>",
+        "url": "<?php echo url('invoice/purchases/payment/serverside_datatables_data_payment_purchase') ?>",
         "type": "POST",
       },
-      columns: [{
+      columns: [
+        {
           data: "id"
-        },
-        {
-          data: "item_code",
-          orderable: false
-        },
-        {
-          data: "item_name",
-          render: function(data, type, row) {
-            let html = `<span class="float-right badge badge-danger">
-                          <?= lang('is_inactive') ?>
-                        </span>`;
-            return `${data} ${(row['is_active']=="0")?html:''}`
+        },{
+          data: "invoice_code"
+        },{
+          data: "date_start",
+          render: function(data, type, row){
+            return `${formatDate(row['date_start'], false)}~${formatDate(row['date_due'], false)}`
           }
-        },
-        {
-          data: "category"
-        },
-        {
-          data: 'item_quantity',
-          orderable: false,
-          render: function(data, type, row) {
-            return `${row['item_quantity']}`;
-          }
-        },
-        {
-          data: 'item_broken',
-          orderable: false,
-          render: function(data, type, row) {
-            return `${data}`;
-          }
-        },
-        {
-          data: 'item_unit',
-          orderable: false,
-          render: function(data, type, row) {
-            return `${data}`;
-          }
-        },
-        {
-          data: "item_capital_price",
-          <?php if(!hasPermissions('items_edit')):?>
+        },{
+          data: "customer_code"
+        },{
+          data: "grand_total"
+        },{
+          data: "payup"
+        },{
+          data: "leftovers"
+        },{
+          data: "status_payment"
+        },{
+          data: "payment_type"
+        },{
+          data: "bank_id",
+        },{
+          data: "description"
+        },{
+          data: "created_at",
           visible: false,
-          <?php endif ?>
-          orderable: false,
-          render: function(data, type, row) {
-            return (data) ? currency(data) : 0
+          render: function(data, type, row){
+            return data?formatDate(data):'';
           }
-        },
-        {
-          data: "item_selling_price",
-          orderable: false,
-          render: function(data, type, row) {
-            return (data) ? currency(data) : 0
+        },{
+          data: "user_created_by",
+          render: function(data, type, row){
+            return `${shorttext(data, 5)} <a href="${row['user_created_id']}" class="btn btn-sm btn-default"><i class="fa fa-tw fa-eye text-primary"></i></a>`
           }
-        },
-        {
-          data: "note"
-        },
-        {
+        },{
+          data: "updated_at",
+          visible: false,
+          render: function(data, type, row){
+            return data?formatDate(data):'';
+          }
+        },{
+          data: "user_updated_by",
+          visible: false,
+          render: function(data, type, row){
+            if(data){
+              return `${shorttext(data, 5)} <a href="${row['user_updated_id']}" class="btn btn-sm btn-default"><i class="fa fa-tw fa-eye text-primary"></i></a>`
+            }
+            return '';
+          }
+        },{
+          data: "payment_date_at",
+          render: function(data, type, row){
+            return data?formatDate(data):''
+          }
+        },{
           data: "id",
           orderable: false,
           render: function(data, type, row) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                <a target="_blank" href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-tw fa-edit text-primary"></i></a>
-                <a target="_blank" href="<?= url('items') ?>/info?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History items"><i class="fa fa-tw fa-history text-primary"></i></a>
-                <a target="_blank" href="<?= url('items') ?>/info_transaction?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="History transaction items"><i class="fa fa-tw fa-layer-group text-primary"></i></a>
-                <?php if(hasPermissions('list_fifo')):?>
-                <a target="_blank" href="<?= url('items') ?>/info_fifo?id=${row['item_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Fifo items"><i class="fa fa-tw fa-book text-primary"></i></a>
-                <?php endif;?>
+                    <a target="_blank" href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-tw fa-edit text-primary"></i></a>
                 </div>`;
           }
         },

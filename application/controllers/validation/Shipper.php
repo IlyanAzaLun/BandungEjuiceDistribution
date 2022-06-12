@@ -44,6 +44,29 @@ class Shipper extends MY_Controller
 			redirect('validation/shipper/report_packing');
 		}
 	}
+	public function update_address_destination()
+	{
+		$data = $this->input->post();
+		$information = array(
+			'address' => $data['address'],
+			'village' => null,
+			'sub_district' => null,
+			'city' => null,
+			'province' => null,
+			'zip' => null,
+			'updated_at' => date('Y-m-d H:i:s', time()),
+			'updated_by' => logged('id'),
+		);
+		if($this->address_model->updateByCustomerCode($data['customer_code'], $information)){
+			$this->activity_model->add("Delevered, #" . $data['customer_code'], (array) $payment);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Delevered is Saved');
+		}else{
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Delevered Failed, need ID Invoice information!');
+		}
+		redirect('validation/shipper/pack?invoice='.get('invoice'));
+	}
 
 	public function destination()
 	{	
