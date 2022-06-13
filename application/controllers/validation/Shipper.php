@@ -25,7 +25,16 @@ class Shipper extends MY_Controller
 			$this->page_data['page']->submenu = 'report_packing';
 			$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['modals'] = (object) array(
+				'id' => 'modal-confirmation-order',
+				'title' => 'Modals confirmation',
+				'link' => 'validation/shipper/is_delevered',
+				'content' => 'delete',
+				'btn' => 'btn-primary',
+				'submit' => 'Yes do it',
+			);
 			$this->load->view('validation/shipper/pack', $this->page_data);
+			$this->load->view('includes/modals', $this->page_data);
 		}else{
 			$this->data['invoice_code'] = get('invoice');
 			$information = array(
@@ -41,7 +50,7 @@ class Shipper extends MY_Controller
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Delevered Failed, need ID Invoice information!');
 			}
-			redirect('validation/shipper/report_packing');
+			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
 	public function update_address_destination()
@@ -611,7 +620,7 @@ class Shipper extends MY_Controller
 		if($this->form_validation->run() == false){
 			$this->session->set_flashdata('alert-type', 'danger');
 			$this->session->set_flashdata('alert', 'Delevered Failed, need ID Invoice information!');
-			redirect('validation/shipper/report_packing');
+			redirect($_SERVER['HTTP_REFERER']);
 		}else{
 			$this->data['invoice_code'] = $this->input->get('id')?$this->input->get('id'):$this->input->post('id');
 			$information = array(
@@ -625,7 +634,7 @@ class Shipper extends MY_Controller
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Delevered Failed, need ID Invoice information!');
 			}
-			redirect('validation/shipper/report_packing');
+			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
 	

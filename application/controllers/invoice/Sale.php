@@ -1042,7 +1042,7 @@ class Sale extends Invoice_controller
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
-	public function test()
+	public function monthly_statistic()
 	{
 		$user = logged('id');
         $haspermission = hasPermissions('dashboard_staff');

@@ -8,6 +8,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?php echo $page->title ?> | <?php echo $app->site_title ?> </title>
   <!-- Tell the browser to be responsive to screen width -->
+  <link rel="stylesheet" href="">
+  <link rel="icon" href="<?=url('uploads/company/').setting('company_icon')?>">  <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=0.6">
 
   <meta name="csrf_token_name" content="<?php echo $this->security->get_csrf_token_name(); ?>" />

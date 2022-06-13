@@ -644,3 +644,6 @@ $lang['settings_timezone'] = "Timezone";
 $lang['language'] = "Language";
 $lang['default_lang'] = "Default Language";
 $lang['blank_page'] = "Blank Page";
+$lang['back'] = "Back";
+$lang['close'] = "Close";
+$lang['confirmation'] = "Confirmation";

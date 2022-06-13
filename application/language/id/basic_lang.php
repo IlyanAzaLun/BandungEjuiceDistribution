@@ -638,3 +638,6 @@ $lang['settings_timezone'] = "Zona waktu";
 $lang['language'] = "Bahasa";
 $lang['default_lang'] = "Bahasa Standar";
 $lang['blank_page'] = "Halaman Kosong";
+$lang['back'] = "Kembali";
+$lang['close'] = "Tutup";
+$lang['confirmation'] = "Konfirmasi";

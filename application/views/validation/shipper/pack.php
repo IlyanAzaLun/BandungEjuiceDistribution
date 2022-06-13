@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); 
-$i = 0; $total_items = 0;?>
+$i = 0; $total_items = 0; $data = $this->input->get();?>
 <!-- Theme style -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
@@ -152,9 +152,13 @@ $i = 0; $total_items = 0;?>
             
             <div class="card">
                 <div class="card-footer">
+                    <div class="float-left">
+                        <a href="<?= url("validation/shipper/destination?id=$invoice->customer")."&invoice=".$data['invoice'] ?>" class="btn btn-info float-right"><i class="fa fa-tw fa-print"></i></a>
+                    </div>
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-                        <button type="button" class="btn btn-default mr-2" onclick="window.close()"><?= lang('cancel') ?></button>
+                        <button type="button" class="btn btn-default mr-2" onclick="window.close()"><?= lang('close') ?></button>
+                        <button type="button" class="btn btn-primary mr-2 confirmation" data-id="<?=$data['invoice']?>" data-toggle="modal" data-target="#modal-confirmation-order"><?= lang('confirmation') ?></button>
                     </div>
                 </div>
             </div>
@@ -190,7 +194,14 @@ $i = 0; $total_items = 0;?>
             service.forEach(element => {
                 $('#services_expedition').append(`<option value="${element}">${element}</option>`)
             });
-        })
+        });
+
+        $('.confirmation').on('click', function(){
+          let id = $(this).data('id');
+          $('#modal-confirmation-order').on('shown.bs.modal', function(){
+              $(this).find('input#id').val(id);
+          })
+      });
     })
     
     //Date range picker

@@ -73,7 +73,7 @@ const main = () => {
         }
         $.ajax({
             type: 'POST', //post method
-            url: location.base + 'invoice/sale/test', //ajaxformexample url
+            url: location.base + 'invoice/sale/monthly_statistic', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
                 console.log(result)
