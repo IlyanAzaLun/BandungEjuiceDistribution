@@ -165,6 +165,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       },
       columns: [{
           data: "order_code",
+          visible: false,
           render: function(data, type, row) {
             return row['id']
           }
