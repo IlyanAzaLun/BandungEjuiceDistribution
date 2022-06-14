@@ -72,6 +72,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             service.forEach(element => {
                 $('#services_expedition').append(`<option value="${element}">${element}</option>`)
             });
+        });
+
+        $('#payment_type').on('change', function(){
+            if($(this).val() == 'cash'){
+                $('#destination').attr('required', 'required');
+                return $('#source_destination').show();
+            }
+            $('#destination').removeAttr('required');
+            return $('#source_destination').hide();
         })
     })
     

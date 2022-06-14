@@ -120,7 +120,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                     <div class="form-group">
                                         <h6><?= lang('expedition_services') ?></h6>
                                         <select class="custom-select" name="services_expedition" id="services_expedition" required>
-                                            <option value="<?=$invoice->services_expedition?>"><?=lang("$invoice->services_expedition")?></option>
+                                            <option value="<?=$invoice->services_expedition?>"><?=$invoice->services_expedition?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -129,6 +129,21 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                     <div class="form-group">
                                         <h6><?= lang('pack') ?></h6>
                                         <input class="form-control" type="text" name="pack" id="pack" value="<?=$invoice->pack?>" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="row">
+                                <div class="col-lg-8 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('select_payment_shipping') ?></h6>
+                                        <select class="custom-select" name="type_payment_shipping" id="type_payment_shipping" required>
+                                            <option value=""><?=lang('option')?></option>
+                                            <option value="TAGIH" <?=$invoice->type_payment_shipping=="TAGIH"?'selected':''?>>TAGIH TUJUAN</option>
+                                            <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
+                                            <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

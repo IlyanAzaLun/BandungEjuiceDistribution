@@ -369,6 +369,7 @@ $lang['expedition_services'] = "Expedition services";
 $lang['expedition_info_add'] = "Add More Information data Expeditions";
 $lang['expedition_info_edit'] = "Edit Information data Expedition";
 $lang['select_category_expedition'] = "Select category Expedition";
+$lang['select_payment_shipping'] = "Pilih Jenis Pembayaran";
 $lang['ground_shipping'] = "Ground Shipping";
 $lang['ground'] = "Ground";
 $lang['air_shipping'] = "Air Shipping";

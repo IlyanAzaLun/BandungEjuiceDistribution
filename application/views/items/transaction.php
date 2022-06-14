@@ -206,7 +206,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             api.rows( {page:'current'} ).data().each(function(index, i){
                 if(index['is_cancelled'] == 1){
                 $(rows).eq(i).addClass('bg-danger');
-                <?php if(!hasPermissions('backup_db')):?>
+                <?php if(!hasPermissions('example')):?>
                     $(rows).eq(i).remove();
                 <?php endif;?>
                 }

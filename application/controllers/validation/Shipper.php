@@ -40,6 +40,7 @@ class Shipper extends MY_Controller
 			$information = array(
 				'expedition' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
+				'type_payment_shipping' => post('type_payment_shipping'),
 				'pack' => post('pack'),
 			);
 			if($this->sale_model->update_by_code($this->data['invoice_code'], $information)){
@@ -140,7 +141,7 @@ class Shipper extends MY_Controller
 		$this->db->select('count(*) as allcount');
 		if ($searchValue != '') {
 			$this->db->group_start();
-			$this->db->like('sale.invoice_code', "INV/SALE/$searchValue", 'after');
+			$this->db->like('sale.invoice_code', $searchValue, 'after');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
@@ -190,7 +191,7 @@ class Shipper extends MY_Controller
 		user_updated.name as user_sale_update_by, ');
 		if ($searchValue != '') {
 			$this->db->group_start();
-			$this->db->like('sale.invoice_code', "INV/SALE/$searchValue", 'after');
+			$this->db->like('sale.invoice_code', $searchValue, 'after');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');

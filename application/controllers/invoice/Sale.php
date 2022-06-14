@@ -286,7 +286,6 @@ class Sale extends Invoice_controller
 		$this->pdf->setPaper('A4', 'potrait');
 		$this->pdf->filename = "$customer->store_name.pdf";
 		$this->pdf->load_view('invoice/sale/print_PDF', $this->page_data);
-	
 	}
 
 	/** 

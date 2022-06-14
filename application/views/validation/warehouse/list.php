@@ -137,7 +137,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       colReorder: true,
       serverSide: true,
       responsive: true,
-      autoWidth: false,
+      lengthChange: true,
+      lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('order_sale')?>], [10, 25, 50, 100, 200, "All"]],
       order: [[ 2, "desc" ]],
       ajax: {
         "url": "<?php echo url('validation/warehouse/serverside_datatables_list_data_order_warehouse') ?>",

@@ -32,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
             <div class="card-tools pull-right">
               <?php if (hasPermissions('order_create')) : ?>
-                <a target="_blank" href="<?php echo url('invoice/order/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('order_create') ?></a>
+                <a href="<?php echo url('invoice/order/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('order_create') ?></a>
               <?php endif ?>
             </div>
 
@@ -127,6 +127,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
+      lengthChange: true,
+      lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('order_sale')?>], [10, 25, 50, 100, 200, "All"]],
       order: [[4, 'desc']],
       ajax: {
         "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
@@ -154,7 +156,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['is_cancelled'] == true){
             $(rows).eq(i).addClass('bg-danger');
-            <?php if(!hasPermissions('backup_db')):?>
+            <?php if(!hasPermissions('example')):?>
               $(rows).eq(i).remove();
             <?php endif;?>
           }
@@ -245,22 +247,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if(row['is_cancelled'] == 1){
               html = `
               <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-primary"></i></button>
-              <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
               <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></button>`;
             }else if(row['is_confirmed'] == 0){
               html = `
               <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-warning"></i></button>
-              <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
             }else if(row['is_confirmed'] == 1){
               html = `
-              <a target="_blank" href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
-              <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
+              <a href="<?= url('invoice/sale') ?>/create?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-primary"></i></a>
+              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;              
             }else{
               html = `<button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Pre Order"><i class="fa fa-fw fa-shopping-bag text-secondary"></i></button>
-              <a target="_blank" href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
-              <a target="_blank" href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;
+              <a href="<?= url('invoice/order') ?>/info?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information Order"><i class="fa fa-fw fa-info text-primary"></i></a>
+              <a href="<?= url('invoice/order')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit Pre Order"><i class="fa fa-fw fa-edit text-primary"></i></a>`;
             }
             return `
                 <div class="btn-group d-flex justify-content-center">

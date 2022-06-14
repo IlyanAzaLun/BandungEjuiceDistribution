@@ -365,6 +365,7 @@ $lang['expedition_services'] = "Layanan ekspedisi";
 $lang['expedition_info_add'] = "Tambah Data Informasi Ekspedisi Lainnya";
 $lang['expedition_info_edit'] = "Mengedit Data Informasi Ekspedisi";
 $lang['select_category_expedition'] = "Pilih kategori Ekspedisi";
+$lang['select_payment_shipping'] = "Pilih Jenis Pembayaran";
 $lang['ground_shipping'] = "Pengiriman Darat";
 $lang['ground'] = "Darat";
 $lang['air_shipping'] = "Pengiriman Udara";

@@ -392,7 +392,7 @@ $i = 0; ?>
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-                        <button type="button" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
+                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('cancel') ?></button>
                     </div>
                 </div>
             </div>

@@ -126,6 +126,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       autoWidth: false,
+      lengthChange: true,
+      lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('invoice_selling')?>], [10, 25, 50, 100, 200, "All"]],
       order: [[ 3, "desc" ]],
       ajax: {
         "url": "<?php echo url('validation/shipper/serverside_datatables_data_list_reportdelivered') ?>",

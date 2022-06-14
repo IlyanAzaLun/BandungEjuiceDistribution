@@ -52,8 +52,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="form-group">
                                     <label><?=lang('shipping_services')?></label>
                                     <select class="form-control" multiple size="2" name="service_expedition[]" id="service_expedition" required>
-                                      <option value="ground"<?=($service[0]=="ground")?' selected':'';?>><?=lang('ground_shipping')?></option>
-                                      <option value="air"<?=($service[0]=="air"||$service[1]=="air")?' selected':'';?>><?=lang('air_shipping')?></option>
+                                      <option value="DARAT"<?=($service[0]=="DARAT")?' selected':'';?>>DARAT</option>
+                                      <option value="UDARA"<?=($service[0]=="UDARA"||$service[1]=="UDARA")?' selected':'';?>>UDARA</option>
                                     </select>
                                     <?=form_error('service_expedition[]', '<small class="text-danger">','</small>')?>
                                 </div>
