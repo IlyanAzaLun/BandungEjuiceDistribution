@@ -268,7 +268,7 @@ $lang['updated_at'] = "Updated At";
 $lang['date'] = "Date";
 $lang['day'] = "Days";
 $lang['number_of_day'] = "Total Days";
-$lang['status_active'] = "This data will not be displayed if the status is turned off";
+$lang['status_active'] = "This Data will not be displayed if the status is turned off";
 
 /*
  * Items
@@ -283,13 +283,13 @@ $lang['item_list_information_transaction'] = "Transaction item Information";
 $lang['item_list_information_fifo'] = "First In Fisrt Out, Item Information";
 $lang['item_add'] = "Add Item";
 $lang['item_update'] = "Update Item";
-$lang['item_code'] = "Item code";
-$lang['item_name'] = "Item name";
+$lang['item_code'] = "Item Code";
+$lang['item_name'] = "Item Name";
 $lang['item_quantity'] = "Item quantity";
 $lang['item_capital_price'] = "Capital price";
 $lang['item_selling_price'] = "Selling price";
-$lang['item_info_add'] = "Add More Information data items";
-$lang['item_info_edit'] = "Edit Information data Item";
+$lang['item_info_add'] = "Add More Information Data items";
+$lang['item_info_edit'] = "Edit Information Data Item";
 $lang['category_item'] = "Category Item";
 $lang['select_category_item'] = "Select Category Item";
 $lang['current_stock'] = "Curent stock";
@@ -315,8 +315,8 @@ $lang['address_destination'] = "Address Destination";
 $lang['select_store_name'] = "Select Store Name";
 $lang['customer_owner'] = "Owner Name";
 $lang['category_customer'] = "Customer Category";
-$lang['customer_info_add'] = "Add More Information data customers";
-$lang['customer_info_edit'] = "Edit Information data customer";
+$lang['customer_info_add'] = "Add More Information Data customers";
+$lang['customer_info_edit'] = "Edit Information Data customer";
 $lang['select_category_customer'] = "Select category customer";
 $lang['customer_category_ws'] = "Wholesale";
 $lang['customer_category_reseller'] = "Reseller";
@@ -334,15 +334,15 @@ $lang['supplier'] = "Supplier";
 $lang['supplier_list'] = "List supplier";
 $lang['supplier_add'] = "Add supplier";
 $lang['supplier_update'] = "Update supplier";
-$lang['supplier_code'] = "Supplier code";
-$lang['supplier_name'] = "Supplier name";
-$lang['store_name'] = "Store name";
+$lang['supplier_code'] = "Supplier Code";
+$lang['supplier_name'] = "Supplier Name";
+$lang['store_name'] = "Store Name";
 $lang['address_destination'] = "Address destination";
-$lang['select_store_name'] = "Select store name";
-$lang['supplier_owner'] = "Owner name";
+$lang['select_store_name'] = "Select store Name";
+$lang['supplier_owner'] = "Owner Name";
 $lang['category_supplier'] = "Supplier category";
-$lang['supplier_info_add'] = "Add More Information data suppliers";
-$lang['supplier_info_edit'] = "Edit Information data supplier";
+$lang['supplier_info_add'] = "Add More Information Data suppliers";
+$lang['supplier_info_edit'] = "Edit Information Data supplier";
 $lang['select_category_supplier'] = "Select category supplier";
 $lang['supplier_category_ws'] = "Wholesale";
 $lang['supplier_category_agent'] = "Agent";
@@ -363,17 +363,18 @@ $lang['pages_expedition'] = "Pages Expedition";
 $lang['expedition_list'] = "List Expedition";
 $lang['expedition_add'] = "Add Expedition";
 $lang['expedition_edit'] = "Edit Expedition";
-$lang['expedition_code'] = "Expedition code";
-$lang['expedition_name'] = "Expedition name";
+$lang['expedition_code'] = "Expedition Code";
+$lang['expedition_name'] = "Expedition Name";
 $lang['expedition_services'] = "Expedition services";
-$lang['expedition_info_add'] = "Add More Information data Expeditions";
-$lang['expedition_info_edit'] = "Edit Information data Expedition";
-$lang['select_category_expedition'] = "Select category Expedition";
-$lang['select_payment_shipping'] = "Pilih Jenis Pembayaran";
+$lang['expedition_info_add'] = "Add More Information Data Expeditions";
+$lang['expedition_info_edit'] = "Edit Information Data Expedition";
+$lang['select_category_expedition'] = "Select Category Expedition";
+$lang['select_payment_shipping'] = "Select Category Payment";
 $lang['ground_shipping'] = "Ground Shipping";
 $lang['ground'] = "Ground";
 $lang['air_shipping'] = "Air Shipping";
 $lang['air'] = "Air";
+$lang['mailer'] = "Mailer";
 $lang['shipping_services'] = "Shipping services";
 
 /*
@@ -391,8 +392,8 @@ $lang['zip'] = "Zip";
 $lang['contact_phone'] = "Contact phone";
 $lang['contact_mail'] = "Contact email";
 $lang['address_update'] = "Update address";
-$lang['address_info_add'] = "Add More Information data address";
-$lang['address_info_edit'] = "Edit Information data address";
+$lang['address_info_add'] = "Add More Information Data address";
+$lang['address_info_edit'] = "Edit Information Data address";
 $lang['is_open'] = "Is Open";
 
 /*
@@ -456,23 +457,23 @@ $lang['name'] = "Name";
  */
 $lang['menu_invoice'] = "Menus Invoice";
 $lang['menu_notinvoice'] = "Menus Not Invoice";
-$lang['invoice_code'] = "Invoice code";
+$lang['invoice_code'] = "Invoice Code";
 $lang['import_purchase'] = "Import Items Purchase";
 
 
 $lang['page_purchase'] = "Page Purchase";
 $lang['purchase_list'] = "List Purchase";
-$lang['find_supplier_code'] = "Find supplier code ...";
-$lang['find_store_name'] = "Find store name ...";
+$lang['find_supplier_code'] = "Find supplier Code ...";
+$lang['find_store_name'] = "Find store Name ...";
 $lang['purchase_create'] = "Create Purchase";
 $lang['purchase_edit'] = "Edit Purchase";
 $lang['purchase_info'] = "Purchase Information";
 $lang['purchase_returns'] = " Returns Purchase";
 $lang['purchase_returns_edit'] = "Edit Returns Purchase";
-$lang['purchase_info_create'] = "Add More Information on data purchase. All Information will be saved on transaction items, invoice purchase, payment, history items, and will be updating value of bank Information, FIFO, and items.";
-$lang['purchase_info_edit'] = "Edit Information data purchase ";
-$lang['purchase_info_info'] = "Information data purchase ";
-$lang['purchase_info_returns'] = "Returns Information data purchase ";
+$lang['purchase_info_create'] = "Add More Information on Data purchase. All Information will be saved on transaction items, invoice purchase, payment, history items, and will be updating value of bank Information, FIFO, and items.";
+$lang['purchase_info_edit'] = "Edit Information Data purchase ";
+$lang['purchase_info_info'] = "Information Data purchase ";
+$lang['purchase_info_returns'] = "Returns Information Data purchase ";
 $lang['information_supplier'] = "Supplier Information";
 $lang['information_customer'] = "Customer Information";
 $lang['information_items'] = "Items Information";
@@ -501,7 +502,7 @@ $lang['credit'] = "Credit";
 $lang['deposit'] = "Deposit";
 $lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
-$lang['invoice_code_reference'] = "Invoice code reference";
+$lang['invoice_code_reference'] = "Invoice Code reference";
 $lang['purchase_return_list'] = "List Returns Purchase";
 
 /*
@@ -527,9 +528,9 @@ $lang['order_edit'] = "Edit Order";
 $lang['order_code'] = "Order Code";
 $lang['status_available'] = "Status Available";
 
-$lang['order_info_create'] = "Add More Information data order";
-$lang['order_info_edit'] = "Edit Information data order ";
-$lang['order_info_info'] = "Information data order ";
+$lang['order_info_create'] = "Add More Information Data order";
+$lang['order_info_edit'] = "Edit Information Data order ";
+$lang['order_info_info'] = "Information Data order ";
 $lang['import_order'] = "Import Order Items ";
 $lang['order_creating_sale_invoice'] = "Tryig To Create Invoice Sale Using Order Code:";
 $lang['order_invoice_has_created'] = "This Order Has Been Created!, Try To Check Sale Invoice";
@@ -615,7 +616,7 @@ $lang['permission_code'] = "Code";
 $lang['edit_permission'] = "Edit Permission";
 $lang['delete_permission'] = "Delete Permission";
 $lang['create_permission'] = "Create Permission";
-$lang['permission_code_unique'] = "* code must be unique";
+$lang['permission_code_unique'] = "* Code must be unique";
 
 /**
  * Roles

@@ -18,10 +18,13 @@ class Pdf extends Dompdf{
      * PDF filename
      * @var String
      */
+    
+	protected $ci;
+	public $Config;
     public $filename;
     public function __construct(){
-    parent::__construct();
-    $this->filename = "Report.pdf";
+        parent::__construct();
+        $this->filename = "Report.pdf";
     }
     /**
      * Get an instance of CodeIgniter
@@ -47,6 +50,6 @@ class Pdf extends Dompdf{
         // Render the PDF
         $this->render();
         // Output the generated PDF to Browser
-        $this->stream($this->filename, array("Attachment" => false));
+        $this->stream($data['customer']->store_name.".pdf", array("Attachment" => false));
     }
 }

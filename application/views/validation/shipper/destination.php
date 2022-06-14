@@ -1,9 +1,7 @@
-<?php 
-$destination = "$customer->address $customer->village $customer->subdistric $customer->city $customer->province $customer->zip";
-$contact = "$customer->contact_phone $customer->contact_mail";
-?>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             /** 
                 Set the margins of the page to 0, so the footer and the header
@@ -13,7 +11,6 @@ $contact = "$customer->contact_phone $customer->contact_mail";
                 margin: 10px;
                 font-family: helvetica;
             }
-
             /** Define now the real margins of every page in the PDF **/
             body {
                 margin-top: 2px;
@@ -21,7 +18,6 @@ $contact = "$customer->contact_phone $customer->contact_mail";
                 margin-right: 2px;
                 margin-bottom: 2px;
             }
-
             /** Define the footer rules **/
             footer {
                 position: fixed; 
@@ -63,7 +59,6 @@ $contact = "$customer->contact_phone $customer->contact_mail";
             .text-top{
                 vertical-align: top;
             }
-            
         </style>
     </head>
     <body>
@@ -71,28 +66,29 @@ $contact = "$customer->contact_phone $customer->contact_mail";
             <table>
                 <thead>
                     <tr class="text-right">
-                        <th rowspan="4" class="text-center"><img src="<?php echo url('uploads/company/').setting('company_icon')?>" alt="" width="50px"></th>
-                        <th>Nama Toko</th>
-                        <th>Nama Pemilik</th>
+                        <!-- <th rowspan="4" class="text-center"><img src="<?php echo url('uploads/company/').setting('company_icon')?>" alt="" width="50px"></th> -->
+                        <th class="text-left">TUJUAN: <?=$customer->store_name?></th>
+                        <th class="text-left"><?=$customer->owner_name?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th class="text-top text-left"><?=$customer->store_name?></th>
-                        <th class="text-top text-left"><?=$customer->owner_name?></th>
-                    </tr>
-                    <tr>
                         <th colspan="2" class="text-top text-left">
-                            Alamat: <?=$destination?><br>
-                            Kontak: <?=$contact?>
+                            <?=$customer->address?"$customer->address":''?><?=isset($customer->subdistric)?", $customer->subdistric":''?><?=isset($customer->city)?", $customer->city":''?><?=isset($customer->village)?", $customer->village":''?><?=isset($customer->zip)?", $customer->zip":''?><br>
+                            <?=$customer->contact_phone?$customer->contact_phone:''?>
                         </th>
                     </tr>
                     <tr>
                         <th colspan="2" class="text-top text-left">
                             <?php $expedition = $invoice->services_expedition?" - $invoice->services_expedition":''?>
                             <?php $payment = $invoice->services_expedition?" - $invoice->services_expedition":''?>
-                            Ekspedisi: <?= "$invoice->expedition$expedition$payment"; ?><br>
-                            Koli: <?=$invoice->pack?>
+                            EKSPEDISI: <?= "$invoice->expedition$expedition$payment"; ?><br>
+                            KOLI: <?=$invoice->pack?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-top text-left">
+                            PENGIRIM: <?= $invoice->note_destination ?>
                         </th>
                     </tr>
                 </tbody>

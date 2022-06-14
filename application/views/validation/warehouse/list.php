@@ -4,7 +4,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
 <?php include viewPath('includes/header'); ?>
+<style>
+  td.details-control {
+    background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+  }
 
+  tr.shown td.details-control {
+    background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_close.png') no-repeat center center;
+  }
+</style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <div class="container-fluid">
@@ -64,6 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
+                  <th width="1%"></th>
                   <th width="1%">no.</th>
                   <th width="7%"><?= lang('created_at') ?></th>
                   <th width="5%"><?= lang('order_code') ?></th>
@@ -74,7 +84,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('other_cost') ?></th>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
-                  <th width="25%"><?= lang('note') ?></th>
+                  <th width="20%"><?= lang('note') ?></th>
                   <th width="7%"><?= lang('created_by') ?></th>
                   <th width="7%"><?= lang('option') ?></th>
                 </tr>
@@ -102,21 +112,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+
     function format(d) {
-        return (
-            'Full name: ' +
-            d.first_name +
-            ' ' +
-            d.last_name +
-            '<br>' +
-            'Salary: ' +
-            d.salary +
-            '<br>' +
-            'The child row can contain any data you wish, including links, images, inner tables etc.'
-        );
+        return (`
+        ${d.order_code}
+        `);
     }
+
     var startdate;
     var enddate;
+    var detailRows = [];
     //Date range picker
     $('#min').daterangepicker({
       timePicker: true,
@@ -138,6 +143,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       serverSide: true,
       responsive: true,
       lengthChange: true,
+      autoWidth: false,
       lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('order_sale')?>], [10, 25, 50, 100, 200, "All"]],
       order: [[ 2, "desc" ]],
       ajax: {
@@ -163,82 +169,77 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }
           })
       },
-      columns: [{
+      columns: [
+        {
+          class: 'details-control',
+          orderable: false,
+          data: null,
+          defaultContent: '',
+        },{
           data: "order_code",
-          visible: false,
           render: function(data, type, row) {
             return row['id']
           }
-        },
-        {
+        },{
           data: "created_at",
           render: function(data, type, row){
             return formatDate(data)
           }
-        },
-        {
-          data: "order_code"
-        },
-        {
+        },{
+          data: "order_code",
+          visible: false
+        },{
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
             return `${shorttext(data, 30, true)} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
-        },
-        {
+        },{
           data: "total_price",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "discounts",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "shipping_cost",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "other_cost",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "grand_total",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "payment_type",
           orderable: false,
           visible: false,
           render: function(data, type, row) {
             return data
           }
-        },
-        {
+        },{
           data: "note",
           orderable: false,
           render: function(data, type, row) {
             return shorttext(data, 80, true)
             return data
           }
-        },
-        {
+        },{
           data: "user_order_create_by",
           orderable: false,
           render: function(data, type, row) {
@@ -246,8 +247,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
-        },
-        {
+        },{
           data: "order_code",
           orderable: false,
           render: function(data, type, row, meta) {
@@ -277,15 +277,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <?php endif ?>
         ]
       } );
-    table.on('draw', function(){
-      $('.confirmation').on('click', function(){
-          let id = $(this).data('id');
-          $('#modal-confirmation-order').on('shown.bs.modal', function(){
-              $(this).find('input#id').val(id);
-          })
-      })
-    })
-    // $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
@@ -294,6 +285,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         table.search($(this).text()).draw();
         $('input[type="search"]').focus()
     } );
+    $('#example2 tbody').on('click', 'td.details-control', function() {
+      var tr = $(this).closest('tr');
+      var row = table.row(tr);
+
+      if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+      } else {
+        // Open this row
+        row.child(format(row.data())).show();
+        tr.addClass('shown');
+      }
+    });
     $('#min').on('apply.daterangepicker', function(ev, picker) {
       startdate = picker.startDate.format('YYYY-MM-DD HH:mm');
       enddate = picker.endDate.format('YYYY-MM-DD HH:mm');
@@ -322,5 +327,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
+    table.on('draw', function(){
+      $('.confirmation').on('click', function(){
+        let id = $(this).data('id');
+        $('#modal-confirmation-order').on('shown.bs.modal', function(){
+            $(this).find('input#id').val(id);
+        });
+      });
+    })
   });
 </script>

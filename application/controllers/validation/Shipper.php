@@ -41,7 +41,8 @@ class Shipper extends MY_Controller
 				'expedition' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'type_payment_shipping' => post('type_payment_shipping'),
-				'pack' => post('pack'),
+				'note_destination' => post('note_destination'),
+				'pack' => post('pack')
 			);
 			if($this->sale_model->update_by_code($this->data['invoice_code'], $information)){
 				$this->activity_model->add("Delevered, #" . $this->data['invoice_code'], (array) $payment);
@@ -81,9 +82,9 @@ class Shipper extends MY_Controller
 	public function destination()
 	{	
 		ifPermissions('shipper_transaction_list');	
-		$customer = $this->customer_model->get_information_customer(get('id'));
+		
 		$data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
-		$data['customer'] = $customer;
+		$data['customer'] = $this->customer_model->get_information_customer(get('id'));
 	
 		$this->load->library('pdf');
 	
@@ -93,7 +94,7 @@ class Shipper extends MY_Controller
 
 
 		$this->pdf->setPaper('A5', 'potrait');
-		$this->pdf->filename = "$customer->store_name.pdf";
+		// $this->pdf->filename = $data['customer']->store_name."pdf";
 		$this->pdf->load_view('validation/shipper/destination', $data);
 	}
 

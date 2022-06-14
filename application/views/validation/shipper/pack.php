@@ -107,7 +107,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                             <div class="form-group">
                                 <h6><?= lang('expedition_name') ?></h6>
                                 <select class="custom-select" name="expedition_name" id="expedition_name" required>
-                                    <option selected disabled><?=lang('option')?></option>
+                                    <option value="" selected disabled><?=lang('option')?></option>
                                     <?php foreach ($expedition as $key => $value):?>
                                         <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
                                     <?php endforeach ?>
@@ -134,9 +134,9 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <div class="row">
-                                <div class="col-lg-8 col-sm-12">
+                                <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('select_payment_shipping') ?></h6>
                                         <select class="custom-select" name="type_payment_shipping" id="type_payment_shipping">
@@ -145,6 +145,12 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
                                             <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg col-sm-12">
+                                    <div class="form-group">
+                                        <label for="note_destination"><?= lang('mailer') ?></label>
+                                        <input name="note_destination" id="note_destination" class="form-control" value="<?= $invoice->note_destination?>">
                                     </div>
                                 </div>
                             </div>

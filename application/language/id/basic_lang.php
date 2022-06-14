@@ -370,6 +370,7 @@ $lang['ground_shipping'] = "Pengiriman Darat";
 $lang['ground'] = "Darat";
 $lang['air_shipping'] = "Pengiriman Udara";
 $lang['air'] = "Udara";
+$lang['mailer'] = "Pengirim";
 $lang['shipping_services'] = "Layanan pengiriman";
 
 /*
