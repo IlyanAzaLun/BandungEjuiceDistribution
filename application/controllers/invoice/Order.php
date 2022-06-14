@@ -419,6 +419,10 @@ class Order extends Invoice_controller
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
 		$this->db->where('is_created', 0);
+		if(!$haspermission){
+			$this->db->where("created_by", $logged);
+			$this->db->where("is_cancelled", 0);
+		}
 		$records = $this->db->get('order_sale')->result();
 		$totalRecords = $records[0]->allcount;
 
@@ -439,6 +443,10 @@ class Order extends Invoice_controller
 			$this->db->group_end();
 		}else{
 			$this->db->like("order.created_at", date("Y-m"), 'after');
+		}
+		if(!$haspermission){
+			$this->db->where("order.created_by", $logged);
+			$this->db->where("order.is_cancelled", 0);
 		}
 		$this->db->where('order.is_created', 0);
 		$records = $this->db->get('order_sale order')->result();
@@ -487,6 +495,7 @@ class Order extends Invoice_controller
 		}
 		if(!$haspermission){
 			$this->db->where("order.created_by", $logged);
+			$this->db->where("order.is_cancelled", 0);
 		}
 		$this->db->where('order.is_created', 0);
 		$this->db->order_by($columnName, $columnSortOrder);

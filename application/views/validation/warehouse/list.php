@@ -162,7 +162,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['is_cancelled'] == 1){
-              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
+              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-danger color-palette');
               <?php if(!hasPermissions('example')):?>
               $(rows).eq(i).remove();
               <?php endif ?>
@@ -251,6 +251,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "order_code",
           orderable: false,
           render: function(data, type, row, meta) {
+            if(row['is_cancelled'] == '1'){
+            return ``;
+            }
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <a target="_blank" href="<?= url('validation/warehouse/available?id=')?>${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>

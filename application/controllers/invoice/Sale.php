@@ -917,6 +917,10 @@ class Sale extends Invoice_controller
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
+		
+		if(!$haspermission){
+			$this->db->where("created_by", $logged);
+		}
 		$records = $this->db->get('invoice_selling')->result();
 		$totalRecords = $records[0]->allcount;
 
@@ -937,6 +941,9 @@ class Sale extends Invoice_controller
 			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
+		}
+		if(!$haspermission){
+			$this->db->where("sale.created_by", $logged);
 		}
 		$this->db->where("sale.is_transaction", 1);
 		$records = $this->db->get('invoice_selling sale')->result();
