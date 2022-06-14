@@ -100,7 +100,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th style="display:none"><?= lang('discount') ?></th>
                     <th style="display:none"><?= lang('total_price') ?></th>
                     <th width="10%" class="text-center"><?= lang('status_available') ?></th>
-                    <th style="display:none" width="10%"><?= lang('option') ?></th>
+                    <th width="5%"><?= lang('option') ?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -151,13 +151,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <input type="checkbox" name="status_available[<?=$key?>]"<?=($value->status_available)?' checked':''?> data-bootstrap-switch data-off-color="danger" data-off-text="<i class='fa fa-fw fa-times'>" data-on-color="success" data-on-text="<i class='fa fa-fw fa-check'></i>" value="1">
                               </div>
                             </td>
-                            <td style="display:none">
+                            <td>
                                 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-fw fa-ellipsis-h"></i></button>
                                 <?php if (sizeof($items) <= 1) : ?>
-                                    <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-fw fa-times"></i></button>
+                                    <button  style="display:none" disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-fw fa-times"></i></button>
                                 <?php else : ?>
-                                    <button disabled type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-fw fa-times"></i></button>
+                                    <button  style="display:none" disabled type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-fw fa-times"></i></button>
                                 <?php endif ?>
                                 </div>
                             </td>
