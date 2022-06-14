@@ -290,7 +290,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     ${drop}
                     </div>
                   </div>
+                <?php if(hasPermissions('purchase_list')):?>
                 ${html}
+                <?php endif; ?>
                 </div>`;
           }
         },

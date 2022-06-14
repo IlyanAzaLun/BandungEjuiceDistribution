@@ -311,6 +311,15 @@ const main = () => {
                     break;
             }
         })
+
+        $('#payment_type').on('change', function () {
+            if ($(this).val() == 'cash') {
+                $('#destination').attr('required', 'required');
+                return $('#source_destination').show();
+            }
+            $('#destination').removeAttr('required');
+            return $('#source_destination').hide();
+        })
     });
 }
 export default main;

@@ -92,7 +92,7 @@ class Shipper extends MY_Controller
         $this->pdf->setOptions($options);
 
 
-		$this->pdf->setPaper('A6', 'landscape');
+		$this->pdf->setPaper('A5', 'potrait');
 		$this->pdf->filename = "$customer->store_name.pdf";
 		$this->pdf->load_view('validation/shipper/destination', $data);
 	}

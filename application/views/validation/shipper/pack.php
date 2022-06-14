@@ -119,7 +119,8 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-8 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('expedition_services') ?></h6>
-                                        <select class="custom-select" name="services_expedition" id="services_expedition" required>
+                                        <select class="custom-select" name="services_expedition" id="services_expedition">
+                                            <option value=""><?=lang('option')?></option>
                                             <option value="<?=$invoice->services_expedition?>"><?=$invoice->services_expedition?></option>
                                         </select>
                                     </div>
@@ -138,7 +139,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-8 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('select_payment_shipping') ?></h6>
-                                        <select class="custom-select" name="type_payment_shipping" id="type_payment_shipping" required>
+                                        <select class="custom-select" name="type_payment_shipping" id="type_payment_shipping">
                                             <option value=""><?=lang('option')?></option>
                                             <option value="TAGIH" <?=$invoice->type_payment_shipping=="TAGIH"?'selected':''?>>TAGIH TUJUAN</option>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
@@ -206,6 +207,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
             const service = services.split(',');
             const data_services = expedition.data('service_selected');
             $('#services_expedition').empty();
+            $('#services_expedition').append(`<option value="">Opsi</option>`)
             service.forEach(element => {
                 $('#services_expedition').append(`<option value="${element}">${element}</option>`)
             });

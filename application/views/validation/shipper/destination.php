@@ -89,7 +89,9 @@ $contact = "$customer->contact_phone $customer->contact_mail";
                     </tr>
                     <tr>
                         <th colspan="2" class="text-top text-left">
-                            Ekspedisi: <?= "$invoice->expedition - $invoice->services_expedition - $invoice->type_payment_shipping"; ?><br>
+                            <?php $expedition = $invoice->services_expedition?" - $invoice->services_expedition":''?>
+                            <?php $payment = $invoice->services_expedition?" - $invoice->services_expedition":''?>
+                            Ekspedisi: <?= "$invoice->expedition$expedition$payment"; ?><br>
                             Koli: <?=$invoice->pack?>
                         </th>
                     </tr>

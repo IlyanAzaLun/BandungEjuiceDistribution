@@ -675,11 +675,10 @@ class Items extends MY_Controller
             $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
             $searchValue = $postData['search']['value']; // Search value
             $item_code = $postData['id'];
-            $dateStart = @$postData['startDate'];
-            $dateFinal = @$postData['finalDate'];    
-            $getCustomer = $postData['getCustomer'];
-            $customer = @$postData['DCustomer'];
-            $supplier = @$postData['DSupplier'];
+            $dateStart = $postData['startDate'];
+            $dateFinal = $postData['finalDate'];    
+            $customer = $postData['DCustomer']?$postData['DCustomer']:$postData['getCustomer'];
+            $supplier = $postData['DSupplier'];
 
             ## Total number of records without filtering
             $this->db->select('count(*) as allcount');
@@ -852,6 +851,7 @@ class Items extends MY_Controller
                 $this->db->like('item_code', $search->value, 'both');
                 $this->db->or_like('item_name', $search->value, 'both');
             }
+            $this->db->order_by('quantity', 'DESC');
             $response = $this->db->get('items')->result();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         };

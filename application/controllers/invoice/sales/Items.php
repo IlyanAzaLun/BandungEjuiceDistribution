@@ -52,7 +52,7 @@ class Items extends MY_Controller
 	public function remove_item_from_list_sale_order()
 	{
 		$order = $this->order_list_item_model->getById(post('id'));
-		$this->order_list_item_model->delete($order->id);
+		$this->order_list_item_model->update($order->id, array('is_cancelled'=> 1));
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}
 }

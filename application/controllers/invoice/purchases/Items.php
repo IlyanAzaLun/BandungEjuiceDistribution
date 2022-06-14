@@ -37,7 +37,7 @@ class Items extends MY_Controller
 		);
 		$this->items_history_model->create($history);
 		$this->items_model->update($item->id, $item_update);
-		$this->transaction_item_model->delete($order->id);
+		$this->transaction_item_model->update($order->id, array('is_cancelled' => 1));
 		$this->items_fifo_model->update($order->id, array('is_cancelled' => 1));
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
 	}

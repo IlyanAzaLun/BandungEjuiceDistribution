@@ -322,18 +322,18 @@ $i = 0; ?>
                                 <div class="col-lg-1 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('payment_type') ?></h6>
-                                        <select class="custom-select" name="payment_type">
+                                        <select class="custom-select" name="payment_type" id="payment_type">
                                             <option value="cash" <?= ($_data_invoice_parent->payment_type == 'cash') ? ' selected' : '' ?>><?= lang('cash') ?></option>
                                             <option value="credit" <?= ($_data_invoice_parent->payment_type == 'credit') ? ' selected' : '' ?>><?= lang('credit') ?></option>
                                         </select>
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-3 col-sm-12">
+                                <div class="col-lg-3 col-sm-12" id="source_destination" style="display:<?= ($_data_invoice_parent->payment_type == 'credit') ? 'none' : '' ?>">
                                     <div class="form-group">
                                         <h6><?=lang('bank_name')?></h6>
                                         <div class="input-group">
-                                            <select name="transaction_destination" id="destination" class="custom-select" required>
+                                            <select name="transaction_destination" id="destination" class="custom-select">
                                                 <option value="" disabled selected><?=lang('select_account')?></option>
                                                 <?php foreach ($bank as $key => $value):?>
                                                 <option value="<?=$value->id?>"<?=($value->id==$_data_invoice_parent->transaction_destination)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>
@@ -343,7 +343,7 @@ $i = 0; ?>
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-2 col-sm-12">
+                                <div class="col-lg col-sm-12">
                                     <div class="form-group">
                                         <h6><?=lang('date')?></h6>
                                         <div class="input-group">
@@ -365,7 +365,7 @@ $i = 0; ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg col-sm-12">
+                                <div class="col-lg-12 col-sm-12">
                                     <div class="form-group">
                                         <label for="note"><?= lang('note') ?></label>
                                         <textarea name="note" id="note" class="form-control"><?= $_data_invoice_parent->note ?></textarea>

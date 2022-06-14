@@ -3,6 +3,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Daterange picker -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
+
 <?php include viewPath('includes/header'); ?>
 
 <!-- Content Header (Page header) -->
@@ -47,22 +52,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </div>
                   <div class="col-2">
                       <div class="input-group">
-                          <select name="customer" id="customer" class="form-control">
-                              <option value=""><?=lang('customer')?></option>
-                              <?php foreach ($customer as $key => $value):?>
-                              <option value="<?=$value->customer_code?>"<?=($value->customer_code==get('customer'))?' selected':''?>><?=$value->store_name?></option>
-                              <?php endforeach ?>
-                          </select>
+                        <input type="text" name="customer_name" id="customer_name" class="form-control" placeholder="<?= lang('find_customer_name') ?>" autocomplete="false" required>
+                        <input type="hidden" name="customer" id="customer" class="form-control">
                       </div>
                   </div>
                   <div class="col-2">
                       <div class="input-group">
-                          <select name="supplier" id="supplier" class="form-control">
-                              <option value=""><?=lang('supplier')?></option>
-                              <?php foreach ($supplier as $key => $value):?>
-                              <option value="<?=$value->customer_code?>"<?=($value->customer_code==get('customer'))?' selected':''?>><?=$value->store_name?></option>
-                              <?php endforeach ?>
-                          </select>
+                        <input type="text" name="supplier_name" id="supplier_name" class="form-control" placeholder="<?= lang('find_supplier_name') ?>" autocomplete="false" required>
+                        <input type="hidden" name="supplier" id="supplier" class="form-control">
                       </div>
                   </div>
                 </div>
@@ -189,16 +186,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             d.getCustomer = "<?= $this->input->get('customer') ?>";
             }
         },
-        // rowCallback: function(row, data, index){
-        //     if(data['is_cancelled'] == true){
-        //         $(row).addClass('bg-danger');
-        //         $(row).find('a').addClass('text-light');
-                
-        //         <?php if(!hasPermissions('backup_db')):?>
-        //         $(row).css('display', 'none');
-        //         <?php endif;?>
-        //     }
-        // },
         drawCallback: function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'current'} ).nodes();
@@ -306,7 +293,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             },
             {
                 data: "item_selling_price",
-                visible: false,
                 render: function(data, type, row) {
                     return data ? currency(data) : 0;
                 }
@@ -385,7 +371,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
         table.draw();
     });
-    $('#customer, #supplier').on('change', function(){
+    $('#customer_name, #supplier_name').on('change', function(){
         customer = $('#customer').val();
         supplier = $('#supplier').val();
         $.fn.dataTableExt.afnFiltering.push(
@@ -401,6 +387,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             } return false;
         });
         table.draw();
+        $('#customer').val('');
+        $('#supplier').val('');
     })
   });
 </script>
+<script type="module" src="<?php echo $url->assets ?>pages/items/MainItemTransactions.js"></script>

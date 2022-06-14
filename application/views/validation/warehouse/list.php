@@ -65,8 +65,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th width="1%">no.</th>
-                  <th width="8%"><?= lang('created_at') ?></th>
-                  <th width="6%"><?= lang('order_code') ?></th>
+                  <th width="7%"><?= lang('created_at') ?></th>
+                  <th width="5%"><?= lang('order_code') ?></th>
                   <th width="15%"><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
@@ -155,9 +155,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            <?php if(hasPermissions('backup_db')):?>
+            $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
+            <?php if(!hasPermissions('example')):?>
             if(index['is_cancelled'] == 1){
-              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
+              $(rows).eq(i).remove();
             }
             <?php endif ?>
           })
