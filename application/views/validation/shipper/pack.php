@@ -71,6 +71,13 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <textarea type="text" name="address" id="address" class="form-control" required><?= set_value('address') ?></textarea>
                             </div>
                         </div>
+                        
+                        <div class="col-lg col-sm-12">
+                            <div class="form-group">
+                                <label for="note_customer"><?= lang('mailer') ?></label>
+                                <input name="note_customer" id="note_customer" class="form-control">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -145,12 +152,6 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
                                             <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg col-sm-12">
-                                    <div class="form-group">
-                                        <label for="note_destination"><?= lang('mailer') ?></label>
-                                        <input name="note_destination" id="note_destination" class="form-control" value="<?= $invoice->note_destination?>">
                                     </div>
                                 </div>
                             </div>

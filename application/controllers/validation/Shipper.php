@@ -41,7 +41,6 @@ class Shipper extends MY_Controller
 				'expedition' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'type_payment_shipping' => post('type_payment_shipping'),
-				'note_destination' => post('note_destination'),
 				'pack' => post('pack')
 			);
 			if($this->sale_model->update_by_code($this->data['invoice_code'], $information)){
@@ -57,6 +56,7 @@ class Shipper extends MY_Controller
 	}
 	public function update_address_destination()
 	{
+		ifPermissions('shipper_transaction_list');
 		$data = $this->input->post();
 		$information = array(
 			'address' => $data['address'],
@@ -65,6 +65,7 @@ class Shipper extends MY_Controller
 			'city' => null,
 			'province' => null,
 			'zip' => null,
+			'note' => $data['note_customer'],
 			'updated_at' => date('Y-m-d H:i:s', time()),
 			'updated_by' => logged('id'),
 		);
