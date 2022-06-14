@@ -155,12 +155,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var api = this.api();
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
-            $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
-            <?php if(!hasPermissions('example')):?>
-            if(index['is_cancelled'] == 1){
+          if(index['is_cancelled'] == 1){
+              $(rows).eq(i).removeClass('bg-lightblue').addClass('bg-primary color-palette');
+              <?php if(!hasPermissions('example')):?>
               $(rows).eq(i).remove();
+              <?php endif ?>
             }
-            <?php endif ?>
           })
       },
       columns: [{
