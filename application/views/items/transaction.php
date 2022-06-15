@@ -285,7 +285,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             },
             {
                 data: "item_capital_price",
-                visible: false,
                 render: function(data, type, row) {
                     return data ? currency(data) : 0;
                 }

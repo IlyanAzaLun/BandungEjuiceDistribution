@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <div class="col-12">
       <div class="callout callout-info">
         <h5><i class="fas fa-info"></i> Note:</h5>
-        <?= lang('order_info_create') ?>
+        <?=lang('order_info_create') ?>
       </div>
       <?php echo form_open_multipart('invoice/order/create', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information customer START -->
@@ -105,66 +105,57 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </tr>
                 </thead>
                 <tbody>
-                  <!--  -->
-                  <?php $i=1; foreach ($data as $key => $value):?>
-                  <?php if ($key == 1):?>
-                  <?php continue; else:?>
-                  <?php if (!$value['A']):?>
-                  <?php break; else:?>
-                  <tr class="input-<?=$i?>" id="main">
-                    <td class="text-center"><div class="form-control form-control-sm"><?=$i?>.</div></td>
+                  <tr class="input-0" id="main">
+                    <td class="text-center"><div class="form-control form-control-sm">1.</div></td>
                     <td>
-                      <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= ($this->items_model->getByCodeItem($value["B"], 'id'));?>">
-                      <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?=$value["B"]?>" required>
+                      <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
+                      <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                     </td>
-                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required><?=$value["C"]?></textarea></td>
-                    <td><input class="form-control form-control-sm" type="text" data-id="note" value="<?= ($this->items_model->getByCodeItem($value["B"], 'note'));?>"></td>
+                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
+                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                     <td style="display:none" >
                       <div class="input-group input-group-sm">
-                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" value="<?= ($this->items_model->getByCodeItem($value["B"], 'quantity'));?>" required>
-                        <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= ($this->items_model->getByCodeItem($value["B"], 'unit'));?>">
+                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
+                        <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
                         <div class="input-group-append">
-                          <span class="input-group-text" data-id="item_unit"><?= ($this->items_model->getByCodeItem($value["B"], 'unit'));?></span>
+                          <span class="input-group-text" data-id="item_unit"></span>
                         </div>
                       </div>
                     </td>
                     <td>
                     <div class="input-group input-group-sm">
                       <span class="input-group-prepend">
-                          <span class="input-group-text" data-id="item_quantity"><?= ($this->items_model->getByCodeItem($value["B"], 'quantity'));?></span>
+                          <span class="input-group-text" data-id="item_quantity"></span>
                       </span>
-                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= (int)$this->items_model->getByCodeItem($value["B"], 'quantity')?>" value="<?=setCurrency(explode(',', $value["F"])[0])?>" required>
+                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required>
                       <div class="input-group-append">
-                        <span class="input-group-text" data-id="item_unit"><?= ($this->items_model->getByCodeItem($value["B"], 'unit'));?></span>
+                        <span class="input-group-text" data-id="item_unit"></span>
                       </div>
                     </div>
-                    <td style="display:none"><input readonly class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= explode(',',$value["H"])[0]?>" required></td>
+                    <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     </td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?= explode(',',$value["I"])[0]?>" required></td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?= explode(',',$value["J"])[0]?>" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>
                     <td>
                       <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
+                        <button type="button" class="btn btn-default" id="new-window"><i class="fas fa-tw fa-expand"></i></button>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
                       </div>
                     </td>
                   </tr>
-                  <tr class="description input-<?=$i?>" style="display:none">
+                  <tr class="description input-0" style="display:none">
                       <td colspan="9">
                           <textarea class="form-control form-control-sm" name="description[]"></textarea>
                       </td>
                   </tr>
-                  <?php $i++; endif; endif;?>
-                  <?php endforeach; ?>
-                  <!--  -->
                 </tbody>
               </table>
               <div class="float-left ml-1">
                 <button type="button" class="btn btn-sm btn-info" id="add_more"><?= lang('add_more') ?></button>
               </div>
-                            
               <!-- Total Items -->
               <div class="float-right ml-1">
                 <div class="input-group input-group-sm">
@@ -172,7 +163,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
               </div>              
               <!--  -->
-              
             </div>
           </div>
         </div>
@@ -196,7 +186,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
+                      <input readonly type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
                     </div>
                   </div>
                 </div>
@@ -231,7 +221,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text"><b>Rp</b></span>
                       </div>
-                      <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required>
+                      <input readonly type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required>
                     </div>
                   </div>
                 </div>
@@ -286,7 +276,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card-footer">
           <div class="float-right">
             <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-            <button type="button" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
+            <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('cancel') ?></button>
           </div>
         </div>
       </div>
@@ -317,4 +307,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderCreateUpload.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderCreate.js"></script>

@@ -103,6 +103,10 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
+                        $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}&customer=${$('input#customer_code').val()}`)
+                        $(`.${parentElement}`).find('button#new-window').attr('data-id', `${ui.item[0]}`)
+                        $(`.${parentElement}`).find('button#new-window').attr('data-customer', `${$('input#customer_code').val()}`)
+
                         return false
                     },
                     select: function (event, ui) {
@@ -117,6 +121,8 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
                         $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}&customer=${$('input#customer_code').val()}`)
+                        $(`.${parentElement}`).find('button#new-window').attr('data-id', `${ui.item[0]}`)
+                        $(`.${parentElement}`).find('button#new-window').attr('data-customer', `${$('input#customer_code').val()}`)
                         return false
                     }
                 })
@@ -174,6 +180,7 @@ const main = () => {
                     <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
+                        <button type="button" class="btn btn-default" id="new-window"><i class="fas fa-tw fa-expand"></i></button>
                         <button type="button" id="remove" class="btn btn-danger"><i class="fa fa-tw fa-times"></i></button>
                     </div>
                 </td>
@@ -227,6 +234,7 @@ const main = () => {
                     <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
+                        <button type="button" class="btn btn-default" id="new-window"><i class="fas fa-tw fa-expand"></i></button>
                         <button type="button" id="remove" class="btn btn-danger"><i class="fa fa-tw fa-times"></i></button>
                     </div>
                 </td>
@@ -244,6 +252,10 @@ const main = () => {
         $(document).on('click', 'button#description', function () {
             let row = $(this).parents('tr').attr('class');
             $(`.description.${row}`).toggle();
+        })
+        // Description item from list
+        $(document).on('click', 'button#new-window', function () {
+            window.open(`${location.base}items/info_transaction?id=${$(this).data('id')}&customer=${$(this).data('customer')}`, '', 'width=800, height=600');
         })
         // Remove item from list
         $(document).on('click', 'button#remove', function () {

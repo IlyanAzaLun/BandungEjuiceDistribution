@@ -276,6 +276,7 @@ $lang['status_active'] = "This Data will not be displayed if the status is turne
 $lang['item'] = "Item";
 $lang['items'] = "Items";
 $lang['unit'] = "Unit";
+$lang['weight'] = "Weight";
 $lang['broken'] = "Broken";
 $lang['item_list'] = "List Item";
 $lang['item_list_Information'] = "List item Information";

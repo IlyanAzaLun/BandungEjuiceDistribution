@@ -276,6 +276,7 @@ $lang['status_active'] = "Data Ini Tidak Akan Ditampilkan Jika Status dimatikan"
 $lang['item'] = "Barang";
 $lang['items'] = "Barang";
 $lang['unit'] = "Satuan";
+$lang['weight'] = "Berat";
 $lang['broken'] = "Rusak";
 $lang['item_list'] = "Barang";
 $lang['item_list_information'] = "Informasi Barang";

@@ -48,7 +48,8 @@ class Order extends Invoice_controller
 				'btn' => 'btn-primary',
 				'submit' => 'Yes do it',
 			);
-			$this->load->view('invoice/order/create', $this->page_data);
+			// $this->load->view('invoice/order/create', $this->page_data);
+			$this->load->view('invoice/order/create_order', $this->page_data);
 			$this->load->view('includes/modals', $this->page_data);
 		}else{
 			$this->data['order_code'] = $this->order_model->get_code_order_sale();

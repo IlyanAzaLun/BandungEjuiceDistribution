@@ -496,7 +496,7 @@ class Purchase extends Invoice_controller
 			}
 		}
 		if (@$data_negatif) {
-			if ($this->transaction_item_model->create_batch($data_negatif) || $this->transaction_item_model->update_batch($data_positif, 'id')) {
+			if ($this->transaction_item_model->create_batch($data_negatif) && $this->transaction_item_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
 		} else {
@@ -544,7 +544,7 @@ class Purchase extends Invoice_controller
 			}
 		}
 		if (@$data_negatif) {
-			if ($this->items_fifo_model->create_batch($data_negatif) || $this->items_fifo_model->update_batch($data_positif, 'id')) {
+			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
 		} else {

@@ -128,7 +128,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                         <h6><?= lang('expedition_services') ?></h6>
                                         <select class="custom-select" name="services_expedition" id="services_expedition">
                                             <option value=""><?=lang('option')?></option>
-                                            <option value="<?=$invoice->services_expedition?>"><?=$invoice->services_expedition?></option>
+                                            <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?></option>
                                         </select>
                                     </div>
                                 </div>

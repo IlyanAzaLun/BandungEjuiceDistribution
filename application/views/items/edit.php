@@ -148,8 +148,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="col-lg-2">
+                            <!-- text input -->
+                                <div class="form-group">
+                                    <label><?=lang('weight')?></label>
+                                    <div class="input-group input-group-sm mb-3">
+                                    <input type="text" class="form-control form-control-sm" name="weight" id="weight" value="<?=$item->weight?>" required>
+                                    <div class="input-group-append">
+                                        <p class="input-group-text">Gram</p>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            <div class="col-sm" style="display:<?php echo !hasPermissions('backup_db')?'none':''?>">
+                            <div class="col-lg" style="display:<?php echo !hasPermissions('backup_db')?'none':''?>">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('item_quantity') ?></label>
@@ -160,7 +173,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('item_name') ?></label>
@@ -168,10 +181,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col">
+                            <div class="col-lg-5">
                                 <div class="row">
 
-                                    <div class="col-sm-6">
+                                    <div class="col-lg-6">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('item_capital_price') ?></label>
@@ -179,7 +192,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <?= form_error('capital_price', '<small class="text-danger">', '</small>') ?>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-lg-6">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('item_selling_price') ?></label>

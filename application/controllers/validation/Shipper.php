@@ -160,6 +160,7 @@ class Shipper extends MY_Controller
 		$this->db->where("sale.is_controlled_by", null);
 		$this->db->where("sale.is_delivered", null);
 		$this->db->where("sale.is_cancelled", 0);
+		$this->db->where("sale.is_child", 0);
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -193,7 +194,7 @@ class Shipper extends MY_Controller
 		user_updated.name as user_sale_update_by, ');
 		if ($searchValue != '') {
 			$this->db->group_start();
-			$this->db->like('sale.invoice_code', $searchValue, 'after');
+			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
@@ -217,6 +218,7 @@ class Shipper extends MY_Controller
 		$this->db->where("sale.is_controlled_by", null);
 		$this->db->where("sale.is_delivered", null);
 		$this->db->where("sale.is_cancelled", 0);
+		$this->db->where("sale.is_child", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_selling sale')->result();

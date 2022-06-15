@@ -69,6 +69,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
+                        <div class="col">
+                        <!-- text input -->
+                            <div class="form-group">
+                                <label><?=lang('weight')?></label>
+                                <div class="input-group input-group-sm mb-3">
+                                  <input type="text" class="form-control form-control-sm" name="weight" id="weight" value="<?=set_value('weight')?>" required>
+                                  <div class="input-group-append">
+                                    <p class="input-group-text">Gram</p>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-sm-3" style="display:none">
                         <!-- text input -->
@@ -109,7 +121,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                           </div>
                         </div>
-                        <div class="col">
+                        <div class="col-12">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('note')?></label>
