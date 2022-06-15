@@ -253,7 +253,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               drop += `
                 <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
                 <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                 `;
             }else if(row['have_a_child']){
               html += `
@@ -264,7 +263,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               drop += `
                 <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
                 <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                 `;
             }else{
               html += `

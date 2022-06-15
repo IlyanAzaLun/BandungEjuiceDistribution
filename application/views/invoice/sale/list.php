@@ -280,7 +280,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               drop += `
                   <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
                   <a class="dropdown-item" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                   `;
             return `
                 <div class="btn-group d-flex justify-content-center">
