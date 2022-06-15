@@ -4,7 +4,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
 <?php include viewPath('includes/header'); ?>
+<style>
+  td.details-control {
+    background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+  }
 
+  tr.shown td.details-control {
+    background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_close.png') no-repeat center center;
+  }
+</style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <div class="container-fluid">
@@ -43,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="row">
               <div class="col-10">
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-md-3 col-sm-7">
                     <div class="input-group">
                       <input class="form-control" type="text" id="min" name="min">
                       <div class="input-group-append">
@@ -64,6 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm dataTable dtr-inline" style="font-size: 12px;" data-resizable="true">
               <thead>
                 <tr>
+                  <th width="1%"></th>
                   <th width="1%">no.</th>
                   <th width="7%"><?= lang('created_at') ?></th>
                   <th width="7%"><?= lang('updated_at') ?></th>
@@ -112,7 +122,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker24Hour: true,
       timePickerIncrement: 30,
       locale: {
-        format: 'DD/MM/YYYY H:mm'
+        format: 'DD/MM/YYYY'
       }
     });
     var groupColumn = 3;
@@ -153,7 +163,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       },
       columns: [
         {
+          class: 'details-control',
+          orderable: false,
+          data: null,
+          defaultContent: '',
+        },{
           data: "invoice_code",
+          visible: false,
           render: function(data, type, row) {
             return row['id']
           }
@@ -254,7 +270,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
       ],
-      buttons: [{
+      buttons: [
+        <?php if(hasPermissions('backup_db')):?>
+        {
           text: 'Export',
           extend: 'excelHtml5',
           className: 'btn-sm',
@@ -267,6 +285,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           extend: 'colvis',
           className: 'btn-sm'
         }
+        <?php endif ?>
       ]
     });
     table.on('draw', function(){

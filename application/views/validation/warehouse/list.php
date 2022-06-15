@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="row">
               <div class="col-10">
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-md-3 col-sm-7">
                     <div class="input-group">
                       <input class="form-control" type="text" id="min" name="min">
                       <div class="input-group-append">
@@ -177,6 +177,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           defaultContent: '',
         },{
           data: "order_code",
+          visible: false,
           render: function(data, type, row) {
             return row['id']
           }

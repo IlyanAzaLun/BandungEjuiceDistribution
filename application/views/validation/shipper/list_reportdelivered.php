@@ -4,7 +4,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
 <?php include viewPath('includes/header'); ?>
+<style>
+  td.details-control {
+    background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+  }
 
+  tr.shown td.details-control {
+    background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_close.png') no-repeat center center;
+  }
+</style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <div class="container-fluid">
@@ -43,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="row">
               <div class="col-10">
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-md-3 col-sm-7">
                     <div class="input-group">
                       <input class="form-control" type="text" id="min" name="min">
                       <div class="input-group-append">
@@ -64,6 +73,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
+                  <th width="1%"></th>
                   <th width="2%">no.</th>
                   <th width="13%"><?= lang('created_at') ?></th>
                   <th width="10%"><?= lang('order_code') ?></th>
@@ -111,7 +121,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker24Hour: true,
       timePickerIncrement: 30,
       locale: {
-        format: 'DD/MM/YYYY H:mm'
+        format: 'DD/MM/YYYY'
       }
     });
     var groupColumn = 3;
@@ -150,78 +160,74 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             }
           })
       },
-      columns: [{
+      columns: [
+        {
+          class: 'details-control',
+          orderable: false,
+          data: null,
+          defaultContent: '',
+        },{
           data: "invoice_code",
+          visible: false,
           render: function(data, type, row) {
             return row['id']
           }
-        },
-        {
+        },{
           data: "created_at"
-        },
-        {
+        },{
           data: "invoice_code"
-        },
-        {
+        },{
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
             return `${data} <span class="float-right"><a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
-        },
-        {
+        },{
           data: "total_price",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "discounts",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "shipping_cost",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "other_cost",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "grand_total",
           visible: false,
           render: function(data, type, row) {
             return currency(data)
           }
-        },
-        {
+        },{
           data: "payment_type",
           orderable: false,
           visible: false,
           render: function(data, type, row) {
             return data
           }
-        },
-        {
+        },{
           data: "note",
           orderable: false,
           render: function(data, type, row) {
             return shorttext(data, 100, true)
             // return data
           }
-        },
-        {
+        },{
           data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
@@ -229,8 +235,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
-        },
-        {
+        },{
           data: "user_sale_update_by",
           orderable: false,
           visible: false,
@@ -239,32 +244,33 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
-        },
-        {
+        },{
           data: "customer_code",
           orderable: false,
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
-                  <button disabled class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fa fa-fw fa-check-double"></i></button>
+                  <button disabled class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fas fa fa-fw fa-flag-checkered"></i></button>
                 </div>`;
           }
         },
       ],
-      buttons: [{
+      buttons: [
+        <?php if(hasPermissions('backup_db')):?>
+        {
           text: 'Export',
           extend: 'excelHtml5',
           className: 'btn-sm',
           customize: function(xlsx) {
             var sheet = xlsx.xl.worksheets['sheet1.xml'];
           }
-        },
-        {
+        },{
           text: 'Column visibility',
           extend: 'colvis',
           className: 'btn-sm'
         }
+        <?php endif ?>
       ]
     });
     table.on('draw', function(){

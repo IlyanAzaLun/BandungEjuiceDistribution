@@ -43,7 +43,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="row">
               <div class="col-10">
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-md-3 col-sm-7">
                     <div class="input-group">
                       <input class="form-control" type="text" id="min" name="min">
                       <div class="input-group-append">
@@ -106,7 +106,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker24Hour: true,
       timePickerIncrement: 30,
       locale: {
-        format: 'DD/MM/YYYY H:mm'
+        format: 'DD/MM/YYYY'
       }
     });
     var groupColumn = 3;
@@ -214,21 +214,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
       ],
-      buttons: [{
-          text: 'Export',
-          extend: 'excelHtml5',
-          className: 'btn-sm',
-          customize: function(xlsx) {
-            var sheet = xlsx.xl.worksheets['sheet1.xml'];
-          }
-        },
+      buttons: [
+        <?php if(hasPermissions('backup_db')):?>
         {
-          text: 'Column visibility',
-          extend: 'colvis',
-          className: 'btn-sm'
-        }
-      ]
-    });
+            text: 'Export',
+            extend: 'excelHtml5',
+            className: 'btn-sm',
+            customize: function(xlsx) {
+              var sheet = xlsx.xl.worksheets['sheet1.xml'];
+            }
+          },
+          {
+            text: 'Column visibility',
+            extend: 'colvis',
+            className: 'btn-sm'
+          }
+          <?php endif ?>
+        ]
+      });
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()

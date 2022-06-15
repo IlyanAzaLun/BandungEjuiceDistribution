@@ -374,7 +374,7 @@ $lang['ground_shipping'] = "Ground Shipping";
 $lang['ground'] = "Ground";
 $lang['air_shipping'] = "Air Shipping";
 $lang['air'] = "Air";
-$lang['mailer'] = "Mailer";
+$lang['mailer'] = "Shipper";
 $lang['shipping_services'] = "Shipping services";
 
 /*
