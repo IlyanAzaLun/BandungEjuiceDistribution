@@ -88,7 +88,7 @@
                     </tr>
                     <tr>
                         <th colspan="2" class="text-top text-left">
-                            PENGIRIM: <?= $invoice->note_destination ?>
+                            PENGIRIM: <?= $customer->note ?>
                         </th>
                     </tr>
                 </tbody>
