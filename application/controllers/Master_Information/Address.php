@@ -97,16 +97,15 @@ class Address extends MY_Controller
             $this->activity_model->add("Update Address #$address, Update by User: #" . logged('id'), (array)$this->page_data['address']);
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'New Address Update Successfully');
-            switch (explode('-', $data['customer_code'])[0]) {
-                case 'PL':
-                    $params = 'customer';
-                    break;
-
-                case 'SP':
-                    $params = 'supplier';
-                    break;
+            if (preg_match('/PL/i', $data['customer_code'])) {
+                redirect("master_information/customer/edit?id=" . $data['customer_code']);
+                break;
+                die();
+            }else{
+                redirect("master_information/supplier/edit?id=" . $data['customer_code']);
+                break;
+                die();
             }
-            redirect("master_information/$params/edit?id=" . $data['customer_code']);
         }
     }
 }

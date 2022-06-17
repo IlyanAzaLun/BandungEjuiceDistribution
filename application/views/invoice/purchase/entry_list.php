@@ -32,7 +32,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
             <div class="card-tools pull-right">
               <?php if (hasPermissions('purchase_create')) : ?>
-                <a target="_blank" href="<?php echo url('invoice/purchase/create') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('purchase_create') ?></a>
+                <a href="<?php echo url('invoice/purchase/entry') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('entry_items') ?></a>
               <?php endif ?>
             </div>
 
@@ -132,7 +132,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           })
       },
       ajax: {
-        "url": "<?php echo url('invoice/purchase/serverside_datatables_data_list_entry_items') ?>",
+        "url": "<?php echo url('invoice/purchases/entry/serverside_datatables_data_list_entry_items') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -236,7 +236,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let html = ``;
             let drop = ``;
             html += `
-            <a target="_blank" href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+            <a target="_blank" href="<?= url('invoice/purchase')  ?>/edit_entry?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
             `;
             drop += `
             <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>

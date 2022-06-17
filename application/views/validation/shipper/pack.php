@@ -58,10 +58,17 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                             </div>
                         </div>
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="owner_name"><?= lang('name') ?></label>
+                                <input type="text" name="owner_name" id="owner_name" class="form-control" value="<?= set_value('owner_name') ?>">
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="contact_phone"><?= lang('contact_phone') ?><small class="text-primary"> (whatsapp)</small></label>
-                                <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>" required readonly>
+                                <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>">
                             </div>
                         </div>
 
@@ -148,7 +155,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                         <h6><?= lang('select_payment_shipping') ?></h6>
                                         <select class="custom-select" name="type_payment_shipping" id="type_payment_shipping">
                                             <option value=""><?=lang('option')?></option>
-                                            <option value="TAGIH" <?=$invoice->type_payment_shipping=="TAGIH"?'selected':''?>>TAGIH TUJUAN</option>
+                                            <option value="TAGIH TUJUAN" <?=$invoice->type_payment_shipping=="TAGIH TUJUAN"?'selected':''?>>TAGIH TUJUAN</option>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
                                             <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                         </select>

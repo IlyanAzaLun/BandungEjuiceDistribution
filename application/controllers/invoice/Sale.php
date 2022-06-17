@@ -106,13 +106,16 @@ class Sale extends Invoice_controller
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
-			// Transaction Payment
-			$this->create_or_update_list_chart_cash($payment);
+			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
 			// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
-			
 			$this->db->trans_complete();
-			echo '</hr>';
-			// die();
+			echo '</pre>';
+			if($this->db->trans_status() === FALSE){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Creating Purchase Failed');	
+				redirect('invoice/purchase/list');
+				die();
+			}
 			$this->activity_model->add("Create Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Sale Invoice Successfully');
@@ -220,7 +223,6 @@ class Sale extends Invoice_controller
 			
 			$this->db->trans_complete();
 			echo '</pre>';
-			// die();
 			$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Edit Sale Invoice Successfully');
@@ -384,7 +386,7 @@ class Sale extends Invoice_controller
 		// update list_item_fifo only cancel..
 		$this->update_list_item_fifo_on_cancel($items); // PREPARE TOO FOR CANCEL CHILD 
 
-		// $this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
+		$this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 		$this->session->set_flashdata('alert-type', 'success');
 		$this->session->set_flashdata('alert', 'Cancel Sale Invoice Successfully');	
 		echo '</pre>';
@@ -507,7 +509,6 @@ class Sale extends Invoice_controller
 			$this->transaction_item_model->update_batch($data_positif, 'id');
 			return true;
 		}
-		return false;
 	}
 
 	protected function create_or_update_list_item_fifo($data)
@@ -535,13 +536,13 @@ class Sale extends Invoice_controller
 				$request[$key]['id'] = $value['id'];
 				$request[$key]['updated_by'] = logged('id');
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
-				// $this->items_fifo_model->update_by_code($this->data['invoice_code'], $request[$key]);
+				// //$this->items_fifo_model->update_by_code($this->data['invoice_code'], $request[$key]);
 				$data_positif[] = $request[$key];
 			} else {
 				$request[$key]['reference_purchase'] = $item_fifo[$key]->invoice_code;
 				$request[$key]['created_at'] = $value['created_at'];
 				$request[$key]['created_by'] = logged('id');
-				// $this->items_fifo_model->create($request[$key]);
+				// //$this->items_fifo_model->create($request[$key]);
 				$data_negatif[] = $request[$key];
 			}
 		}
@@ -588,12 +589,11 @@ class Sale extends Invoice_controller
 			//
 			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request);
 		} else {
-			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->payment_model->create($request);
 		}
-		return $request;
+		return false;
 	}
 	
 	protected function update_items($data)
@@ -664,240 +664,6 @@ class Sale extends Invoice_controller
 		return $this->items_fifo_model->update_batch($request, 'id');
 	}
 
-	public function list_drop_items()
-	{
-		ifPermissions('drop_items');
-		$this->page_data['title'] = 'drop_list';
-		$this->page_data['page']->menu = 'drop_items';
-		$this->page_data['page']->submenu = 'list_drop';
-		$this->load->view('invoice/sale/drop_list', $this->page_data);
-	}
-	public function serverside_datatables_data_list_drop()
-	{
-		$response = array();
-		$postData = $this->input->post();
-		## Read value
-		$draw = $postData['draw'];
-		$start = $postData['start'];
-		$rowperpage = $postData['length']; // Rows display per page
-		$columnIndex = $postData['order'][0]['column']; // Column index
-		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
-		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
-		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = $postData['startDate'];
-		$dateFinal = $postData['finalDate'];
-		$logged = logged('id');
-		$haspermission = hasPermissions('fetch_all_invoice_sales');
-
-		## Total number of records without filtering
-		$this->db->select('count(*) as allcount');
-		$records = $this->db->get('invoice_selling')->result();
-		$totalRecords = $records[0]->allcount;
-
-		## Total number of record with filtering
-		$this->db->select('count(*) as allcount');
-		if ($searchValue != '') {
-			$this->db->group_start();
-			$this->db->like('sale.invoice_code', $searchValue, 'after');
-			$this->db->or_like('sale.customer', $searchValue, 'both');
-			$this->db->or_like('sale.note', $searchValue, 'both');
-			$this->db->or_like('sale.created_at', $searchValue, 'both');
-			$this->db->group_end();
-		}
-		if ($dateStart != '') {
-			$this->db->group_start();
-			$this->db->where("sale.created_at >=", $dateStart);
-			$this->db->where("sale.created_at <=", $dateFinal);
-			$this->db->group_end();
-		}else{
-			$this->db->like("sale.created_at", date("Y-m"), 'after');
-		}
-		$this->db->where("sale.is_transaction", 0);
-		$records = $this->db->get('invoice_selling sale')->result();
-		$totalRecordwithFilter = $records[0]->allcount;
-
-		## Fetch records
-		$this->db->select('
-		sale.id as id, 
-		SUBSTRING(sale.invoice_code, 5) as invoice_code_reference, 
-		sale.invoice_code as invoice_code, 
-		sale.have_a_child as have_a_child, 
-		sale.total_price as total_price, 
-		sale.discounts as discounts, 
-		sale.shipping_cost as shipping_cost, 
-		sale.other_cost as other_cost, 
-		sale.payment_type as payment_type, 
-		sale.grand_total as grand_total, 
-		sale.date_start as date_start, 
-		sale.date_due as date_due, 
-		sale.note as note, 
-		sale.created_at as created_at, 
-		sale.updated_at as updated_at, 
-		sale.created_by as created_by, 
-		sale.is_controlled_by as is_controlled_by,  
-		sale.is_delivered as is_delivered,  
-		sale.is_cancelled as is_cancelled,  
-		sale.cancel_note as cancel_note,
-		customer.customer_code as customer_code, 
-		customer.store_name as store_name, 
-		user_created.id as user_id, 
-		user_created.name as user_sale_create_by,
-		user_updated.id as user_id_updated, 
-		user_updated.name as user_sale_update_by');
-		if ($searchValue != '') {
-			$this->db->group_start();
-			$this->db->like('sale.invoice_code', $searchValue, 'after');
-			$this->db->or_like('sale.customer', $searchValue, 'both');
-			$this->db->or_like('sale.note', $searchValue, 'both');
-			$this->db->or_like('sale.created_at', $searchValue, 'both');
-			$this->db->or_like('customer.store_name', $searchValue, 'both');
-			$this->db->group_end();
-		}
-		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
-		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
-		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
-		if ($dateStart != '') {
-			$this->db->group_start();
-			$this->db->where("sale.created_at >=", $dateStart);
-			$this->db->where("sale.created_at <=", $dateFinal);
-			$this->db->group_end();
-		}else{
-			$this->db->like("sale.created_at", date("Y-m"), 'after');
-		}
-		if(!$haspermission){
-			$this->db->where("sale.created_by", $logged);
-		}
-		$this->db->where("sale.is_transaction", 0);
-		$this->db->order_by($columnName, $columnSortOrder);
-		$this->db->limit($rowperpage, $start);
-		$records = $this->db->get('invoice_selling sale')->result();
-
-		$data = array();
-
-		foreach ($records as $record) {
-
-			$data[] = array(
-				'id' => $record->id,
-				'invoice_code_reference' => $record->invoice_code_reference,
-				'invoice_code' => $record->invoice_code,
-				'have_a_child' => $record->have_a_child,
-				'customer_code' => $record->customer_code,
-				'store_name' => $record->store_name,
-				'total_price' => $record->total_price,
-				'discounts' => $record->discounts,
-				'shipping_cost' => $record->shipping_cost,
-				'other_cost' => $record->other_cost,
-				'payment_type' => lang($record->payment_type),
-				'grand_total' => $record->grand_total,
-				'date_start' => $record->date_start,
-				'date_due' => $record->date_due,
-				'note' => $record->note,
-				'created_at' => $record->created_at,
-				'updated_at' => $record->updated_at,
-				'user_id' => $record->user_id,
-				'user_id_updated' => $record->user_id_updated,
-				'is_controlled_by' => $record->is_controlled_by,
-				'is_delivered' => $record->is_delivered,
-				'is_cancelled' => $record->is_cancelled,
-				'cancel_note' => $record->cancel_note,
-				'user_sale_create_by' => $record->user_sale_create_by,
-				'user_sale_update_by' => $record->user_sale_update_by,
-			);
-		}
-
-		## Response
-		$response = array(
-			"draw" => intval($draw),
-			"iTotalRecords" => $totalRecords,
-			"iTotalDisplayRecords" => $totalRecordwithFilter,
-			"aaData" => $data,
-		);
-		$this->output->set_content_type('application/json')->set_output(json_encode($response));
-	}
-	/*
-	 * drop stock item without invoice code
-	*/
-	public function drop()
-	{
-		ifPermissions('drop_items');
-		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
-		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
-
-		if ($this->form_validation->run() == false) {
-			$this->page_data['order'] = $this->order_model->get_order_selling_by_code(get('id'));
-			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
-			$this->page_data['expedition'] = $this->expedition_model->get();
-			$this->page_data['bank'] = $this->account_bank_model->get();
-			$this->page_data['title'] = 'sale_create';
-			$this->page_data['page']->menu = 'drop_items';
-			$this->page_data['page']->submenu = 'drop_items';
-			$this->load->view('invoice/sale/drop', $this->page_data);
-		}else{
-			$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-			$random = substr(str_shuffle($permitted_chars), 0, 5);
-			$now = date('ym');
-			$this->data['invoice_code'] = "DROP/$random/$now";
-			$date = preg_split('/[-]/', $this->input->post('date_due'));
-			$this->data['date'] = array(
-				'date_start' => trim(str_replace('/', '-', $date[0])), 
-				'date_due'	 => trim(str_replace('/', '-', $date[1]))
-			);
-			//information items
-			$items = array();
-			foreach (post('item_code') as $key => $value) {
-				$items[] = array(
-					"item_id" => post('item_id')[$key],
-					"item_code" => post('item_code')[$key],
-					"item_name" => post('item_name')[$key],
-					"item_quantity" => post('item_quantity')[$key],
-					"item_order_quantity" => post('item_order_quantity')[$key],
-					"item_unit" => post('item_unit')[$key],
-					"item_capital_price" => post('item_capital_price')[$key],
-					"item_selling_price" => post('item_selling_price')[$key],
-					"item_discount" => post('item_discount')[$key],
-					"total_price" => post('total_price')[$key],
-					"item_description" => post('description')[$key],
-					"customer_code" => 0,
-				);
-			}
-			//information payment
-			$payment = array(
-				'customer' => 0,
-				'transaction_destination' => 0,
-				'store_name' => 0,
-				'contact_phone' => 0,
-				'address' => 0,
-				'total_price' => 0,
-				'discounts' => 0,
-				'shipping_cost' => 0,
-				'other_cost' => 0,
-				'grand_total' => 0,
-				'expedition_name' => 0,
-				'services_expedition' => 0,
-				'payment_type' => 0,
-				'status_payment' => 0,
-				'date_start' => 0,
-				'date_due' => 0,
-				'note' => post('note'),
-				'reference_order' => 0,
-				'is_transaction' => 0,
-			);
-			// // DROP
-			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
-			$this->create_item_history($items, ['DROP', 'DROP']);
-			$this->create_or_update_invoice($payment);
-			$this->create_or_update_list_item_transcation($items);
-			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
-			$this->update_items($items); // CHANGE VALUE QUANTITY ITEMS
-			
-			$this->activity_model->add("Create Drop Items, #" . $this->data['invoice_code'], (array) $payment);
-			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'New Information add, Successfully');
-
-			redirect('invoice/sale/list');
-		}
-	}
-
 	public function serverside_datatables_data_sale()
 	{
 		$response = array();
@@ -927,12 +693,14 @@ class Sale extends Invoice_controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('sale.invoice_code', $searchValue, 'after');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {

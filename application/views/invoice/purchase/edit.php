@@ -320,7 +320,7 @@ $i = 0; ?>
                                     <div class="form-group">
                                         <h6><?=lang('bank_name')?></h6>
                                         <div class="input-group">
-                                            <select name="transaction_source" id="source" class="custom-select" required>
+                                            <select name="transaction_source" id="source" class="custom-select">
                                                 <option value="" disabled selected><?=lang('select_account')?></option>
                                                 <?php foreach ($bank as $key => $value):?>
                                                     <option value="<?=$value->id?>"<?=($value->id==$_data_invoice_parent->transaction_source)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>

@@ -59,6 +59,7 @@ class Shipper extends MY_Controller
 		ifPermissions('shipper_transaction_list');
 		$data = $this->input->post();
 		$information = array(
+			'contact_phone' => $data['contact_phone'],
 			'address' => $data['address'],
 			'village' => null,
 			'sub_district' => null,
@@ -70,6 +71,7 @@ class Shipper extends MY_Controller
 			'updated_by' => logged('id'),
 		);
 		if($this->address_model->updateByCustomerCode($data['customer_code'], $information)){
+			$this->customer_model->updateByCustomerCode($data['customer_code'], array('owner_name' => $data['owner_name']));
 			$this->activity_model->add("Delevered, #" . $data['customer_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Delevered is Saved');
@@ -141,12 +143,14 @@ class Shipper extends MY_Controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('sale.invoice_code', $searchValue, 'after');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {
@@ -308,15 +312,21 @@ class Shipper extends MY_Controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
@@ -471,15 +481,21 @@ class Shipper extends MY_Controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($searchValue != '') {
+			$this->db->group_start();
 			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
+			$this->db->group_end();
 		}
 		if ($dateStart != '') {
+			$this->db->group_start();
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
+			$this->db->group_end();
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}

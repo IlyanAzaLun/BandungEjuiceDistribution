@@ -24,6 +24,12 @@ class Customer_model extends MY_Model {
 		$this->db->where('address.is_active', '1');
 		return $this->db->get($this->table.' customer')->row();
 	}
+
+	public function updateByCustomerCode($code, $data)
+	{
+		$this->db->where('customer_code', $code);
+		return $this->db->update($this->table, $data);
+	}
 }
 
 /* End of file Items_model.php */

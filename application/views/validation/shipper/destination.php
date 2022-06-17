@@ -67,8 +67,7 @@
                 <thead>
                     <tr class="text-right">
                         <!-- <th rowspan="4" class="text-center"><img src="<?php echo url('uploads/company/').setting('company_icon')?>" alt="" width="50px"></th> -->
-                        <th class="text-left">TUJUAN: <?=$customer->store_name?></th>
-                        <th class="text-left"><?=$customer->owner_name?></th>
+                        <th class="text-left" colspan="2">PENERIMA: <?=$customer->owner_name?></th>
                     </tr>
                 </thead>
                 <tbody>

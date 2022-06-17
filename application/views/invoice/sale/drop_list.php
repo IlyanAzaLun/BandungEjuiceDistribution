@@ -126,7 +126,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       ],
       order: [[ 1, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/sale/serverside_datatables_data_list_drop') ?>",
+        "url": "<?php echo url('invoice/sales/drop/serverside_datatables_data_list_drop') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -254,7 +254,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               drop += ``;
               if(row['have_a_child'] == null){
                 html += `
-                  <a target="_blank" href="<?= url('invoice/sale')     ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+                  <a target="_blank" href="<?= url('invoice/sales/drop') ?>/edit_drop?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
                   `;
                   if(row['is_cancelled'] == true){
                     html = `
@@ -263,9 +263,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   }
                 }
               drop += `
-                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sale') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sale') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                   `;
             return `
                 <div class="btn-group d-flex justify-content-center">

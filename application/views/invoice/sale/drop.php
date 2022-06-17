@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <h5><i class="fas fa-info"></i> Note:</h5>
                 <?= lang('purchase_info_edit') ?><b><?= get('id') ?></b>
             </div>
-            <?php echo form_open_multipart('invoice/sale/drop', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('invoice/sales/drop', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <!-- //content -->
             <!-- Information customer START -->
             <div class="card" style="display:none">
@@ -373,4 +373,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </script>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainSaleCreate.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainDropCreate.js"></script>

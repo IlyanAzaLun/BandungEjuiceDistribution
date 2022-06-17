@@ -88,7 +88,8 @@ class Items_fifo_model extends MY_Model
                 , `is_cancelled`
             FROM fifo_items
             WHERE item_code = '$data' AND (is_cancelled = 0 AND is_readable = 1)
-            GROUP BY invoice, is_free)
+            GROUP BY invoice, is_free
+            ORDER BY created_at ASC)
             SELECT * FROM RECURSIVES
             WHERE RECURSIVES.item_quantity > 0")->row();
         

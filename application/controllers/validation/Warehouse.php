@@ -58,12 +58,14 @@ class Warehouse extends MY_Controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->join('customer_information customer', 'customer.customer_code = order.customer', 'left');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('order.order_code', $searchValue, 'both');
 			$this->db->or_like('order.customer', $searchValue, 'both');
 			$this->db->or_like('order.note', $searchValue, 'both');
 			$this->db->or_like('order.created_at', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {

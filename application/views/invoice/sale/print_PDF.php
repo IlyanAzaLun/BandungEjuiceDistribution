@@ -1,7 +1,6 @@
-
 <?php 
 defined('BASEPATH') or exit('No direct script access allowed'); 
-$account_bank = "$bank->name: $bank->no_account, a/n $bank->own_by, $bank->description";
+$account_bank = "$bank->name: $bank->no_account, a/n $bank->own_by";
 $destination = "$customer->address $customer->village $customer->subdistric $customer->city $customer->province $customer->zip";
 $contact = "$customer->contact_phone $customer->contact_mail";
 $i = 0;
@@ -25,21 +24,6 @@ $i = 0;
                 margin-right: 20px;
                 margin-bottom: 4px;
             }
-
-            /** Define the footer rules **/
-            footer {
-                position: fixed; 
-                bottom: 0cm; 
-                left: 0cm; 
-                right: 0cm;
-                height: 2cm;
-
-                /** Extra personal styles **/
-                background-color: #03a9f4;
-                color: white;
-                text-align: center;
-                line-height: 1.5cm;
-            }
             main{                
                 top: 0px;
                 left: 0px; 
@@ -52,10 +36,10 @@ $i = 0;
                 width: 100%;
             }
             tr {
-                background-color: #ffff;
+                background-color: #fff;
             }
             tr:nth-child(even) {
-                background-color: #ffff;
+                background-color: #fff;
             }
             td, th{
                 text-align: left;
@@ -70,11 +54,6 @@ $i = 0;
             .text-center{
                 text-align: center;
             }
-            .invoice-destination{
-                vertical-align:top;
-                background-color: #fff;
-                color: #000;
-            }
             #header{
                 background-color: #e9ecef;
             }
@@ -88,13 +67,16 @@ $i = 0;
             <table class="table border">
                 <thead>
                     <tr>
-                        <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th>
-                        <th class="text-right" colspan="3">Invoice Code: </th>
-                        <th class="text-left" colspan="3"><?=$_data_item_invoice_parent[0]->invoice_code?> </th>
+                        <th colspan="2" rowspan="4" class="text-center"><h1 style="font-family: 'monospace';font-color: 'coral'">B.<span style="">E</span>.D</h1></th>
+                        <!-- <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th> -->
+                        <th colspan="3"></th>
+                        <th>Invoice Code</th>
+                        <th class="text-left" colspan="2">: <?=$_data_item_invoice_parent[0]->invoice_code?> </th>
                     </tr>
                     <tr>
-                    <th class="text-right" colspan="3">Created at: </th>
-                        <th class="text-left" colspan="3"><?=$invoice_information_transaction->created_at?> </th>
+                        <th colspan="3"></th>
+                        <th>Created At</th>
+                        <th class="text-left" colspan="2">: <?=date_format(date_create($invoice_information_transaction->created_at),"d/M/Y")?> </th>
                     </tr>
                     <tr>
                         <th colspan="2" style="vertical-align:top;"><?=lang('user_address')?>: <?=$destination?></th>
@@ -103,8 +85,8 @@ $i = 0;
                     </tr>
                     <tr>
                         <th colspan="2" style="vertical-align:top;"><?=lang('contacts')?>: <?=$contact?></th>
-                        <th colspan="2" class="text-left"><?=$invoice_information_transaction->date_start?> </th>
-                        <th colspan="2" class="text-left"><?=$invoice_information_transaction->date_due?> </th>
+                        <th colspan="2" class="text-left"><?=date_format(date_create($invoice_information_transaction->date_start),"d/M/Y")?> </th>
+                        <th colspan="2" class="text-left"><?=date_format(date_create($invoice_information_transaction->date_due),"d/M/Y")?> </th>
                     </tr>
                     <tr id="header">
                         <th  width="1%">No.</th>
@@ -164,36 +146,43 @@ $i = 0;
                         <th class="text-right"><?=getCurrentcy($invoice_information_transaction->discounts)?></th>
                     </tr>
                     <tr>
-                        <th colspan="2" class="text-right"></th>
-                        <th class="text-center">Hormat Kami</th>
-                        <th colspan="2" class="text-right">Penerima</th>
-                        <th colspan="2" class="text-right"><?=lang('shipping_cost')?>: </th>
+                        <th colspan="2"><?=lang('bank_name')?></th>
+                        <th><?=$bank->name?></th>
+                        <th colspan="4" class="text-right"><?=lang('shipping_cost')?>: </th>
                         <th class="text-right"><?=getCurrentcy($invoice_information_transaction->shipping_cost)?></th>
                     </tr>
                     <tr>
-                        <th colspan="3" class="text-left"></th>
+                        <th colspan="2"><?=lang('beneficiary_name')?></th>
+                        <th><?=$bank->own_by?></th>
                         <th colspan="4" class="text-right"><?=$invoice_information_transaction->expedition?>:</th>
-                        <th class="text-left"><?=$invoice_information_transaction->services_expedition?></th>
+                        <th class="text-left"><?=$invoice_information_transaction->services_expedition?> <?=$invoice_information_transaction->type_payment_shipping?></th>
                     </tr>
                     <tr>
-                        <th colspan="2" class="text-right"></th>
-                        <th class="text-center">(..................................)</th>
-                        <th colspan="3" class="text-center">(..................................)</th>
-                        <th  class="text-right"><?=lang('status_payment')?>:</th>
-                        <th class="text-left"><?=$invoice_information_transaction->status_payment?></th>
+                        <th colspan="2"><?=lang('no_account')?></th>
+                        <th><?=$bank->no_account?></th>
+                        <th colspan="4" class="text-right"><?=lang('status_payment')?>:</th>
+                        <th class="text-left"><?=$invoice_information_transaction->status_payment?lang('payed'):lang('credit')?></th>
                     </tr>
                     <tr>
-                        <th colspan="3" class="text-left"></th>
+                        <th colspan="3"><i>Terbilang : # <b><?=terbilang($invoice_information_transaction->grand_total)?> </b> rupiah #</i></th>
                         <th colspan="4" class="text-right"><?=lang('grandtotal')?>: </th>
                         <th class="text-right"><?=getCurrentcy($invoice_information_transaction->grand_total)?></th>
                     </tr>
-                    <tr>
-                        <th colspan="8" class="text-center"><?=$account_bank?></th>
-                    </tr>
-                    <tr style="border: none;">
-                        <td colspan="8">Copyright &copy; <?php echo date("Y");?></td>
-                    </tr>
                 </tfoot>
+            </table>
+            <table>
+                <tr>
+                    <th class="text-center">Hormat Kami</th>
+                    <th class="text-center">Hormat Kami</th>
+                    <th class="text-center" style="color:white">Penerima</th>
+                    <th class="text-center" style="color:white">Penerima</th>
+                </tr>
+                <tr>
+                    <th class="text-center">(..................................)</th>
+                    <th class="text-center">(..................................)</th>
+                    <th class="text-center" style="color:white">(..................................)</th>
+                    <th class="text-center" style="color:white">(..................................)</th>
+                </tr>
             </table>
         </main>
     </body>

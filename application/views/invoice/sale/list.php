@@ -138,7 +138,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var rows = api.rows( {page:'current'} ).nodes();
         let regex = /RET/;
         api.rows( {page:'current'} ).data().each(function(index, i){
-          if(index['invoice_code'].match(regex) != null){
+          if(index['invoice_code']?index['invoice_code'].match(regex) != null:false){
             $(rows).eq(i).remove();
           }
         })
@@ -175,12 +175,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row){
             let html = '';
             let regex = /RET/;
-            if(data.match(regex) != null){
+            if(data?data.match(regex) != null:false){
               html += '<span class="float-right"><a class="btn btn-xs btn-default disabled" data-toggle="tooltip" data-placement="top" title="Is Returns"><i class="fa fa-fw fa-undo text-primary"></i></a></span>';
               //<span class="badge badge-danger">RETURNS</span>
             }
             return `${data} ${html}`;
-          }},{
+          }
+        },{
           data: "store_name",
           orderable: false,
           render: function(data, type, row) {
