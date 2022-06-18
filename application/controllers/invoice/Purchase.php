@@ -96,7 +96,6 @@ class Purchase extends Invoice_controller
 				'note' => post('note'),
 				'is_consignment' => post('is_consignment'),
 				'transaction_source' => post('transaction_source'),
-				'is_transaction' => 1,
 			);
 				//Create
 				echo '<pre>';
@@ -229,7 +228,6 @@ class Purchase extends Invoice_controller
 				'created_by' => logged('id'),
 				'is_consignment' => post('is_consignment'),
 				'transaction_source' => post('transaction_source'),
-				'is_transaction' => 1,
 			);
 
 			// EDIT
@@ -587,7 +585,6 @@ class Purchase extends Invoice_controller
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request) ? true: false;
 		} else {
 			$request['invoice_code'] = $this->data['invoice_code'];
-			$request['is_transaction'] = $data['is_transaction'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->purchase_model->create($request) ? true: false;

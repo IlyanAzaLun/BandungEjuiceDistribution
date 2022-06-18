@@ -81,7 +81,7 @@ class Entry extends Purchase
 		purchasing.other_cost as other_cost, 
 		purchasing.payment_type as payment_type, 
 		purchasing.status_payment as status_payment, 
-		purchasing.grand_total as grand_total, 
+		purchasing.grand_total as grand_total,
 		purchasing.note as purchase_note, 
 		purchasing.created_at as created_at, 
 		purchasing.updated_at as updated_at, 
@@ -196,7 +196,6 @@ class Entry extends Purchase
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => 0,
-					'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				);
 			}
 			//information payment
@@ -244,13 +243,8 @@ class Entry extends Purchase
 			$this->page_data['page']->submenu = 'entry_items';
 			$this->load->view('invoice/purchase/entry_edit', $this->page_data);
 		} else {
-			// information invoice
+			// information invoice			
 			$this->data['invoice_code'] = $this->input->get('id');
-			// 
-			$this->session->set_flashdata('alert-type', 'danger');
-			$this->session->set_flashdata('alert', 'Edit Entry Failed');
-
-			redirect('invoice/purchases/entry/list_entry');
 			// 
 
 			//information items
@@ -305,7 +299,6 @@ class Entry extends Purchase
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items);
-			$this->create_or_update_list_chart_cash($payment);
 			$this->db->trans_complete();
 			
 			$this->activity_model->add("Update Entry Quantity Items, #" . $this->data['invoice_code'], (array) $payment);
@@ -315,6 +308,45 @@ class Entry extends Purchase
 			redirect('invoice/purchases/entry/list_entry');
 		}
 	}
+	
+	/**
+	 * @param Type array Description: create or update invoices,
+	 * */ 
+	protected function create_or_update_invoice($data)
+	{
+		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
+
+		$request['total_price'] = setCurrency($data['total_price']);
+		$request['discounts'] = setCurrency($data['discounts']);
+		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
+		$request['other_cost'] = setCurrency($data['other_cost']);
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		$request['supplier'] = $data['supplier'];
+		$request['payment_type'] = $data['payment_type'];
+		$request['status_payment'] = $data['status_payment'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['note'] = $data['note'];
+		$request['created_at'] = $data['created_at'];
+		$request['is_consignment'] = $data['is_consignment'];
+		$request['transaction_source'] = $data['transaction_source'];
+		if ($response) {
+			$request['is_cancelled'] = @$data['is_cancelled'];
+			$request['cancel_note'] = @$data['cancel_note'];
+			$request['updated_by'] = logged('id');
+			$request['updated_at'] = date('Y-m-d H:i:s');
+			//
+			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request) ? true: false;
+		} else {
+			$request['invoice_code'] = $this->data['invoice_code'];
+			$request['is_transaction'] = $data['is_transaction'];
+			$request['created_by'] = logged('id');
+			//	
+			return $this->purchase_model->create($request) ? true: false;
+		}
+		return true;
+	}
+
 }
 
 /* End of file Purchasing.php */

@@ -35,48 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <h5><i class="fas fa-info"></i> Note:</h5>
         <?= lang('purchase_info_create') ?>
       </div>
-      <?php echo form_open_multipart('invoice/purchases/entry', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
-      <!-- Information customer START -->
-      <div class="card" style="display:none">
-        <div class="card-header with-border">
-          <h3 class="card-title"><i class="fa fa-fw fa-dice-one"></i><?php echo lang('information_supplier') ?></h3>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="store_name"><?= lang('supplier_code') ?></label>
-                <input type="text" name="supplier_code" id="supplier_code" class="form-control" placeholder="<?= lang('find_supplier_code') ?>" autocomplete="false" >
-                <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
-              </div>
-            </div>
-
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="store_name"><?= lang('store_name') ?></label>
-                <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" >
-                <?= form_error('store_name', '<small class="text-danger">', '</small>') ?>
-              </div>
-            </div>
-
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="contact_phone"><?= lang('contact_phone') ?><small class="text-primary"> (whatsapp)</small></label>
-                <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>"  readonly>
-              </div>
-            </div>
-
-            <div class="col-sm-12">
-              <div class="form-group">
-                <label for="address"><?= lang('address_destination') ?></label>
-                <textarea type="text" name="address" id="address" class="form-control"  readonly><?= set_value('address') ?></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /.card-body -->
-      </div>
-      <!-- Information customer END -->
+      <?php echo form_open_multipart('invoice/purchases/entry/edit_entry', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information Items START -->
       <div class="card">
         <div class="card-header with-border">
@@ -92,11 +51,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th width="2%">No.</th>
                     <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
-                    <th style="display:none"><?= lang('item_quantity') ?></th>
+                    <th style=""><?= lang('item_quantity') ?></th>
                     <th width="10%"><?= lang('note') ?></th>
                     <th width="12%"><?= lang('item_order_quantity') ?></th>
                     <th width="10%"><?= lang('item_capital_price') ?></th>
-                    <th style="display:none"><?= lang('item_selling_price') ?></th>
+                    <th style=""><?= lang('item_selling_price') ?></th>
                     <th width="7%"><?= lang('discount') ?></th>
                     <th width="10%"><?= lang('total_price') ?></th>
                     <th width="7%"><?= lang('option') ?></th>
@@ -107,16 +66,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <tr class="input-<?=$key?>" id="main">
                     <td class="text-center"><div class="form-control form-control-sm"><?=$key+1?>.</div></td>
                     <td>
-                      <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?=$value->id?>">
+                      <input type="text" name="id[]" id="id" value="<?= $value->id ?>">
+                      <input type="text" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?=$value->item_code?>" required>
                     </td>
                     <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required><?=$value->item_name?></textarea></td>
                     <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" value="<?=$value->note?>"></td>
-                    <td style="display:none" >
+                    <td style="" >
                       <div class="input-group input-group-sm">
-                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>" required>
-                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
-                        <input type="text" name="item_unit[]" id="item_unit" data-id="item_unit">
+                      <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
+                      <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
+                        <input type="text" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
                         <div class="input-group-append">
                           <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                         </div>
@@ -124,8 +84,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </td>
                     <td>
                     <div class="input-group input-group-sm">
-                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="<?=$value->item_quantity?>" required>
-                      <input readonly class="form-control form-control-sm" type="hidden" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= $value->item_quantity ?>">
+                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_quantity ?>">
+                    <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
                       <div class="input-group-append">
                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                       </div>
@@ -134,7 +94,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td>
                       <input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?=$value->item_capital_price?>" required>
                     </td>
-                    <td style="display:none" ><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?=$value->item_selling_price?>"></td>
+                    <td style="" ><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?=$value->item_selling_price?>"></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?=$value->discount?>" required></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?=$value->total_price?>" required></td>
                     <td>
@@ -145,7 +105,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </td>
                   </tr>
-                  <tr class="description input-<?=$key?>" style="display:none">
+                  <tr class="description input-<?=$key?>" style="">
                       <td colspan="8">
                           <textarea class="form-control form-control-sm" name="description[]"></textarea>
                       </td>
@@ -162,137 +122,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- /.card-body -->
       </div>
       <!-- Information Items END -->
-      <!-- Information payment START -->
-      <div class="card" style="display:none">
-        <div class="card-header with-border">
-          <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_payment') ?></h3>
-        </div>
-        <div class="card-body">
-
-          <div class="row">
-            <div class="col-12">
-              <div class="row">
-                <div class="col-lg-6 col-12">
-                  <div class="form-group">
-                    <h6><?= lang('subtotal') ?> :</h6>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">Rp</span>
-                      </div>
-                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" >
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="col-lg-3 col-sm-12">
-                  <div class="form-group">
-                    <h6><?= lang('discount') ?> :</h6>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">Rp</span>
-                      </div>
-                      <input type="text" name="discount" id="discount" class="form-control" value="0" >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-3 col-sm-12">
-                  <div class="form-group">
-                    <h6><?= lang('shipping_cost') ?> :</h6>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">Rp</span>
-                      </div>
-                      <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" value="0" >
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-3 col-sm-12" style="display: none">
-                  <div class="form-group">
-                    <h6><?= lang('other_cost') ?> :</h6>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">Rp</span>
-                      </div>
-                      <input readonly type="text" name="other_cost" id="other_cost" class="form-control" value="0" >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 col-sm-12">
-                  <div class="form-group">
-                    <h6><b><?= lang('grandtotal') ?> :</b></h6>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><b>Rp</b></span>
-                      </div>
-                      <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-1 col-sm-12">
-                  <div class="form-group">
-                    <h6><?= lang('payment_type') ?></h6>
-                    <select class="custom-select" name="payment_type">
-                      <option value="cash"><?= lang('cash') ?></option>
-                      <option value="credit"><?= lang('credit') ?></option>
-                      <option value="consignment"><?= lang('consignment') ?></option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div class="col-lg-2 col-sm-12">
-                  <div class="form-group">
-                    <h6><?=lang('date')?></h6>
-                      <div class="input-group">
-                        <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at"/>
-                        <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
-                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                      </div>
-                  </div>
-                </div>            
-                <div class="col-lg-3 col-sm-12">
-                  <div class="form-group">
-                    <h6><?= lang('date_due') ?></h6>
-                    <div class="input-group mb-3">
-                      <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
-                      <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-11 col-sm-12">
-                  <div class="form-group">
-                    <label for="note"><?= lang('note') ?></label>
-                    <textarea name="note" id="note" class="form-control"></textarea>
-                  </div>
-                </div>
-                <div class="col-lg-1 col-sm-12">
-                  <h6><?=lang('number_of_day')?></h6>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="numberdays" disabled>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
-                  <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                      <input class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" value=1>
-                      <label for="is_consignment" class="custom-control-label"><?=lang('is_consignment')?></label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /.card-body -->
-      </div>
       <div class="card">
         <div class="card-header with-border">
           <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_payment') ?></h3>
@@ -372,4 +201,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseEdit.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainEntryEdit.js"></script>

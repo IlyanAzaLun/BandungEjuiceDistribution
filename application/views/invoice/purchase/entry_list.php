@@ -32,14 +32,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
             <div class="card-tools pull-right">
               <?php if (hasPermissions('purchase_create')) : ?>
-                <a href="<?php echo url('invoice/purchase/entry') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('entry_items') ?></a>
+                <a href="<?php echo url('invoice/purchases/entry') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('entry_items') ?></a>
               <?php endif ?>
             </div>
 
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <?php echo form_open('invoice/purchase/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
+            <?php echo form_open('invoice/purchases/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
             <div class="row">
               <div class="input-group col-4">
                 <input class="form-control" type="text" id="min" name="min">
