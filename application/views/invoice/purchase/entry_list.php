@@ -236,22 +236,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let html = ``;
             let drop = ``;
             html += `
-            <a target="_blank" href="<?= url('invoice/purchase')  ?>/edit_entry?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-            `;
-            drop += `
-            <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-            <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-            <a target="_blank" class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+            <a target="_blank" href="<?= url('invoice/purchases/entry')  ?>/edit_entry?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
             `;
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
-                    </button>
-                    <div class="dropdown-menu" style="">
-                      ${drop}
-                    </div>
-                  </div>
                 ${html}
                 </div>`;
           }

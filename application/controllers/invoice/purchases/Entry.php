@@ -238,22 +238,21 @@ class Entry extends Purchase
 		$this->form_validation->set_rules('item_code[]', lang('item_code'), 'required|trim');
 		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
 
-		// 
-		$this->session->set_flashdata('alert-type', 'danger');
-		$this->session->set_flashdata('alert', 'Edit Entry Failed');
-
-		redirect('invoice/purchases/entry/list_entry');
-		// 
 		if ($this->form_validation->run() == false) {
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$this->page_data['title'] = 'entry_edit';
-			$this->page_data['page']->menu = 'entry_items';
 			$this->page_data['page']->submenu = 'entry_items';
 			$this->load->view('invoice/purchase/entry_edit', $this->page_data);
 		} else {
 			// information invoice
 			$this->data['invoice_code'] = $this->input->get('id');
-			
+			// 
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Edit Entry Failed');
+
+			redirect('invoice/purchases/entry/list_entry');
+			// 
+
 			//information items
 			$items = array();
 			foreach (post('item_code') as $key => $value) {

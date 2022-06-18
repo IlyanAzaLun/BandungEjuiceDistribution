@@ -524,13 +524,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="<?php echo url('invoice/purchase/list_entry') ?>" class="nav-link <?php echo ($page->submenu == 'list_entry') ? 'active' : '' ?>">
+        <a href="<?php echo url('invoice/purchases/entry/list_entry') ?>" class="nav-link <?php echo ($page->submenu == 'list_entry') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('list_entry') ?> </p>
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo url('invoice/purchase/entry') ?>" class="nav-link <?php echo ($page->submenu == 'entry_items') ? 'active' : '' ?>">
+        <a href="<?php echo url('invoice/purchases/entry') ?>" class="nav-link <?php echo ($page->submenu == 'entry_items') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('entry_items') ?> </p>
         </a>
