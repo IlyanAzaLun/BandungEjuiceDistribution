@@ -113,6 +113,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    function format(d) {
+        return (`
+        ${d.invoice_code}
+        `);
+    }
     var startdate;
     var enddate;
     //Date range picker
@@ -178,7 +183,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return formatDate(data)
           }
         },{
-          data: "invoice_code"
+          data: "invoice_code",
+          visible: false,
+          render: function(data, type, row){
+            return shorttextfromback(data, 12, true)
+          }
         },{
           data: "store_name",
           orderable: false,
@@ -284,6 +293,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           })
       })
     });
+    $('#example2 tbody').on('click', 'td.details-control', function() {
+      var tr = $(this).closest('tr');
+      var row = table.row(tr);
+
+      if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+      } else {
+        // Open this row
+        row.child(format(row.data())).show();
+        tr.addClass('shown');
+      }
+    })
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()

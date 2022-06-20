@@ -75,9 +75,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <tr>
                   <th width="1%"></th>
                   <th width="2%">no.</th>
-                  <th width="13%"><?= lang('created_at') ?></th>
-                  <th width="10%"><?= lang('order_code') ?></th>
-                  <th><?= lang('store_name') ?></th>
+                  <th width="5%"><?= lang('created_at') ?></th>
+                  <th><?= lang('order_code') ?></th>
+                  <th width="13%"><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
                   <th><?= lang('shipping_cost') ?></th>
@@ -85,9 +85,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('payment_type') ?></th>
                   <th width="20%"><?= lang('note') ?></th>
-                  <th width="15%"><?= lang('created_by') ?></th>
-                  <th width="15%"><?= lang('updated_by') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="10%"><?= lang('created_by') ?></th>
+                  <th width="10%"><?= lang('updated_by') ?></th>
+                  <th width="3%"><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -113,6 +113,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    function format(d) {
+        return (`
+        ${d.invoice_code}
+        `);
+    }
     var startdate;
     var enddate;
     //Date range picker
@@ -158,6 +163,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             if(index['invoice_code'].match(/RET/) != null){
               $(rows).eq(i).remove(); // DON'T DO THIS
             }
+            if(index['receipt_code'] != null){
+              $(rows).eq(i).addClass('bg-primary');
+            }
           })
       },
       columns: [
@@ -175,7 +183,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "created_at"
         },{
-          data: "invoice_code"
+          data: "invoice_code",
+          visible: false,
+          render: function(data, type, row){
+            return shorttextfromback(data, 12, true)
+          }
         },{
           data: "store_name",
           orderable: false,
@@ -231,7 +243,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "user_sale_create_by",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
@@ -240,18 +252,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           visible: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${data}</a>`;
             return `<a target="_blank" href="${location.base}users/view/${row['user_id']}">${shorttext(data, 12, true)}</a>`;
           }
         },{
-          data: "customer_code",
+          data: "invoice_code",
           orderable: false,
           render: function(data, type, row, meta) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                  <a target="_blank" href="<?= url('validation/shipper') ?>/destination?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
-                  <button disabled class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fas fa fa-fw fa-flag-checkered"></i></button>
+                  <a target="_blank" href="<?= url('validation/shipper') ?>/delivered?invoice=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Find Destination"><i class="fa fa-fw fa fa-fw fa-print text-primary"></i></a>
+                  <button  class="btn btn-xs btn-primary confirmation" data-id="${data}" data-toggle="modal" data-target="#modal-confirmation-order"><i class="fas fa fa-fw fa-flag-checkered"></i></button>
                 </div>`;
           }
         },
@@ -277,10 +289,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       $('.confirmation').on('click', function(){
           let id = $(this).data('id');
           $('#modal-confirmation-order').on('shown.bs.modal', function(){
-              $(this).find('input#id').val(id);
+            $("#note").prop('required',true);
+            $("label[for='note']").text('Receipt Code');
+            $(this).find('input#id').val(id);
           })
       })
     });
+    $('#example2 tbody').on('click', 'td.details-control', function() {
+      var tr = $(this).closest('tr');
+      var row = table.row(tr);
+
+      if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+      } else {
+        // Open this row
+        row.child(format(row.data())).show();
+        tr.addClass('shown');
+      }
+    })
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0])', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()

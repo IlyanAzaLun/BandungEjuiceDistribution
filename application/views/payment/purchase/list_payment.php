@@ -1,5 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<!-- Daterange picker -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
 <?php include viewPath('includes/header'); ?>
 
@@ -13,6 +15,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
+          <li class="breadcrumb-item active"><?php echo lang('page_sale') ?></li>
           <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>
       </div>
@@ -30,7 +33,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <table id="example2" class="table table-sm table-bordered table-hover" style="font-size: 12px;">
+            <?php echo form_open('invoice/order/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
+            <div class="row">
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-4">
+                    <div class="input-group">
+                      <input class="form-control" type="text" id="min" name="min">
+                      <div class="input-group-append">
+                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-8"></div>
+                </div>
+              </div>
+              <div class="col-2">
+              <?php if (hasPermissions('sale_create')) : ?>
+                <!-- EMPTY -->
+              <?php endif ?>
+              </div>
+            </div>
+            <?php echo form_close(); ?>
+            <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
                 <tr>
                   <th>No.</th>
@@ -55,11 +80,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <tbody>
               </tbody>
             </table>
+
           </div>
-          
           <!-- /.card-body -->
         </div>
         <!-- /.card -->
+
 
       </div>
       <!-- /.col -->
@@ -74,20 +100,58 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
-    $("#example2").DataTable({
-
+    var startdate;
+    var enddate;
+    //Date range picker
+    $('#min').daterangepicker({
+      timePicker: true,
+      timePicker24Hour: true,
+      timePickerIncrement: 30,
+      startDate: moment().startOf('month').format('DD/MM/YYYY H:mm'),
+      locale: {
+        format: 'DD/MM/YYYY H:mm'
+      }
+    });
+    $('.ui-buttonset').draggable();
+    var table = $("#example2").DataTable({
       dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
-                <'row'<'col-12'tr>>
-                <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
+            <'row'R<'col-12'tr>>
+            <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
       processing: true,
+      colReorder: true,
       serverSide: true,
       responsive: true,
-      autoWidth: false,        
-			lengthChange: true,
-      lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('invoice_payment')?>], [10, 25, 50, 100, 200, "All"]],
+      autoWidth: false,
+      aLengthMenu: [
+        [5, 50, 100, 200, <?=$this->db->get('invoice_payment')->num_rows()?>],
+        [5, 50, 100, 200, "All"]
+      ],
+      order: [[ 1, "desc" ]],
       ajax: {
         "url": "<?php echo url('invoice/purchases/payment/serverside_datatables_data_payment_purchase') ?>",
         "type": "POST",
+        "data": function(d) {
+          d.startDate = startdate;
+          d.finalDate = enddate;
+        }
+      },
+      drawCallback: function ( settings ) {
+        var api = this.api();
+        var rows = api.rows( {page:'current'} ).nodes();
+        let regex = /RET/;
+        api.rows( {page:'current'} ).data().each(function(index, i){
+          if(index['invoice_code']?index['invoice_code'].match(regex) != null:false){
+            $(rows).eq(i).remove();
+          }
+        })
+        api.rows( {page:'current'} ).data().each(function(index, i){
+          if(index['is_cancelled'] == 1){
+            $(rows).eq(i).addClass('bg-danger');
+            <?php if(!hasPermissions('example')):?>
+              $(rows).eq(i).remove();
+            <?php endif;?>
+          }
+        })
       },
       columns: [
         {
@@ -157,10 +221,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
       ],
-      buttons: [
-        
-        <?php if(hasPermissions('backup_db')):?>
-        {
+      buttons: [{
           text: 'Export',
           extend: 'excelHtml5',
           className: 'btn-sm',
@@ -169,45 +230,49 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          text: 'Empty',
-          className: 'btn-sm btn-danger',
-          action: function(e, dt, node, config) {
-            Swal.fire({
-              title: 'Are you sure?',
-              text: "You won't be able to revert this!",
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-              if (result.value) {
-                location.href = '<?= url('items/truncate') ?>';
-              }
-            })
-          }
-        },
-        {
-          text: 'Import',
-          className: 'btn-sm',
-          action: function(e, dt, node, config) {
-            $('#modal-import').modal('show');
-          }
-        },
-        {
           text: 'Column visibility',
           extend: 'colvis',
           className: 'btn-sm'
-        },
-        {
-          text: '<?= lang('add_data') ?>',
-          className: 'btn-sm',
-          action: function(e, dt, node, config) {
-            location.href = '<?= url('items/add') ?>'
-          }
-        },
-        <?php endif ?>
+        }
       ]
     });
+    $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
+        table.search(table.cell( this ).data()).draw();
+        $('input[type="search"]').focus()
+        console.log($(this))
+    })
+    $('#example2 tbody').on( 'click', 'td.group', function () {
+        table.search($(this).text()).draw();
+        $('input[type="search"]').focus()
+    } );
+    $('#min').on('apply.daterangepicker', function(ev, picker) {
+      startdate = picker.startDate.format('YYYY-MM-DD HH:mm');
+      enddate = picker.endDate.format('YYYY-MM-DD HH:mm');
+      $.fn.dataTableExt.afnFiltering.push(
+        function(oSettings, aData, iDataIndex) {
+          if (startdate != undefined) {
+            var coldate = aData[3].split("/");
+            var d = new Date(coldate[2], coldate[1] - 1, coldate[1]);
+            var date = moment(d.toISOString());
+            date = date.format("YYYY-MM-DD HH:mm");
+            dateMin = startdate.replace(/-/g, "");
+            dateMax = enddate.replace(/-/g, "");
+            date = date.replace(/-/g, "");
+            if (dateMin == "" && date <= dateMax) {
+              return true;
+            } else if (dateMin == "" && date <= dateMax) {
+              return true;
+            } else if (dateMin <= date && "" == dateMax) {
+              return true;
+            } else if (dateMin <= date && date <= dateMax) {
+              return true;
+            }
+            return false;
+          }
+        });
+      table.draw();
+      // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
+    });
+    new $.fn.dataTable.ColReorder(table);
   });
 </script>

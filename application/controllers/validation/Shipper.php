@@ -88,6 +88,7 @@ class Shipper extends MY_Controller
 		
 		$data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
 		$data['customer'] = $this->customer_model->get_information_customer(get('id'));
+		$data['loop'] = $data['invoice']->pack;
 	
 		$this->load->library('pdf');
 	
@@ -437,7 +438,43 @@ class Shipper extends MY_Controller
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}
 
+	public function delivered()
+	{
+		ifPermissions('report_delivered');
+		$this->form_validation->set_rules('id', lang('id'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
+			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['title'] = 'shipping_report';
+			$this->page_data['page']->submenu = 'report_delivered';
+			$this->page_data['modals'] = (object) array(
+				'id' => 'modal-confirmation-order',
+				'title' => 'Modals confirmation',
+				'link' => 'validation/shipper/is_delevered',
+				'content' => 'delete',
+				'btn' => 'btn-primary',
+				'submit' => 'Yes do it',
+			);
+			$this->load->view('validation/shipper/delivered', $this->page_data);
+			$this->load->view('includes/modals', $this->page_data);
+		}else{
+			$this->data['invoice_code'] = $this->input->get('id')?$this->input->get('id'):$this->input->post('id');
+			//information items
+			$information = array(
+				'receipt_code' => post('note'),
+			);
+			if($this->sale_model->update_by_code($this->data['invoice_code'], $information)){
+				$this->activity_model->add("Quality Control, #" . $this->data['invoice_code'], (array) $information);
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'Quality Control is Saved');
+			}else{
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quality Control Failed, need ID Invoice information!');
+			}
+			redirect('validation/shipper/list');
+		}
 
+	}
 	//LIST IS DELIVERED
 	public function report_delivered()
 	{
@@ -447,7 +484,7 @@ class Shipper extends MY_Controller
 		$this->page_data['modals'] = (object) array(
 			'id' => 'modal-confirmation-order',
 			'title' => 'Modals confirmation',
-			'link' => 'validation/shipper/is_delivered',
+			'link' => 'validation/shipper/delivered',
 			'content' => 'delete',
 			'btn' => 'btn-primary',
 			'submit' => 'Yes do it',
@@ -526,6 +563,7 @@ class Shipper extends MY_Controller
 		sale.is_delivered as is_delivered,  
 		sale.is_cancelled as is_cancelled,  
 		sale.cancel_note as cancel_note,
+		sale.receipt_code as receipt_code,
 		customer.customer_code as customer_code, 
 		customer.store_name as store_name, 
 		user_created.id as user_id, 
@@ -587,6 +625,7 @@ class Shipper extends MY_Controller
 				'user_id_updated' => $record->user_id_updated,
 				'is_controlled_by' => $record->is_controlled_by,
 				'is_delivered' => $record->is_delivered,
+				'receipt_code' => $record->receipt_code,
 				'is_cancelled' => $record->is_cancelled,
 				'cancel_note' => $record->cancel_note,
 				'user_sale_create_by' => $record->user_sale_create_by,

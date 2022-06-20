@@ -105,9 +105,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-
-
-
 <?php include viewPath('includes/footer'); ?>
 
 <script>

@@ -103,12 +103,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
 
   })
+  // default
   $(function() {
-    $("#example1").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-    });
-
     $("input[data-bootstrap-switch]").each(function() {
       $(this).bootstrapSwitch('state', $(this).prop('checked'));
       // $(this).prop('checked') ? $(this).val(1) : $(this).val(0);
@@ -126,6 +122,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
       unhighlight: function(element, errorClass, validClass) {
         $(element).removeClass('is-invalid');
       }
+    });
+    
+    $("#example1").DataTable({
+      "responsive": true,
+      "autoWidth": false,
     });
 
   });

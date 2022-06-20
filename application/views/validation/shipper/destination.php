@@ -61,6 +61,7 @@
             }
         </style>
     </head>
+    <?php for($i = 1; $i <= $loop?$loop:0; $i++):?>
     <body>
         <main>
             <table>
@@ -73,8 +74,14 @@
                 <tbody>
                     <tr>
                         <th colspan="2" class="text-top text-left">
-                            <?=$customer->address?"$customer->address":''?><?=isset($customer->subdistric)?", $customer->subdistric":''?><?=isset($customer->city)?", $customer->city":''?><?=isset($customer->village)?", $customer->village":''?><?=isset($customer->zip)?", $customer->zip":''?><br>
-                            <?=$customer->contact_phone?$customer->contact_phone:''?>
+                            
+                            <?php echo $customer->address; ?>
+                            <?php echo ($customer->province)?"$customer->province, ":false;?>
+                            <?php echo ($customer->city)?"$customer->city, ":false;?>
+                            <?php echo ($customer->sub_district)?"$customer->sub_district, ":false;?>
+                            <?php echo ($customer->village)?"$customer->village, ":false;?><br>
+                            
+                            <?php echo ($customer->contact_phone)?$customer->contact_phone:false?>
                         </th>
                     </tr>
                     <tr>
@@ -82,7 +89,7 @@
                             <?php $expedition = $invoice->services_expedition?" - $invoice->services_expedition":''?>
                             <?php $payment = $invoice->type_payment_shipping?" - $invoice->type_payment_shipping":''?>
                             EKSPEDISI: <?= "$invoice->expedition$expedition$payment"; ?><br>
-                            KOLI: <?=$invoice->pack?>
+                            KOLI: <?="$invoice->pack/$i"?>
                         </th>
                     </tr>
                     <tr>
@@ -94,4 +101,5 @@
             </table>
         </main>
     </body>
+    <?php endfor; ?>
 </html>

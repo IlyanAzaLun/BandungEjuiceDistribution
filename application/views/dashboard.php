@@ -58,14 +58,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>44</h3>
+                <h3><?=$this->db->get('users')->num_rows()?></h3>
 
                 <p><?php echo lang('dashboard_user_register');?></p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
               </div>
-              <a href="#" class="small-box-footer"><?php echo lang('dashboard_more_info');?><i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?=url('users')?>" class="small-box-footer"><?php echo lang('dashboard_more_info');?><i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
