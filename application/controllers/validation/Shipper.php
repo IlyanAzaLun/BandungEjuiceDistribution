@@ -450,7 +450,7 @@ class Shipper extends MY_Controller
 			$this->page_data['modals'] = (object) array(
 				'id' => 'modal-confirmation-order',
 				'title' => 'Modals confirmation',
-				'link' => 'validation/shipper/is_delevered',
+				'link' => 'validation/shipper/delivered',
 				'content' => 'delete',
 				'btn' => 'btn-primary',
 				'submit' => 'Yes do it',
@@ -471,7 +471,7 @@ class Shipper extends MY_Controller
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Quality Control Failed, need ID Invoice information!');
 			}
-			redirect('validation/shipper/list');
+			redirect('validation/shipper/report_delivered');
 		}
 
 	}

@@ -583,6 +583,7 @@ $lang['page_shipping'] = "Page Shipping";
 $lang['shipping_list'] = "Shipping List";
 $lang['shipping_report'] = "Report Shipping";
 $lang['delivered_report'] = "Report Delivered";
+$lang['receipt_code'] = "Receipt Code";
 $lang['weight_shipping_information'] = "Append Weight Information";
 
 

@@ -576,6 +576,7 @@ $lang['page_shipping'] = "Halaman Pengiriman";
 $lang['shipping_list'] = "Pengiriman";
 $lang['shipping_report'] = "Laporkan Pengiriman";
 $lang['delivered_report'] = "Laporan Terkirim";
+$lang['receipt_code'] = "Kode Resi";
 $lang['weight_shipping_information'] = "Tambahkan Informasi Berat Barang";
 
 

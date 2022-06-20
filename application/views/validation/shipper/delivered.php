@@ -112,7 +112,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('expedition_name') ?></h6>
-                                <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                                <select disabled class="custom-select" name="expedition_name" id="expedition_name" required>
                                     <option value="" selected disabled><?=lang('option')?></option>
                                     <?php foreach ($expedition as $key => $value):?>
                                         <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
@@ -125,7 +125,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-8 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('expedition_services') ?></h6>
-                                        <select class="custom-select" name="services_expedition" id="services_expedition">
+                                        <select disabled class="custom-select" name="services_expedition" id="services_expedition">
                                             <option value="" selected disabled><?=lang('option')?></option>
                                             <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?$invoice->services_expedition:lang('option')?></option>
                                         </select>
@@ -135,7 +135,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('pack') ?></h6>
-                                        <input class="form-control" type="text" name="pack" id="pack" value="<?=$invoice->pack?>" required>
+                                        <input disabled class="form-control" type="text" name="pack" id="pack" value="<?=$invoice->pack?>" required>
                                     </div>
                                 </div>
                             </div>
@@ -145,12 +145,18 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('select_payment_shipping') ?></h6>
-                                        <select class="custom-select" name="type_payment_shipping" id="type_payment_shipping">
+                                        <select disabled class="custom-select" name="type_payment_shipping" id="type_payment_shipping">
                                             <option value=""><?=lang('option')?></option>
                                             <option value="TAGIH TUJUAN" <?=$invoice->type_payment_shipping=="TAGIH TUJUAN"?'selected':''?>>TAGIH TUJUAN</option>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
                                             <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 colsm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('receipt_code') ?></h6>
+                                        <input readonly class="form-control" type="text" name="pack" id="pack" value="<?=$invoice->receipt_code?>" required>
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +167,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg col-sm-12">
                                     <div class="form-group">
                                         <label for="note"><?= lang('note') ?></label>
-                                        <textarea name="note" id="note" class="form-control"><?= $invoice->note ?></textarea>
+                                        <textarea readonly name="note" id="note" class="form-control"><?= $invoice->note ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +184,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                         <a href="<?= url("validation/shipper/pack?")."invoice=".$data['invoice'] ?>" class="btn btn-default float-right mr-2"><i class="fa fa-tw fa-undo text-danger"></i></a>
                     </div>
                     <div class="float-right">
-                        <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
+                        <button disabled type="button" class="btn btn-info float-right"><?= lang('save') ?></button>
                         <button type="button" class="btn btn-default mr-2" onclick="window.close()"><?= lang('close') ?></button>
                         <button type="button" class="btn btn-primary mr-2 confirmation" data-id="<?=$data['invoice']?>" data-toggle="modal" data-target="#modal-confirmation-order"><?= lang('confirmation') ?></button>
                     </div>
@@ -222,7 +228,9 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
         $('.confirmation').on('click', function(){
           let id = $(this).data('id');
           $('#modal-confirmation-order').on('shown.bs.modal', function(){
-              $(this).find('input#id').val(id);
+            $("textarea#note").prop('required',true);
+            $("label[for='note']").text('Receipt Code');
+            $(this).find('input#id').val(id);
           })
       });
     })
