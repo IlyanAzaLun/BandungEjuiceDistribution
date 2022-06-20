@@ -203,12 +203,31 @@ class Users extends MY_Controller {
 		$search = (object) post('search');
 		$this->db->limit(5);
 		if (isset($search->value)) {
+			$this->db->group_start();
 			$this->db->like('users.name', $search->value, 'both');
 			$this->db->or_like('users.username', $search->value, 'both');
 			$this->db->or_like('users.email', $search->value, 'both');
+			$this->db->group_end();
 		}
 		$response = $this->db->get('users')->result();
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+	public function data_user_marketing()
+    {
+		$search = (object) post('search');
+		$this->db->limit(5);
+		if (isset($search->value)) {
+			$this->db->group_start();
+			$this->db->like('users.name', $search->value, 'both');
+			$this->db->or_like('users.username', $search->value, 'both');
+			$this->db->group_end();
+		}
+		$this->db->where('users.role', 3);
+		$response = $this->db->get('users')->result();
+		
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+		// $this->output->set_content_type('application/json')->set_output(json_encode($this->db->last_query()));
     }
 }
 

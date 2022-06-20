@@ -35,7 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <h5><i class="fas fa-info"></i> Note:</h5>
         <?= lang('purchase_info_create') ?>
       </div>
-      <?php echo form_open_multipart('invoice/purchases/entry/edit_entry', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+      <?php echo form_open_multipart('invoice/purchases/entry/edit_entry?id='.get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information Items START -->
       <div class="card">
         <div class="card-header with-border">

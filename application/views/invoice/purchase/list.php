@@ -99,6 +99,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker: true,
       timePicker24Hour: true,
       timePickerIncrement: 30,
+      startDate: moment().startOf('month').format('DD/MM/YYYY H:mm'),
       locale: {
         format: 'DD/MM/YYYY H:mm'
       }
@@ -276,42 +277,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                 `;
             }
-           /**
-              if(row['have_a_child'] == null && row['is_cancelled'] == false){
-                html += `
-                  <a href="<?= url('invoice/purchase')  ?>/edit?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <a href="<?= url('invoice/purchases') ?>/returns?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></a>
-                  <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                  `;
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
-              }else if(row['have_a_child']){
-                html += `
-                  <a href="<?= url('invoice/purchases') ?>/returns/edit?id=${row['have_a_child']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  <button class="btn btn-xs btn-default" disabled data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></button>
-                  <a href="<?= url('invoice/purchases') ?>/payment?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></a>
-                  `;
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
-              }else{
-                html += `
-                  <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></button>
-                  <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Returns purchasing"><i class="fa fa-fw fa-undo text-primary"></i></button>
-                  <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-money-bill-wave-alt text-primary"></i></button>
-                  `;
-                drop += `
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/print_PDF?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" href="<?= url('invoice/purchase') ?>/info?id=${row['have_a_child']?row['have_a_child']:row['invoice_code']}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
-              }
-            **/
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <div class="btn-group">

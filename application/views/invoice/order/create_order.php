@@ -236,7 +236,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </div>
                 </div>
                 
-                <div class="col-lg-3 col-sm-12">
+                <div class="col-lg col-sm-12">
                   <div class="form-group">
                     <h6><?=lang('date')?></h6>
                       <div class="input-group">
@@ -246,8 +246,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                       </div>
                   </div>
-                </div>            
-
+                </div>
+                <?php if(hasPermissions('warehouse_order_list')):?>
+                <div class="col-lg-1 col-sm-12">
+                  <div class="form-group">
+                    <label for="marketing"><?= lang('marketing') ?></label>
+                    <input type="hidden" name="created_by" id="created_by">
+                    <input type="text" name="marketing" id="marketing" class="form-control" required>
+                  </div>
+                </div>
+                <?php endif ?>
               </div>
             </div>
             <div class="col-lg-3 col-sm-12" style="display: none">

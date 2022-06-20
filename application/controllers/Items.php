@@ -58,10 +58,10 @@ class Items extends MY_Controller
                 'category' => post('subcategory') ? post('subcategory') : post('category'),
                 'brand' => post('brand'),
                 'brands' => post('brands'),
-                'mg' => post('MG'),
-                'ml' => post('ML'),
-                'vg' => post('VG'),
-                'pg' => post('PG'),
+                'mg' => post('mg'),
+                'ml' => post('ml'),
+                'vg' => post('vg'),
+                'pg' => post('pg'),
                 'flavour' => post('flavour'),
                 'quantity' => post('quantity'),
                 'unit' => post('unit'),
@@ -78,7 +78,7 @@ class Items extends MY_Controller
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'New Item Created Successfully');
 
-            redirect('items/add');
+            redirect('items/list');
         }
     }
 
@@ -213,7 +213,11 @@ class Items extends MY_Controller
             $this->page_data['page']->submenu = 'edit';
             $this->load->view('items/edit', $this->page_data);
         } else {
+            // echo '<pre>';
             $id = $this->input->get('id');
+            // var_dump($this->input->post());
+            // echo '</pre>';
+            // die();
             $data = [
                 'item_code' => post('item_code'),
                 'item_name' => post('item_name'),
@@ -244,7 +248,7 @@ class Items extends MY_Controller
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', "Item #$item has been Updated Successfully");
 
-            redirect('items');
+            redirect('items/edit?id='.get('id'));
         }
     }
 

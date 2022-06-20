@@ -1,7 +1,9 @@
 import DataCustomer from "../data/DataCustomer.js";
+import DataUser from "../data/DataUser.js";
 import DataItems from "../data/DataItems.js";
 import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./order_create-calcualtion.js";
 
+const data_user_marketing = new DataUser();
 const data_customer = new DataCustomer();
 const data_items = new DataItems();
 
@@ -14,6 +16,35 @@ const main = () => {
         })
     }
     $(document).ready(function () {
+        // Find users marketing
+        $(document).on('keyup', 'input#marketing', function () {
+            let valueElement = $(this).val();
+            let selfElement = $(this);
+            data_user_marketing.user_info_search(valueElement, function (data) {
+                let result = data.map(({
+                    id, name, username,
+                }) => [
+                        id, name, username,
+                    ]
+                );
+                $(`input#${selfElement.attr('id')}`).autocomplete({
+                    source: result,
+                    focus: function (event, ui) {
+                        $('input#created_by').val(ui.item[0])
+                        $('input#marketing').val(ui.item[1])
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        $('input#created_by').val(ui.item[0])
+                        $('input#marketing').val(ui.item[1])
+                        return false;
+                    }
+                }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                    return $('<li>').data("item.autocomplete", item)
+                        .append(`<div>${item[1]}</div>`).appendTo(ul)
+                }
+            })
+        })
         // Find customer // limit.. this overload
         $(document).on('keyup', 'input#store_name, input#customer_code', function () {
             let valueElement = $(this).val();

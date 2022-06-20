@@ -295,11 +295,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </div>
                 </div>
 
-                <div class="col-lg-3 col-sm-12">
+                <div class="col-lg-3 col-sm-12" style="display: none">
                   <div class="form-group">
                         <h6><?=lang('bank_name')?></h6>
                         <div class="input-group">
-                            <select name="transaction_source" id="source" class="custom-select" required>
+                            <select name="transaction_source" id="source" class="custom-select">
                                 <option value="" disabled selected><?=lang('select_account')?></option>
                                 <?php foreach ($bank as $key => $value):?>
                                 <option value="<?=$value->id?>"><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>

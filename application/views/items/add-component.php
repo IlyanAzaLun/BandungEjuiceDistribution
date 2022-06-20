@@ -17,14 +17,14 @@
   <!-- text input -->
   <div class="form-group">
     <label>MG <small>(Nikotin)</small></label>
-    <input type="number" class="form-control form-control-sm" name="MG" id="MG" required>
+    <input type="number" class="form-control form-control-sm" name="mg" id="mg" required>
   </div>
 </div>
 <div class="col-sm-3 subcategory">
   <!-- text input -->
   <div class="form-group">
     <label>ML <small>(Milligram)</small></label>
-    <input type="number" class="form-control form-control-sm" name="ML" id="ML" required>
+    <input type="number" class="form-control form-control-sm" name="ml" id="ml" required>
   </div>
 </div>
 <div class="col-sm-3 subcategory">
@@ -33,14 +33,14 @@
   	<div class="col-6">
     	<div class="form-group">
         <label>VG</label>
-        <input type="number" class="form-control form-control-sm" name="VG" id="VG" required>
+        <input type="number" class="form-control form-control-sm" name="vg" id="vg" required>
       </div>
   	</div>
 
   	<div class="col-6">
     	<div class="form-group">
         <label>PG</label>
-        <input type="number" class="form-control form-control-sm" name="PG" id="PG" required>
+        <input type="number" class="form-control form-control-sm" name="pg" id="pg" required>
       </div>
   	</div>
 
@@ -67,14 +67,14 @@
      <!-- text input -->
     <div class="form-group">
       <label>Brand 1</label>
-      <input type="text" class="form-control form-control-sm" name="brand_1" id="brand_1" required>
+      <input type="text" class="form-control form-control-sm" name="brand" id="brand" required>
     </div> 
   </div>
   <div class="col-sm-6 subcategory">
     <!-- text input -->
     <div class="form-group">
       <label>Brand 2</label>
-      <input type="text" class="form-control form-control-sm" name="brand_2" id="brand_2">
+      <input type="text" class="form-control form-control-sm" name="brands" id="brands">
     </div>
   </div>
   </div>

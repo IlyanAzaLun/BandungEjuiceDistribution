@@ -191,7 +191,25 @@ class Customer extends MY_Controller
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
-        $this->db->select('*, customer_information.id as customer_id');
+        $this->db->select('
+             customer_information.id as customer_id
+            ,customer_information.customer_code
+            ,customer_information.store_name
+            ,customer_information.owner_name
+            ,customer_information.customer_type
+            ,customer_information.created_at
+            ,customer_information.created_by
+            ,address_information.is_active
+            ,address_information.id
+            ,address_information.address
+            ,address_information.village
+            ,address_information.sub_district
+            ,address_information.city
+            ,address_information.province
+            ,address_information.zip
+            ,address_information.contact_phone
+            ,address_information.contact_mail
+        ');
         if ($searchQuery != '') {
             $this->db->like('customer_information.store_name', $searchValue, 'both');
             $this->db->or_like('customer_information.owner_name', $searchValue, 'both');

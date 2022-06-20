@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); 
-$i = 0; ?>
+$i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateTime($_data_invoice_parent->date_start);?>
 <!-- Main content -->
 <section class="content">
 
@@ -299,7 +299,7 @@ $i = 0; ?>
                                 <div class="col-lg-2 col-sm-12">
                                     <h6><?=lang('number_of_day')?></h6>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="numberdays" value="<?=date("d/m/Y H:i:s",strtotime($_data_invoice_parent->date_due))-date("d/m/Y H:i:s",strtotime($_data_invoice_parent->date_start))?>" disabled>
+                                        <input type="text" class="form-control" id="numberdays" value="<?=$start->diff($due)->d?>" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -316,7 +316,7 @@ $i = 0; ?>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-12">
+                                <div class="col-lg-3 col-sm-12" style="display: none">
                                     <div class="form-group">
                                         <h6><?=lang('bank_name')?></h6>
                                         <div class="input-group">

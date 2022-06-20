@@ -67,6 +67,7 @@ class Order extends Invoice_controller
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => post('customer_code'),
+					'created_by' => post('created_by'),
 				);
 			}
 			//information payment
@@ -82,6 +83,7 @@ class Order extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
+				'created_by' => post('created_by'),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
@@ -233,7 +235,6 @@ class Order extends Invoice_controller
 				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
-				'created_by' => logged('id'),
 				'is_confirmed' => null,
 			);
 			// EDIT
@@ -334,7 +335,8 @@ class Order extends Invoice_controller
 				$request[$key]['index_list'] = $key;
 				$request[$key]['item_quantity'] = $item[$key]->quantity;
 				$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
-				$request[$key]['created_by'] = logged('id');
+				$request[$key]['created_by'] = $data['created_by']?$data['created_by']:logged('id');
+
 				$data_negatif[$key] = $request[$key];
 				unset($data_negatif[$key]['id']);
 			}
@@ -372,7 +374,7 @@ class Order extends Invoice_controller
 			return $this->order_model->update_by_code($this->data['order_code'], $request);
 		} else {
 			$request['order_code'] = $this->data['order_code'];
-			$request['created_by'] = logged('id');
+			$request['created_by'] = $data['created_by']?$data['created_by']:logged('id');
 			//	
 			return $this->order_model->create($request);
 		}
@@ -416,6 +418,7 @@ class Order extends Invoice_controller
 		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
 		$haspermission = hasPermissions('warehouse_order_list');
+		$is_super_user = hasPermissions('example');
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
@@ -449,6 +452,8 @@ class Order extends Invoice_controller
 		}
 		if(!$haspermission){
 			$this->db->where("order.created_by", $logged);
+		}
+		if(!$is_super_user){
 			$this->db->where("order.is_cancelled", 0);
 		}
 		$this->db->where('order.is_created', 0);
@@ -498,6 +503,8 @@ class Order extends Invoice_controller
 		}
 		if(!$haspermission){
 			$this->db->where("order.created_by", $logged);
+		}	
+		if(!$is_super_user){
 			$this->db->where("order.is_cancelled", 0);
 		}
 		$this->db->where('order.is_created', 0);

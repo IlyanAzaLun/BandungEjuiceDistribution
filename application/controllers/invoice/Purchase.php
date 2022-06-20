@@ -561,7 +561,7 @@ class Purchase extends Invoice_controller
 	protected function create_or_update_invoice($data)
 	{
 		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
-
+		$request['invoice_code'] = $this->data['invoice_code'];
 		$request['total_price'] = setCurrency($data['total_price']);
 		$request['discounts'] = setCurrency($data['discounts']);
 		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
@@ -584,7 +584,6 @@ class Purchase extends Invoice_controller
 			//
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request) ? true: false;
 		} else {
-			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->purchase_model->create($request) ? true: false;

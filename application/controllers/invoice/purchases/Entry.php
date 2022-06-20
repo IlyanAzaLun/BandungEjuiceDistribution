@@ -331,6 +331,7 @@ class Entry extends Purchase
 		$request['is_consignment'] = $data['is_consignment'];
 		$request['transaction_source'] = $data['transaction_source'];
 		if ($response) {
+			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['is_cancelled'] = @$data['is_cancelled'];
 			$request['cancel_note'] = @$data['cancel_note'];
 			$request['updated_by'] = logged('id');

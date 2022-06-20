@@ -552,6 +552,8 @@ $lang['sale_payment'] = "Selling to pay";
 $lang['sale_returns'] = "Returns Sale";
 $lang['sale_return_list'] = "List Returns Sale";
 $lang['returns'] = "Returns";
+$lang['marketing'] = "Marketing";
+
 
 /*
  * Payment

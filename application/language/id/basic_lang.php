@@ -530,6 +530,7 @@ $lang['order_info_info'] = "Informasi Data Pesanan ";
 $lang['import_order'] = "Impor Barang Pesanan ";
 $lang['order_invoice_has_created'] = "Pesanan Ini Sudah Pernah Dibuat!, Coba Cek Invoice Penjualan";
 $lang['order_creating_sale_invoice'] = "Membuat Invoice Penjualan Berdasarkan Kode Pemesanan:";
+$lang['marketing'] = "Marketing";
 
 /*
  * Faktur
