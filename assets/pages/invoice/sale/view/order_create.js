@@ -30,12 +30,12 @@ const main = () => {
                 $(`input#${selfElement.attr('id')}`).autocomplete({
                     source: result,
                     focus: function (event, ui) {
-                        $('input#created_by').val(ui.item[0])
+                        $('input#is_have').val(ui.item[0])
                         $('input#marketing').val(ui.item[1])
                         return false;
                     },
                     select: function (event, ui) {
-                        $('input#created_by').val(ui.item[0])
+                        $('input#is_have').val(ui.item[0])
                         $('input#marketing').val(ui.item[1])
                         return false;
                     }

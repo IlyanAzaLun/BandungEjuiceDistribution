@@ -71,6 +71,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th width="10%"><?= lang('grandtotal') ?></th>
                   <th width="2%"><?= lang('payment_type') ?></th>
                   <th><?= lang('note') ?></th>
+                  <th width="10%"><?= lang('marketing') ?></th>
                   <th width="10%"><?= lang('created_by') ?></th>
                   <th width="10%"><?= lang('updated_by') ?></th>
                   <th width="8%"><?= lang('option') ?></th>
@@ -233,8 +234,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             // return data
           }
         },{
+          data: "is_have_name",
+          orderable: false,
+          visible: <?=(!hasPermissions('fetch_all_invoice_sales'))?'false':'true'?>,
+          render: function(data, type, row) {
+            return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}users/view/${row['is_have']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+          }
+        },{
           data: "user_sale_create_by",
           orderable: false,
+          visible: <?=(!hasPermissions('fetch_all_invoice_sales'))?'false':'true'?>,
           render: function(data, type, row) {
             return `${shorttext(data, 12, true)} <span class="float-right"><a href="${location.base}users/view/${row['user_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
           }

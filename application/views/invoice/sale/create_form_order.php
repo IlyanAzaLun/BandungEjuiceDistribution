@@ -275,6 +275,7 @@
                             <div class="form-group">
                                 <label for="note"><?= lang('note') ?></label>
                                 <textarea name="note" id="note" class="form-control"><?= $order->note ?></textarea>
+                                <input type="hidden" name="is_have" id="is_have" class="form-control" value="<?= $order->is_have ?>">
                             </div>
                         </div>
                     </div>

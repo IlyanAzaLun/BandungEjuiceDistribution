@@ -128,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       ],
       order: [[ 1, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/purchases/payment/serverside_datatables_data_payment_purchase') ?>",
+        "url": "<?php echo url('invoice/sales/payment/serverside_datatables_data_payment_sale') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
@@ -188,8 +188,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "user_created_by",
           render: function(data, type, row){
-            return `${shorttext(data, 5, true)} <span class="float-right"><a href="${location.base}users/view/${row['user_updated_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-          
+            return `${shorttext(data, 5, true)} <span class="float-right"><a href="${location.base}users/view/${row['user_created_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+
           }
         },{
           data: "updated_at",

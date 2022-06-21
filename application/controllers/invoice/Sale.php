@@ -95,6 +95,7 @@ class Sale extends Invoice_controller
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => strtoupper(post('note')),
 				'reference_order' => $this->data['order_code'],
+				"is_have" => post('is_have'),
 				'transaction_destination' => post('transaction_destination'),
 			);
 			// // CREATE
@@ -207,6 +208,7 @@ class Sale extends Invoice_controller
 				'reference_order' => get('id'),
 				'is_controlled_by' => null,
 				'is_delivered' => null,
+				'is_have' => post('is_have'),
 			);// Check
 			
 			echo '<pre>';
@@ -443,6 +445,7 @@ class Sale extends Invoice_controller
 		$request['date_start'] = $data['date_start'];
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
+		$request['is_have'] = $data['is_have']?$data['is_have']:logged('id');
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['cancel_note'] = $data['cancel_note'];
@@ -657,7 +660,7 @@ class Sale extends Invoice_controller
 		$this->items_fifo_model->update_batch($data, 'id');
 		// prepare data
 		foreach ($data as $key => $value) {
-			array_push($items, $this->items_fifo_model->select_fifo_by_item_code($value['item_code']));
+			array_push($items, $this->items_fifo_model->select_fifo_by_item_code_is_canceled($value['item_code']));
 			$request[$key]['id'] = $items[$key]->id;
 			$request[$key]['item_quantity'] = $items[$key]->item_quantity - $value['item_order_quantity'];
 		}
@@ -681,6 +684,7 @@ class Sale extends Invoice_controller
 		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
 		$haspermission = hasPermissions('fetch_all_invoice_sales');
+		$is_super_user = hasPermissions('example');
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
@@ -712,7 +716,13 @@ class Sale extends Invoice_controller
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
+			$this->db->group_start();
 			$this->db->where("sale.created_by", $logged);
+			$this->db->or_where("sale.is_have", $logged);
+			$this->db->group_end();
+		}
+		if(!$is_super_user){
+			$this->db->where("sale.is_cancelled", 0);
 		}
 		$this->db->where("sale.is_transaction", 1);
 		$records = $this->db->get('invoice_selling sale')->result();
@@ -742,6 +752,8 @@ class Sale extends Invoice_controller
 		sale.cancel_note as cancel_note,
 		customer.customer_code as customer_code, 
 		customer.store_name as store_name, 
+		sale.is_have as is_have, 
+		is_have.name as is_have_name, 
 		user_created.id as user_id, 
 		user_created.name as user_sale_create_by,
 		user_updated.id as user_id_updated, 
@@ -757,6 +769,7 @@ class Sale extends Invoice_controller
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
+		$this->db->join('users is_have', 'is_have.id = sale.is_have', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
@@ -767,7 +780,13 @@ class Sale extends Invoice_controller
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
+			$this->db->group_start();
 			$this->db->where("sale.created_by", $logged);
+			$this->db->or_where("sale.is_have", $logged);
+			$this->db->group_end();
+		}
+		if(!$is_super_user){
+			$this->db->where("sale.is_cancelled", 0);
 		}
 		$this->db->where("sale.is_transaction", 1);
 		$this->db->order_by($columnName, $columnSortOrder);
@@ -802,6 +821,8 @@ class Sale extends Invoice_controller
 				'is_delivered' => $record->is_delivered,
 				'is_cancelled' => $record->is_cancelled,
 				'cancel_note' => $record->cancel_note,
+				'is_have' => $record->is_have,
+				'is_have_name' => $record->is_have_name,
 				'user_sale_create_by' => $record->user_sale_create_by,
 				'user_sale_update_by' => $record->user_sale_update_by,
 			);

@@ -1,4 +1,4 @@
-<div class="col-sm-3 subcategory">
+<div class="col-lg-3 col-sm-12 subcategory">
   <div class="form-group">
     <label>Sub Category</label>
     <select class="form-control form-control-sm select2" style="width: 100%;" name="subcategory" id="subcategory" required>
@@ -13,31 +13,31 @@
   </div>
 </div>
 
-<div class="col-sm-3 subcategory">
+<div class="col-lg-3 col-sm-6 subcategory">
   <!-- text input -->
   <div class="form-group">
     <label>MG <small>(Nikotin)</small></label>
     <input type="number" class="form-control form-control-sm" name="mg" id="mg" required>
   </div>
 </div>
-<div class="col-sm-3 subcategory">
+<div class="col-lg-3 col-sm-6 subcategory">
   <!-- text input -->
   <div class="form-group">
     <label>ML <small>(Milligram)</small></label>
     <input type="number" class="form-control form-control-sm" name="ml" id="ml" required>
   </div>
 </div>
-<div class="col-sm-3 subcategory">
+<div class="col-lg-3 col-sm-12 subcategory">
   <!-- text input -->
   <div class="row">
-  	<div class="col-6">
+  	<div class="col-lg-6 col-sm-6">
     	<div class="form-group">
         <label>VG</label>
         <input type="number" class="form-control form-control-sm" name="vg" id="vg" required>
       </div>
   	</div>
 
-  	<div class="col-6">
+  	<div class="col-lg-6 col-sm-6">
     	<div class="form-group">
         <label>PG</label>
         <input type="number" class="form-control form-control-sm" name="pg" id="pg" required>
@@ -46,14 +46,14 @@
 
   </div>
 </div>
-<div class="col-sm-3 subcategory">
+<div class="col-lg-3 col-sm-12 subcategory">
   <!-- text input -->
   <div class="form-group">
     <label>Flavour <small>(Rasa)</small></label>
     <input type="text" class="form-control form-control-sm" name="flavour" id="flavour" required>
   </div>
 </div>
-<div class="col-sm-3 subcategory">
+<div class="col-lg-3 col-sm-12 subcategory">
   <!-- text input -->
   <div class="form-group">
     <label>Customs <small>(Bea cukai)</small></label>
@@ -61,16 +61,16 @@
   </div>
 </div>
 
-<div class="col-sm-3 subcategory">
+<div class="col-lg-3 col-sm-12 subcategory">
   <div class="row">   
-  <div class="col-sm-6 subcategory">
+  <div class="col-lg-6 col-sm-6 subcategory">
      <!-- text input -->
     <div class="form-group">
       <label>Brand 1</label>
       <input type="text" class="form-control form-control-sm" name="brand" id="brand" required>
     </div> 
   </div>
-  <div class="col-sm-6 subcategory">
+  <div class="col-lg-6 col-sm-6 subcategory">
     <!-- text input -->
     <div class="form-group">
       <label>Brand 2</label>

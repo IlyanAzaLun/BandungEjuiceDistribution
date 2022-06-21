@@ -14,7 +14,7 @@ class Items extends MY_Controller
 
 		$order = $this->transaction_item_model->getById(post('id'));
 		$fifo_list_item = $this->items_fifo_model->getById(post('id'));
-		$parent_fifo_item = $this->items_fifo_model->select_fifo_by_items($fifo_list_item->item_code);
+		$parent_fifo_item = $this->items_fifo_model->select_fifo_by_items_is_canceled($fifo_list_item->item_code);
 		$item  = $this->items_model->getById($order->item_id);
 		$history = array(
 			'item_id' => $order->item_id, 

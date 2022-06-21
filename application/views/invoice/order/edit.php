@@ -43,7 +43,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-4">
+            
+            <?php if(hasPermissions('warehouse_order_list')):?>
+            <div class="col-lg-1 col-sm-12">
+              <div class="form-group">
+                <label for="marketing"><?= lang('marketing') ?></label>
+                <input type="hidden" name="is_have" id="is_have" value="<?=$invoice->is_have?>">
+                <input type="text" name="marketing" id="marketing" class="form-control" value="<?=$this->db->get_where('users', array('id'=> $invoice->is_have))->row()->name?>" required>
+              </div>
+            </div>
+            <?php endif ?>
+            
+            <div class="col-lg col-sm-12">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
                 <input type="hidden" name="order_code" id="order_code" class="form-control" value="<?=$invoice->order_code?>" autocomplete="false" readonly required>
@@ -52,7 +63,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <label for="store_name"><?= lang('store_name') ?></label>
                 <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
@@ -60,14 +71,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <label for="contact_phone"><?= lang('contact_phone') ?><small class="text-primary"> (whatsapp)</small></label>
                 <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>" required readonly>
               </div>
             </div>
 
-            <div class="col-sm-12">
+            <div class="col-lg-12 col-sm-12">
               <div class="form-group">
                 <label for="address"><?= lang('address_destination') ?></label>
                 <textarea type="text" name="address" id="address" class="form-control" required readonly><?= set_value('address') ?></textarea>

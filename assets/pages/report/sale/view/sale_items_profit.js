@@ -39,7 +39,7 @@ const main = () => {
         $("#users").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: location.base + "users/data_user",
+                    url: location.base + "users/data_user_marketing",
                     method: 'POST',
                     dataType: 'JSON',
                     data: {

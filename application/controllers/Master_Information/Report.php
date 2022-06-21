@@ -435,7 +435,7 @@ class Report extends MY_Controller
             $this->page_data['title'] = 'sale_profit';
             $this->page_data['page']->submenu = 'report_sale';
             $this->page_data['page']->submenu_child = 'report_sale_profit';
-            $this->page_data['data'] = $this->transaction_item_model->get_report_items_profit();
+            // $this->page_data['data'] = $this->transaction_item_model->get_report_items_profit();
             $this->load->view('invoice/sale/report_items_sale_profit', $this->page_data);
         }else{
             ifPermissions('download_file');
@@ -506,18 +506,18 @@ class Report extends MY_Controller
 		$totalRecords = $records[0]->allcount;
 
 		## Total number of record with filtering
-		$this->db->select('count(*) as allcount');
-        $this->db->like('invoice_code', 'INV/SALE/', 'after');
+		$this->db->select('count(transaction.invoice_code) as allcount');
+        $this->db->join('invoice_selling sale', 'transaction.invoice_code=sale.invoice_code', 'left');
+        $this->db->where('sale.is_transaction', 1);
         $this->db->where('transaction.is_cancelled', 0);
 		if ($dateStart != '') {
             $this->db->group_start();
             $this->db->where("transaction.created_at >=", $dateStart);
 			$this->db->where("transaction.created_at <=", $dateFinal);
             $this->db->group_end();
-		}else{
+		}else{            
             $this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}
-        $this->db->group_by('transaction.invoice_code');
 		$records = $this->db->get('invoice_transaction_list_item transaction')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 		
@@ -532,7 +532,8 @@ class Report extends MY_Controller
             ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
-        $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
+        $this->db->join('invoice_selling sale', 'transaction.invoice_code=sale.invoice_code', 'left');
+        $this->db->where('sale.is_transaction', 1);
         $this->db->where('transaction.is_cancelled', 0);
         if($customer != ''){
             $this->db->select('
@@ -606,7 +607,7 @@ class Report extends MY_Controller
                 ,users.name
                 ,transaction.customer_code
                 ,customer.store_name');
-                $this->db->group_by("invoice_code");
+                $this->db->group_by("transaction.invoice_code");
                 break;
         }
 		$this->db->order_by($columnName, $columnSortOrder);

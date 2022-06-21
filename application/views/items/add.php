@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                     <div class="row">
 
-                        <div class="col-sm-3 category">
+                        <div class="col-lg-3 col-sm-12 category">
                             <div class="form-group">
                                 <label><?=lang('category_item')?></label>
                                 <select class="form-control select2" style="width: 100%;" name="category" id="category"value="<?=set_value('category')?>" required>
@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 
 
-                        <div class="col-sm-3">
+                        <div class="col-lg-3 col-sm-12">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('item_code')?></label>
@@ -69,7 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-lg">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('weight')?></label>
@@ -82,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
 
-                        <div class="col-sm-3" style="display:none">
+                        <div class="col-lg-3" style="display:none">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('item_quantity')?></label>
@@ -92,17 +92,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-lg-6">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('item_name')?></label>
                                 <input type="text" class="form-control form-control-sm" name="item_name" id="item_name" value="<?=set_value('item_name')?>" required>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-lg-4">
                           <div class="row">
 
-                            <div class="col-sm-6">
+                            <div class="col-lg-6">
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('item_capital_price')?></label>
@@ -110,7 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <?=form_error('capital_price', '<small class="text-danger">','</small>')?>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-lg-6">
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('item_selling_price')?></label>
@@ -121,7 +121,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                           </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-lg-12">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('note')?></label>

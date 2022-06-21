@@ -135,6 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             timePicker: false,
             timePicker24Hour: true,
             timePickerIncrement: 30,
+            startDate: moment().startOf('month').format('DD/MM/YYYY H:mm'),
             locale: {
                 format: 'DD/MM/YYYY'
             }

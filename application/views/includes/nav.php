@@ -496,7 +496,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo url('invoice/sale/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
+        <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('payment_sales') ?> </p>
         </a>

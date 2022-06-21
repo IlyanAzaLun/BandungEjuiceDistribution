@@ -34,7 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="card-body">
                         <div class="row">
 
-                            <div class="col category">
+                            <div class="col col-sm-12 category">
                                 <div class="form-group">
                                     <label><?= lang('category_item') ?></label>
                                     <select class="form-control select2" style="width: 100%;" name="category" id="category" value="<?= set_value('category') ?>" required>
@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <?php $tmp = explode('-', $item->category); ?>
                             <!-- condition if item is liquid -->
                             <?php if (count($tmp) >= 2) : ?>
-                                <div class="col-sm-3 subcategory">
+                                <div class="col-lg-3 col-sm-12 subcategory">
                                     <div class="form-group">
                                         <label>Sub Category</label>
                                         <select class="form-control form-control-sm select2" style="width: 100%;" name="subcategory" id="subcategory" required>
@@ -66,16 +66,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-3 subcategory">
+                                <div class="col-lg-3 col-sm-12 subcategory">
                                     <!-- text input -->
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-sm-6">
                                             <div class="form-group">
                                                 <label>MG <small>(Nikotin)</small></label>
                                                 <input type="number" class="form-control form-control-sm" name="mg" id="mg" value="<?= $item->mg ?>" required>
                                             </div>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-sm-6">
                                             <div class="form-group">
                                                 <label>ML <small>(Milligram)</small></label>
                                                 <input type="number" class="form-control form-control-sm" name="ml" id="ml" value="<?= $item->ml ?>" required>
@@ -83,17 +83,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 subcategory">
+                                <div class="col-lg-3 col-sm-12 subcategory">
                                     <!-- text input -->
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-sm-6">
                                             <div class="form-group">
                                                 <label>VG</label>
                                                 <input type="number" class="form-control form-control-sm" name="vg" id="vg" value="<?= $item->vg ?>" required>
                                             </div>
                                         </div>
 
-                                        <div class="col-6">
+                                        <div class="col-lg-6 col-sm-6">
                                             <div class="form-group">
                                                 <label>PG</label>
                                                 <input type="number" class="form-control form-control-sm" name="pg" id="pg" value="<?= $item->pg ?>" required>
@@ -102,28 +102,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                     </div>
                                 </div>
-                                <div class="col-sm-3 subcategory">
+                                <div class="col-lg-3 col-sm-12 subcategory">
                                     <!-- text input -->
                                     <div class="form-group">
                                         <label>Flavour <small>(Rasa)</small></label>
                                         <input type="text" class="form-control form-control-sm" name="flavour" id="flavour" value="<?= $item->flavour ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 subcategory">
+                                <div class="col-lg-3 col-sm-12 subcategory">
                                     <!-- text input -->
                                     <div class="form-group">
                                         <label>Customs <small>(Bea cukai)</small></label>
                                         <input type="text" class="form-control form-control-sm" name="customs" id="customs" data-inputmask-alias="datetime" data-inputmask-inputformat="yyyy" data-mask value="<?= $item->customs ?>">
                                     </div>
                                 </div>
-                                <div class="col-sm-3 subcategory">
+                                <div class="col-lg-3 col-sm-6 subcategory">
                                     <!-- text input -->
                                     <div class="form-group">
                                         <label>Brand 1</label>
                                         <input type="text" class="form-control form-control-sm" name="brand" id="brand" value="<?= $item->brand ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 subcategory">
+                                <div class="col-lg-3 col-sm-6 subcategory">
                                     <!-- text input -->
                                     <div class="form-group">
                                         <label>Brand 2</label>
@@ -133,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <!-- condition if item is liquid -->
                             <?php endif; ?>
 
-                            <div class="col-sm-3">
+                            <div class="col-lg-3 col-sm-6">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('item_code') ?></label>
@@ -149,7 +149,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             
-                            <div class="col-lg-2">
+                            <div class="col-lg-2 col-sm-6">
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('weight')?></label>
@@ -162,7 +162,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-lg" style="display:<?php echo !hasPermissions('backup_db')?'none':''?>">
+                            <div class="col-lg col-sm-12" style="display:<?php echo !hasPermissions('backup_db')?'none':''?>">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('item_quantity') ?></label>
@@ -173,7 +173,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <div class="col-lg-6 col-sm-12">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('item_name') ?></label>
@@ -181,10 +181,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-lg-5">
+                            <div class="col-lg-5 col-sm-12">
                                 <div class="row">
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 col-sm-12">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('item_capital_price') ?></label>
@@ -192,7 +192,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <?= form_error('capital_price', '<small class="text-danger">', '</small>') ?>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 col-sm-12">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('item_selling_price') ?></label>
@@ -203,7 +203,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-lg-12 col-sm-12">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('note') ?></label>
@@ -211,7 +211,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <?= form_error('note', '<small class="text-danger">', '</small>') ?>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-lg-12 col-sm-12">
                                 <div class="form-group">
                                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                         <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" <?= ($item->is_active) ? ' checked' : '' ?>>

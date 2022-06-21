@@ -43,7 +43,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-4">
+
+          <?php if(hasPermissions('warehouse_order_list')):?>
+            <div class="col-lg-1 col-sm-12">
+              <div class="form-group">
+                <label for="marketing"><?= lang('marketing') ?></label>
+                <input type="hidden" name="is_have" id="is_have" value="">
+                <input type="text" name="marketing" id="marketing" class="form-control" required>
+              </div>
+            </div>
+            <?php endif ?>
+            
+            <div class="col-lg col-sm-12">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
                 <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
@@ -51,7 +62,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <label for="store_name"><?= lang('store_name') ?></label>
                 <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
@@ -59,19 +70,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
 
-            <div class="col-sm-4">
+            <div class="col-lg-4 col-sm-12">
               <div class="form-group">
                 <label for="contact_phone"><?= lang('contact_phone') ?><small class="text-primary"> (whatsapp)</small></label>
                 <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>" required readonly>
               </div>
             </div>
 
-            <div class="col-sm-12">
+            <div class="col-lg-12 col-sm-12">
               <div class="form-group">
                 <label for="address"><?= lang('address_destination') ?></label>
                 <textarea type="text" name="address" id="address" class="form-control" required readonly><?= set_value('address') ?></textarea>
               </div>
-            </div>
+            </div>            
           </div>
         </div>
         <!-- /.card-body -->
@@ -247,15 +258,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                   </div>
                 </div>
-                <?php if(hasPermissions('warehouse_order_list')):?>
-                <div class="col-lg-1 col-sm-12">
-                  <div class="form-group">
-                    <label for="marketing"><?= lang('marketing') ?></label>
-                    <input type="hidden" name="created_by" id="created_by">
-                    <input type="text" name="marketing" id="marketing" class="form-control" required>
-                  </div>
-                </div>
-                <?php endif ?>
               </div>
             </div>
             <div class="col-lg-3 col-sm-12" style="display: none">

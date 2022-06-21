@@ -531,7 +531,7 @@ class Returns extends Sale
 		$item_fifo = array();
 		foreach ($data as $key => $value) {
 			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
-			array_push($item_fifo, $this->items_fifo_model->select_fifo_by_item_code($value['item_code']));
+			array_push($item_fifo, $this->items_fifo_model->select_fifo_by_item_code_is_canceled($value['item_code']));
 
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
@@ -616,7 +616,7 @@ class Returns extends Sale
 		$item = array();
 		$request = array();
 		foreach ($data as $key => $value) {
-			array_push($item, $this->items_fifo_model->select_fifo_by_items($value['item_code'])); // Primary for find items with code item
+			array_push($item, $this->items_fifo_model->select_fifo_by_items_is_canceled($value['item_code'])); // Primary for find items with code item
 			if($value['status_return']){
 				if ($value['id']) {
 					$request[$key]['quantity'] = ($item[$key]->item_quantity - $value['item_order_quantity_current']) + ($value['item_order_quantity'] + $value['item_order_quantity_current']);

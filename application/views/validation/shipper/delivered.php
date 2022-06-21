@@ -149,6 +149,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                             <option value=""><?=lang('option')?></option>
                                             <option value="TAGIH TUJUAN" <?=$invoice->type_payment_shipping=="TAGIH TUJUAN"?'selected':''?>>TAGIH TUJUAN</option>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
+                                            <option value="TUNAI" <?=$invoice->type_payment_shipping=="TUNAI"?'selected':''?>>TUNAI</option>
                                             <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                         </select>
                                     </div>

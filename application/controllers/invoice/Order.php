@@ -67,7 +67,7 @@ class Order extends Invoice_controller
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => post('customer_code'),
-					'created_by' => post('created_by'),
+					'is_have' => post('is_have'),
 				);
 			}
 			//information payment
@@ -83,7 +83,7 @@ class Order extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'created_by' => post('created_by'),
+				'is_have' => post('is_have'),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 			);
@@ -235,6 +235,7 @@ class Order extends Invoice_controller
 				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
+				'is_have' => post('is_have'),
 				'is_confirmed' => null,
 			);
 			// EDIT
@@ -335,7 +336,7 @@ class Order extends Invoice_controller
 				$request[$key]['index_list'] = $key;
 				$request[$key]['item_quantity'] = $item[$key]->quantity;
 				$request[$key]['item_order_quantity'] = abs($value['item_order_quantity']);
-				$request[$key]['created_by'] = $data['created_by']?$data['created_by']:logged('id');
+				$request[$key]['created_by'] = logged('id');
 
 				$data_negatif[$key] = $request[$key];
 				unset($data_negatif[$key]['id']);
@@ -365,6 +366,7 @@ class Order extends Invoice_controller
 		$request['payment_type'] = $data['payment_type'];
 		$request['note'] = $data['note'];
 		$request['created_at'] = $data['created_at'];		
+		$request['is_have'] = $data['is_have']?$data['is_have']:logged('id');
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['is_confirmed'] = $data['is_confirmed'];
@@ -374,7 +376,7 @@ class Order extends Invoice_controller
 			return $this->order_model->update_by_code($this->data['order_code'], $request);
 		} else {
 			$request['order_code'] = $this->data['order_code'];
-			$request['created_by'] = $data['created_by']?$data['created_by']:logged('id');
+			$request['created_by'] = logged('id');
 			//	
 			return $this->order_model->create($request);
 		}
@@ -451,7 +453,10 @@ class Order extends Invoice_controller
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
+			$this->db->group_start();
 			$this->db->where("order.created_by", $logged);
+			$this->db->or_where("order.is_have", $logged);
+			$this->db->group_end();
 		}
 		if(!$is_super_user){
 			$this->db->where("order.is_cancelled", 0);
@@ -476,6 +481,8 @@ class Order extends Invoice_controller
 		order.is_confirmed as is_confirmed,
 		order.is_cancelled as is_cancelled, 
 		order.is_created as is_created, 
+		is_haved.name as is_have_name, 
+		order.is_have as is_have, 
 		customer.customer_code as customer_code, 
 		customer.store_name as store_name, 
 		user_created.id as user_id, 
@@ -492,6 +499,7 @@ class Order extends Invoice_controller
 		}
 		$this->db->join('users user_created', 'user_created.id = order.created_by', 'left');
 		$this->db->join('users user_updated', 'user_updated.id = order.updated_by', 'left');
+		$this->db->join('users is_haved', 'is_haved.id = order.is_have', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = order.customer', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
@@ -502,7 +510,10 @@ class Order extends Invoice_controller
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
+			$this->db->group_start();
 			$this->db->where("order.created_by", $logged);
+			$this->db->or_where("order.is_have", $logged);
+			$this->db->group_end();
 		}	
 		if(!$is_super_user){
 			$this->db->where("order.is_cancelled", 0);
@@ -533,6 +544,8 @@ class Order extends Invoice_controller
 				'is_confirmed' => $record->is_confirmed,
 				'is_cancelled' => $record->is_cancelled,
 				'is_created' => $record->is_created,
+				'is_have_name' => $record->is_have_name,
+				'is_have' => $record->is_have,
 				'user_order_create_by' => $record->user_order_create_by,
 				'user_order_update_by' => $record->user_order_update_by,
 			);

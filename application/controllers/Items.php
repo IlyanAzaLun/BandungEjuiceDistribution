@@ -78,7 +78,7 @@ class Items extends MY_Controller
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'New Item Created Successfully');
 
-            redirect('items/list');
+            redirect('items/add');
         }
     }
 

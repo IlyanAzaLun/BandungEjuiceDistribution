@@ -8,16 +8,16 @@ class Payment extends MY_Controller
 		parent::__construct();
 		$this->page_data['page']->title = 'Payment';
 		$this->page_data['page']->menu = 'Payment';
-		$this->page_data['page']->submenu = 'purchase_payment';
+		$this->page_data['page']->submenu = 'sale_payment';
 	}
     
     public function index()
     {
-        $this->page_data['page']->submenu_child = 'purchase_payment_list';
-        $this->load->view('payment/purchase/list_payment', $this->page_data);
+        $this->page_data['page']->submenu_child = 'sale_payment_list';
+        $this->load->view('payment/sale/list_payment', $this->page_data);
     }
 
-    public function serverside_datatables_data_payment_purchase()
+    public function serverside_datatables_data_payment_sale()
     {
         $response = array();
 
@@ -41,7 +41,7 @@ class Payment extends MY_Controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
-		$this->db->join('invoice_purchasing purchase', 'payment.invoice_code = purchase.invoice_code', 'left');
+		$this->db->join('invoice_selling sale', 'payment.invoice_code = sale.invoice_code', 'left');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
@@ -58,7 +58,7 @@ class Payment extends MY_Controller
 		}else{
 			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
-		$this->db->where("purchase.is_transaction", 1);
+		$this->db->where("sale.is_transaction", 1);
 		$records = $this->db->get('invoice_payment payment')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -98,7 +98,7 @@ class Payment extends MY_Controller
 			$this->db->or_like('supplier.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
-        $this->db->join('invoice_purchasing purchase', 'payment.invoice_code = purchase.invoice_code', 'left');
+        $this->db->join('invoice_selling sale', 'payment.invoice_code = sale.invoice_code', 'left');
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
         $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
         $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
@@ -111,7 +111,7 @@ class Payment extends MY_Controller
 		}else{
 			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
-		$this->db->where("purchase.is_transaction", 1);
+		$this->db->where("sale.is_transaction", 1);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);
