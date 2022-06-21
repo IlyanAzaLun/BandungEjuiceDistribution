@@ -192,6 +192,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             },{
                 data: "name",
+                render: function(data, type, row){
+                    return (row['is_have_name']!=row['name'] && row['is_have_name']!=null)?row['is_have_name']:row['name']
+                }
             }],
             buttons: [{
                 text: 'Export',

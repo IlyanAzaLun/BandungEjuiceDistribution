@@ -83,13 +83,16 @@ class Transaction_item_model extends MY_Model {
             $this->db->select('
             transaction.customer_code
            ,customer.store_name');
-            $this->db->where("transaction.customer_code", $data['customer_code']);
+           $this->db->where("transaction.customer_code", $data['customer_code']);
         }
         if($data['user_id'] != ''){
             $this->db->select('
             transaction.created_by
-           ,users.name');
+            ,users.name');
+            $this->db->group_start();
             $this->db->where("transaction.created_by", $data['user_id']);
+            $this->db->or_where("sale.is_have", $data['customer_code']);
+            $this->db->group_end();
         }
 		if ($data['date']['date_start'] != '') {
             $this->db->group_start();
