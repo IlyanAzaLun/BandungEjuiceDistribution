@@ -532,9 +532,10 @@ class Report extends MY_Controller
             ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
-        $this->db->join('invoice_selling sale', 'transaction.invoice_code=sale.invoice_code', 'left');
-        $this->db->where('sale.is_transaction', 1);
-        $this->db->where('transaction.is_cancelled', 0);
+        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
+		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
+        $this->db->where("sale.is_transaction", 1);
+        $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
             $this->db->select('
             transaction.customer_code
@@ -544,8 +545,13 @@ class Report extends MY_Controller
         if($user != ''){
             $this->db->select('
             transaction.created_by
-           ,users.name');
+           ,users.name
+           ,sale.is_have
+           ,is_have.name AS is_have_name');
+            $this->db->group_start();
             $this->db->where("transaction.created_by", $user);
+            $this->db->or_where("sale.is_have", $user);
+            $this->db->group_end();
         }
 		if ($dateStart != '') {
             $this->db->group_start();
@@ -574,7 +580,9 @@ class Report extends MY_Controller
                 # code...
                 $this->db->select('
                  transaction.created_by
-                ,users.name');
+                ,users.name
+                ,sale.is_have
+                ,is_have.name AS is_have_name');
                 $this->db->group_by("yearmount, transaction.created_by");
                 break;
                     
@@ -587,7 +595,9 @@ class Report extends MY_Controller
                 # code...
                 $this->db->select('
                  transaction.created_by
-                 ,users.name');
+                 ,users.name
+                 ,sale.is_have
+                 ,is_have.name AS is_have_name');
                 $this->db->group_by("yearmountday, transaction.created_by");
                 break;
 
@@ -605,6 +615,8 @@ class Report extends MY_Controller
                  transaction.invoice_code
                 ,transaction.created_by
                 ,users.name
+                ,sale.is_have
+                ,is_have.name AS is_have_name
                 ,transaction.customer_code
                 ,customer.store_name');
                 $this->db->group_by("transaction.invoice_code");
@@ -617,6 +629,8 @@ class Report extends MY_Controller
 		foreach ($records as $record) {
 
 			$data[] = array(
+				'is_have' => $record->is_have,
+				'is_have_name' => $record->is_have_name,
 				'created_at' => $record->created_at,
 				'updated_at' => $record->updated_at,
 				'invoice_code' => $record->invoice_code,
