@@ -401,7 +401,7 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('cancel') ?></button>
+                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
                     </div>
                 </div>
             </div>

@@ -236,7 +236,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let html = ``;
             let drop = ``;
             html += `
-            <a target="_blank" href="<?= url('invoice/purchases/entry')  ?>/edit_entry?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+            <a  href="<?= url('invoice/purchases/entry')  ?>/edit_entry?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
             `;
             return `
                 <div class="btn-group d-flex justify-content-center">

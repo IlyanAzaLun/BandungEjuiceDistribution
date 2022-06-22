@@ -67,6 +67,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <label><?= lang('category_customer') ?></label>
                                             <select class="form-control select2" style="width: 100%;" name="customer_type" id="category" value="<?= set_value('category') ?>" required>
                                                 <option value="" selected="selected"><?= lang('select_category_customer') ?></option>
+                                                <option value="WS" <?= ($customer->customer_type == 'WS') ? ' selected' : '' ?>><?=lang('customer_category_ws')?></option>
                                                 <option value="RESELLER" <?= ($customer->customer_type == 'RESELLER') ? ' selected' : '' ?>><?= lang('customer_category_reseller') ?></option>
                                                 <option value="AGENT" <?= ($customer->customer_type == 'AGENT') ? ' selected' : '' ?>><?= lang('customer_category_agent') ?></option>
                                                 <option value="SPECIAL AGENT" <?= ($customer->customer_type == 'SPECIAL AGENT') ? ' selected' : '' ?>><?= lang('customer_category_special') ?></option>

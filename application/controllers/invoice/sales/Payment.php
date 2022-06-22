@@ -82,7 +82,7 @@ class Payment extends MY_Controller
         , payment.updated_by
         , payment.updated_at
         , payment.description
-		, supplier.store_name
+		, customer.store_name
         , user_created.id as user_created_id
         , user_created.name as user_created_by
         , user_updated.id as user_updated_id
@@ -95,13 +95,12 @@ class Payment extends MY_Controller
 			$this->db->or_like('payment.customer_code', $searchValue, 'both');
 			$this->db->or_like('payment.description', $searchValue, 'both');
 			$this->db->or_like('payment.created_at', $searchValue, 'both');
-			$this->db->or_like('supplier.store_name', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
         $this->db->join('invoice_selling sale', 'payment.invoice_code = sale.invoice_code', 'left');
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
         $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
-        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
         $this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
@@ -144,6 +143,7 @@ class Payment extends MY_Controller
 				"user_updated_id"=> $record->user_updated_id,
 				"user_updated_by"=> $record->user_updated_by,
 				"payment_date_at"=> $record->payment_date_at,
+				"store_name"=>$record->store_name,
 			);
 		}
 

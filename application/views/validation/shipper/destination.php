@@ -89,7 +89,7 @@
                             <?php $expedition = $invoice->services_expedition?" - $invoice->services_expedition":''?>
                             <?php $payment = $invoice->type_payment_shipping?" - $invoice->type_payment_shipping":''?>
                             EKSPEDISI: <?= "$invoice->expedition$expedition$payment"; ?><br>
-                            KOLI: <?="$invoice->pack/$i"?>
+                            KOLI: <?="$i/$invoice->pack"?>
                         </th>
                     </tr>
                     <tr>

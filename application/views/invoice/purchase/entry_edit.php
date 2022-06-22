@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Theme style -->
-<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
@@ -42,7 +41,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <h3 class="card-title"><i class="fa fa-fw fa-dice-two"></i><?php echo lang('information_items') ?></h3>
         </div>
         <div class="card-body">
-          <pre><?php var_dump($items)?></pre>
           <div class="row" id="order_item">
             <div class="col-12">
               <table class="table table-sm">
@@ -51,11 +49,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th width="2%">No.</th>
                     <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
-                    <th style=""><?= lang('item_quantity') ?></th>
+                    <th style="display: none"><?= lang('item_quantity') ?></th>
                     <th width="10%"><?= lang('note') ?></th>
                     <th width="12%"><?= lang('item_order_quantity') ?></th>
                     <th width="10%"><?= lang('item_capital_price') ?></th>
-                    <th style=""><?= lang('item_selling_price') ?></th>
+                    <th style="display: none"><?= lang('item_selling_price') ?></th>
                     <th width="7%"><?= lang('discount') ?></th>
                     <th width="10%"><?= lang('total_price') ?></th>
                     <th width="7%"><?= lang('option') ?></th>
@@ -66,13 +64,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <tr class="input-<?=$key?>" id="main">
                     <td class="text-center"><div class="form-control form-control-sm"><?=$key+1?>.</div></td>
                     <td>
-                      <input type="text" name="id[]" id="id" value="<?= $value->id ?>">
-                      <input type="text" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
+                      <input type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
+                      <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= $this->items_model->getByCodeItem($value->item_code, 'id') ?>">
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?=$value->item_code?>" required>
                     </td>
                     <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required><?=$value->item_name?></textarea></td>
                     <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" value="<?=$value->note?>"></td>
-                    <td style="" >
+                    <td style="display: none" >
                       <div class="input-group input-group-sm">
                       <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
                       <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
@@ -94,7 +92,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td>
                       <input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?=$value->item_capital_price?>" required>
                     </td>
-                    <td style="" ><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?=$value->item_selling_price?>"></td>
+                    <td style="display: none" ><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?=$value->item_selling_price?>"></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?=$value->discount?>" required></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?=$value->total_price?>" required></td>
                     <td>
@@ -105,7 +103,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </td>
                   </tr>
-                  <tr class="description input-<?=$key?>" style="">
+                  <tr class="description input-<?=$key?>" style="display: none">
                       <td colspan="8">
                           <textarea class="form-control form-control-sm" name="description[]"></textarea>
                       </td>
@@ -140,9 +138,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <!-- Information payment END -->
       <div class="card">
         <div class="card-footer">
+          <div class="float-left">
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
+          </div>
           <div class="float-right">
             <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-            <button type="button" class="btn btn-default mr-2"><?= lang('cancel') ?></button>
+            <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
           </div>
         </div>
       </div>
@@ -156,47 +157,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
   $('body').addClass('sidebar-collapse');
-
-  function cb(start, end) {
-      $('#date_due span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-  }
-  $('#date_due').daterangepicker({
-    
-    startDate: moment(),
-    timePicker: true,
-    timePicker24Hour: true,
-    timePickerSeconds: true,
-    opens: "center",
-    drops: "up",
-    locale: {
-      format: 'DD/MM/YYYY H:mm:s'
-    },
-    ranges: {
-        'Today': [moment(), moment()],
-        'Tomorow': [moment(), moment().add(1, 'days')],
-        'Next 7 Days': [moment(), moment().add(6, 'days')],
-        'Next 14 Days': [moment(), moment().add(13, 'days')],
-        'Next 30 Days': [moment(), moment().add(29, 'days')],
-        'This Month': [moment().startOf('month'), moment().endOf('month')],
-        'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
-    },
-  }, cb).on('apply.daterangepicker', function(ev, picker) {
-      $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
-  });
-  
-  //Date range picker
-  $('#created_at').daterangepicker({
-    startDate: moment(),
-    singleDatePicker: true,
-    timePicker: true,
-    timePicker24Hour: true,
-    timePickerSeconds: true,
-    opens: "center",
-    drops: "up",
-    locale: {
-      format: 'DD/MM/YYYY H:mm:s'
-    }
-  });
+  $(document).ready(function(){
+      $('#exampleModal').on('shown.bs.modal', function(){
+          $('textarea').prop('required',true);
+          $('textarea').focus();
+      })
+  })
 </script>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>

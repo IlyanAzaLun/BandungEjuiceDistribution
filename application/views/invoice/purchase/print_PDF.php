@@ -16,7 +16,6 @@ $i = 0;
                 margin: 5px;
                 font-family: helvetica;
             }
-
             /** Define now the real margins of every page in the PDF **/
             body {
                 margin-top: 4px;
@@ -35,7 +34,7 @@ $i = 0;
                 font-size: 9px;
                 width: 100%;
             }
-            tr {
+            tr {                
                 background-color: #fff;
             }
             tr:nth-child(even) {
@@ -161,18 +160,20 @@ $i = 0;
                 </tfoot>
             </table>
             <table>
-                <tr>
-                    <th class="text-center">Hormat Kami</th>
-                    <th class="text-center">Hormat Kami</th>
-                    <th class="text-center" style="color:white">Penerima</th>
-                    <th class="text-center" style="color:white">Penerima</th>
-                </tr>
-                <tr>
-                    <th class="text-center">(..................................)</th>
-                    <th class="text-center">(..................................)</th>
-                    <th class="text-center" style="color:white">(..................................)</th>
-                    <th class="text-center" style="color:white">(..................................)</th>
-                </tr>
+                <tfoot>
+                    <tr>
+                        <th class="text-center">Hormat Kami</th>
+                        <th class="text-center">Hormat Kami</th>
+                        <th class="text-center" style="color:white">Penerima</th>
+                        <th class="text-center" style="color:white">Penerima</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">(..................................)</th>
+                        <th class="text-center">(..................................)</th>
+                        <th class="text-center" style="color:white">(..................................)</th>
+                        <th class="text-center" style="color:white">(..................................)</th>
+                    </tr>
+                </tfoot>
             </table>
         </main>
     </body>

@@ -38,6 +38,20 @@ class Sale extends Invoice_controller
 			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->page_data['bank'] = $this->account_bank_model->get();
+			
+			if($this->page_data['order']->is_confirmed != '1'){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Failed Worng Information');
+				redirect('invoice/order/list');	
+				die();
+			}
+			if(hasPermissions('fetch_all_invoice_sales') || $this->page_data['order']->is_have == logged('id')){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Failed Worng Information');
+				redirect('invoice/order/list');	
+				die();
+			}
+			
 			$this->page_data['title'] = 'sale_create';
 			$this->page_data['page']->submenu = 'sale_list';
 			$this->load->view('invoice/sale/form', $this->page_data);
@@ -430,6 +444,7 @@ class Sale extends Invoice_controller
 	
 	protected function create_or_update_invoice($data)
 	{
+		$user = logged('id');
 		$response = $this->sale_model->get_invoice_selling_by_code($this->data['invoice_code']);
 		$request['transaction_destination'] = $data['transaction_destination'];
 		$request['total_price'] = setCurrency($data['total_price']);
@@ -445,12 +460,12 @@ class Sale extends Invoice_controller
 		$request['date_start'] = $data['date_start'];
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
-		$request['is_have'] = $data['is_have']?$data['is_have']:logged('id');
+		$request['is_have'] = $data['is_have']?$data['is_have']:$user;
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['cancel_note'] = $data['cancel_note'];
 			$request['created_at'] = $data['created_at'];
-			$request['updated_by'] = logged('id');
+			$request['updated_by'] = $user;
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			$request['is_controlled_by'] = null;
 			$request['is_delivered'] = null;
@@ -768,7 +783,7 @@ class Sale extends Invoice_controller
 			$this->db->group_end();
 		}
 		$this->db->join('users user_created', 'user_created.id = sale.created_by', 'left');
-		$this->db->join('users user_updated', 'user_updated.id = sale.created_by', 'left');
+		$this->db->join('users user_updated', 'user_updated.id = sale.updated_by', 'left');
 		$this->db->join('users is_have', 'is_have.id = sale.is_have', 'left');
 		$this->db->join('customer_information customer', 'customer.customer_code = sale.customer', 'left');
 		if ($dateStart != '') {

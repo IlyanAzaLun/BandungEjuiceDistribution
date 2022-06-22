@@ -240,8 +240,18 @@ class Entry extends Purchase
 		if ($this->form_validation->run() == false) {
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$this->page_data['title'] = 'entry_edit';
-			$this->page_data['page']->submenu = 'entry_items';
+			$this->page_data['page']->submenu = 'entry_items';			
+			$this->page_data['modals'] = (object) array(
+				'id' => 'exampleModal',
+				'title' => 'Modals confirmation',
+				'link' => 'invoice/purchases/entry/cancel?id='.get('id'),
+				'content' => 'delete',
+				'btn' => 'btn-danger',
+				'submit' => 'Yes do it',
+			);
 			$this->load->view('invoice/purchase/entry_edit', $this->page_data);
+			$this->load->view('includes/modals', $this->page_data);
+
 		} else {
 			// information invoice			
 			$this->data['invoice_code'] = $this->input->get('id');
@@ -346,6 +356,47 @@ class Entry extends Purchase
 			return $this->purchase_model->create($request) ? true: false;
 		}
 		return true;
+	}
+
+	public function cancel()
+	{
+		$items = array();
+		$this->data['invoice_code'] = get('id');
+		$this->data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+		foreach ($this->data['items'] as $key => $value) {
+			$items[$key]['id'] = $value->id;
+			$items[$key]['item_id'] = $value->item_id;
+			$items[$key]['invoice_code'] = $value->invoice_code;
+			$items[$key]['index_list'] = $value->index_list;
+			$items[$key]['item_code'] = $value->item_code;
+			$items[$key]['item_name'] = $value->item_name;
+			$items[$key]['item_quantity_current'] = $this->items_model->getByCodeItem($value->item_code, 'quantity');
+			$items[$key]['item_unit'] = $value->item_unit;
+			$items[$key]['item_capital_price'] = $value->item_capital_price;
+			$items[$key]['item_selling_price'] = $value->item_selling_price;
+			$items[$key]['item_discount'] = $value->item_discount;
+			$items[$key]['total_price'] = $value->total_price;
+			$items[$key]['item_description'] = $value->item_description;
+			$items[$key]['customer_code'] = $value->customer_code;
+			$items[$key]['is_cancelled'] = 1;			
+			$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
+		}
+		$payment['is_cancelled'] = 1;
+		$payment['cancel_note'] = $this->input->post('note');
+		//
+		echo "<pre>";
+		$this->create_item_history( $items, ['CANCELED', 'CANCELED']);
+		$this->create_or_update_invoice($payment);
+		$this->update_items($items);
+		$this->create_or_update_list_item_transcation($items);
+		$this->create_or_update_list_item_fifo($items);
+		echo "</pre>";
+
+		$this->activity_model->add("Cancel Entry Quantity Items, #" . $this->data['invoice_code'], (array) $payment);
+		$this->session->set_flashdata('alert-type', 'success');
+		$this->session->set_flashdata('alert', 'Cancel Entry Quantity Successfully');
+
+		redirect('invoice/purchases/entry/list_entry');
 	}
 
 }

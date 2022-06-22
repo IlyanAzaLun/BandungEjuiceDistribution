@@ -296,19 +296,20 @@ $i = 0; $total_price = 0;?>
                 </div>
                 <!-- /.card-body -->
             </div>
+            <?php if(!$invoice_information_transaction->is_cancelled):?>
             <div class="card">
                 <!-- /card-footer -->
-                <?php if(!$invoice_information_transaction->is_cancelled):?>
                 <div class="card-footer">
                     <div class="float-left">
                         <a target="_blank" class="btn btn-sm" href="<?= url('invoice/purchase/print_PDF?id=').get('id') ?>" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-danger"></i> PDF</a>
                     </div>
                     <div class="float-right">
+                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Remove this information"><?=lang('cancel')?></button>
                     </div>
                 </div>
-                <?php endif?>
             </div>
+            <?php endif?>
             <!-- Information payment END -->
             <!-- /.card -->
         </div>

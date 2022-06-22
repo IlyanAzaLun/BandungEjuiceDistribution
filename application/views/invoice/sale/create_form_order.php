@@ -293,7 +293,7 @@
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right" <?php echo $order->is_created?'disabled':'';?>><?= lang('save') ?></button>
-                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('cancel') ?></button>
+                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
                     </div>
                 </div>
             </div>

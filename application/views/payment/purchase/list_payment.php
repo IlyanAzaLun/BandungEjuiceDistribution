@@ -164,7 +164,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `${formatDate(row['date_start'], false)}~${formatDate(row['date_due'], false)}`
           }
         },{
-          data: "customer_code"
+          data: "customer_code",
+          render: function(data, type, row){
+            return row['store_name']
+          }
         },{
           data: "grand_total"
         },{

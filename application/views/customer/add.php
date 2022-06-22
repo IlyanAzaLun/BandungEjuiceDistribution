@@ -67,6 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <select class="form-control select2" style="width: 100%;" name="customer_type" id="category"value="<?=set_value('category')?>" required>
                                         <option value="" selected="selected"><?=lang('select_category_customer')?></option>
                                         <option value="WS"><?=lang('customer_category_ws')?></option>
+                                        <option value="RESELLER"><?=lang('customer_category_reseller')?></option>
                                         <option value="AGENT"><?=lang('customer_category_agent')?></option>
                                         <option value="SPECIAL AGENT"><?=lang('customer_category_special')?></option>
                                         <option value="DISTRIBUTION"><?=lang('customer_category_distributor')?></option>

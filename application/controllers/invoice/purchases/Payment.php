@@ -102,7 +102,6 @@ class Payment extends MY_Controller
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
         $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
         $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
-        $this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("payment.created_at >=", $dateStart);
@@ -126,6 +125,7 @@ class Payment extends MY_Controller
 				"date_start"=> $record->date_start,
 				"date_due"=> $record->date_due,
 				"customer_code"=> $record->customer_code,
+				"store_name"=> $record->store_name,
 				"grand_total"=> $record->grand_total,
 				"payup"=> $record->payup,
 				"leftovers"=> $record->leftovers,

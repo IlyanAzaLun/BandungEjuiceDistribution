@@ -296,7 +296,7 @@ class Purchase extends Invoice_controller
 		);
 
 		$this->load->view('invoice/purchase/info', $this->page_data);
-		$this->load->view('includes/modals');
+		$this->load->view('includes/modals', $this->page_data);
 	}
 
 	public function print_PDF()
