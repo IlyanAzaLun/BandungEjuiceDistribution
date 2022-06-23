@@ -30,6 +30,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
+            <div class="card-tools pull-right">
+              <?php if (hasPermissions('purchase_create')) : ?>
+                <a href="<?php echo url('invoice/sales/drop') ?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('drop_items') ?></a>
+              <?php endif ?>
+            </div>
+
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -63,7 +69,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th width="11%"><?= lang('updated_at') ?></th>
                   <th width="9%"><?= lang('invoice_code_reference') ?></th>
                   <th width="2%"><?= lang('invoice_code') ?></th>
-                  <th width="11%"><?= lang('store_name') ?></th>
                   <th width="2%"><?= lang('total_price') ?></th>
                   <th width="2%"><?= lang('discount') ?></th>
                   <th width="2%"><?= lang('shipping_cost') ?></th>
@@ -180,12 +185,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               //<span class="badge badge-danger">RETURNS</span>
             }
             return `${data} ${html}`;
-          }},{
-          data: "store_name",
-          orderable: false,
-          render: function(data, type, row) {
-            return `${shorttext(data, 12, true)} <span class="float-right"><a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
-            return `<a target="_blank" href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },{
           data: "total_price",
@@ -250,23 +249,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           render: function(data, type, row, meta) {
             let html = ``;
             let drop = ``;
-              html += ``;
-              drop += ``;
-              if(row['have_a_child'] == null){
-                html += `
-                  <a target="_blank" href="<?= url('invoice/sales/drop') ?>/edit_drop?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
-                  `;
-                  if(row['is_cancelled'] == true){
-                    html = `
-                    <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></button>
-                    `;
-                  }
+            if(row['have_a_child'] == null){
+              html += `
+              <a target="_blank" href="<?= url('invoice/sales/drop') ?>/edit_drop?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
+              `;
+              if(row['is_cancelled'] == true){
+                html = `
+                <button disabled class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit return purchasing"><i class="fa fa-fw fa-edit text-primary"></i></button>
+                `;
                 }
-              drop += `
-                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
-                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
-                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
-                  `;
+            }
+            drop += `
+                <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                `;
+            if(row['is_cancelled'] == 1){
+              return '';
+            }
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <div class="btn-group">

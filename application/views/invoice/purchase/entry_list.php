@@ -238,8 +238,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             html += `
             <a  href="<?= url('invoice/purchases/entry')  ?>/edit_entry?id=${data}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit purchasing"><i class="fa fa-fw fa-edit text-primary"></i></a>
             `;
+            drop += `
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/purchases/entry') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Info"><i class="fa fa-fw fa-info text-primary"></i> Information</a>
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/purchases/entry') ?>/print_PDF?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-primary"></i> PDF</a>
+                  <a class="dropdown-item" target="_blank" href="<?= url('invoice/purchases/entry') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
+                  `;
+            if(row['is_cancelled'] == 1){
+              return '';
+            }
             return `
                 <div class="btn-group d-flex justify-content-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false"></button>
+                    <div class="dropdown-menu" style="">
+                    ${drop}
+                    </div>
+                  </div>
                 ${html}
                 </div>`;
           }

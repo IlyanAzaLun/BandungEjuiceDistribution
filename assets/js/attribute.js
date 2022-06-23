@@ -2,7 +2,7 @@ function currency(Num) {
     return new Intl.NumberFormat('en-EN', { maximumSignificantDigits: 18 }).format(Num);
 }
 function currencyToNum(curent) {
-    return curent.replace(/[,]|[.]/g, '');
+    return Number(curent.replace(/[,]|[.]/g, ''));
 }
 function shorttext(text, count, insertDots) {
     return text ? text.slice(0, count) + (((text.length > count) && insertDots) ? "..." : "") : null;
