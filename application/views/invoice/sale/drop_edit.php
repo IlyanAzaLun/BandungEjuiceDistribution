@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Theme style -->
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
@@ -16,8 +17,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>"><?php echo lang('home') ?></a></li>
-          <li class="breadcrumb-item active"><?php echo lang('page_purchase') ?></li>
-          <li class="breadcrumb-item active"><?php echo lang('purchase') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('page_sale') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('sale') ?></li>
         </ol>
       </div>
     </div>
@@ -32,9 +33,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <div class="col-12">
       <div class="callout callout-info">
         <h5><i class="fas fa-info"></i> Note:</h5>
-        <?= lang('purchase_info_create') ?>
+        <?= lang('sale_info_create') ?>
       </div>
-      <?php echo form_open_multipart('invoice/purchases/entry/edit_entry?id='.get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+      <?php echo form_open_multipart('invoice/sales/drop/edit_drop?id='.get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
       <!-- Information Items START -->
       <div class="card">
         <div class="card-header with-border">
@@ -72,8 +73,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" value="<?=$value->note?>"></td>
                     <td style="display: none" >
                       <div class="input-group input-group-sm">
-                      <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
-                      <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
+                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
+                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity_current[]" data-id="item_quantity_current" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') - $value->item_quantity ?>">
                         <input type="text" name="item_unit[]" id="item_unit" data-id="item_unit" value="<?= $value->item_unit ?>">
                         <div class="input-group-append">
                           <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
@@ -82,8 +83,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </td>
                     <td>
                     <div class="input-group input-group-sm">
-                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_quantity ?>">
-                    <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
+                        <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= $value->item_quantity ?>">
+                        <input readonly class="form-control form-control-sm" type="text" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display: none">
                       <div class="input-group-append">
                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                       </div>
@@ -129,7 +130,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="note"><?= lang('note') ?></label>
-                <textarea name="note" id="note" class="form-control"></textarea>
+                <textarea name="note" id="note" class="form-control"><?=$drops_information->note?></textarea>
               </div>
             </div>
           </div>
@@ -167,4 +168,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainEntryEdit.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainDropEdit.js"></script>

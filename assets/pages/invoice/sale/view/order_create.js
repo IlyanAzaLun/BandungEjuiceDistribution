@@ -308,12 +308,6 @@ const main = () => {
             getTotalItemOnInvoice();
 
             // validation price
-            console.log('====');
-            console.log(currencyToNum($(`.${row} input[data-id="item_capital_price"]`).val()));
-            console.log(currencyToNum($(`.${row} input[data-id="item_selling_price"]`).val()));
-            console.log(currencyToNum($(`.${row} input[data-id="item_capital_price"]`).val()) > currencyToNum($(`.${row} input[data-id="item_selling_price"]`).val()));
-            console.log('====');
-
             if (currencyToNum($(`.${row} input[data-id="item_capital_price"]`).val()) > currencyToNum($(`.${row} input[data-id="item_selling_price"]`).val())) {
                 $(`.${row} input[data-id="item_selling_price"]`).addClass('is-invalid');
             } else {

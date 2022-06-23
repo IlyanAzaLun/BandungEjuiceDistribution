@@ -250,11 +250,21 @@ class Drop extends Sale
 		$this->form_validation->set_rules('item_name[]', lang('item_name'), 'required|trim');
 
 		if ($this->form_validation->run() == false) {
+			$this->page_data['drops_information'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$this->page_data['title'] = 'drop_edit';
 			$this->page_data['page']->menu = 'drop_items';
 			$this->page_data['page']->submenu = 'drop_items';
-			$this->load->view('invoice/sale/edit_drop', $this->page_data);
+			$this->page_data['modals'] = (object) array(
+				'id' => 'exampleModal',
+				'title' => 'Modals confirmation',
+				'link' => 'invoice/sales/drop/cancel?id='.get('id'),
+				'content' => 'delete',
+				'btn' => 'btn-danger',
+				'submit' => 'Yes do it',
+			);
+			$this->load->view('invoice/sale/drop_edit', $this->page_data);
+			$this->load->view('includes/modals', $this->page_data);
 		}else{
 			$this->data['invoice_code'] = $this->input->get('id');
 			//information items
@@ -358,24 +368,9 @@ class Drop extends Sale
 	protected function create_or_update_invoice($data)
 	{
 		$response = $this->sale_model->get_invoice_selling_by_code($this->data['invoice_code']);
-		$request['transaction_destination'] = $data['transaction_destination'];
-		$request['total_price'] = setCurrency($data['total_price']);
-		$request['discounts'] = setCurrency($data['discounts']);
-		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
-		$request['other_cost'] = setCurrency($data['other_cost']);
-		$request['grand_total'] = setCurrency($data['grand_total']);
-		$request['customer'] = $data['customer'];
-		$request['expedition'] = $data['expedition_name'];
-		$request['services_expedition'] = $data['services_expedition'];
-		$request['payment_type'] = $data['payment_type'];
-		$request['status_payment'] = $data['status_payment'];
-		$request['date_start'] = $data['date_start'];
-		$request['date_due'] = $data['date_due'];
-		$request['note'] = $data['note'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['cancel_note'] = $data['cancel_note'];
-			$request['created_at'] = $data['created_at'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			$request['is_controlled_by'] = null;
@@ -383,7 +378,7 @@ class Drop extends Sale
 			//
 			return $this->sale_model->update_by_code($this->data['invoice_code'], $request);
 		} else {
-			$request['reference_order'] = $data['reference_order'];
+			$request['note'] = $data['note'];
 			$request['is_transaction'] = $data['is_transaction'];
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['created_at'] = $data['created_at'];
@@ -441,6 +436,48 @@ class Drop extends Sale
 		}
 	}
 
+	public function cancel()
+	{
+		$items = array();
+		$this->data['invoice_code'] = get('id');
+		$this->data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+		foreach ($this->data['items'] as $key => $value) {
+			$items[$key]['id'] = $value->id;
+			$items[$key]['item_id'] = $value->item_id;
+			$items[$key]['invoice_code'] = $value->invoice_code;
+			$items[$key]['index_list'] = $value->index_list;
+			$items[$key]['item_code'] = $value->item_code;
+			$items[$key]['item_name'] = $value->item_name;
+			$items[$key]['item_quantity_current'] = $this->items_model->getByCodeItem($value->item_code, 'quantity');
+			$items[$key]['item_unit'] = $value->item_unit;
+			$items[$key]['item_capital_price'] = $value->item_capital_price;
+			$items[$key]['item_selling_price'] = $value->item_selling_price;
+			$items[$key]['item_discount'] = $value->item_discount;
+			$items[$key]['total_price'] = $value->item_description;
+			$items[$key]['item_description'] = $value->item_description;
+			$items[$key]['customer_code'] = $value->customer_code;
+			$items[$key]['is_cancelled'] = 1;
+			$items[$key]['item_order_quantity'] = ($value->item_quantity) * -1;
+		}
+		$payment['is_cancelled'] = 1;
+		$payment['cancel_note'] = $this->input->post('note');
+		//
+		echo "<pre>";
+		var_dump($this->create_item_history( $items, ['CANCELED', 'CANCELED'])); //ok
+		var_dump($this->create_or_update_invoice($payment)); //
+		var_dump($this->update_items($items)); //
+		var_dump($this->create_or_update_list_item_transcation($items)); // ok
+
+		var_dump($this->update_list_item_fifo_on_cancel($items)); // PREPARE TOO FOR CANCEL CHILD 
+
+		echo "</pre>";
+
+		$this->activity_model->add("Cancel Drop Quantity Items, #" . $this->data['invoice_code'], (array) $payment);
+		$this->session->set_flashdata('alert-type', 'success');
+		$this->session->set_flashdata('alert', 'Cancel Drop Quantity Successfully');
+
+		redirect('invoice/sales/drop/list_drop_items');
+	}
 	
 
 }

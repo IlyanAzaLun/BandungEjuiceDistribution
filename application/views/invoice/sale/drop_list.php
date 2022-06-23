@@ -265,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <a class="dropdown-item" target="_blank" href="<?= url('invoice/sales/drop') ?>/info?id=${data}" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-excel text-primary"></i> Excel</a>
                 `;
             if(row['is_cancelled'] == 1){
-              return '';
+              return row['cancel_note'];
             }
             return `
                 <div class="btn-group d-flex justify-content-center">

@@ -284,21 +284,7 @@ class Entry extends Purchase
 			$items = array_values($items);
 			//information payment
 			$payment = array(
-				'supplier' => 0,
-				'store_name' => 0,
-				'contact_phone' => 0,
-				'address' => 0,
-				'total_price' => 0,
-				'discounts' => 0,
-				'shipping_cost' => 0,
-				'other_cost' => 0,
-				'grand_total' => 0,
-				'payment_type' => 0,
-				'status_payment' => 0,
-				'date_start' => 0,
-				'date_due' => 0,
 				'note' => post('note'),
-				'is_consignment' => 0,
 				'is_transaction' => 0,
 			);
 			// EDIT
@@ -326,29 +312,17 @@ class Entry extends Purchase
 	{
 		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
 
-		$request['total_price'] = setCurrency($data['total_price']);
-		$request['discounts'] = setCurrency($data['discounts']);
-		$request['shipping_cost'] = setCurrency($data['shipping_cost']);
-		$request['other_cost'] = setCurrency($data['other_cost']);
-		$request['grand_total'] = setCurrency($data['grand_total']);
-		$request['supplier'] = $data['supplier'];
-		$request['payment_type'] = $data['payment_type'];
-		$request['status_payment'] = $data['status_payment'];
-		$request['date_start'] = $data['date_start'];
-		$request['date_due'] = $data['date_due'];
-		$request['note'] = $data['note'];
-		$request['created_at'] = $data['created_at'];
-		$request['is_consignment'] = $data['is_consignment'];
-		$request['transaction_source'] = $data['transaction_source'];
 		if ($response) {
 			$request['invoice_code'] = $this->data['invoice_code'];
-			$request['is_cancelled'] = @$data['is_cancelled'];
-			$request['cancel_note'] = @$data['cancel_note'];
+			$request['is_cancelled'] = $data['is_cancelled'];
+			$request['cancel_note'] = $data['cancel_note'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request) ? true: false;
 		} else {
+			$request['created_at'] = $data['created_at'];
+			$request['note'] = $data['note'];
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['is_transaction'] = $data['is_transaction'];
 			$request['created_by'] = logged('id');

@@ -565,6 +565,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </ul>
   </li>
   <?php endif ?>
+    <!-- Purchase -->
+    <?php if (hasPermissions('purchase_list')) : ?>
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'swap_items') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'swap_items') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-exchange-alt"></i>
+      <p>
+        <?php echo lang('swap_items') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchases/swap/list_swap') ?>" class="nav-link <?php echo ($page->submenu == 'list_swap') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('list_swap') ?> </p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo url('invoice/purchases/swap') ?>" class="nav-link <?php echo ($page->submenu == 'swap_items') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('swap_items') ?> </p>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <?php endif ?>
   <!-- end Sale -->
   <?php endif ?>
   <!-- end END Invoice -->
@@ -605,7 +631,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <?php endif ?>
     <!-- END Warehouse -->
     <!-- Shipping -->
-    <?php if (hasPermissions('shipper_transaction_list')) : ?>
+  <?php if (hasPermissions('shipper_transaction_list')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Shipper') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Shipper') ? 'active' : '' ?>">
       <i class="nav-icon fas fa-dolly-flatbed"></i>
@@ -642,9 +668,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
       <?php endif ?>
     </ul>
   </li>
-    <?php endif ?>
-    <!-- END Shipping -->
-    <!-- END validation -->
+  <?php endif ?>
+  <!-- END Shipping -->
+  <!-- END validation -->
 <?php if(hasPermissions('example')):?>    
 <li class="nav-header text-danger"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>

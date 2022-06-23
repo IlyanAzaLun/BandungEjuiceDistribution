@@ -1,8 +1,6 @@
-import DataCustomer from "../data/DataCustomer.js";
 import DataItems from "../data/DataItems.js";
-import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./order_create-calcualtion.js";
+import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./purchase_create-calculation.js";
 
-const data_customer = new DataCustomer();
 const data_items = new DataItems();
 
 const main = () => {
@@ -15,68 +13,9 @@ const main = () => {
     }
     $(document).ready(function () {
         getTotalItemOnInvoice();
-        let customer_code = $('input#customer_code').val();
-        if (isNaN(customer_code)) {
-            data_customer.user_info_search(customer_code, function (output) {
-                $('input#customer_code').val(output[0]['customer_code'])
-                $('input#store_name').val(output[0]['store_name'])
-                $('input#contact_phone').val(`${output[0]['contact_phone']} (${output[0]['owner_name']})`)
-                $('textarea#address').val(`${output[0]['address']}, ${output[0]['village']}, ${output[0]['sub_district']}, ${output[0]['city']}, ${output[0]['province']}, ${output[0]['zip']}`)
-                return false;
-            });
-        }
         $('.currency').each(function (index, field) {
             $(field).val(currency(currencyToNum($(field).val())));
         });
-
-        $(document).on('keyup', 'input#store_name, input#customer_code', function () {
-            let valueElement = $(this).val();
-            let selfElement = $(this);
-            function getFieldNo(type) {
-                var fieldNo;
-                switch (type) {
-                    case 'customer_code':
-                        fieldNo = 1;
-                        break;
-                    case 'store_name':
-                        fieldNo = 2;
-                        break;
-                    default:
-                        break;
-                }
-                return fieldNo;
-            }
-            data_customer.user_info_search(valueElement, function (data) {
-                let result = data.map(({
-                    customer_id, customer_code, store_name, owner_name, address, village,
-                    sub_district, city, province, zip, contact_phone, contact_mail,
-                }) => [
-                        customer_id, customer_code, store_name, owner_name, address, village,
-                        sub_district, city, province, zip, contact_phone, contact_mail,
-                    ]
-                );
-                $(`input#${selfElement.attr('id')}`).autocomplete({
-                    source: result,
-                    focus: function (event, ui) {
-                        $('input#customer_code').val(ui.item[1])
-                        $('input#store_name').val(ui.item[2])
-                        $('textarea#address').val(`${ui.item[4]}, ${ui.item[5]}, ${ui.item[6]}, ${ui.item[7]}, ${ui.item[8]}, ${ui.item[9]}`)
-                        return false;
-                    },
-                    select: function (event, ui) {
-                        $('input#customer_code').val(ui.item[1])
-                        $('input#store_name').val(ui.item[2])
-                        $('input#contact_phone').val(`${ui.item[10]} (${ui.item[3]})`)
-                        $('textarea#address').val(`${ui.item[4]}, ${ui.item[5]}, ${ui.item[6]}, ${ui.item[7]}, ${ui.item[8]}, ${ui.item[9]}`)
-                        return false;
-                    }
-                }).data("ui-autocomplete")._renderItem = function (ul, item) {
-                    let fieldNo = getFieldNo(selfElement.attr('id'));
-                    return $('<li>').data("item.autocomplete", item)
-                        .append(`<div>${item[fieldNo]}</div>`).appendTo(ul)
-                }
-            })
-        })
         // Find Items // limit.. this overload
         $(document).on('keyup', 'input[data-id="item_code"], textarea[data-id="item_name"]', function () {
             function getFieldNo(type) {
@@ -182,8 +121,8 @@ const main = () => {
                             </span>
                         </div>
                     </td>
-                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
+                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                     <td>
@@ -232,8 +171,8 @@ const main = () => {
                         </span>
                     </div>
                 </td>
-                <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
-                <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
+                <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                 <td>
@@ -262,7 +201,7 @@ const main = () => {
             $(`tr.${row}`).remove();
         })
         // get sub total items
-        $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_selling_price"], input[data-id="discount"]', function () {
+        $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_capital_price"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item(row);
             getTotalItemOnInvoice();

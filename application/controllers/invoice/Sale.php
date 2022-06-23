@@ -45,7 +45,7 @@ class Sale extends Invoice_controller
 				redirect('invoice/order/list');	
 				die();
 			}
-			if(hasPermissions('fetch_all_invoice_sales') || $this->page_data['order']->is_have == logged('id')){
+			if(!(hasPermissions('fetch_all_invoice_sales') || $this->page_data['order']->is_have == logged('id'))){
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Failed Worng Information');
 				redirect('invoice/order/list');	
