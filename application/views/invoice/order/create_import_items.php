@@ -152,7 +152,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= explode(',',$value["H"])[0]?>" required></td>
                     </td>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?= explode(',',$value["I"])[0]?>" required></td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?= explode(',',$value["J"])[0]?>" required></td>
+                    <td><input readonly class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?= explode(',',$value["J"])[0]?>" required></td>
                     <td>
                       <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
