@@ -2,6 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- Daterange picker -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
 
 <?php include viewPath('includes/header'); ?>
 
@@ -36,15 +39,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       <?php echo form_open_multipart('master_information/report/download_report_transaction_items', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
         <div class="row">
           <div class="col-4">
-            <input type="hidden" name="params" id="params" value="sale">
-            <div class="input-group">
-              <input class="form-control" type="text" id="min" name="min">
-              <div class="input-group-append">
-                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+            <div class="row">
+              <div class="col-12">
+              <input type="hidden" name="params" id="params" value="sale">
+                <div class="input-group form-group">
+                  <input class="form-control" type="text" id="min" name="min">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="label"><?=lang('item_name')?></label>
+                  <input type="hidden" id="item_id" name="item_id" value="">
+                  <input type="hidden" id="item_code" name="item_code" value="">
+                  <textarea class="form-control" type="text" id="item_name" name="item_name"></textarea>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-8">
+          <div class="col-4">
             <button class="btn btn-lg btn-info" type="submit"> <i class="fa fa-download"></i> <?php echo lang('report_generate_message') ?></button>
           </div>
         </div>
@@ -70,3 +85,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       }
     });
 </script>
+<script type="module" src="<?php echo $url->assets ?>pages/report/sale/mainSaleItems.js"></script>

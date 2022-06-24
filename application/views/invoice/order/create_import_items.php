@@ -127,7 +127,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?= ($this->items_model->getByCodeItem($value["B"], 'id'));?>">
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?=$value["B"]?>" required>
                     </td>
-                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required><?=$value["C"]?></textarea></td>
+                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required><?= ($this->items_model->getByCodeItem($value["B"], 'item_name'));?></textarea></td>
                     <td><input class="form-control form-control-sm" type="text" data-id="note" value="<?= ($this->items_model->getByCodeItem($value["B"], 'note'));?>"></td>
                     <td style="display:none" >
                       <div class="input-group input-group-sm">

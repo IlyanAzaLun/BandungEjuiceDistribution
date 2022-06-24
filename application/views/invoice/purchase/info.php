@@ -297,11 +297,14 @@ $i = 0; $total_price = 0;?>
                 <!-- /.card-body -->
             </div>
             <?php if(!$invoice_information_transaction->is_cancelled):?>
-            <div class="card">
-                <!-- /card-footer -->
-                <div class="card-footer">
-                    <div class="float-left">
-                        <a target="_blank" class="btn btn-sm" href="<?= url('invoice/purchase/print_PDF?id=').get('id') ?>" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-danger"></i> PDF</a>
+                <div class="card">
+                    <!-- /card-footer -->
+                    <div class="card-footer">
+                        <div class="float-left">
+                        <a target="_blank" class="btn btn-default" href="<?= url('invoice/purchase/print_PDF?id=').get('id') ?>" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-fw fa-file-pdf text-danger"></i></a>
+                        <?php if($_data_item_invoice_child_ == true):?>
+                        <a target="_blank" class="btn btn-default" href="<?= url('invoice/purchase/print_delivery?id=').get('id') ?>" data-toggle="tooltip" data-placement="top" title="Print"><i class="fas fa-fw fa-file-invoice text-primary"></i><i></i></a>
+                        <?php endif; ?>
                     </div>
                     <div class="float-right">
                         <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>

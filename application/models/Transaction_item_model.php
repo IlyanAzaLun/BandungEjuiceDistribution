@@ -17,7 +17,7 @@ class Transaction_item_model extends MY_Model {
         return $this->db->get($this->table)->result();
     }
 
-    public function get_report_items_transaction($data)
+    public function get_report_items_transaction($data, $parameter = false)
     {
         $this->db->select(
             'transaction.*
@@ -49,6 +49,9 @@ class Transaction_item_model extends MY_Model {
 		}else{
 			$this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}
+        if($parameter){
+            $this->db->where('transaction.item_code', $parameter['item_code']);
+        }
         $this->db->join('users user_created', 'transaction.created_by = user_created.id', 'left');
         $this->db->join('users user_updated', 'transaction.updated_by = user_updated.id', 'left');
         $this->db->join('address_information address', 'transaction.customer_code = address.customer_code', 'left');

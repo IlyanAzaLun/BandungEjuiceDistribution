@@ -502,6 +502,7 @@ $lang['online'] = "Daring";
 $lang['returns_failed'] = "Pengembalian Gagal, Ubah Jumlah Barang Yang Dikembalikan";
 $lang['invoice_code_reference'] = "Referensi Kode Faktur";
 $lang['purchase_return_list'] = "Pengembalian Pembelian";
+$lang['purchase_return_note'] = "Nota Retur Pembelian";
 
 /*
 KONSINYASI

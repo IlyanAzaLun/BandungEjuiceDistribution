@@ -356,7 +356,7 @@ class Report extends MY_Controller
                 die();
                 break;
         }
-        $data = $this->transaction_item_model->get_report_items_transaction($this->data);
+        $data = $this->transaction_item_model->get_report_items_transaction($this->data, $this->input->post());
         $i = 2;
         $sheet->setCellValue("A1", "invoice_code");
         $sheet->setCellValue("B1", "item_code");
@@ -436,7 +436,7 @@ class Report extends MY_Controller
             $this->page_data['page']->submenu = 'report_sale';
             $this->page_data['page']->submenu_child = 'report_sale_profit';
             // $this->page_data['data'] = $this->transaction_item_model->get_report_items_profit();
-            $this->load->view('invoice/sale/report_items_sale_profit', $this->page_data);
+            $this->load->view('invoice/sale/report_sale_profit', $this->page_data);
         }else{
             ifPermissions('download_file');
             // (C) CREATE A NEW SPREADSHEET + WORKSHEET

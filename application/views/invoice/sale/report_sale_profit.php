@@ -122,7 +122,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
-<script type="module" src="<?php echo $url->assets ?>pages/report/sale/mainSaleItemsProfit.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/report/sale/mainSaleProfit.js"></script>
 <script>
     $(function() {
         var startdate;

@@ -314,6 +314,21 @@ class Purchase extends Invoice_controller
 	
 	}
 	
+	public function print_delivery()
+	{
+		$this->data_purchase();
+		$this->load->library('pdf');
+	
+        $options = $this->pdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $this->pdf->setOptions($options);
+
+		$this->pdf->setPaper('A4', 'potrait');
+		$this->pdf->filename = "$supplier->store_name.pdf";
+		$this->pdf->load_view('invoice/purchase/print_delivery', $this->page_data);
+	
+	}
+	
 	public function cancel()
 	{
 		echo "<pre>";

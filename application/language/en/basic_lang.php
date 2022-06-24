@@ -509,6 +509,8 @@ $lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
 $lang['invoice_code_reference'] = "Invoice Code reference";
 $lang['purchase_return_list'] = "List Returns Purchase";
+$lang['purchase_return_note'] = "Purchase Returns Note";
+
 
 /*
 CONSIGNMENT
