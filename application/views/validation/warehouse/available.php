@@ -78,6 +78,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- /.card-body -->
       </div>
       <!-- Information customer END -->
+      <pre><?=var_dump($items)?></pre>
       <!-- Information Items START -->
       <div class="card">
         <div class="card-header with-border">

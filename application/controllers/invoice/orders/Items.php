@@ -21,7 +21,8 @@ class Items extends MY_Controller
 			'updated_by' => logged('id'), 
 		);
 		$this->items_model->update($item->id, $item_update);
-		$this->order_list_item_model->delete($dataPost['idorder']);
+		// $this->order_list_item_model->delete($dataPost['idorder']);
+		$this->order_list_item_model->update($dataPost['idorder'], array('is_cancelled'=>1));
 		header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 }

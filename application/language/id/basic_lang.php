@@ -503,6 +503,7 @@ $lang['returns_failed'] = "Pengembalian Gagal, Ubah Jumlah Barang Yang Dikembali
 $lang['invoice_code_reference'] = "Referensi Kode Faktur";
 $lang['purchase_return_list'] = "Pengembalian Pembelian";
 $lang['purchase_return_note'] = "Nota Retur Pembelian";
+$lang['invoice_purchase'] = "Faktur Pembelian";
 
 /*
 KONSINYASI
@@ -548,6 +549,7 @@ $lang['sale_payment'] = "Menjual Untuk membayar";
 $lang['sale_returns'] = "Pengembalian Penjualan";
 $lang['sale_return_list'] = "Pengembalian Penjualan";
 $lang['returns'] = "Pengembalian";
+$lang['invoice_sale'] = "Faktur Penjualan";
 
 /*
  * Payment

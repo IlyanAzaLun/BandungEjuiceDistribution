@@ -295,8 +295,8 @@ const main = () => {
             // Grand Total
             $('input#grand_total').val(currency(sum_grand_total()));
         })
-        // Shipping cost
-        $(document).on('focusout', 'input#shipping_cost', function () {
+        // Shipping cost // diffine to add or no to price grandtotal 
+        $(document).on('change', 'input#shipping_cost', function () {
 
         })
         // get grand total

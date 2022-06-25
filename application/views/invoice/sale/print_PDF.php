@@ -65,9 +65,14 @@ $i = 0;
     <body>
         <main>
             <table class="table border">
-                <thead>
+                <thead>                
                     <tr>
-                        <th colspan="2" rowspan="4" class="text-center"><h1 style="font-family: 'monospace';font-color: 'coral'">B.<span style="">E</span>.D</h1></th>
+                        <th colspan="8" class="text-left"><h3><?=lang('invoice_sale')?></h3></th>
+                    </tr>
+                    <tr>
+                    <th colspan="2" rowspan="4" class="text-center">
+                        <h1 style="font-family: 'monospace';font-color: 'coral'">B.<span style="color:#FFBF00">E</span>.D</h1>
+                    </th>
                         <!-- <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th> -->
                         <th colspan="3"></th>
                         <th>Invoice Code</th>
@@ -173,12 +178,21 @@ $i = 0;
             <table>
                 <tr>
                     <th class="text-center">Hormat Kami</th>
-                    <th class="text-center">Hormat Kami</th>
-                    <th class="text-center" style="color:white">Penerima</th>
-                    <th class="text-center" style="color:white">Penerima</th>
+                    <th class="text-center">Penerima</th>
+                    <th class="text-center" style="color:white">&nbsp;</th>
+                    <th class="text-center" style="color:white">&nbsp;</th>
                 </tr>
                 <tr>
-                    <th class="text-center">(..................................)</th>
+                    <th class="text-center" colspan="4">&nbsp;</th>
+                </tr>
+                <tr>
+                    <th class="text-center" colspan="4">&nbsp;</th>
+                </tr>
+                <tr>
+                    <th class="text-center" colspan="4">&nbsp;</th>
+                </tr>
+                <tr>
+                    <th class="text-center">( Bandung Ejuice Distribution. )</th>
                     <th class="text-center">(..................................)</th>
                     <th class="text-center" style="color:white">(..................................)</th>
                     <th class="text-center" style="color:white">(..................................)</th>

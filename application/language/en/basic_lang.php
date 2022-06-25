@@ -510,6 +510,7 @@ $lang['returns_failed'] = "Return failed, change the quantity of the returned it
 $lang['invoice_code_reference'] = "Invoice Code reference";
 $lang['purchase_return_list'] = "List Returns Purchase";
 $lang['purchase_return_note'] = "Purchase Returns Note";
+$lang['invoice_purchase'] = "Invoice Purchase";
 
 
 /*
@@ -557,6 +558,7 @@ $lang['sale_returns'] = "Returns Sale";
 $lang['sale_return_list'] = "List Returns Sale";
 $lang['returns'] = "Returns";
 $lang['marketing'] = "Marketing";
+$lang['invoice_sale'] = "Invoice Sale";
 
 
 /*

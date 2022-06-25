@@ -177,7 +177,7 @@ class Order extends Invoice_controller
 			$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
 			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
 			if(!hasPermissions('warehouse_order_list')){
-				if($this->page_data['invoice']->created_by != logged('id')){
+				if( $this->page_data['invoice']->is_have != logged('id') ){
 					$this->session->set_flashdata('alert-type', 'danger');
 					$this->session->set_flashdata('alert', 'Worng Information');
 					redirect('invoice/order/list');

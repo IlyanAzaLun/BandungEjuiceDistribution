@@ -304,6 +304,13 @@ const main = () => {
             $('input#grand_total').val(currency(sum_grand_total()));
             //
             getTotalItemOnInvoice();
+
+            // validation price
+            if (currencyToNum($(`.${row} input[data-id="item_capital_price"]`).val()) > currencyToNum($(`.${row} input[data-id="item_selling_price"]`).val())) {
+                $(`.${row} input[data-id="item_selling_price"]`).addClass('is-invalid');
+            } else {
+                $(`.${row} input[data-id="item_selling_price"]`).removeClass('is-invalid');
+            }
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));
