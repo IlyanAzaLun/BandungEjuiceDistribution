@@ -96,6 +96,7 @@ class Purchase extends Invoice_controller
 				'note' => post('note'),
 				'is_consignment' => post('is_consignment'),
 				'transaction_source' => post('transaction_source'),
+				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 			);
 				//Create
 				echo '<pre>';
@@ -228,6 +229,7 @@ class Purchase extends Invoice_controller
 				'created_by' => logged('id'),
 				'is_consignment' => post('is_consignment'),
 				'transaction_source' => post('transaction_source'),
+				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 			);
 
 			// EDIT
@@ -590,6 +592,7 @@ class Purchase extends Invoice_controller
 		$request['note'] = $data['note'];
 		$request['created_at'] = $data['created_at'];
 		$request['is_consignment'] = $data['is_consignment'];
+		$request['is_shipping_cost'] = $data['shipping_cost_to_invoice'];
 		$request['transaction_source'] = $data['transaction_source'];
 		if ($response) {
 			$request['is_cancelled'] = @$data['is_cancelled'];

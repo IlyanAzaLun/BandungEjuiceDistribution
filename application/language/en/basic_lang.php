@@ -569,6 +569,7 @@ $lang['page_payment'] = "Page Payment";
 $lang['payment'] = "Payment";
 $lang['payment_purchases'] = "Purchases Payment";
 $lang['payment_sales'] = "Sales Payment";
+$lang['is_shipping_cost_to_invoice'] = "Is Shipping Cost Add to Invoice ?";
 
 /*
  * Validation
@@ -577,6 +578,7 @@ $lang['payment_sales'] = "Sales Payment";
 $lang['menu_validation'] = "Menus Validation";
 $lang['confirmation_by'] = "Confiramtion By";
 $lang['order_list_item_available'] = "List Order Item";
+$lang['is_completey_clear'] = "All Items is Complete Fit ?";
 
  
 /*

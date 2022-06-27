@@ -337,20 +337,29 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                 <textarea name="note" id="note" class="form-control"><?= $_data_invoice_parent->note ?></textarea>
                             </div>
                         </div>
-                        <div class="col-12">
+                        
+                        <div class="col-lg-12 col-sm-12">
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" <?= $_data_invoice_parent->is_consignment?'checked':'' ?> value=1>
-                                <label for="is_consignment" class="custom-control-label"><?=lang('is_consignment')?></label>
+                                    <label for="shipping_cost_to_invoice" class="custom-control-label"><?=strtolower(lang('is_shipping_cost_to_invoice'))?></label>
+                                    <input class="custom-control-input" type="checkbox" id="shipping_cost_to_invoice" name="shipping_cost_to_invoice" <?= $_data_invoice_parent->is_shipping_cost?'checked':'' ?> value=1>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-lg-12 col-sm-12">
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
-                                <input type="hidden" name="status_payment" value=0>
-                                <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment?'checked':'' ?> value=1>
-                                <label for="status_payment" class="custom-control-label"><?=lang('is_status_payment')?></label>
+                                    <label for="is_consignment" class="custom-control-label"><?=strtolower(lang('is_consignment'))?></label>
+                                    <input class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" <?= $_data_invoice_parent->is_consignment?'checked':'' ?> value=1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <label for="status_payment" class="custom-control-label"><?=strtolower(lang('is_status_payment'))?></label>
+                                    <input type="hidden" name="status_payment" value=0>
+                                    <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment?'checked':'' ?> value=1>
                                 </div>
                             </div>
                         </div>

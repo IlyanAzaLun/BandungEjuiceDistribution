@@ -292,6 +292,15 @@ const main = () => {
         $(document).on('click', 'button#remove', function () {
             let row = $(this).parents('tr').attr('class');
             $(`tr.${row}`).remove();
+
+            // get sub total
+            $('input#sub_total').val(currency(sum_sub_total()));
+            // get grand total
+            $('input#grand_total').val(currency(sum_grand_total()));
+            //
+            getTotalItemOnInvoice();
+            //
+            shipping_cost_to_invoice();
         })
         // get sub total items
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_selling_price"], input[data-id="discount"]', function () {
@@ -311,6 +320,9 @@ const main = () => {
             } else {
                 $(`.${row} input[data-id="item_selling_price"]`).removeClass('is-invalid');
             }
+
+            //
+            shipping_cost_to_invoice();
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));
@@ -326,6 +338,8 @@ const main = () => {
                     console.log(event.type)
                     break;
             }
+
+            shipping_cost_to_invoice();
         });
         // discount, shipping, other cost to currency
         $(document).on('keyup', 'input#discount, input#shipping_cost, input#other_cost', function () {
@@ -333,6 +347,9 @@ const main = () => {
 
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
+
+            //
+            shipping_cost_to_invoice();
         })
         // get grand total
         $('input#grand_total').val(currency(sum_grand_total()));
@@ -348,6 +365,7 @@ const main = () => {
                     console.log(event.type)
                     break;
             }
+            shipping_cost_to_invoice();
         })
 
         $('#payment_type').on('change', function () {
@@ -358,6 +376,20 @@ const main = () => {
             $('#destination').removeAttr('required');
             return $('#source_destination').hide();
         })
+
+        //shipping_cost
+        $(document).on('change', 'input#shipping_cost_to_invoice', function (event) {
+            shipping_cost_to_invoice();
+        })
+
+        shipping_cost_to_invoice()
+        function shipping_cost_to_invoice() {
+            if ($('input#shipping_cost_to_invoice').is(':checked')) {
+                $('input#grand_total').val(currency(sum_grand_total()));
+            } else {
+                $('input#grand_total').val(currency(sum_grand_total() - currencyToNum($('input#shipping_cost').val())));
+            }
+        }
     });
 }
 export default main;

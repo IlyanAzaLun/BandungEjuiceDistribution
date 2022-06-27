@@ -314,6 +314,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="col-12">
                   <div class="form-group">
                     <div class="custom-control custom-checkbox">
+                      <input type="hidden" name="shipping_cost_to_invoice" value=0>
+                      <input class="custom-control-input" type="checkbox" id="shipping_cost_to_invoice" name="shipping_cost_to_invoice" value=1>
+                      <label for="shipping_cost_to_invoice" class="custom-control-label"><?=strtolower(lang('is_shipping_cost_to_invoice'))?></label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox">
                       <input class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" value=1>
                       <label for="is_consignment" class="custom-control-label"><?=lang('is_consignment')?></label>
                     </div>

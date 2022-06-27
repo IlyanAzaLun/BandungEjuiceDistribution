@@ -110,6 +110,7 @@ class Sale extends Invoice_controller
 				'note' => strtoupper(post('note')),
 				'reference_order' => $this->data['order_code'],
 				"is_have" => post('is_have'),
+				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 				'transaction_destination' => post('transaction_destination'),
 			);
 			// // CREATE
@@ -223,6 +224,7 @@ class Sale extends Invoice_controller
 				'is_controlled_by' => null,
 				'is_delivered' => null,
 				'is_have' => post('is_have'),
+				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 			);// Check
 			
 			echo '<pre>';
@@ -461,6 +463,7 @@ class Sale extends Invoice_controller
 		$request['date_due'] = $data['date_due'];
 		$request['note'] = $data['note'];
 		$request['is_have'] = $data['is_have']?$data['is_have']:$user;
+		$request['is_shipping_cost'] = $data['shipping_cost_to_invoice'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['cancel_note'] = $data['cancel_note'];

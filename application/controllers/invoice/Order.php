@@ -718,4 +718,22 @@ class Order extends Invoice_controller
 			}
 		}
 	}
+	
+	/* 
+	 * GET PENDDING ITEM ON ORDERS
+	 *
+		SELECT
+		items.item_name,
+		order_sale_list_item.item_code,
+		order_sale_list_item.item_order_quantity,
+		order_sale.note,
+		customer_information.store_name
+
+		FROM order_sale
+		JOIN order_sale_list_item ON order_sale.order_code = order_sale_list_item.order_code
+		JOIN customer_information ON order_sale.customer = customer_information.customer_code
+		LEFT JOIN items ON items.item_code = order_sale_list_item.item_code
+		WHERE order_sale.is_created = 0 AND order_sale.is_cancelled = 0  
+	 *  
+	 */
 }

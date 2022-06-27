@@ -559,6 +559,7 @@ $lang['page_payment'] = "Halaman Pembayaran";
 $lang['payment'] = "Pembayaran";
 $lang['payment_purchases'] = "Pembelian";
 $lang['payment_sales'] = "Penjualan";
+$lang['is_shipping_cost_to_invoice'] = "Biaya Pengiriman di Masukan dalam Faktur ?";
 
 
 /*
@@ -568,7 +569,7 @@ $lang['payment_sales'] = "Penjualan";
 $lang['menu_validation'] = "Menu Validasi";
 $lang['confirmation_by'] = "Konfirmasi Oleh";
 $lang['order_list_item_available'] = "Barang Pesanan";
-$lang['is_completey_clear'] = "Semua Barang Sudah Sesuai";
+$lang['is_completey_clear'] = "Semua Barang Sudah Sesuai ?";
 
  
 /*

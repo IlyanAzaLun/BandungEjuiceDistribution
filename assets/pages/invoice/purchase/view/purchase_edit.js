@@ -257,6 +257,18 @@ const main = () => {
         $(document).on('click', 'button#remove', function () {
             let row = $(this).parents('tr').attr('class');
             $(`tr.${row}`).remove();
+
+
+            // get sub total
+            $('input#sub_total').val(currency(sum_sub_total()));
+
+            // get grand total
+            $('input#grand_total').val(currency(sum_grand_total()));
+
+            // Total items
+            getTotalItemOnInvoice();
+            //
+            shipping_cost_to_invoice();
         })
         // get sub total items
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_capital_price"], input[data-id="discount"]', function () {
@@ -271,6 +283,8 @@ const main = () => {
 
             // Total items
             getTotalItemOnInvoice();
+            //
+            shipping_cost_to_invoice();
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));
@@ -286,6 +300,7 @@ const main = () => {
                     console.log(event.type)
                     break;
             }
+            shipping_cost_to_invoice()
         });
         // discount, shipping, other cost to currency
         $(document).on('keyup', 'input#discount, input#shipping_cost, input#other_cost', function () {
@@ -293,6 +308,14 @@ const main = () => {
 
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
+
+            //
+            shipping_cost_to_invoice()
+        })
+        // Shipping cost // diffine to add or no to price grandtotal 
+        $(document).on('change', 'input#shipping_cost', function () {
+            // dont or add price to grand total
+            shipping_cost_to_invoice()
 
         })
         // get grand total
@@ -309,6 +332,7 @@ const main = () => {
                     console.log(event.type)
                     break;
             }
+            shipping_cost_to_invoice()
         });
 
         //if is consignment
@@ -319,10 +343,23 @@ const main = () => {
                 $('input#is_consignment').prop('checked', false)
             }
         })
+        //shipping_cost
+        $(document).on('change', 'input#shipping_cost_to_invoice', function (event) {
+            shipping_cost_to_invoice();
+        })
         //consignment();
         $(document).on('change', 'input#is_consignment', function (event) {
             //consignment();
         })
+        shipping_cost_to_invoice()
+        function shipping_cost_to_invoice() {
+            if ($('input#shipping_cost_to_invoice').is(':checked')) {
+                $('input#grand_total').val(currency(sum_grand_total()));
+            } else {
+                $('input#grand_total').val(currency(sum_grand_total() - currencyToNum($('input#shipping_cost').val())));
+            }
+        }
+
         function consignmnet() {
             if ($('input#is_consignment').is(':checked')) {
                 $('input#sub_total, input#grand_total').val(0);

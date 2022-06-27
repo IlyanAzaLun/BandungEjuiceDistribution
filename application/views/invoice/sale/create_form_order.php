@@ -278,6 +278,16 @@
                                 <input type="hidden" name="is_have" id="is_have" class="form-control" value="<?= $order->is_have ?>">
                             </div>
                         </div>
+                        
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="hidden" name="shipping_cost_to_invoice" value=0>
+                                    <input class="custom-control-input" type="checkbox" id="shipping_cost_to_invoice" name="shipping_cost_to_invoice" <?= $_data_invoice_parent->is_shipping_cost?'checked':'' ?> value=1>
+                                    <label for="shipping_cost_to_invoice" class="custom-control-label"><?=strtolower(lang('is_shipping_cost_to_invoice'))?></label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /.card-body -->
