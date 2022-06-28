@@ -352,6 +352,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          <!-- Order -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/order') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_order_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('report_order_items') ?> </p>
+              </a>
+            </li>
+          </ul>
           <!-- Sale Parents -->
           <ul class="nav nav-treeview">
             <li class="nav-item">

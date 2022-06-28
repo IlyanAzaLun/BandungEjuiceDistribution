@@ -75,7 +75,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body oncontextmenu="return true//false;" class="hold-transition sidebar-mini pace-primary text-sm<?php echo isset($page->body_classes) ? $page->body_classes : ' layout-fixed layout-navbar-fixed layout-footer-fixed' ?>">
 
 <div class="wrapper">
-<div class="loading"></div>
+<div class="loading">
+  <div class="float-left">
+    <button id="close-loading" class="btn btn-sm btn-default"><i class="fa fa-fw fa-times text-danger"></i></button>
+  </div>
+</div>
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-dark navbar-gray-dark">
 

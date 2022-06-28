@@ -298,6 +298,14 @@ class Report extends MY_Controller
         $this->page_data['page']->submenu_child = 'report_purchase_returns_list';
         $this->load->view('invoice/purchase/report_items_purchase_returns', $this->page_data);
     }
+    // Report order
+    public function order()
+    {
+        $this->page_data['title'] = 'order';
+        $this->page_data['page']->submenu = 'report_sale';
+        $this->page_data['page']->submenu_child = 'report_order_list';
+        $this->load->view('invoice/order/report_items_order', $this->page_data);
+    }
     // Report sale
     public function sale()
     {
@@ -313,6 +321,50 @@ class Report extends MY_Controller
         $this->page_data['page']->submenu = 'report_sale';
         $this->page_data['page']->submenu_child = 'report_sale_returns_list';
         $this->load->view('invoice/sale/report_items_sale_returns', $this->page_data);
+    }
+    public function download_report_order_items()
+    {
+        ifPermissions('download_file');
+        // (C) CREATE A NEW SPREADSHEET + WORKSHEET
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle("Order Items");
+        $dates = preg_split('/[-]/', $this->input->post('min'));
+        $this->data['date'] = array(
+            'date_start' => trim(str_replace('/', '-', $dates[0])), 
+            'date_due'	 => trim(str_replace('/', '-', $dates[1]))
+        );
+        $data = $this->order_list_item_model->get_report_items_order($this->data);
+        $i = 2;
+        $sheet->setCellValue("A1", "item_name");
+        $sheet->setCellValue("B1", "item_code");
+        $sheet->setCellValue("C1", "item_order_quantity");
+        $sheet->setCellValue("D1", "item_capital_price");
+        $sheet->setCellValue("E1", "selling_price");
+        $sheet->setCellValue("F1", "order_selling_price");
+        $sheet->setCellValue("G1", "note");
+        $sheet->setCellValue("H1", "store_name");
+        $sheet->setCellValue("I1", "marketing");
+        $sheet->setCellValue("J1", "created_at");
+        foreach ($data as $key => $value) {
+            $sheet->setCellValue("A".$i, $value->item_name);
+            $sheet->setCellValue("B".$i, $value->item_code);
+            $sheet->setCellValue("C".$i, $value->item_order_quantity);
+            $sheet->setCellValue("D".$i, $value->item_capital_price);
+            $sheet->setCellValue("E".$i, $value->selling_price);
+            $sheet->setCellValue("F".$i, $value->order_selling_price);
+            $sheet->setCellValue("G".$i, $value->note);
+            $sheet->setCellValue("H".$i, $value->store_name);
+            $sheet->setCellValue("I".$i, $value->marketing);
+            $sheet->setCellValue("J".$i, $value->created_at);
+            $i++;
+        }
+        // (E) SAVE FILE
+        $writer = new Xlsx($spreadsheet);
+		$fileName = 'OrderItems-'. date("Y-m-d-His") .'.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
+        $writer->save('php://output');
     }
     public function download_report_transaction_items()
     {

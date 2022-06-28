@@ -424,6 +424,7 @@ $lang['report'] = "Laporkan";
 $lang['report_master'] = "Master Data";
 $lang['report_purchase'] = "Informasi Pembelian";
 $lang['report_sale'] = "Informasi Penjualan";
+$lang['report_order_items'] = "Informasi Pesanan";
 $lang['report_sale_items'] = "Informasi Barang";
 $lang['report_sale_profit'] = "Informasi Laba";
 $lang['pages_report_information'] = "Informasi Laporan";

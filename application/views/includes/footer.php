@@ -99,8 +99,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
     $('form').submit(function() {
       disableConfirmation = true;
-      $('.loading').css({"display":"block"})
+      $('.loading').css({"display":"block"});
     });
+    $('button#close-loading').on('click', function(){
+      disableConfirmation = false;
+      $('.loading').css({"display":"none"});
+    })
 
   })
   // default

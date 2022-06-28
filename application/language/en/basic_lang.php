@@ -429,6 +429,7 @@ $lang['report'] = "Report";
 $lang['report_master'] = "Data Master";
 $lang['report_purchase'] = "Purchase Information";
 $lang['report_sale'] = "Sale Information";
+$lang['report_order_items'] = "Order Information";
 $lang['report_sale_items'] = "Items Information";
 $lang['report_sale_profit'] = "Profit Information";
 $lang['pages_report_information'] = "Report Information";
