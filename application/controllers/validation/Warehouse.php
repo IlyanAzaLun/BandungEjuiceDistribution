@@ -180,7 +180,7 @@ class Warehouse extends MY_Controller
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 		if ($this->form_validation->run() == false) {
 			$this->page_data['invoice'] = $this->order_model->get_order_selling_by_code(get('id'));
-			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order_warehouse(get('id'));
 			$this->load->view('validation/warehouse/available', $this->page_data);
 		}else{
 			$this->data['order_code'] = $this->input->get('id');

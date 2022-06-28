@@ -181,10 +181,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-lg-5 col-sm-12">
+                            <div class="col-lg-6 col-sm-12">
                                 <div class="row">
 
-                                    <div class="col-lg-6 col-sm-12">
+                                    <div class="col-lg-4 col-sm-12">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('item_capital_price') ?></label>
@@ -192,12 +192,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <?= form_error('capital_price', '<small class="text-danger">', '</small>') ?>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-sm-12">
+                                    <div class="col-lg-4 col-sm-12">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('item_selling_price') ?></label>
                                             <input type="text" class="form-control form-control-sm" name="selling_price" id="selling_price" value="<?= $item->selling_price ?>" required>
                                             <?= form_error('selling_price', '<small class="text-danger">', '</small>') ?>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-4 col-sm-12">
+                                        <!-- text input -->
+                                        <div class="form-group">
+                                            <label><?= lang('item_shadow_selling_price') ?></label>
+                                            <input type="text" class="form-control form-control-sm" name="shadow_selling_price" id="shadow_selling_price" value="<?= $item->shadow_selling_price ?>" required>
+                                            <?= form_error('shadow_selling_price', '<small class="text-danger">', '</small>') ?>
                                         </div>
                                     </div>
 

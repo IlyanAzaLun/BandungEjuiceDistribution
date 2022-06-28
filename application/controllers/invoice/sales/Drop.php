@@ -1,5 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 require_once APPPATH . 'controllers/Items.php';
 require_once APPPATH . 'controllers/invoice/Sale.php';
@@ -17,6 +20,62 @@ class Drop extends Sale
 		$this->page_data['title'] = 'drop_list';
 		$this->page_data['page']->submenu = 'list_drop';
 		$this->load->view('invoice/sale/drop_list', $this->page_data);
+	}
+	
+	public function download()
+	{
+		ifPermissions('download_file');
+        // (C) CREATE A NEW SPREADSHEET + WORKSHEET
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle("Drop Item");
+		$date = preg_split('/[-]/', trim(post("min")));
+		$data['date'] = array(
+			'date_start' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[0]))), "Y-m-d"), 
+			'date_due' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[1]))), "Y-m-d")
+		);
+		$this->db->select('
+		sale.invoice_code as invoice_code,
+		list_item.item_code,
+		list_item.item_name,
+		list_item.item_quantity,
+		sale.note as purchase_note, 
+		sale.created_at as created_at, 
+		user.name as user_sale_create_by');
+		$this->db->join('users user', 'user.id = sale.created_by', 'left');
+		$this->db->join('invoice_transaction_list_item list_item', 'list_item.invoice_code = sale.invoice_code', 'left');
+		$this->db->group_start();
+        $this->db->where("sale.created_at >=", $data['date']['date_start']);
+        $this->db->where("sale.created_at <=", $data['date']['date_due']);
+        $this->db->group_end();
+		$this->db->where("sale.is_transaction", 0);
+		$this->db->where("sale.is_cancelled", 0);
+		$data = $this->db->get('invoice_selling sale')->result();
+        $i = 2;
+
+        $sheet->setCellValue("A1", "invoice_code");
+        $sheet->setCellValue("B1", "item_code");
+        $sheet->setCellValue("C1", "item_name");
+        $sheet->setCellValue("D1", "item_quantity");
+        $sheet->setCellValue("E1", "purchase_note");
+        $sheet->setCellValue("F1", "created_at");
+        $sheet->setCellValue("G1", "user_sale_create_by");
+        foreach ($data as $key => $value) {
+            $sheet->setCellValue("A".$i, $value->invoice_code);
+            $sheet->setCellValue("B".$i, $value->item_code);
+            $sheet->setCellValue("C".$i, $value->item_name);
+            $sheet->setCellValue("D".$i, $value->item_quantity);
+            $sheet->setCellValue("E".$i, $value->purchase_note);
+            $sheet->setCellValue("F".$i, $value->created_at);
+            $sheet->setCellValue("G".$i, $value->user_sale_create_by);
+            $i++;
+        }
+        // (E) SAVE FILE
+        $writer = new Xlsx($spreadsheet);
+		$fileName = 'drop_item-'. date("Y-m-d-His") .'.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
+        $writer->save('php://output');
 	}
 	public function serverside_datatables_data_list_drop()
 	{

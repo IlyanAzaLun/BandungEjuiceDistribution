@@ -39,15 +39,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <?php echo form_open('invoice/purchases/list', ['method' => 'GET', 'autocomplete' => 'off']); ?>
-            <div class="row">
-              <div class="input-group col-4">
-                <input class="form-control" type="text" id="min" name="min">
-                <div class="input-group-append">
-                  <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+            <?php echo form_open_multipart('invoice/purchases/entry/download', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <div class="row">
+                <div class="col-4">
+                  <input type="hidden" name="params" id="params" value="purchase">
+                  <div class="input-group">
+                    <input class="form-control" type="text" id="min" name="min">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <button class="btn btn-info" type="submit"> <i class="fa fa-download"></i> <?php echo lang('report_generate_message') ?></button>
                 </div>
               </div>
-            </div>
             <?php echo form_close(); ?>
             <table id="example2" class="table table-bordered table-hover table-sm" style="font-size: 12px;">
               <thead>
@@ -98,6 +104,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker: true,
       timePicker24Hour: true,
       timePickerIncrement: 30,
+      startDate: moment().startOf('month').format('DD/MM/YYYY H:mm'),
       locale: {
         format: 'DD/MM/YYYY H:mm'
       }

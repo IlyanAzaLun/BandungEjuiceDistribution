@@ -302,6 +302,9 @@ $lang['status_transaction'] = "Status transaction";
 $lang['invoice_reference'] = "Invoice reference";
 $lang['item_quantity_in'] = "Item In";
 $lang['item_quantity_out'] = "Item Out";
+$lang['item_shadow_selling_price'] = "Pesudo Price";
+$lang['shadow_selling_price_desc'] = "This Price Will Be Displayed As Capital Price.";
+
 
 /*
  * Customer

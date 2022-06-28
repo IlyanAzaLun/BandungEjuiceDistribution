@@ -78,7 +78,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- /.card-body -->
       </div>
       <!-- Information customer END -->
-      <pre><?=var_dump($items)?></pre>
       <!-- Information Items START -->
       <div class="card">
         <div class="card-header with-border">
@@ -106,7 +105,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </thead>
                 <tbody>
                     <?php foreach ($items as $key => $value) : ?>
-                        <tr class="input-<?= $key ?>" id="main">
+                        <tr class="input-<?= $key ?>" id="main" style="display:<?=$value->is_cancelled&&!$value->status_available?'none':''?>">
                             <td class="text-center"><b><?=$key+1?>.</b></td>
                             <td style="display:none">
                                 <input type="hidden" name="id[]" id="id" value="<?= $value->id ?>">
@@ -116,7 +115,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </td>
                             <td>
                               <input class="form-control form-control-sm" type="hidden" name="item_name[]" data-id="item_name" value="<?= $value->item_name ?>" readonly required>
+                              <?php if($value->is_cancelled):?>
+                              <strike><b class="text-danger"><?=$value->item_name ?></b></strike>
+                              <?php else: ?>
                               <b><?= $value->item_name ?></b>
+                              <?php endif; ?>
+
                             </td>
                             <td style="display:none">
                                 <div class=" input-group input-group-sm">
@@ -142,7 +146,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </span>
                                 </div>
                                 <input readonly class="form-control form-control-sm" type="hidden" name="item_order_quantity_current[]" data-id="item_order_quantity_current" min="1" required value="<?= (int)$value->item_quantity ?>" style="display:none">
+                                <?php if($value->is_cancelled):?>
+                                <strike><b class="text-danger"><?= (int)$value->item_order_quantity ?></b></strike>
+                                <?php else: ?>
                                 <b><?= (int)$value->item_order_quantity ?></b>
+                                <?php endif; ?>
                             </td>
                             <td style="display:none"><input class="form-control form-control-sm currency" type="hidden" name="item_discount[]" data-id="discount" min="0" required value="<?= (int)$value->item_discount ?>" readonly></td>
                             <td style="display:none"><input class="form-control form-control-sm currency" type="hidden" name="total_price[]" data-id="total_price" min="0" required value="<?= $value->item_total_price ?>" readonly></td>

@@ -302,6 +302,9 @@ $lang['status_transaction'] = "Status Transaksi";
 $lang['invoice_reference'] = "Referensi Faktur";
 $lang['item_quantity_in'] = "Barang Masuk";
 $lang['item_quantity_out'] = "Barang Keluar";
+$lang['item_shadow_selling_price'] = "Harga Semu";
+$lang['shadow_selling_price_desc'] = "Harga Yang Akan Di Tampilkan Sebagai Harga Pokok.";
+
 
 /*
  * Pelanggan

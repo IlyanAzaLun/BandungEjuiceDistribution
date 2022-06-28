@@ -27,7 +27,7 @@ const main = () => {
     })
 
     // price formater
-    $('input#capital_price, input#selling_price').keyup(function () {
+    $('input.currency').keyup(function () {
         $(this).val(currency(
             currencyToNum($(this).val())
         ));

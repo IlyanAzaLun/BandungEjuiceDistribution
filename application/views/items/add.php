@@ -74,7 +74,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="form-group">
                                 <label><?=lang('weight')?></label>
                                 <div class="input-group input-group-sm mb-3">
-                                  <input type="text" class="form-control form-control-sm" name="weight" id="weight" value="<?=set_value('weight')?>" required>
+                                  <input type="number" class="form-control form-control-sm" name="weight" id="weight" value="<?=set_value('weight')?>" required>
                                   <div class="input-group-append">
                                     <p class="input-group-text">Gram</p>
                                   </div>
@@ -99,23 +99,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <input type="text" class="form-control form-control-sm" name="item_name" id="item_name" value="<?=set_value('item_name')?>" required>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                           <div class="row">
 
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('item_capital_price')?></label>
-                                    <input type="text" class="form-control form-control-sm" name="capital_price" id="capital_price" value="<?=set_value('capital_price')?>" required>
+                                    <input type="text" class="form-control form-control-sm currency" name="capital_price" id="capital_price" value="<?=set_value('capital_price')?>" required>
                                     <?=form_error('capital_price', '<small class="text-danger">','</small>')?>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('item_selling_price')?></label>
-                                    <input type="text" class="form-control form-control-sm" name="selling_price" id="selling_price" value="<?=set_value('selling_price')?>" required>
+                                    <input type="text" class="form-control form-control-sm currency" name="selling_price" id="selling_price" value="<?=set_value('selling_price')?>" required>
                                     <?=form_error('selling_price', '<small class="text-danger">','</small>')?>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                            <!-- text input -->
+                                <div class="form-group">
+                                    <label><?=lang('item_shadow_selling_price')?></label>
+                                    <input type="text" class="form-control form-control-sm currency" name="shadow_selling_price" id="shadow_selling_price" value="<?=set_value('shadow_selling_price')?>" required>
+                                    <?=form_error('shadow_selling_price', '<small class="text-danger">','</small>')?>
+                                    <small class="text-danger">*<?=lang('shadow_selling_price_desc')?></small>
                                 </div>
                             </div>
 

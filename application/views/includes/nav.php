@@ -68,6 +68,152 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </li>
   <?php endif ?>
 
+  
+  <!-- Report -->
+  <?php if (hasPermissions('download_file')) : ?>
+    <!-- <li class="nav-header"><strong>  <?php echo lang('page_report_information')?> </strong> &nbsp; -->
+    <li class="nav-item has-treeview <?php echo ($page->menu == 'report') ? 'menu-open' : '' ?>">
+      <a href="#" class="nav-link  <?php echo ($page->menu == 'report') ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-file-signature"></i>
+        <p>
+          <?php echo lang('pages_report_information') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+
+        <!-- Data Master Report -->
+        <li class="nav-item has-treeview <?php echo ($page->submenu == 'report_master') ? 'menu-open' : '' ?>">
+          <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'report_master') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p>
+              <?php echo lang('report_master') ?>
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/items') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_item') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('item_report') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/customer') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_customer') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('customer_report') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/supplier') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_supplier') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('supplier_report') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/expedition') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_expedition') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('expedition_report') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/bank') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_bank') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('bank_report') ?> </p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Data Master Report -->
+        
+        <!-- Data Purchase -->
+        <li class="nav-item has-treeview <?php echo ($page->submenu == 'report_purchase') ? 'menu-open' : '' ?>">
+          <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'report_purchase') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p>
+              <?php echo lang('report_purchase') ?>
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <!-- Purchase parent -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/purchase') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_purchase_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('purchase') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <!-- Purchase Returns -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/purchase_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_purchase_returns_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('purchase_returns') ?> </p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Data Purchase -->
+        <!-- Data Sale -->
+        <li class="nav-item has-treeview <?php echo ($page->submenu == 'report_sale') ? 'menu-open' : '' ?>">
+          <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'report_sale') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p>
+              <?php echo lang('report_sale') ?>
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <!-- Order -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/order') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_order_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('report_order_items') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <!-- Sale Parents -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/sale') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('report_sale_items') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <!-- Sale Profit -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/sale_profit') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_profit') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('report_sale_profit') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <!-- Sale Returns -->
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/report/sale_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_returns_list') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('sale_returns') ?> </p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Data Sale -->
+      </ul>
+    </li>
+  <?php endif ?>
+  <!-- end Report -->
   <?php if (hasPermissions('company_settings')) : ?>
     <li class="nav-item has-treeview <?php echo ($page->menu == 'settings') ? 'menu-open' : '' ?>">
       <a href="#" class="nav-link  <?php echo ($page->menu == 'settings') ? 'active' : '' ?>">
@@ -249,151 +395,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </li>
   <?php endif ?>
   <!-- end Account Bank -->
-  <!-- Report -->
-  <?php if (hasPermissions('download_file')) : ?>
-    <!-- <li class="nav-header"><strong>  <?php echo lang('page_report_information')?> </strong> &nbsp; -->
-    <li class="nav-item has-treeview <?php echo ($page->menu == 'report') ? 'menu-open' : '' ?>">
-      <a href="#" class="nav-link  <?php echo ($page->menu == 'report') ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-database"></i>
-        <p>
-          <?php echo lang('pages_report_information') ?>
-          <i class="right fas fa-angle-left"></i>
-        </p>
-      </a>
-      <ul class="nav nav-treeview">
-
-        <!-- Data Master Report -->
-        <li class="nav-item has-treeview <?php echo ($page->submenu == 'report_master') ? 'menu-open' : '' ?>">
-          <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'report_master') ? 'active' : '' ?>">
-            <i class="far fa-circle nav-icon"></i>
-            <p>
-              <?php echo lang('report_master') ?>
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/items') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_item') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('item_report') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/customer') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_customer') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('customer_report') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/supplier') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_supplier') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('supplier_report') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/expedition') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_expedition') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('expedition_report') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/bank') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_bank') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('bank_report') ?> </p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Data Master Report -->
-        
-        <!-- Data Purchase -->
-        <li class="nav-item has-treeview <?php echo ($page->submenu == 'report_purchase') ? 'menu-open' : '' ?>">
-          <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'report_purchase') ? 'active' : '' ?>">
-            <i class="far fa-circle nav-icon"></i>
-            <p>
-              <?php echo lang('report_purchase') ?>
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <!-- Purchase parent -->
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/purchase') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_purchase_list') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('purchase') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <!-- Purchase Returns -->
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/purchase_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_purchase_returns_list') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('purchase_returns') ?> </p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Data Purchase -->
-        <!-- Data Sale -->
-        <li class="nav-item has-treeview <?php echo ($page->submenu == 'report_sale') ? 'menu-open' : '' ?>">
-          <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'report_sale') ? 'active' : '' ?>">
-            <i class="far fa-circle nav-icon"></i>
-            <p>
-              <?php echo lang('report_sale') ?>
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <!-- Order -->
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/order') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_order_list') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('report_order_items') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <!-- Sale Parents -->
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/sale') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_list') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('report_sale_items') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <!-- Sale Profit -->
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/sale_profit') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_profit') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('report_sale_profit') ?> </p>
-              </a>
-            </li>
-          </ul>
-          <!-- Sale Returns -->
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo url('master_information/report/sale_returns') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_sale_returns_list') ? 'active' : '' ?>">
-                <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('sale_returns') ?> </p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Data Sale -->
-      </ul>
-    </li>
-  <?php endif ?>
-  <!-- end Report -->
   
   <!-- Invoice -->
   <?php if (hasPermissions('purchase_list') || hasPermissions('sale_list')) : ?>
