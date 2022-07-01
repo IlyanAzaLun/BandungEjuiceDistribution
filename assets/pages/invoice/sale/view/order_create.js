@@ -308,7 +308,8 @@ const main = () => {
         // get sub total items
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_selling_price"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
-
+            //
+            sum_sub_total_item(row);
             // SUB TOTAL
             $('input#sub_total').val(currency(sum_sub_total()));
 
@@ -316,8 +317,7 @@ const main = () => {
             $('input#grand_total').val(currency(sum_grand_total()));
 
             $(`.${row} input[data-id="item__total_weight"]`).val($(`.${row} input[data-id="item_order_quantity"]`).val() * $(`.${row} input[data-id="item_weight"]`).val())
-            //
-            sum_sub_total_item(row);
+
             // Total items
             getTotalItemOnInvoice();
 
