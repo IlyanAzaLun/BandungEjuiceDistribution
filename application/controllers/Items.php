@@ -754,9 +754,11 @@ class Items extends MY_Controller
             $this->db->join('supplier_information supplier', 'supplier.customer_code = transaction.customer_code', 'left');
             $this->db->join('customer_information customer', 'customer.customer_code = transaction.customer_code', 'left');
             if ($searchValue != '') {
+                $this->db->group_start();
                 $this->db->like('item_name', $searchValue, 'both');
                 $this->db->or_like('item_code', $searchValue, 'both');
                 $this->db->or_like('transaction.customer_code', $searchValue, 'both');
+                $this->db->group_end();
             }
             if ($customer || $supplier) {
                 $this->db->where("(transaction.customer_code = '$customer' OR transaction.customer_code = '$supplier')");
@@ -766,9 +768,9 @@ class Items extends MY_Controller
             }
             $this->db->where('item_code', $item_code);
             $this->db->order_by($columnName, $columnSortOrder);
-            // $this->db->group_by('invoice_code');
             $this->db->limit($rowperpage, $start);
-            $records = $this->db->get("(SELECT * FROM invoice_transaction_list_item UNION
+            $records = $this->db->get("(SELECT *
+            FROM invoice_transaction_list_item UNION
             SELECT 
                 `id`, 
                 `index_list`, 
@@ -781,6 +783,7 @@ class Items extends MY_Controller
                 `item_quantity` as item_current_quantity, 
                 `item_order_quantity` as item_quantity, 
                 `item_unit`, 
+                 0,
                 `item_discount`, 
                 `item_total_price`, 
                 'OUT' as item_status, 
@@ -793,14 +796,9 @@ class Items extends MY_Controller
                 `updated_by` 
             FROM 
                 `order_sale_list_item`
-            WHERE item_code = '$item_code' AND is_cancelled = 0 AND status_available IS NULL) transaction")->result();
+            WHERE item_code = '$item_code' AND is_cancelled = 0 AND status_available IS NULL) transaction", FALSE)->result();
             $data = array();
             
-            // echo '<pre>';
-            // var_dump($this->db->last_query());
-            // echo '</pre>';
-            // die();
-
             foreach ($records as $record) {
 
                 $data[] = array(

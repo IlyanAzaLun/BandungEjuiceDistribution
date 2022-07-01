@@ -217,8 +217,8 @@ const main = () => {
                                 <span class="input-group-text" data-id="item_quantity"></span>
                             </span>
                             <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required>
-                            <input class="form-control form-control-sm" type="number" name="item_weight[]" data-id="item_weight" value="" readonly>
-                            <input class="form-control form-control-sm" type="number" name="item__total_weight[]" data-id="item__total_weight" value="" readonly>
+                            <input class="form-control form-control-sm" type="hidden" name="item_weight[]" data-id="item_weight" value="" readonly>
+                            <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" value="" readonly>
                             <span class="input-group-append">
                                 <span class="input-group-text" data-id="item_unit"></span>
                             </span>
@@ -270,8 +270,8 @@ const main = () => {
                             <span class="input-group-text" data-id="item_quantity"></span>
                         </span>
                         <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required>
-                        <input class="form-control form-control-sm" type="number" name="item_weight[]" data-id="item_weight" value="" readonly>
-                        <input class="form-control form-control-sm" type="number" name="item__total_weight[]" data-id="item__total_weight" value="" readonly>
+                        <input class="form-control form-control-sm" type="hidden" name="item_weight[]" data-id="item_weight" value="" readonly>
+                        <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" value="" readonly>
                         <span class="input-group-append">
                             <span class="input-group-text" data-id="item_unit"></span>
                         </span>

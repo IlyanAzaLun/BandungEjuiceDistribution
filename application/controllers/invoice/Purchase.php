@@ -231,11 +231,6 @@ class Purchase extends Invoice_controller
 				'transaction_source' => post('transaction_source'),
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 			);
-			echo "<pre>";
-			var_dump($payment);
-			echo "</pre>";
-			die();
-
 			// EDIT
 			echo '<pre>';
 			$this->db->trans_start();

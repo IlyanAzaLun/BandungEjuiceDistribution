@@ -289,7 +289,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="form-group">
                                         <h6><?=lang('bank_name')?></h6>
                                         <div class="input-group">
-                                            <select name="transaction_destination" id="destination" class="custom-select" required>
+                                            <select name="transaction_destination" id="destination" class="custom-select">
                                                 <option value="" disabled selected><?=lang('select_account')?></option>
                                                 <?php foreach ($bank as $key => $value):?>
                                                 <option value="<?=$value->id?>"<?=($value->id==$invoice->transaction_destination)?' selected':''?>><?=$value->name?>/<?=$value->no_account?>/<?=$value->own_by?></option>

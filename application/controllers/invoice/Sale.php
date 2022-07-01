@@ -748,7 +748,10 @@ class Sale extends Invoice_controller
 		if(!$is_super_user){
 			$this->db->where("sale.is_cancelled", 0);
 		}
+		$this->db->group_start();
 		$this->db->where("sale.is_transaction", 1);
+		$this->db->where("sale.is_child", 0);
+		$this->db->group_end();
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -812,7 +815,10 @@ class Sale extends Invoice_controller
 		if(!$is_super_user){
 			$this->db->where("sale.is_cancelled", 0);
 		}
+		$this->db->group_start();
 		$this->db->where("sale.is_transaction", 1);
+		$this->db->where("sale.is_child", 0);
+		$this->db->group_end();
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_selling sale')->result();

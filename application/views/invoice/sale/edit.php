@@ -137,7 +137,8 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                             <td>
                                                 <div class=" input-group input-group-sm">
                                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= $value->item_quantity ?>">
-                                                    <input class="form-control form-control-sm" type="number" name="item_weight[]" data-id="item_weight" value="" readonly>
+                                                    <input class="form-control form-control-sm" type="hidden" name="item_weight[]" data-id="item_weight" value="<?=$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
+                                                    <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" value="<?=$value->item_quantity*$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
                                                     <input disabled class="form-control form-control-sm" type="number" name="item_order_quantity_with_return[]" data-id="item_order_quantity" min="1" required value="<?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>">
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
@@ -191,8 +192,8 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                             <td>
                                                 <div class=" input-group input-group-sm">
                                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_quantity ?>" required value="<?= (int)$value->item_quantity ?>">
-                                                    <input class="form-control form-control-sm" type="number" name="item_weight[]" data-id="item_weight" value="<?=$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
-                                                    <input class="form-control form-control-sm" type="number" name="item__total_weight[]" data-id="item__total_weight" value="<?=$value->item_quantity*$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
+                                                    <input class="form-control form-control-sm" type="hidden" name="item_weight[]" data-id="item_weight" value="<?=$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
+                                                    <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" value="<?=$value->item_quantity*$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                                     </span>

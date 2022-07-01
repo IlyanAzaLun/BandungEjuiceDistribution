@@ -106,13 +106,13 @@ $i = 0; $total_price = 0;?>
                                     <?php foreach ($_data_item_invoice_parent as $key => $value) : ?>
                                         <?php $total_price += $value->total_price;?>
                                         <?php if($value->item_code == $intersect_codex_item[$key] && $value->index_list == $intersect_index_item[$key]):?>
-                                        <tr class="input-<?= $key ?>">
+                                        <tr class="input-<?= $key ?> bg-warning">
                                             <td><?= $key+1 ?>.</td>
                                             <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
                                             <td><?= $value->item_name ?></td>
                                             <td style="display:none"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?> <?= $value->item_unit ?></td>
                                             <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
-                                            <td class="bg-warning"><?= $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td><?= $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <td>Rp.<?= number_format((int)$_data_item_invoice_child_[$i]->item_capital_price) ?></td>
                                             <td style="display:none">Rp.<?= number_format((int)$_data_item_invoice_child_[$i]->item_selling_price) ?></td>

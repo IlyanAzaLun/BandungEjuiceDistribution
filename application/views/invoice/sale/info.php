@@ -111,7 +111,7 @@ $i = 0; $total_price = 0;?>
                                         <?php if($value->item_code == $intersect_codex_item[$key] && $value->index_list == $intersect_index_item[$key]):?>
                                         <!-- <pre>Item INDEX TOTAL:<?=$value->index_list?> | Item CODE TOTALN:<?=$value->item_code?> | Item Quantity TOTAL:<?=$value->item_quantity - $_data_item_invoice_child_[$i]->item_quantity?></pre> -->
                                         <!--  -->
-                                        <tr class="input-<?= $key ?>">
+                                        <tr class="input-<?= $key ?> bg-warning">
                                             <td><?= $key+1 ?>.</td>
                                             <td><a href="<?=url('items/info_transaction?id='.$value->item_code)?>"><?= $value->item_code ?></a></td>
                                             <td><?= $value->item_name ?></td>
@@ -119,8 +119,8 @@ $i = 0; $total_price = 0;?>
                                             <td><?= $this->items_model->getByCodeItem($value->item_code, 'note') ?></td>
                                             <!--  -->
                                             <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
-                                            <td><?= $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
-                                            <td><?= $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td><?= (int) $_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
+                                            <td><?= (int) $value->item_quantity-$_data_item_invoice_child_[$i]->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <!--  -->
                                             <td style="display:none">Rp.<?= number_format($_data_item_invoice_child_[$i]->item_capital_price) ?></td>
                                             <td>Rp.<?= number_format($_data_item_invoice_child_[$i]->item_selling_price) ?></td>

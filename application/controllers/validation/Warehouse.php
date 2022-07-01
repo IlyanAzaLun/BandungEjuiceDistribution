@@ -73,9 +73,10 @@ class Warehouse extends MY_Controller
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
-			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
+		// else{
+		// 	$this->db->like("order.created_at", date("Y-m"), 'after');
+		// }
 		$this->db->where('order.is_created', 0);
 		$this->db->where('order.is_confirmed', null);
 		$records = $this->db->get('order_sale order')->result();
@@ -120,9 +121,10 @@ class Warehouse extends MY_Controller
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
-			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
+		// else{
+		// 	$this->db->like("order.created_at", date("Y-m"), 'after');
+		// }
 		if(!$haspermission){
 			$this->db->where("order.created_by", $logged);
 		}
