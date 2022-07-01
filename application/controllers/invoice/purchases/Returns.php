@@ -443,6 +443,7 @@ class Returns extends Purchase
 		}else{
 			$this->db->like("purchasing.created_at", date("Y-m"), 'after');
 		}
+		$this->db->where('purchasing.is_child', 1);
 		$records = $this->db->get('invoice_purchasing purchasing')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 

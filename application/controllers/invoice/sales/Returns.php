@@ -281,7 +281,7 @@ class Returns extends Sale
 		}else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
-		$this->db->like("sale.invoice_code", 'RET/SALE/', 'after');
+		$this->db->where('sale.is_child', 1);
 		$records = $this->db->get('invoice_selling sale')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -332,7 +332,7 @@ class Returns extends Sale
 		if(!$haspermission){
 			$this->db->where("sale.created_by", $logged);
 		}
-		$this->db->like("sale.invoice_code", 'RET/SALE/', 'after');
+		$this->db->where('sale.is_child', 1);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_selling sale')->result();
