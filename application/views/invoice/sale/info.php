@@ -148,8 +148,8 @@ $i = 0; $total_price = 0;?>
                                             <td>0 PCS</td>
                                             <td><?= $value->item_quantity ?>  <?= $value->item_unit ?></td>
                                             <?php endif;?>
-                                            <td>Rp.<?= number_format($value->item_capital_price) ?></td>
-                                            <td style="display:none">Rp.<?= number_format($value->item_selling_price) ?></td>
+                                            <td style="display:none">Rp.<?= number_format($value->item_capital_price) ?></td>
+                                            <td>Rp.<?= number_format($value->item_selling_price) ?></td>
                                             <td>Rp.<?= number_format($value->item_discount) ?></td>
                                             <td>Rp.<b><?= number_format($value->total_price) ?></b></td>
                                         </tr>
@@ -165,6 +165,18 @@ $i = 0; $total_price = 0;?>
                                     <?php endforeach;?>
                                 </tbody>
                             </table>
+                            <!-- Total Items -->
+                            <div class="float-right ml-1">
+                                <div class="">
+                                    <div class="input-group input-group-sm">
+                                        <h6 id="total_weights_item">Total Weight Items: 0 Kg</h6>
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <h6 id="total_items">Total Items: 0</h6>
+                                    </div>
+                                </div>
+                            </div>              
+                            <!--  -->
                         </div>
                     </div>
                 </div>

@@ -80,6 +80,7 @@ class Sale extends Invoice_controller
 					"item_quantity" => post('item_quantity')[$key],
 					"item_order_quantity" => post('item_order_quantity')[$key],
 					"item_unit" => post('item_unit')[$key],
+					"item__total_weight" => post('item__total_weight')[$key],
 					"item_capital_price" => post('item_capital_price')[$key],
 					"item_selling_price" => post('item_selling_price')[$key],
 					"item_discount" => post('item_discount')[$key],
@@ -100,6 +101,7 @@ class Sale extends Invoice_controller
 				'shipping_cost' => post('shipping_cost'),
 				'other_cost' => post('other_cost'),
 				'grand_total' => post('grand_total'),
+				'total_weights_item' => post('total_weights_item'),
 				'expedition_name' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'payment_type' => post('payment_type'),
@@ -107,7 +109,7 @@ class Sale extends Invoice_controller
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-				'note' => strtoupper(post('note')),
+				'note' => post('note') == 0? null : strtoupper(post('note')),
 				'reference_order' => $this->data['order_code'],
 				"is_have" => post('is_have'),
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
@@ -190,6 +192,7 @@ class Sale extends Invoice_controller
 					"item_capital_price" => post('item_capital_price')[$key],
 					"item_selling_price" => post('item_selling_price')[$key],
 					"item_discount" => post('item_discount')[$key],
+					"item__total_weight" => post('item__total_weight')[$key],
 					"total_price" => post('total_price')[$key],
 					"item_description" => post('description')[$key],
 					"customer_code" => post('customer_code'),
@@ -219,7 +222,8 @@ class Sale extends Invoice_controller
 				'date_start' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-				'note' => strtoupper(post('note')),
+				'total_weights_item' => post('total_weights_item'),
+				'note' => post('note') == 0? null : strtoupper(post('note')),
 				'reference_order' => get('id'),
 				'is_controlled_by' => null,
 				'is_delivered' => null,
@@ -455,6 +459,7 @@ class Sale extends Invoice_controller
 		$request['other_cost'] = setCurrency($data['other_cost']);
 		$request['grand_total'] = setCurrency($data['grand_total']);
 		$request['customer'] = $data['customer'];
+		$request['weight'] = $data['total_weights_item'];
 		$request['expedition'] = $data['expedition_name'];
 		$request['services_expedition'] = $data['services_expedition'];
 		$request['payment_type'] = $data['payment_type'];
@@ -500,6 +505,7 @@ class Sale extends Invoice_controller
 			$request[$key]['item_current_quantity'] = $item[$key]->quantity;
 			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
+			$request[$key]['item_total_weight'] = $value['item__total_weight'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
 			$request[$key]['total_price'] = setCurrency($value['total_price']);
 			$request[$key]['created_at'] = $value['created_at'];

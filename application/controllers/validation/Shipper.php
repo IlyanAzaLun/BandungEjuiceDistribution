@@ -72,12 +72,12 @@ class Shipper extends MY_Controller
 		);
 		if($this->address_model->updateByCustomerCode($data['customer_code'], $information)){
 			$this->customer_model->updateByCustomerCode($data['customer_code'], array('owner_name' => $data['owner_name']));
-			$this->activity_model->add("Delevered, #" . $data['customer_code'], (array) $payment);
+			$this->activity_model->add("Customer,#" . $data['customer_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
-			$this->session->set_flashdata('alert', 'Delevered is Saved');
+			$this->session->set_flashdata('alert', 'Customer is Saved');
 		}else{
 			$this->session->set_flashdata('alert-type', 'danger');
-			$this->session->set_flashdata('alert', 'Delevered Failed, need ID Invoice information!');
+			$this->session->set_flashdata('alert', 'Customer Failed, need ID Invoice information!');
 		}
 		redirect('validation/shipper/pack?invoice='.get('invoice'));
 	}

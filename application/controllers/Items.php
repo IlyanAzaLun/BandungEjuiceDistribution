@@ -412,6 +412,7 @@ class Items extends MY_Controller
                 "item_name" => $record->item_name,
                 "category" => $record->category,
                 "item_quantity" => $record->quantity,
+                "weight" => (int)$record->weight,
                 "item_broken" => $record->broken,
                 "item_unit" => $record->unit,
                 "item_capital_price" => $record->capital_price,

@@ -128,6 +128,8 @@ $lang['labels'] = "Label";
 $lang['important'] = "Penting";
 $lang['warning'] = "Peringatan";
 $lang['informational'] = "Informasi";
+$lang['information'] = "Informasi";
+$lang['documents'] = "Dokumen";
 
 $lang['id'] = "ID";
 $lang['action'] = "TindAkan";
@@ -586,8 +588,11 @@ $lang['page_shipping'] = "Halaman Pengiriman";
 $lang['shipping_list'] = "Pengiriman";
 $lang['shipping_report'] = "Laporkan Pengiriman";
 $lang['delivered_report'] = "Laporan Terkirim";
+$lang['delivery_documents'] = "Surat Pengiriman";
 $lang['receipt_code'] = "Kode Resi";
 $lang['weight_shipping_information'] = "Tambahkan Informasi Berat Barang";
+$lang['delivery_document_list'] = "Daftar Dokumen Pengiriman";
+$lang['delivery_document_create'] = "Tambahkan Dokumen Pengiriman";
 
 
 /**

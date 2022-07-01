@@ -84,6 +84,8 @@
                                             <td>
                                                 <div class=" input-group input-group-sm">
                                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" required value="<?= (int)$value->item_order_quantity ?>" readonly>
+                                                    <input class="form-control form-control-sm" type="hidden" name="item_weight[]" data-id="item_weight" value="<?=$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
+                                                    <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" value="<?=$value->item_order_quantity*$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
                                                     <span class="input-group-append">
                                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                                     </span>
@@ -106,8 +108,14 @@
                             
                             <!-- Total Items -->
                             <div class="float-right ml-1">
-                                <div class="input-group input-group-sm">
-                                <h6 id="total_items">Total Items: 0</h6>
+                                <div class="">
+                                    <div class="input-group input-group-sm">
+                                        <h6 id="total_weights_item">Total Weight Items: 0 Kg</h6>
+                                        <input type="hidden" id="total_weights_item" name="total_weights_item" value="0">
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <h6 id="total_items">Total Items: 0</h6>
+                                    </div>
                                 </div>
                             </div>              
                             <!--  -->

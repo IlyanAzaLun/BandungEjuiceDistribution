@@ -141,6 +141,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <span class="input-group-text" data-id="item_quantity"><?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?></span>
                                     </span>
                                     <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" max="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') + $value->item_order_quantity?>" required value="<?= (int)$value->item_order_quantity ?>">
+                                    <input class="form-control form-control-sm" type="hidden" name="item_weight[]" data-id="item_weight" value="<?=$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
+                                    <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" value="<?=$value->item_order_quantity*$this->items_model->getByCodeItem($value->item_code, 'weight')?>" readonly>
                                     <span class="input-group-append">
                                         <span class="input-group-text" data-id="item_unit"><?= $value->item_unit ?></span>
                                     </span>
@@ -171,7 +173,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </tr>
                         <tr class="description input-<?=$key?>" style="display:<?=(!strlen($value->item_description))?'none':''?>">
                             <td colspan="8">
-                                <textarea class="form-control form-control-sm" name="description[]"><?=$value->item_description?></textarea>
+                                <textarea class="form-control form-control-sm" name="description[]"> <?=$value->item_description?> </textarea>
                             </td>
                         </tr>
                     <?php endforeach ?>
@@ -182,8 +184,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
               <!-- Total Items -->
               <div class="float-right ml-1">
-                <div class="input-group input-group-sm">
-                  <h6 id="total_items">Total Items: 0</h6>
+                <div class="">
+                  <div class="input-group input-group-sm">
+                      <h6 id="total_weights_item">Total Weight Items: 0 Kg</h6>
+                  </div>
+                  <div class="input-group input-group-sm">
+                      <h6 id="total_items">Total Items: 0</h6>
+                  </div>
                 </div>
               </div>              
               <!--  -->

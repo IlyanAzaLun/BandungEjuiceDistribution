@@ -249,35 +249,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <?php endif ?>
   <!-- Items -->
   <?php if (hasPermissions('items_list')) : ?>
-    <li class="nav-header"><strong> <?php echo lang('menus') . ' ' . lang('master') ?> </strong> &nbsp;
-    <li class="nav-item has-treeview <?php echo ($page->menu == 'Items') ? 'menu-open' : '' ?>">
-      <a href="#" class="nav-link  <?php echo ($page->menu == 'Items') ? 'active' : '' ?>">
-        <i class="nav-icon fas fa-database"></i>
-        <p>
-          <?php echo lang('pages') . ' ' . lang('item') ?>
-          <i class="right fas fa-angle-left"></i>
-        </p>
-      </a>
-      <ul class="nav nav-treeview">
-        <li class="nav-item">
-          <a href="<?php echo url('items/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
-            <i class="far fa-circle nav-icon"></i>
-            <p> <?php echo lang('item_list') ?> </p>
-          </a>
-        </li>
-        <?php if(hasPermissions('items_add')):?>
-        <li class="nav-item">
-          <a href="<?php echo url('items/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
-            <i class="far fa-circle nav-icon"></i>
-            <p> <?php echo lang('item_add') ?> </p>
-          </a>
-        </li>
-        <?php endif ?>
-      </ul>
-    </li>
-
+  <li class="nav-header"><strong> <?php echo lang('menus') . ' ' . lang('master') ?> </strong> &nbsp;
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'Items') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'Items') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-database"></i>
+      <p>
+        <?php echo lang('pages') . ' ' . lang('item') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('items/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('item_list') ?> </p>
+        </a>
+      </li>
+      <?php if(hasPermissions('items_add')):?>
+      <li class="nav-item">
+        <a href="<?php echo url('items/add') ?>" class="nav-link <?php echo ($page->submenu == 'add') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('item_add') ?> </p>
+        </a>
+      </li>
+      <?php endif ?>
+    </ul>
+  </li>
   <?php endif ?>
   <!-- end Items -->
+
   <!-- Customer -->
   <?php if (hasPermissions('customer_list')) : ?>
     <!-- <li class="nav-header"><strong>  <?php echo lang('menus') . ' ' . lang('customer') ?> </strong> &nbsp; -->
@@ -681,6 +681,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <?php endif ?>
   <!-- END Shipping -->
   <!-- END validation -->
+    
+  <!-- delivery documents -->
+  <?php if (hasPermissions('delivery_document')) : ?>
+  <li class="nav-header"><strong> <?php echo lang('menus') . ' ' . lang('documents') ?> </strong> &nbsp;
+  <li class="nav-item has-treeview <?php echo ($page->menu == 'delivery_document') ? 'menu-open' : '' ?>">
+    <a href="#" class="nav-link  <?php echo ($page->menu == 'delivery_document') ? 'active' : '' ?>">
+      <i class="nav-icon fas fa-database"></i>
+      <p>
+        <?php echo lang('delivery_documents') ?>
+        <i class="right fas fa-angle-left"></i>
+      </p>
+    </a>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="<?php echo url('document/delivery/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('delivery_document_list') ?> </p>
+        </a>
+      </li>
+      <?php if(hasPermissions('delivery_document_create')):?>
+      <li class="nav-item">
+        <a href="<?php echo url('document/delivery/create') ?>" class="nav-link <?php echo ($page->submenu == 'create') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('delivery_document_create') ?> </p>
+        </a>
+      </li>
+      <?php endif ?>
+    </ul>
+  </li>
+  <?php endif ?>
+  <!-- end delivery documents -->
+  
 <?php if(hasPermissions('example')):?>    
 <li class="nav-header text-danger"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>

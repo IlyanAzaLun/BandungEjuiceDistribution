@@ -128,6 +128,8 @@ $lang['labels'] = "Labels";
 $lang['important'] = "Important";
 $lang['warning'] = "Warning";
 $lang['Informational'] = "Informational";
+$lang['Information'] = "Information";
+$lang['documents'] = "Documents";
 
 $lang['id'] = "ID";
 $lang['action'] = "Action";
@@ -595,8 +597,11 @@ $lang['page_shipping'] = "Page Shipping";
 $lang['shipping_list'] = "Shipping List";
 $lang['shipping_report'] = "Report Shipping";
 $lang['delivered_report'] = "Report Delivered";
+$lang['delivery_documents'] = "Delivered Documents";
 $lang['receipt_code'] = "Receipt Code";
 $lang['weight_shipping_information'] = "Append Weight Information";
+$lang['delivery_document_list'] = "Document List";
+$lang['delivery_document_create'] = "Document Create";
 
 
 /**

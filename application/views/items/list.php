@@ -39,6 +39,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('category_item') ?></th>
                   <th><?= lang('item_quantity') ?></th>
                   <th><?= lang('broken') ?></th>
+                  <th><?= lang('weight') ?></th>
                   <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
@@ -56,6 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('category_item') ?></th>
                   <th><?= lang('item_quantity') ?></th>
                   <th><?= lang('broken') ?></th>
+                  <th><?= lang('weight') ?></th>
                   <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
@@ -129,6 +131,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           orderable: false,
           render: function(data, type, row) {
             return `${data}`;
+          }
+        },
+        {
+          data: 'weight',
+          visible: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return `${Number(data)}`;
           }
         },
         {

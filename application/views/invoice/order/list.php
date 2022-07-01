@@ -333,5 +333,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
+    setInterval(() => {
+      table.draw();
+      console.log('Refresh')
+    }, 1*60*1000);
   });
 </script>

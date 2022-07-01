@@ -76,7 +76,6 @@ const main = () => {
             url: location.base + 'invoice/sale/monthly_statistic', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
-                console.log(result)
                 salesChart.data = result;
                 salesChart.update();
             }

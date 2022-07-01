@@ -338,6 +338,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $(this).find('input#id').val(id);
         });
       });
-    })
+    });
+    setInterval(() => {
+      table.draw();
+      console.log('Refresh')
+    }, 1*60*1000);
   });
 </script>

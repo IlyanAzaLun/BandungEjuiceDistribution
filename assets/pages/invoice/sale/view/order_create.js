@@ -10,9 +10,15 @@ const data_items = new DataItems();
 const main = () => {
     function getTotalItemOnInvoice() {
         var sum_amount = 0;
+        var sum_weight = 0;
         $('input[name="item_order_quantity[]"]').each(function () {
             sum_amount += +$(this).val();
             $('#total_items').text(`Total Items: ${sum_amount}`);
+        })
+        $('input[name="item__total_weight[]"]').each(function () {
+            sum_weight += +$(this).val();
+            $('#total_weights_item').text(`Total Weight Items: ${sum_weight / 1000} Kg`);
+            $('input#total_weights_item').val(sum_weight);
         })
     }
     $(document).ready(function () {
@@ -115,9 +121,9 @@ const main = () => {
             let selfElement = $(this);
             data_items.item_info_search(valueElement, function (data) {
                 let result = data.map(({
-                    item_code, item_name, quantity, unit, capital_price, selling_price, id, note
+                    item_code, item_name, quantity, unit, capital_price, selling_price, id, note, weight
                 }) => [
-                        item_code, item_name, quantity, unit, capital_price, selling_price, id, note
+                        item_code, item_name, quantity, unit, capital_price, selling_price, id, note, weight
                     ]
                 );
                 $('input[data-id="item_code"], textarea[data-id="item_name"]').autocomplete({
@@ -134,6 +140,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
+                        $(`.${parentElement}`).find('input[data-id="item_weight"]').val(ui.item[8])
                         $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}&customer=${$('input#customer_code').val()}`)
                         $(`.${parentElement}`).find('button#new-window').attr('data-id', `${ui.item[0]}`)
                         $(`.${parentElement}`).find('button#new-window').attr('data-customer', `${$('input#customer_code').val()}`)
@@ -151,6 +158,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
+                        $(`.${parentElement}`).find('input[data-id="item_weight"]').val(ui.item[8])
                         $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}&customer=${$('input#customer_code').val()}`)
                         $(`.${parentElement}`).find('button#new-window').attr('data-id', `${ui.item[0]}`)
                         $(`.${parentElement}`).find('button#new-window').attr('data-customer', `${$('input#customer_code').val()}`)
@@ -198,6 +206,8 @@ const main = () => {
                             <span class="input-group-text" data-id="item_quantity"></span>
                         </span>
                         <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required>
+                        <input class="form-control form-control-sm" type="number" name="item_weight[]" data-id="item_weight" value="" readonly>
+                        <input class="form-control form-control-sm" type="number" name="item__total_weight[]" data-id="item__total_weight" value="" readonly>
                         <span class="input-group-append">
                             <span class="input-group-text" data-id="item_unit"></span>
                         </span>
@@ -252,6 +262,8 @@ const main = () => {
                             <span class="input-group-text" data-id="item_quantity"></span>
                         </span>
                         <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity"  min="1" value="0" required>
+                        <input class="form-control form-control-sm" type="number" name="item_weight[]" data-id="item_weight" value="" readonly>
+                        <input class="form-control form-control-sm" type="number" name="item__total_weight[]" data-id="item__total_weight" value="" readonly>
                         <span class="input-group-append">
                             <span class="input-group-text" data-id="item_unit"></span>
                         </span>
@@ -296,7 +308,6 @@ const main = () => {
         // get sub total items
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_selling_price"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
-            sum_sub_total_item(row);
 
             // SUB TOTAL
             $('input#sub_total').val(currency(sum_sub_total()));
@@ -304,6 +315,9 @@ const main = () => {
             // GRAND TOTAL
             $('input#grand_total').val(currency(sum_grand_total()));
 
+            $(`.${row} input[data-id="item__total_weight"]`).val($(`.${row} input[data-id="item_order_quantity"]`).val() * $(`.${row} input[data-id="item_weight"]`).val())
+            //
+            sum_sub_total_item(row);
             // Total items
             getTotalItemOnInvoice();
 
