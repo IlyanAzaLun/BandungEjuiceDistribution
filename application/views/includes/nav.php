@@ -492,7 +492,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <?php if (hasPermissions('payment')) : ?>
   <li class="nav-item has-treeview <?php echo ($page->menu == 'Payment') ? 'menu-open' : '' ?>">
     <a href="#" class="nav-link  <?php echo ($page->menu == 'Payment') ? 'active' : '' ?>">
-      <i class="nav-icon fas fa-money-bill-wave"></i>
+      <i class="nav-icon fas fa-hand-holding-usd"></i>
       <p>
         <?php echo lang('page_payment') ?>
         <i class="right fas fa-angle-left"></i>

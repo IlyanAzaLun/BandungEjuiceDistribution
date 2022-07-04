@@ -148,7 +148,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <span class="input-group-text" data-id="item_unit"><?= ($this->items_model->getByCodeItem($value["B"], 'unit'));?></span>
                       </div>
                     </div>
-                    <td style="display:none"><input readonly class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td style="display:none"><input readonly class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?= (int)$this->items_model->getByCodeItem($value["B"], 'capital_price')?>" required></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= explode(',',$value["H"])[0]?>" required></td>
                     </td>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?= explode(',',$value["I"])[0]?>" required></td>
@@ -309,7 +309,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
-  $('body').addClass('sidebar-collapse');
+  // $('body').addClass('sidebar-collapse');
   //Date range picker
   $('#created_at').daterangepicker({
     startDate: moment(),

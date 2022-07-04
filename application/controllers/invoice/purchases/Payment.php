@@ -25,17 +25,28 @@ class Payment extends MY_Controller
         ifPermissions('payment');
 		$this->page_data['title'] = 'payment_indebtedness';
 		$this->page_data['page']->submenu_child = 'payment_indebtedness';
-		$this->form_validation->set_rules('customer_code', 'Customer Name', 'required|trim');
+		$this->form_validation->set_rules('supplier_code', 'Customer Name', 'required|trim');
         if ($this->form_validation->run() == false) {
 			$this->load->view('payment/purchase/debt', $this->page_data);
 		}else{
 			postAllowed();
+			$this->page_data['data_post'] = $this->input->post();
+			$date = preg_split('/[-]/', $this->page_data['data_post']['min']);
+			$this->page_data['data_post']['date'] = array(
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_end'	 => trim(str_replace('/', '-', $date[1]))
+			);
+			$this->page_data['data_list_debts'] = $this->indebtedness->select_invoice_by_customer_code($this->page_data['data_post']);
 			$this->load->view('payment/purchase/debt_list', $this->page_data);
 		}
 	}
 
 	public function debt_to()
 	{
+        ifPermissions('payment');
+		
+		$this->page_data['title'] = 'payment_indebtedness';
+		$this->page_data['page']->submenu_child = 'payment_indebtedness';
 		$this->load->view('payment/purchase/debt_to', $this->page_data);
 	}
 

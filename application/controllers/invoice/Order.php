@@ -212,7 +212,7 @@ class Order extends Invoice_controller
 				$items[$key]['item_discount'] = post('item_discount')[$key];
 				$items[$key]['total_price'] = post('total_price')[$key];
 				$items[$key]['item_description'] = post('description')[$key];
-				$items[$key]['customer_code'] = post('supplier_code');
+				$items[$key]['customer_code'] = post('customer_code');
 				if($items[$key]['item_order_quantity'] == $items[$key]['item_order_quantity_current'] && setCurrency($items[$key]['item_selling_price']) == $this->order_list_item_model->getRowById($items[$key]['id'], 'item_selling_price')){
 					unset($items[$key]);
 				}
@@ -288,9 +288,11 @@ class Order extends Invoice_controller
 			$items_order[$key]->updated_at = date('Y-m-d H:i:s');
 			$items_order[$key]->updated_by = logged('id');
 			unset($items_order[$key]->name);
+			// Update item_quantity
+			$this->items_model->update($item[$key]->id, $request[$key]);
 		}
-		$this->order_list_item_model->update_batch($items_order, 'id');
-		$response = $this->items_model->update_batch($request, 'id');
+		$response = $this->order_list_item_model->update_batch($items_order, 'id');
+		//$response = $this->items_model->update_batch($request, 'id');
 		if ($response) {
 			$this->activity_model->add("Delete Order, #" . get('id'), (array) $order);
 			$this->session->set_flashdata('alert-type', 'success');

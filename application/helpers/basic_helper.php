@@ -235,8 +235,11 @@ if (!function_exists('viewPath')) {
  */
 if (!function_exists('DateFomatDb')) {
 
-	function DateFomatDb($date)
+	function DateFomatDb($date, $times = false)
 	{
+		if ($times) {
+			return date('Y-m-d H:m:s', strtotime($date));
+		}
 		return date('Y-m-d', strtotime($date));
 	}
 }

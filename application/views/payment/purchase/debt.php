@@ -3,6 +3,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Daterange picker -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
+
 <?php include viewPath('includes/header'); ?>
 
 <!-- Content Header (Page header) -->
@@ -38,7 +43,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="col-10">
                 <div class="row">
 
-                  <div class="col-lg-4 col-sm-12">
+                  <div class="col-lg-5 col-sm-12">
                     <div class="form-group input-group">
                       <input class="form-control" type="text" id="min" name="min">
                       <div class="input-group-append">
@@ -46,18 +51,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </div>
                   </div>
-
-                  <div class="col-lg-8 col-sm-12"></div>
+                  <div class="col-lg-7 col-sm-12"></div>
 
                   <div class="col-lg-3 col-sm-12">
-                    <input class="form-control" type="hidden" id="customer_code" name="customer_code" required>
+                    <input class="form-control" type="hidden" id="supplier_code" name="supplier_code" required>
                     <div class="form-group">
-                      <input class="form-control" type="text" id="customer_name" name="customer_name" required>
-                      <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
+                      <input class="form-control" type="text" id="supplier_name" name="supplier_name" required>
+                      <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
                     </div>
                   </div>
-                  <div class="col-lg-1 col-sm-12">
-                    <button class="btn btn-block btn-info">Search</button>
+                  <div class="col-lg-2 col-sm-12">
+                    <button type="submit" class="btn btn-info btn-block start">
+                      <span>Start search</span>&nbsp;&nbsp;
+                      <i class="fa fa-fw fa-search"></i>
+                    </button>
                   </div>
 
                 </div>
@@ -91,10 +98,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   $(function() {
     //Date range picker
     $('#min').daterangepicker({
+      showDropdowns: true,
       timePicker: true,
       timePicker24Hour: true,
       timePickerIncrement: 30,
       startDate: moment().startOf('years').format('DD/MM/YYYY H:mm'),
+      endDate: moment().endOf('days').format('DD/MM/YYYY H:mm'),
       locale: {
         format: 'DD/MM/YYYY H:mm'
       }
@@ -102,3 +111,5 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('.ui-buttonset').draggable();
   });
 </script>
+
+<script type="module" src="<?php echo $url->assets ?>pages/payment/debt/mainDebtSearch.js"></script>

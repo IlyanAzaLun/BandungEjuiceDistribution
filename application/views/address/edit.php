@@ -58,7 +58,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <label for="city"><?= lang('city') ?></label>
                   <select class="custom-select" name="city" id="city" required>
 
-                  </select>
+                </select>
                 </div>
               </div>
               <div class="col-sm-3">
@@ -155,7 +155,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     province_id = option_1.find('option:selected').data('id');
     $.each(data, function(key, entry) {
       if (entry.province_id == province_id) {
-        option_2.append($(`<option${(entry.province=='<?= $address->province ?>')?' selected':''}></option$>`).attr('value', entry.city_name).text(entry.city_name));
+        option_2.append($(`<option ${(entry.city_name=='<?= $address->city ?>')?' selected':''}></option>`).attr('value', entry.city_name).text(entry.city_name));
       }
     });
   });
