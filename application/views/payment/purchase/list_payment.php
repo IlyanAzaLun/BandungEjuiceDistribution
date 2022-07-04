@@ -60,6 +60,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <tr>
                   <th>No.</th>
                   <th><?= lang('invoice_code') ?></th>
+                  <th><?= lang('date')?></th>
+                  <th><?= lang('created_at')?></th>
+                  <th><?= lang('updated_at')?></th>
                   <th><?= lang('date_due')?></th>
                   <th><?= lang('customer_code')?></th>
                   <th><?= lang('grandtotal')?></th>
@@ -69,11 +72,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('payment_type')?></th>
                   <th><?= lang('bank_id')?></th>
                   <th><?= lang('note')?></th>
-                  <th><?= lang('created_at')?></th>
                   <th><?= lang('created_by')?></th>
-                  <th><?= lang('updated_at')?></th>
                   <th><?= lang('updated_by')?></th>
-                  <th><?= lang('date')?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
               </thead>
@@ -107,7 +107,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker: true,
       timePicker24Hour: true,
       timePickerIncrement: 30,
-      startDate: moment().startOf('month').format('DD/MM/YYYY H:mm'),
+      startDate: moment().startOf('years').format('DD/MM/YYYY H:mm'),
       locale: {
         format: 'DD/MM/YYYY H:mm'
       }
@@ -155,9 +155,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       },
       columns: [
         {
+          visible: false,
           data: "id"
         },{
           data: "invoice_code"
+        },{
+          data: "payment_date_at",
+          render: function(data, type, row){
+            return data?formatDate(data):''
+          }
+        },{
+          data: "created_at",
+          visible: false,
+          render: function(data, type, row){
+            return data?formatDate(data):'';
+          }
+        },{
+          data: "updated_at",
+          visible: false,
+          render: function(data, type, row){
+            return data?formatDate(data):'';
+          }
         },{
           data: "date_start",
           render: function(data, type, row){
@@ -169,36 +187,36 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return row['store_name']
           }
         },{
-          data: "grand_total"
+          data: "grand_total",
+          render: function(data, type, row){
+            return currency(data);
+          }
         },{
-          data: "payup"
+          data: "payup",
+          render: function(data, type, row){
+            return currency(data);
+          }
         },{
-          data: "leftovers"
+          data: "leftovers",
+          render: function(data, type, row){
+            return currency(data);
+          }
         },{
+          visible: false,
           data: "status_payment"
         },{
+          visible: false,
           data: "payment_type"
         },{
+          visible: false,
           data: "bank_id",
         },{
           data: "description"
-        },{
-          data: "created_at",
-          visible: false,
-          render: function(data, type, row){
-            return data?formatDate(data):'';
-          }
         },{
           data: "user_created_by",
           render: function(data, type, row){
             return `${shorttext(data, 5, true)} <span class="float-right"><a href="${location.base}users/view/${row['user_updated_id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
           
-          }
-        },{
-          data: "updated_at",
-          visible: false,
-          render: function(data, type, row){
-            return data?formatDate(data):'';
           }
         },{
           data: "user_updated_by",
@@ -209,11 +227,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
             }
             return '';
-          }
-        },{
-          data: "payment_date_at",
-          render: function(data, type, row){
-            return data?formatDate(data):''
           }
         },{
           data: "id",

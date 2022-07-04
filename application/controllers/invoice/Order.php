@@ -85,7 +85,7 @@ class Order extends Invoice_controller
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
 				'is_have' => post('is_have'),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-				'note' => post('note') == 0? null : strtoupper(post('note')),
+				'note' => post('note') == false? null : strtoupper(post('note')),
 			);
 			// CREATE
 			$result = $this->validation_items($items);
@@ -234,7 +234,7 @@ class Order extends Invoice_controller
 				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
 				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-				'note' => post('note') == 0? null : strtoupper(post('note')),
+				'note' => post('note') == false? null : strtoupper(post('note')),
 				'is_have' => post('is_have'),
 				'is_confirmed' => null,
 			);

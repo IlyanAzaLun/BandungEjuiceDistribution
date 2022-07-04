@@ -94,7 +94,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
                     <td>
-                      <div class="btn-group" role="group" aria-label="Basic example">
+                      <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
@@ -119,10 +119,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <!-- Information Items END -->
       <div class="card">
         <div class="card-header with-border">
-          <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_payment') ?></h3>
+          <h3 class="card-title"><i class="fa fa-fw fa-dice-three"></i><?php echo lang('information_entry_item') ?></h3>
         </div>
         <div class="card-body">
           <div class="row">
+            <div class="col-lg-2 offset-lg-10 col-sm-12">
+              <div class="form-group">
+                <h6><?=lang('date')?></h6>
+                  <div class="input-group">
+                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at"/>
+                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                  </div>
+              </div>
+            </div>
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="note"><?= lang('note') ?></label>
@@ -150,35 +161,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
-  $('body').addClass('sidebar-collapse');
-
-  function cb(start, end) {
-      $('#date_due span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-  }
-  $('#date_due').daterangepicker({
-    
-    startDate: moment(),
-    timePicker: true,
-    timePicker24Hour: true,
-    timePickerSeconds: true,
-    opens: "center",
-    drops: "up",
-    locale: {
-      format: 'DD/MM/YYYY H:mm:s'
-    },
-    ranges: {
-        'Today': [moment(), moment()],
-        'Tomorow': [moment(), moment().add(1, 'days')],
-        'Next 7 Days': [moment(), moment().add(6, 'days')],
-        'Next 14 Days': [moment(), moment().add(13, 'days')],
-        'Next 30 Days': [moment(), moment().add(29, 'days')],
-        'This Month': [moment().startOf('month'), moment().endOf('month')],
-        'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')]
-    },
-  }, cb).on('apply.daterangepicker', function(ev, picker) {
-      $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
-  });
-  
   //Date range picker
   $('#created_at').daterangepicker({
     startDate: moment(),

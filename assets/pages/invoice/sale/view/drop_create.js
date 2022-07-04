@@ -12,7 +12,7 @@ const main = () => {
         })
     }
     $(document).ready(function () {
-        getTotalItemOnInvoice();
+        // getTotalItemOnInvoice();
         $('.currency').each(function (index, field) {
             $(field).val(currency(currencyToNum($(field).val())));
         });
@@ -54,7 +54,7 @@ const main = () => {
                         $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
-                        $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
+                        $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[4])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
                         $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}`)
                         return false
@@ -69,7 +69,7 @@ const main = () => {
                         $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
-                        $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
+                        $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[4])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
                         $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}`)
                         return false
@@ -123,7 +123,7 @@ const main = () => {
                     </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
                     <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
+                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                     <td>
                         <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
@@ -173,7 +173,7 @@ const main = () => {
                 </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
                 <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
+                <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                 <td>
                     <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
@@ -204,7 +204,7 @@ const main = () => {
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_capital_price"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item(row);
-            getTotalItemOnInvoice();
+            // getTotalItemOnInvoice();
         })
     });
 }

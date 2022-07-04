@@ -96,7 +96,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?=$value->discount?>" required></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?=$value->total_price?>" required></td>
                     <td>
-                      <div class="btn-group" role="group" aria-label="Basic example">
+                      <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
@@ -126,10 +126,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row">
+            <div class="col-lg-2 offset-lg-10 col-sm-12">
+              <div class="form-group">
+                <h6><?=lang('date')?></h6>
+                  <div class="input-group">
+                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($invoice->created_at))?>"/>
+                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                  </div>
+              </div>
+            </div>      
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="note"><?= lang('note') ?></label>
-                <textarea name="note" id="note" class="form-control"></textarea>
+                <textarea name="note" id="note" class="form-control"><?=$invoice->note?></textarea>
               </div>
             </div>
           </div>
@@ -156,7 +167,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
-  $('body').addClass('sidebar-collapse');
+  //Date range picker
+  $('#created_at').daterangepicker({
+    singleDatePicker: true,
+    timePicker: true,
+    timePicker24Hour: true,
+    timePickerSeconds: true,
+    opens: "center",
+    drops: "up",
+    locale: {
+      format: 'DD/MM/YYYY H:mm:s'
+    }
+  });
   $(document).ready(function(){
       $('#exampleModal').on('shown.bs.modal', function(){
           $('textarea').prop('required',true);

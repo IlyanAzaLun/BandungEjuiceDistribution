@@ -168,7 +168,7 @@ const main = () => {
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                     <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
+                        <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                             <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                             <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                             <button type="button" id="remove" class="btn btn-block btn-danger"><i class="fa fa-tw fa-times"></i></button>
@@ -222,7 +222,7 @@ const main = () => {
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
                 <td>
-                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" id="remove" class="btn btn-block btn-danger"><i class="fa fa-tw fa-times"></i></button>

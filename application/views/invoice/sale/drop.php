@@ -41,75 +41,75 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <h3 class="card-title"><i class="fa fa-fw fa-dice-two"></i><?php echo lang('information_items') ?></h3>
                 </div>
                 <div class="card-body">
-                <div class="row" id="order_item">
-                    <div class="col-12">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th width="2%">No.</th>
-                            <th width="10%"><?= lang('item_code') ?></th>
-                            <th><?= lang('item_name') ?></th>
-                            <th style="display:none"><?= lang('item_quantity') ?></th>
-                            <th width="10%"><?= lang('item_order_quantity') ?></th>
-                            <th width="10%"><?= lang('item_capital_price') ?></th>
-                            <th style="display:none"><?= lang('item_selling_price') ?></th>
-                            <th width="10%"><?= lang('discount') ?></th>
-                            <th width="10%"><?= lang('total_price') ?></th>
-                            <th width="10%"><?= lang('option') ?></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="input-0" id="main">
-                            <td class="text-center"><div class="form-control form-control-sm">1.</div></td>
-                            <td>
-                            <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
-                            <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
-                            </td>
-                            <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
-                            <td style="display:none" >
-                            <div class="input-group input-group-sm">
-                                <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
-                                <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
-                                <div class="input-group-append">
-                                <span class="input-group-text" data-id="item_unit"></span>
-                                </div>
+                    <div class="row" id="order_item">
+                        <div class="col-12">
+                            <table class="table table-sm">
+                                <thead>
+                                <tr>
+                                    <th width="2%">No.</th>
+                                    <th width="10%"><?= lang('item_code') ?></th>
+                                    <th><?= lang('item_name') ?></th>
+                                    <th style="display:none"><?= lang('item_quantity') ?></th>
+                                    <th width="10%"><?= lang('item_order_quantity') ?></th>
+                                    <th width="10%"><?= lang('item_capital_price') ?></th>
+                                    <th style="display:none"><?= lang('item_selling_price') ?></th>
+                                    <th style="display:none"><?= lang('discount') ?></th>
+                                    <th width="10%"><?= lang('total_price') ?></th>
+                                    <th width="10%"><?= lang('option') ?></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="input-0" id="main">
+                                    <td class="text-center"><div class="form-control form-control-sm">1.</div></td>
+                                    <td>
+                                    <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
+                                    <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
+                                    </td>
+                                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
+                                    <td style="display:none" >
+                                    <div class="input-group input-group-sm">
+                                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
+                                        <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
+                                        <div class="input-group-append">
+                                        <span class="input-group-text" data-id="item_unit"></span>
+                                        </div>
+                                    </div>
+                                    </td>
+                                    <td>
+                                    <div class="input-group input-group-sm">
+                                    <span class="input-group-prepend">
+                                        <span class="input-group-text" data-id="item_quantity"></span>
+                                    </span>
+                                    <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" data-id="item_unit"></span>
+                                    </div>
+                                    </div>
+                                    </td>
+                                    <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required readonly></td>
+                                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                                    <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
+                                    <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
+                                    <td>
+                                    <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
+                                        <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
+                                        <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
+                                    </div>
+                                    </td>
+                                </tr>
+                                <tr class="description input-0" style="display:none">
+                                    <td colspan="8">
+                                        <textarea class="form-control form-control-sm" name="description[]"></textarea>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="float-left ml-1">
+                                <button type="button" class="btn btn-sm btn btn-info" id="add_more"><?= lang('add_more') ?></button>
                             </div>
-                            </td>
-                            <td>
-                            <div class="input-group input-group-sm">
-                            <span class="input-group-prepend">
-                                <span class="input-group-text" data-id="item_quantity"></span>
-                            </span>
-                            <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required>
-                            <div class="input-group-append">
-                                <span class="input-group-text" data-id="item_unit"></span>
-                            </div>
-                            </div>
-                            </td>
-                            <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                            <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                            <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
-                            <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
-                            <td>
-                            <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
-                                <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
-                                <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
-                            </div>
-                            </td>
-                        </tr>
-                        <tr class="description input-0" style="display:none">
-                            <td colspan="8">
-                                <textarea class="form-control form-control-sm" name="description[]"></textarea>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div class="float-left ml-1">
-                        <button type="button" class="btn btn-sm btn btn-info" id="add_more"><?= lang('add_more') ?></button>
+                        </div>
                     </div>
-                    </div>
-                </div>
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -121,6 +121,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-lg-2 offset-lg-10 col-sm-12">
+                            <div class="form-group">
+                                <h6><?=lang('date')?></h6>
+                                <div class="input-group">
+                                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at"/>
+                                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg col-sm-12">
                             <div class="form-group">
                                 <label for="note"><?= lang('note') ?></label>
@@ -161,6 +172,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 $(this).find('input#id').val(id);
             })
         })
+            
+        //Date range picker
+        $('#created_at').daterangepicker({
+            startDate: moment(),
+            singleDatePicker: true,
+            timePicker: true,
+            timePicker24Hour: true,
+            timePickerSeconds: true,
+            opens: "center",
+            drops: "up",
+            locale: {
+                format: 'DD/MM/YYYY H:mm:s'
+            }
+        });
     });
 </script>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>

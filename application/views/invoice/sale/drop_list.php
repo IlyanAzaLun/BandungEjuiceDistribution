@@ -261,7 +261,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 `;
             if(row['is_cancelled'] == 1){
               return row['cancel_note'];
-            }
+            }            
+            return `
+                <div class="btn-group d-flex justify-content-center">
+                ${html}
+                </div>`;
             return `
                 <div class="btn-group d-flex justify-content-center">
                   <div class="btn-group">

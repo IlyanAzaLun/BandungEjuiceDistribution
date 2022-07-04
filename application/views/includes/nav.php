@@ -498,21 +498,62 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <i class="right fas fa-angle-left"></i>
       </p>
     </a>
+
     <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu == 'purchase_payment') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('payment_purchases') ?> </p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu == 'sale_payment') ? 'active' : '' ?>">
-          <i class="far fa-circle nav-icon"></i>
-          <p> <?php echo lang('payment_sales') ?> </p>
-        </a>
-      </li>
+    <!-- Data indebtedness -->
+    <li class="nav-item has-treeview <?php echo ($page->submenu == 'indebtedness') ? 'menu-open' : '' ?>">
+      <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'indebtedness') ? 'active' : '' ?>">
+        <i class="far fa-circle nav-icon"></i>
+        <p>
+          <?php echo lang('indebtedness') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <!-- Purchase parent -->
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('invoice/purchases/payment') ?>" class="nav-link <?php echo ($page->submenu_child == 'indebtedness_list') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('payment_indebtedness_list') ?> </p>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="<?php echo url('invoice/purchases/payment/debt') ?>" class="nav-link <?php echo ($page->submenu_child == 'payment_indebtedness') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('payment_indebtedness') ?> </p>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- End Data indebtedness -->
+    <!-- Data receivables -->
+    <li class="nav-item has-treeview <?php echo ($page->submenu == 'receivables') ? 'menu-open' : '' ?>">
+      <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'receivables') ? 'active' : '' ?>">
+        <i class="far fa-circle nav-icon"></i>
+        <p>
+          <?php echo lang('receivables') ?>
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <!-- Purchase parent -->
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu_child == 'receivables_list') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('payment_receivables_list') ?> </p>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="<?php echo url('invoice/sales/payment') ?>" class="nav-link <?php echo ($page->submenu_child == 'payment_receivables') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> <?php echo lang('payment_receivables') ?> </p>
+          </a>
+        </li>
+      </ul>
+    <!-- End Data receivables -->
     </ul>
-  </li>
   <?php endif ?>
   <!-- End Payment -->
   <?php endif ?>

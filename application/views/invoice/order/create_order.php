@@ -99,7 +99,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import_order_items"><i class="fa fa-fw fa-file-import"></i>&nbsp;<?=lang('import_order')?></button>
             </div>
             <div class="col-12">
-              <table class="table table-sm">
+              <table class="table table-fixed table-sm" width="100%">
                 <thead>
                   <tr>
                     <th width="2%">No.</th>
@@ -306,7 +306,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
-  $('body').addClass('sidebar-collapse');
+  // $('body').addClass('sidebar-collapse');
   //Date range picker
   $('#created_at').daterangepicker({
     startDate: moment(),

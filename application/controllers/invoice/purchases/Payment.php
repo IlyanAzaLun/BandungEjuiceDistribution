@@ -6,16 +6,38 @@ class Payment extends MY_Controller
     public function __construct()
 	{
 		parent::__construct();
-		$this->page_data['page']->title = 'Payment';
+		ifPermissions('payment');
+		$this->page_data['page']->title = 'payment';
 		$this->page_data['page']->menu = 'Payment';
-		$this->page_data['page']->submenu = 'purchase_payment';
+		$this->page_data['page']->submenu = 'indebtedness';
 	}
     
     public function index()
     {
-        $this->page_data['page']->submenu_child = 'purchase_payment_list';
+        ifPermissions('payment');
+		$this->page_data['title'] = 'payment_indebtedness_list';
+        $this->page_data['page']->submenu_child = 'indebtedness_list';
         $this->load->view('payment/purchase/list_payment', $this->page_data);
     }
+
+	public function debt()
+	{
+        ifPermissions('payment');
+		$this->page_data['title'] = 'payment_indebtedness';
+		$this->page_data['page']->submenu_child = 'payment_indebtedness';
+		$this->form_validation->set_rules('customer_code', 'Customer Name', 'required|trim');
+        if ($this->form_validation->run() == false) {
+			$this->load->view('payment/purchase/debt', $this->page_data);
+		}else{
+			postAllowed();
+			$this->load->view('payment/purchase/debt_list', $this->page_data);
+		}
+	}
+
+	public function debt_to()
+	{
+		$this->load->view('payment/purchase/debt_to', $this->page_data);
+	}
 
     public function serverside_datatables_data_payment_purchase()
     {
@@ -47,7 +69,6 @@ class Payment extends MY_Controller
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
 			$this->db->or_like('payment.customer_code', $searchValue, 'both');
 			$this->db->or_like('payment.description', $searchValue, 'both');
-			$this->db->or_like('payment.created_at', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {
@@ -55,10 +76,15 @@ class Payment extends MY_Controller
 			$this->db->where("payment.created_at >=", $dateStart);
 			$this->db->where("payment.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
-			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
+		else{
+			// select by years
+			$this->db->like("payment.created_at", date("Y"), 'after');
+		}
+		// select indebtness
 		$this->db->where("purchase.is_transaction", 1);
+		// is have indebtness,
+		$this->db->where("payment.leftovers !=", 0);
 		$records = $this->db->get('invoice_payment payment')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -94,7 +120,6 @@ class Payment extends MY_Controller
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
 			$this->db->or_like('payment.customer_code', $searchValue, 'both');
 			$this->db->or_like('payment.description', $searchValue, 'both');
-			$this->db->or_like('payment.created_at', $searchValue, 'both');
 			$this->db->or_like('supplier.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
@@ -107,10 +132,15 @@ class Payment extends MY_Controller
 			$this->db->where("payment.created_at >=", $dateStart);
 			$this->db->where("payment.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
-			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
+		else{
+			// select by years
+			$this->db->like("payment.created_at", date("Y"), 'after');
+		}
+		// select indebtness
 		$this->db->where("purchase.is_transaction", 1);
+		// is have indebtness,
+		$this->db->where("payment.leftovers !=", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);

@@ -8,12 +8,12 @@ class Payment extends MY_Controller
 		parent::__construct();
 		$this->page_data['page']->title = 'Payment';
 		$this->page_data['page']->menu = 'Payment';
-		$this->page_data['page']->submenu = 'sale_payment';
+		$this->page_data['page']->submenu = 'receivables';
 	}
     
     public function index()
     {
-        $this->page_data['page']->submenu_child = 'sale_payment_list';
+        $this->page_data['page']->submenu_child = 'receivables_list';
         $this->load->view('payment/sale/list_payment', $this->page_data);
     }
 
@@ -47,7 +47,6 @@ class Payment extends MY_Controller
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
 			$this->db->or_like('payment.customer_code', $searchValue, 'both');
 			$this->db->or_like('payment.description', $searchValue, 'both');
-			$this->db->or_like('payment.created_at', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {
@@ -55,10 +54,15 @@ class Payment extends MY_Controller
 			$this->db->where("payment.created_at >=", $dateStart);
 			$this->db->where("payment.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
-			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
+		else{
+			// select by years
+			$this->db->like("payment.created_at", date("Y"), 'after');
+		}
+		// select reveivables
 		$this->db->where("sale.is_transaction", 1);
+		// is have receivables,
+		$this->db->where("payment.leftovers !=", 0);
 		$records = $this->db->get('invoice_payment payment')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -94,7 +98,6 @@ class Payment extends MY_Controller
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
 			$this->db->or_like('payment.customer_code', $searchValue, 'both');
 			$this->db->or_like('payment.description', $searchValue, 'both');
-			$this->db->or_like('payment.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
@@ -107,10 +110,15 @@ class Payment extends MY_Controller
 			$this->db->where("payment.created_at >=", $dateStart);
 			$this->db->where("payment.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
-			$this->db->like("payment.created_at", date("Y-m"), 'after');
 		}
+		else{
+			// select by years
+			$this->db->like("payment.created_at", date("Y"), 'after');
+		}
+		// select reveivables
 		$this->db->where("sale.is_transaction", 1);
+		// is have receivables,
+		$this->db->where("payment.leftovers !=", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);

@@ -272,6 +272,7 @@ class Entry extends Purchase
 				'date_start' => 0,
 				'date_due' => 0,
 				'note' => post('note'),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'is_consignment' => 0,
 				'is_transaction' => 0,
 			);
@@ -297,6 +298,7 @@ class Entry extends Purchase
 
 		if ($this->form_validation->run() == false) {
 			$this->page_data['items'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
+			$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
 			$this->page_data['title'] = 'entry_edit';
 			$this->page_data['page']->submenu = 'entry_items';			
 			$this->page_data['modals'] = (object) array(
@@ -342,6 +344,7 @@ class Entry extends Purchase
 			$items = array_values($items);
 			//information payment
 			$payment = array(
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note'),
 				'is_transaction' => 0,
 			);
@@ -370,6 +373,7 @@ class Entry extends Purchase
 	{
 		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
 
+		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['is_cancelled'] = $data['is_cancelled'];
@@ -379,7 +383,6 @@ class Entry extends Purchase
 			//
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request) ? true: false;
 		} else {
-			$request['created_at'] = $data['created_at'];
 			$request['note'] = $data['note'];
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['is_transaction'] = $data['is_transaction'];

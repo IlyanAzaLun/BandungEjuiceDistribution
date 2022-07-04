@@ -99,7 +99,7 @@ $lang['read'] = "Baca";
 $lang['pages'] = "Halaman";
 $lang['invoice'] = "Faktur";
 $lang['menus'] = "Menu";
-$lang['purchase'] = "Beli";
+$lang['purchase'] = "Pembelian";
 $lang['selling'] = "Jual";
 $lang['ecommerce-niaga'] = "E-niaga";
 $lang['projects'] = "Proyek";
@@ -437,6 +437,7 @@ $lang['item_report'] = "Laporkan Barang";
 $lang['list_entry'] = "Daftar Masuk";
 $lang['entry_items'] = "Barang Masuk";
 $lang['entry_edit'] = "Ubah Barang Masuk";
+$lang['information_entry_item'] = "Informasi Barang Masuk";
 $lang['list_drop'] = "Daftar Keluar";
 $lang['drop_items'] = "Barang Keluar";
 $lang['list_swap'] = "Daftar Tukar";
@@ -560,9 +561,21 @@ $lang['invoice_sale'] = "Faktur Penjualan";
 /*
  * Payment
  */
-$lang['page_payment'] = "Halaman Pembayaran";
 
 $lang['payment'] = "Pembayaran";
+$lang['payup'] = "Di Bayar";
+$lang['leftovers'] = "Sisa Bayar";
+$lang['page_payment'] = "Halaman Pembayaran";
+$lang['payment'] = "Pembayaran";
+
+$lang['indebtedness'] = "Hutang Pembelian";
+$lang['payment_indebtedness'] = "Pembayaran Hutang";
+$lang['payment_indebtedness_list'] = "Daftar Hutang";
+
+$lang['receivables'] = "Piutang Penjualan";
+$lang['payment_receivables'] = "Pembayaran Piutang";
+$lang['payment_receivables_list'] = "Daftar Piutang";
+
 $lang['payment_purchases'] = "Pembelian";
 $lang['payment_sales'] = "Penjualan";
 $lang['is_shipping_cost_to_invoice'] = "Biaya Pengiriman di Masukan dalam Faktur ?";

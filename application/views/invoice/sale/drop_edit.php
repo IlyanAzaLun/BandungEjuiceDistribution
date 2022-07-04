@@ -55,7 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th width="12%"><?= lang('item_order_quantity') ?></th>
                     <th width="10%"><?= lang('item_capital_price') ?></th>
                     <th style="display: none"><?= lang('item_selling_price') ?></th>
-                    <th width="7%"><?= lang('discount') ?></th>
+                    <th style="display: none"><?= lang('discount') ?></th>
                     <th width="10%"><?= lang('total_price') ?></th>
                     <th width="7%"><?= lang('option') ?></th>
                   </tr>
@@ -91,13 +91,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     </td>
                     <td>
-                      <input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?=$value->item_capital_price?>" required>
+                      <input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?=$value->item_capital_price?>" required readonly>
                     </td>
-                    <td style="display: none" ><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?=$value->item_selling_price?>"></td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?=$value->discount?>" required></td>
+                    <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?=$value->item_selling_price?>"></td>
+                    <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?=$value->discount?>"></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?=$value->total_price?>" required></td>
                     <td>
-                      <div class="btn-group" role="group" aria-label="Basic example">
+                      <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                         <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
@@ -127,6 +127,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row">
+            <div class="col-lg-2 offset-lg-10 col-sm-12">
+              <div class="form-group">
+                <h6><?=lang('date')?></h6>
+                  <div class="input-group">
+                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at" value="<?=date("d/m/Y H:i:s",strtotime($drops_information->created_at))?>"/>
+                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                  </div>
+              </div>
+            </div>
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="note"><?= lang('note') ?></label>
@@ -163,6 +174,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           $('textarea').prop('required',true);
           $('textarea').focus();
       })
+      //Date range picker
+      $('#created_at').daterangepicker({
+        singleDatePicker: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        opens: "center",
+        drops: "up",
+        locale: {
+            format: 'DD/MM/YYYY H:mm:s'
+        }
+      });
   })
 </script>
 <!-- Jquery ui -->

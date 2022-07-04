@@ -442,6 +442,7 @@ $lang['item_report'] = "Report Item";
 $lang['list_entry'] = "List Entry Items";
 $lang['entry_items'] = "Entry Items";
 $lang['entry_edit'] = "Update Entry Items";
+$lang['information_entry_item'] = "Information Entry Item";
 $lang['list_drop'] = "List Out Items";
 $lang['drop_items'] = "Out Items";
 $lang['list_swap'] = "List Exchange Items";
@@ -570,9 +571,19 @@ $lang['invoice_sale'] = "Invoice Sale";
 /*
  * Payment
  */
-$lang['page_payment'] = "Page Payment";
+$lang['payup'] = "Payup";
+$lang['leftovers'] = "Leftover";
 
+$lang['page_payment'] = "Page Payment";
 $lang['payment'] = "Payment";
+
+$lang['indebtedness'] = "Indebtedness";
+$lang['payment_indebtedness'] = "Debt Payments";
+$lang['payment_indebtedness_list'] = "Indebtedness List";
+
+$lang['receivables'] = "Receivables";
+$lang['payment_receivables'] = "Receivable Payments";
+$lang['payment_receivables_list'] = "Receivable List";
 $lang['payment_purchases'] = "Purchases Payment";
 $lang['payment_sales'] = "Sales Payment";
 $lang['is_shipping_cost_to_invoice'] = "Is Shipping Cost Add to Invoice ?";

@@ -283,6 +283,7 @@ class Drop extends Sale
 				'date_start' => 0,
 				'date_due' => 0,
 				'note' => post('note'),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'reference_order' => 0,
 				'is_transaction' => 0,
 			);
@@ -374,6 +375,7 @@ class Drop extends Sale
 				'date_start' => 0,
 				'date_due' => 0,
 				'note' => post('note'),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'reference_order' => 0,
 				'is_transaction' => 0,
 			);
@@ -427,6 +429,7 @@ class Drop extends Sale
 	protected function create_or_update_invoice($data)
 	{
 		$response = $this->sale_model->get_invoice_selling_by_code($this->data['invoice_code']);
+		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['cancel_note'] = $data['cancel_note'];
@@ -440,7 +443,6 @@ class Drop extends Sale
 			$request['note'] = $data['note'];
 			$request['is_transaction'] = $data['is_transaction'];
 			$request['invoice_code'] = $this->data['invoice_code'];
-			$request['created_at'] = $data['created_at'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->sale_model->create($request);
