@@ -47,6 +47,17 @@ class Indebtedness extends MY_Model {
 
         return $this->db->get($this->table." payment")->result();
     }
+
+    public function select_invoice($data)
+    {
+        $this->db->group_start();
+        $this->db->where('payment.invoice_code', $data['invoice_code']);
+        $this->db->where('payment.leftovers >', '0');
+        $this->db->group_end();
+        $this->db->group_by('payment.invoice_code');
+
+        return $this->db->get($this->table." payment")->result();
+    }
 }
 
 /* End of file Account_bank_model.php */

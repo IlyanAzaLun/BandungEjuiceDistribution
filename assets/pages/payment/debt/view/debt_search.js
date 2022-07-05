@@ -63,6 +63,13 @@ const main = () => {
                 }
             })
         })
+        // To Pay
+        $(document).on('click', 'button#to_pay', function () {
+            console.log($(this).parent('#to_pay').data('id'));
+            $("div.card#to_pay").toggle(200, "linear", function () {
+
+            });
+        })
     })
 }
 export default main;

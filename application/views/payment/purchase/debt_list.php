@@ -79,6 +79,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <!-- /.card-body -->
         </div>
+        <!-- payment -->
+        <div class="card" id="to_pay" style="display: none;">
+          <div class="card-body">
+
+          </div>
+        </div>
+        <!-- ./payment -->
         <!-- /.card -->
         <div class="card">
           <div class="card-body">
@@ -106,8 +113,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
                   <div class="col-md-1 col sm-12"><?=$list->user_created?></div>
                   <div class="col-md-1 col sm-12">
-                    <div class="btn-group btn-block">
-                      <button class="btn btn-sm btn-default"><i class="fa fa-fw fa-dollar-sign text-primary"></i></button>
+                    <div class="btn-group btn-block" id="to_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
+                      <button class="btn btn-sm btn-default" id="to_pay"><i class="fa fa-fw fa-dollar-sign text-primary"></i></button>
                       <button class="btn btn-sm btn-default"><i class="fa fa-fw fa-history text-primary"></i></button>
                     </div>
                   </div>

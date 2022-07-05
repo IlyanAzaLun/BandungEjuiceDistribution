@@ -574,14 +574,33 @@ class Report extends MY_Controller
 		$totalRecordwithFilter = $records[0]->allcount;
 		
         ## Fetch records
-		$this->db->select("
-            ,transaction.created_at
-            ,transaction.updated_at
-            ,DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
-            ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
-            ,SUM(transaction.item_capital_price) AS item_capital_price
-            ,SUM(transaction.item_selling_price) AS item_selling_price
-            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit");
+		$this->db->select("transaction.id
+        , transaction.index_list
+        , transaction.item_id
+        , transaction.item_code
+        , transaction.item_name
+        , transaction.item_capital_price
+        , transaction.item_selling_price
+        , transaction.item_current_quantity
+        , transaction.item_quantity
+        , transaction.item_unit
+        , transaction.item_total_weight
+        , transaction.item_discount
+        , transaction.total_price
+        , transaction.item_status
+        , transaction.item_description
+        , transaction.customer_code
+        , transaction.is_cancelled
+        , transaction.created_at
+        , transaction.created_by
+        , transaction.updated_at
+        , transaction.updated_by
+        , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
+        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
+        , SUM(CAST(transaction.item_selling_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_selling_price
+        , SUM(CAST(transaction.total_price AS INT)) AS total_price
+        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
@@ -687,8 +706,8 @@ class Report extends MY_Controller
 				'invoice_code' => $record->invoice_code,
 				'customer_code' => $record->customer_code,
 				'store_name' => $record->store_name,
-				'item_capital_price' => $record->item_capital_price,
-				'item_selling_price' => $record->item_selling_price,
+				'item_capital_price' => $record->time_capital_price,
+				'item_selling_price' => $record->total_price,
 				'profit' => $record->profit,
 				'name' => $record->name,
 			);
