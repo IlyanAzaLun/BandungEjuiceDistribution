@@ -451,8 +451,7 @@ class Order extends Invoice_controller
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}
-		else{
+		}else{
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
@@ -509,8 +508,7 @@ class Order extends Invoice_controller
 			$this->db->where("order.created_at >=", $dateStart);
 			$this->db->where("order.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}
-		else{
+		}else{
 			$this->db->like("order.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){

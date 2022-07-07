@@ -240,6 +240,12 @@ class Purchase extends Invoice_controller
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items);
 			$this->create_or_update_list_chart_cash($payment);
+
+			// UPDATE CURRENT FIFO TRANSACTION
+			var_dump($this->update_list_item_fifo_transaction($items));
+			var_dump($this->db->last_query());
+
+
 			$this->db->trans_complete();
 			echo "</pre>";
 			if($this->db->trans_status() === FALSE){
@@ -568,6 +574,30 @@ class Purchase extends Invoice_controller
 			return true;
 		}
 		return $request;
+	}
+
+	/**
+	 * @param Type array Description: update list item on table ``item_fifo``, where reference_purchase and where iten_code to set item_capital_price
+	 * */ 
+	protected function update_list_item_fifo_transaction($data)
+	{
+		$item = array();
+		$item_fifo = array();
+		foreach ($data as $key => $value) {
+			if ($value['id']) {
+				$this->db->trans_start();
+				$this->db->set('item_capital_price', setCurrency($value['item_capital_price']));
+				$this->db->group_start();
+				$this->db->where('item_id', $value['item_id']);
+				$this->db->where('item_code', $value['item_code']);
+				$this->db->where('reference_purchase', $this->data['invoice_code']);
+				$this->db->group_end();
+				$this->db->update('fifo_items');
+				$this->db->trans_complete();
+			}
+			
+		}
+		return $item;
 	}
 
 	

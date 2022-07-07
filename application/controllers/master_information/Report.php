@@ -554,7 +554,8 @@ class Report extends MY_Controller
         $this->db->like('invoice_code', 'INV/SALE/', 'after');
         $this->db->where('is_cancelled', 0);
         $this->db->group_by('invoice_code');
-		$records = $this->db->get('invoice_transaction_list_item')->result();
+		// $records = $this->db->get('invoice_transaction_list_item')->result();
+		$records = $this->db->get('fifo_items')->result();
 		$totalRecords = $records[0]->allcount;
 
 		## Total number of record with filtering
@@ -570,25 +571,18 @@ class Report extends MY_Controller
 		}else{            
             $this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}
-		$records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		// $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		$records = $this->db->get('fifo_items transaction')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 		
         ## Fetch records
 		$this->db->select("transaction.id
-        , transaction.index_list
         , transaction.item_id
         , transaction.item_code
         , transaction.item_name
         , transaction.item_capital_price
-        , transaction.item_selling_price
-        , transaction.item_current_quantity
         , transaction.item_quantity
         , transaction.item_unit
-        , transaction.item_total_weight
-        , transaction.item_discount
-        , transaction.total_price
-        , transaction.item_status
-        , transaction.item_description
         , transaction.customer_code
         , transaction.is_cancelled
         , transaction.created_at
@@ -598,7 +592,6 @@ class Report extends MY_Controller
         , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
         , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
         , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
-        , SUM(CAST(transaction.item_selling_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_selling_price
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
@@ -694,7 +687,8 @@ class Report extends MY_Controller
         }
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
-		$records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		// $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		$records = $this->db->get('fifo_items transaction')->result();
 		$data = array();
 		foreach ($records as $record) {
 

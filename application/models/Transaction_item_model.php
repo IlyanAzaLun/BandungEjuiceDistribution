@@ -160,7 +160,8 @@ class Transaction_item_model extends MY_Model {
                 $this->db->group_by("invoice_code");
                 break;
         }
-        return $this->db->get('invoice_transaction_list_item transaction')->result();
+        return $this->db->get('fifo_items transaction')->result();
+        // return $this->db->get('invoice_transaction_list_item transaction')->result();
     }
 
 }
