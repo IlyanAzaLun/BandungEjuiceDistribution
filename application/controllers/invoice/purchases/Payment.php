@@ -44,14 +44,15 @@ class Payment extends MY_Controller
 	public function debt_to()
 	{
         ifPermissions('payment');
-		$this->page_data['title'] = 'payment_indebtedness';
-		$this->page_data['page']->submenu_child = 'payment_indebtedness';
-		$this->form_validation->set_rules('invoice_code', 'Invoice Code', 'required|trim');
-		if($this->form_validation->run() == false){
-			// $this->page_data['information'] = $this->indebtedness->select_invoice();
-
-			$this->load->view('payment/purchase/debt_to', $this->page_data);
+		postAllowed();
+		$this->page_data['data_post'] = $this->input->post();
+		var_dump((int) $this->page_data['data_post']['to_pay'] > 0);
+		if(!$this->page_data['data_post']['id_payment'] && !((int) $this->page_data['data_post']['to_pay'] > 0)){
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Faild, Worng information');
+			redirect('invoice/purchases/payment/debt');
 		}
+		die();
 	}
 
     public function serverside_datatables_data_payment_purchase()

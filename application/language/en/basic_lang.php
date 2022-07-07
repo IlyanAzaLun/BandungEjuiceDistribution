@@ -255,6 +255,7 @@ $lang['overview'] = "Overview";
 //Options
 $lang['master'] = "Master";
 $lang['option'] = "Options";
+$lang['print'] = "Print";
 $lang['add_more'] = "Add More";
 $lang['add_data'] = "Add Data";
 $lang['edit_data'] = "Edit Data";
@@ -572,6 +573,7 @@ $lang['invoice_sale'] = "Invoice Sale";
  * Payment
  */
 $lang['payup'] = "Payup";
+$lang['to_payup'] = "Amount To Be Paid";
 $lang['leftovers'] = "Leftover";
 
 $lang['page_payment'] = "Page Payment";

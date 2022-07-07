@@ -70,13 +70,13 @@ class Transaction_item_model extends MY_Model {
             );
         }
         $this->db->select("
-            ,transaction.created_at
-            ,transaction.updated_at
-            ,DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
-            ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
-            ,SUM(transaction.item_capital_price) AS item_capital_price
-            ,SUM(transaction.item_selling_price) AS item_selling_price
-            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit");
+            , transaction.created_at
+            , transaction.updated_at
+            , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
+            , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+            , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
+            , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
+            ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code = sale.invoice_code", "left");

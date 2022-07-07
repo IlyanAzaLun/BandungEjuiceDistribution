@@ -255,6 +255,7 @@ $lang['overview'] = "Ringkasan";
 //Pilihan
 $lang['master'] = "Master";
 $lang['option'] = "Opsi";
+$lang['print'] = "Print";
 $lang['add_more'] = "Tambah Lagi";
 $lang['add_data'] = "Tambah Data";
 $lang['edit_data'] = "Ubah Data";
@@ -563,6 +564,7 @@ $lang['invoice_sale'] = "Faktur Penjualan";
  */
 
 $lang['payment'] = "Pembayaran";
+$lang['to_payup'] = "Nominal Yang Akan Bayar";
 $lang['payup'] = "Di Bayar";
 $lang['leftovers'] = "Sisa Bayar";
 $lang['page_payment'] = "Halaman Pembayaran";

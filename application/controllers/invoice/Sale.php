@@ -873,13 +873,13 @@ class Sale extends Invoice_controller
 		$user = logged('id');
         $haspermission = hasPermissions('dashboard_staff');
 		$this->db->select("
-            ,transaction.created_at
-            ,transaction.updated_at
-            ,DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
-            ,DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
-            ,SUM(transaction.item_capital_price) AS item_capital_price
-            ,SUM(transaction.item_selling_price) AS item_selling_price
-            ,(SUM(transaction.item_selling_price)-SUM(transaction.item_capital_price)) AS profit
+            , transaction.created_at
+            , transaction.updated_at
+            , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
+            , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+            , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
+            , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
+            ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
 			");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
@@ -896,7 +896,7 @@ class Sale extends Invoice_controller
 		$data['labels'] = array();
 		$data['datasets'][]['data'] = array();
 		foreach ($records as $key => $record) {
-			array_push($data['labels'], $record->yearmount);
+			array_push($data['labels'], date_format(date_create($record->yearmountday),"Y-m"));
 			
 			$data['datasets'][0]['label'] = 'Profit';
 			array_push($data['datasets'][0]['data'], $record->profit);

@@ -6,6 +6,14 @@ const data_supplier = new DataSupplier();
 
 const main = () => {
     $(document).ready(function () {
+        // discount to currency
+        $(document).on('keyup', 'input.currency', function () {
+            $(this).val(currency(currencyToNum($(this).val())));
+        })
+        $('.currency').each(function (index, field) {
+            $(field).val(currency(currencyToNum($(field).val())));
+        });
+
         $(document).on('keyup', 'input#supplier_name', function () {
             let valueElement = $(this).val();
             let selfElement = $(this);
@@ -65,9 +73,10 @@ const main = () => {
         })
         // To Pay
         $(document).on('click', 'button#to_pay', function () {
-            console.log($(this).parent('#to_pay').data('id'));
+            let toPayElement = $(this).parent('#to_pay');
             $("div.card#to_pay").toggle(200, "linear", function () {
-
+                $('#id_payment').val(toPayElement.data('id'));
+                $('#invoice_code').val(toPayElement.data('code_invoice'));
             });
         })
     })

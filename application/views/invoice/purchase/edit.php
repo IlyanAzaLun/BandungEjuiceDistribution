@@ -167,13 +167,13 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= number_format($value->item_discount) ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= number_format($value->total_price) ?>"></td>
                                             <td>
-                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                                                     <a target="_blank" href='<?=url("items/info_transaction?id=$value->item_code&customer=$_data_invoice_parent->supplier")?>' class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
                                                 <?php if (sizeof($items) <= 1) : ?>
-                                                    <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
+                                                    <button disabled type="button" class="btn btn-secondary"><i class="fa fa-tw fa-times"></i></button>
                                                 <?php else : ?>
-                                                    <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
+                                                    <button type="button" class="btn btn-danger remove" data-id="<?=$value->id?>" data-toggle="modal" data-target="#modal-remove-order"><i class="fa fa-tw fa-times"></i></button>
                                                 <?php endif ?>
                                                 </div>
                                             </td>

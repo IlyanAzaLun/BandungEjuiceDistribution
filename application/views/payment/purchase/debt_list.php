@@ -81,9 +81,33 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <!-- payment -->
         <div class="card" id="to_pay" style="display: none;">
-          <div class="card-body">
 
+        <?php echo form_open_multipart('invoice/purchases/payment/debt_to?id=' . get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-2 col-sm-12">
+                <div class="form-group">
+                  <label for="invoice_code"><?=lang('invoice_code')?></label>
+                  <input type="hidden" id="id_payment" name="id_payment" value="" required>
+                  <input type="text" class="form-control" id="invoice_code" name="invoice_code" value="" required>
+                </div>
+              </div>
+              <div class="col-lg-3 col-sm-12">
+                <label for="to_pay"><?=lang('to_payup')?></label>
+                <input type="text" class="form-control currency" id="to_pay" name="to_pay" required>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-1 col-sm-12">
+                <button type="submit" class="btn btn-info btn-block start">
+                  <i class="fa fa-fw fa-coins"></i>&nbsp;&nbsp;
+                  <span><?=lang('payup')?></span>
+                </button>
+              </div>
+            </div>
           </div>
+        <?php echo form_close(); ?>
+
         </div>
         <!-- ./payment -->
         <!-- /.card -->
