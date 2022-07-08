@@ -370,6 +370,7 @@ const main = () => {
                 if (!output) {
                     event.preventDefault();
                     $('.loading').css({ "display": "none" });
+
                 }
             })
         })
