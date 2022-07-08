@@ -340,6 +340,14 @@ const main = () => {
                     break;
             }
         })
+
+        //form submit
+        $('form.form-validate').on('submit', function (event) {
+            validation_form()
+
+            event.preventDefault();
+        })
+
     });
 }
 export default main;

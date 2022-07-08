@@ -1,7 +1,7 @@
 import DataCustomer from "../data/DataCustomer.js";
 import DataUser from "../data/DataUser.js";
 import DataItems from "../data/DataItems.js";
-import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./order_create-calcualtion.js";
+import { sum_sub_total_item, sum_sub_total, sum_grand_total, validation_form } from "./order_create-calcualtion.js";
 
 const data_user_marketing = new DataUser();
 const data_customer = new DataCustomer();
@@ -363,6 +363,16 @@ const main = () => {
                     break;
             }
         });
+
+        //form submit
+        $('form.form-validate').on('submit', function (event) {
+            validation_form(function (output) {
+                if (!output) {
+                    event.preventDefault();
+                    $('.loading').css({ "display": "none" });
+                }
+            })
+        })
     });
 }
 export default main;

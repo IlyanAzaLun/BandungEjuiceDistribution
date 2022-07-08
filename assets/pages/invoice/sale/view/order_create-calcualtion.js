@@ -86,4 +86,39 @@ function sum_grand_total() {
     return grand_total;
 }
 
-export { sum_sub_total_item, sum_sub_total_item_returns, sum_sub_total, sum_grand_total };
+function validation_form(callback) {
+    let _total = [];
+    let unique_values = {};
+    let list_of_values = [];
+    let row;
+    $('input[data-id="item_id"]').each(function (item, field) {
+        _total[item] = 0;
+        let parents = $(`input[data-id="item_id"][value="${field.value}"]`);
+        row = parents.parents('tr#main').attr('class');
+
+        //find not unique item_id
+        if (!unique_values[field.value]) {
+            unique_values[field.value] = true;
+            list_of_values.push(field.value)
+        }
+        parents.each(function (index, res) {
+            let part_row = $(this).parents('tr#main').attr('class');
+            _total[item] += parseInt($(`tr#main.${part_row} input[data-id="item_order_quantity"]`).val());
+        });
+        validate(_total[item], field.value, callback)
+    })
+}
+
+
+function validate(data, item_id, callback) {
+    let row = $(`input[data-id="item_id"][value="${item_id}"]`).parents('tr#main').attr('class');
+    if (parseInt($(`tr#main.${row} input[data-id="item_order_quantity"]`).attr('max')) < data) {
+        callback(false);
+        $(`tr#main.${row} input[data-id="item_order_quantity"]`).addClass('is-invalid');
+        return false;
+    } else {
+        return callback(true)
+    }
+}
+
+export { sum_sub_total_item, sum_sub_total_item_returns, sum_sub_total, sum_grand_total, validation_form };
