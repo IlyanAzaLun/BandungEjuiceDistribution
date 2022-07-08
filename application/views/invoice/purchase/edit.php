@@ -350,17 +350,18 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                         <div class="col-lg-12 col-sm-12">
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
-                                    <label for="is_consignment" class="custom-control-label"><?=strtolower(lang('is_consignment'))?></label>
+                                    <input type="hidden" name="is_consignment" value=0>
                                     <input class="custom-control-input" type="checkbox" id="is_consignment" name="is_consignment" <?= $_data_invoice_parent->is_consignment?'checked':'' ?> value=1>
+                                    <label for="is_consignment" class="custom-control-label"><?=strtolower(lang('is_consignment'))?></label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-12 col-sm-12">
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
-                                    <label for="status_payment" class="custom-control-label"><?=strtolower(lang('is_status_payment'))?></label>
                                     <input type="hidden" name="status_payment" value=0>
                                     <input class="custom-control-input" type="checkbox" id="status_payment" name="status_payment" <?= $_data_invoice_parent->status_payment?'checked':'' ?> value=1>
+                                    <label for="status_payment" class="custom-control-label"><?=strtolower(lang('is_status_payment'))?></label>
                                 </div>
                             </div>
                         </div>
