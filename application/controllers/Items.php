@@ -622,7 +622,11 @@ class Items extends MY_Controller
             $this->db->where("(fifo_items.customer_code = '$customer' OR fifo_items.customer_code = '$supplier')");
         }
         if($dateStart != '') {
-            $this->db->where("((fifo_items.created_at >= '$dateStart' AND fifo_items.created_at <= '$dateFinal') OR (fifo_items.updated_at >= '$dateStart' AND fifo_items.updated_at <= '$dateFinal'))");
+            // $this->db->where("((fifo_items.created_at >= '$dateStart' AND fifo_items.created_at <= '$dateFinal') OR (fifo_items.updated_at >= '$dateStart' AND fifo_items.updated_at <= '$dateFinal'))");
+            $this->db->group_start();                
+            $this->db->where("fifo_items.created_at >=", $dateStart);
+            $this->db->where("fifo_items.created_at <=", $dateFinal);
+            $this->db->group_end(); 
         }
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
@@ -710,12 +714,16 @@ class Items extends MY_Controller
             $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
             $this->db->where('item_code', $item_code);
             if ($dateStart != '') {
+                $this->db->group_start();
                 $this->db->where("transaction.created_at >=", $dateStart);
                 $this->db->where("transaction.created_at <=", $dateFinal);
+                $this->db->group_end();
             }
             if ($customer || $supplier) {
+                $this->db->group_start();
                 $this->db->where('transaction.customer_code', $customer);
                 $this->db->or_where('transaction.customer_code', $supplier);
+                $this->db->group_end();
             }
             $records = $this->db->get('invoice_transaction_list_item transaction')->result();
             $totalRecordwithFilter = $records[0]->allcount;
@@ -761,10 +769,16 @@ class Items extends MY_Controller
                 $this->db->group_end();
             }
             if ($customer || $supplier) {
-                $this->db->where("(transaction.customer_code = '$customer' OR transaction.customer_code = '$supplier')");
+                $this->db->group_start();
+                $this->db->where('transaction.customer_code', $customer);
+                $this->db->or_where('transaction.customer_code', $supplier);
+                $this->db->group_end();
             }
             if($dateStart != '') {
-                $this->db->where("((transaction.created_at >= '$dateStart' AND transaction.created_at <= '$dateFinal') OR (transaction.updated_at >= '$dateStart' AND transaction.updated_at <= '$dateFinal'))");
+                $this->db->group_start();                
+                $this->db->where("transaction.created_at >=", $dateStart);
+                $this->db->where("transaction.created_at <=", $dateFinal);
+                $this->db->group_end();                
             }
             $this->db->where('item_code', $item_code);
             $this->db->order_by($columnName, $columnSortOrder);

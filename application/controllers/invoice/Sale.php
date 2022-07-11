@@ -875,35 +875,78 @@ class Sale extends Invoice_controller
 		$this->db->select("
             , transaction.created_at
             , transaction.updated_at
-            , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
-            , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+            , DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
+            , DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
+            , DATE_FORMAT(transaction.created_at, '%M') AS mount
             , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
             , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
-            ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
-			");
-		$this->db->join("users", "transaction.created_by = users.id", "left");
-        $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
-        $this->db->like('transaction.invoice_code', 'INV/SALE/', 'after');
+			, SUM(CAST(transaction.total_price AS INT)) AS total_price
+			,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+		");
+		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code');
+		$this->db->group_start();
         $this->db->where('transaction.is_cancelled', 0);
         if(!$haspermission){
-            $this->db->where("transaction.created_by", $user);
+			$this->db->group_start();
+			$this->db->where("transaction.created_by", $user);
+			$this->db->or_where("selling.is_have", $user);
+			$this->db->group_end();
         }
+		$this->db->group_end();
 		$this->db->group_by("yearmount");
-        
-		$this->db->order_by($columnName, $columnSortOrder);
-		$this->db->limit($rowperpage, $start);
-		$records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		$records = $this->db->get('fifo_items transaction')->result();
 		$data['labels'] = array();
 		$data['datasets'][]['data'] = array();
 		foreach ($records as $key => $record) {
-			array_push($data['labels'], date_format(date_create($record->yearmountday),"Y-m"));
+			array_push($data['labels'], $record->mount);
+			
+			$data['datasets'][0]['label'] = 'Profit';
+			array_push($data['datasets'][0]['data'], bd_nice_number((int) $record->profit));
+		}
+		## Response
+		$this->output->set_content_type('application/json')->set_output(json_encode($data));
+	}
+
+	public function daily_statistic()
+	{
+		$user = logged('id');
+        $haspermission = hasPermissions('dashboard_staff');
+		$this->db->select("
+            , transaction.created_at
+            , transaction.updated_at
+            , DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
+            , DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
+            , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
+            , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
+			, SUM(CAST(transaction.total_price AS INT)) AS total_price
+			,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+		");
+		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code');
+		$this->db->group_start();
+        $this->db->where('transaction.is_cancelled', 0);
+        if(!$haspermission){
+			$this->db->group_start();
+			$this->db->where("transaction.created_by", $user);
+			$this->db->or_where("selling.is_have", $user);
+			$this->db->group_end();
+        }
+		$this->db->group_end();
+		$this->db->group_start();
+		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -7 DAY)',false);
+		$this->db->where("transaction.created_at <=", 'NOW()',false);
+		$this->db->group_end();
+		$this->db->group_by("yearmountday");
+		$records = $this->db->get('fifo_items transaction')->result();
+		$data['labels'] = array();
+		$data['datasets'][]['data'] = array();
+		foreach ($records as $key => $record) {
+			array_push($data['labels'], $record->yearmountday);
 			
 			$data['datasets'][0]['label'] = 'Profit';
 			array_push($data['datasets'][0]['data'], $record->profit);
 		}
 		## Response
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
-		
 	}
 
 }

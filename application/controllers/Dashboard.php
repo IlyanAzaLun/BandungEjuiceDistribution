@@ -13,7 +13,11 @@ class Dashboard extends MY_Controller {
 	}
 
 }
-//SELECT * FROM `invoice_selling` WHERE created_at BETWEEN DATE_ADD(NOW(), INTERVAL -2 DAY) AND NOW()
+/*
+SELECT * FROM invoice_selling 
+WHERE created_at >= DATE_ADD(NOW(), INTERVAL -7 DAY)
+  AND created_at <= now()
+*/
 
 /* End of file Dashboard.php */
 /* Location: ./application/controllers/Dashboard.php */

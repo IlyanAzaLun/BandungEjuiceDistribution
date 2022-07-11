@@ -34,7 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">DataTable with minimal features & hover style</h3>
+            <h3 class="card-title">Search and Find our debt..</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -82,7 +82,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- payment -->
         <div class="card" id="to_pay" style="display: none;">
 
-        <?php echo form_open_multipart('invoice/purchases/payment/debt_to?id=' . get('id'), ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart('invoice/purchases/payment/debt_to', ['class' => 'form-validate', 'id' => 'to_pay', 'autocomplete' => 'off']); ?>
+          
+          <div class="card-header">
+            <h3 class="card-title">Wont to pay ?</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-sm bg-default remove" data-card-widget="remove"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
           <div class="card-body">
             <div class="row">
               <div class="col-lg-2 col-sm-12">
@@ -96,6 +103,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <label for="to_pay"><?=lang('to_payup')?></label>
                 <input type="text" class="form-control currency" id="to_pay" name="to_pay" required>
               </div>
+              
+              <div class="col-lg-2 col-sm-12">
+                <label for="beneficiary_name"><?=lang('beneficiary_name')?></label>
+                <input type="hidden" class="form-control bank_name" id="id" name="bank_id" required>
+                <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" required>
+              </div>
+
             </div>
             <div class="row">
               <div class="col-lg-1 col-sm-12">

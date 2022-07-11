@@ -138,6 +138,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
       console.log(`Document is ready!`);
       $('li.nav-item.has-treeview.menu-open').focus()
   });
+  document.addEventListener("wheel", function(event){
+      if(document.activeElement.type === "number"){
+          document.activeElement.blur();
+      }
+  });
 /* //disabeld right click
 document.onkeydown = function(e) {
   if(event.keyCode == 123) {

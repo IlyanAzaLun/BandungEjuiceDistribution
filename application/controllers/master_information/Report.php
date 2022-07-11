@@ -646,7 +646,7 @@ class Report extends MY_Controller
                 ,users.name
                 ,sale.is_have
                 ,is_have.name AS is_have_name');
-                $this->db->group_by("yearmount, transaction.created_by");
+                $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
                 break;
                     
             case 'daily':
@@ -661,7 +661,7 @@ class Report extends MY_Controller
                  ,users.name
                  ,sale.is_have
                  ,is_have.name AS is_have_name');
-                $this->db->group_by("yearmountday, transaction.created_by");
+                $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
                 break;
 
             case 'daily_by_customer':

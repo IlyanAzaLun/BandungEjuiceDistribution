@@ -41,9 +41,11 @@ class Indebtedness extends MY_Model {
 		}
         $this->db->group_start();
         $this->db->where('payment.customer_code', $data['supplier_code']);
-        $this->db->where('payment.leftovers >', '0');
+        $this->db->where('payment.leftovers >=', '0');
         $this->db->group_end();
         $this->db->group_by('payment.invoice_code');
+
+        return $this->db->last_query();
 
         return $this->db->get($this->table." payment")->result();
     }

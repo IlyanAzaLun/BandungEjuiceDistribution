@@ -1305,4 +1305,16 @@ if(!function_exists('terbilang')){
 		return $hasil;
 	}
 }
+if(!function_exists('bd_nice_number')){
+	function bd_nice_number($n) {
+        // first strip any formatting;
+        $n = (0+str_replace(",","",$n));
+       
+        // is this a number?
+        if(!is_numeric($n)) return false;
+       
+        // now filter it;
+    	return round(($n/1000000),1);
+    }
+}
 // 

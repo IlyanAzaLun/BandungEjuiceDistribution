@@ -230,6 +230,24 @@ class Account_bank extends MY_Controller
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+    
+
+    public function data_bank()
+    {
+        if (hasPermissions('requst_data_bank')) {
+            $search = (object) post('search');
+            $this->db->limit(5);
+            if (isset($search->value)) {
+                $this->db->like('bank_information.name', $search->value, 'after');
+                $this->db->or_like('bank_information.no_account', $search->value, 'after');
+                $this->db->or_like('bank_information.own_by', $search->value, 'after');
+            }
+            $response = $this->db->get('bank_information')->result();
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        }else{
+            ifPermissions('order_create');
+        }
+    }
 }
 
 /* End of file Activity_logs.php */

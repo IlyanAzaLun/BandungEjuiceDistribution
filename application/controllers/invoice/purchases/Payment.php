@@ -46,13 +46,33 @@ class Payment extends MY_Controller
         ifPermissions('payment');
 		postAllowed();
 		$this->page_data['data_post'] = $this->input->post();
-		var_dump((int) $this->page_data['data_post']['to_pay'] > 0);
-		if(!$this->page_data['data_post']['id_payment'] && !((int) $this->page_data['data_post']['to_pay'] > 0)){
+		if(!($this->page_data['data_post']['id_payment'] && ((int) $this->page_data['data_post']['to_pay'] > 0))){
 			$this->session->set_flashdata('alert-type', 'danger');
 			$this->session->set_flashdata('alert', 'Faild, Worng information');
 			redirect('invoice/purchases/payment/debt');
+		}else{
+			$request = $this->payment_model->getById($this->page_data['data_post']['id_payment']);
+			$dataPost = $this->input->post();
+			$request->leftovers = $request->leftovers - setCurrency($dataPost['to_pay']);
+			$request->payup = $request->payup + setCurrency($dataPost['to_pay']);
+			$request->created_by = logged('id');
+			$request->bank_id = $dataPost['bank_id'];
+
+			unset($request->id);
+			unset($request->created_at);
+
+			$response = $this->payment_model->create($request);
+			var_dump($response);
 		}
-		die();
+
+	}
+	public function validation_currency_check($str)
+	{
+		if((int) $str > 0){
+			return true;
+		}else{
+			$this->form_validation->set_message('validation_currency_check', 'The {field} field can not be null');
+		}
 	}
 
     public function serverside_datatables_data_payment_purchase()
