@@ -242,9 +242,8 @@ class Purchase extends Invoice_controller
 			$this->create_or_update_list_chart_cash($payment);
 
 			// UPDATE CURRENT FIFO TRANSACTION
-			var_dump($this->update_list_item_fifo_transaction($items));
+			$this->update_list_item_fifo_transaction($items);
 			var_dump($this->db->last_query());
-
 
 			$this->db->trans_complete();
 			echo "</pre>";
@@ -595,7 +594,6 @@ class Purchase extends Invoice_controller
 				$this->db->update('fifo_items');
 				$this->db->trans_complete();
 			}
-			
 		}
 		return $item;
 	}
@@ -662,10 +660,14 @@ class Purchase extends Invoice_controller
 		$request['status_payment'] = 1; // "withdraw, come out"
 		$request['description'] = $data['note'];
 		if ($response) {
+			//set left ofer
+			$leftover = setCurrency($data['grand_total']) - (int) $response->grand_total;
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['cancel_note']  = $data['cancel_note'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
+			$request['payup'] = $response->payup; // want to pay
+			$request['leftovers'] = $response->leftovers + $leftover; // remaind
 			//
 			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
 		} else {

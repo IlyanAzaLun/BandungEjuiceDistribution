@@ -140,7 +140,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php $grandtotal = 0;$payup = 0;$leftovers = 0;?>
             <table class="table table-sm table-hover table-border">
             <?php foreach ($data_list_debts as $key => $list):?>
-            <tr>
+            <tr class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>" <?php echo(!hasPermissions('example') && (getCurrentcy($list->leftovers) <= 0))?'style="display:none;"':''?>>
               <td>
                 <div class="row">
                   <div class="col-md-3 col sm-12"><?=$list->invoice_code?></div>
@@ -152,7 +152,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="col-md-1 col sm-12"><?=$list->user_created?></div>
                   <div class="col-md-1 col sm-12">
                     <div class="btn-group btn-block" id="to_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
+                      <?php if(getCurrentcy($list->leftovers) > 0):?>
                       <button class="btn btn-sm btn-default" id="to_pay"><i class="fa fa-fw fa-dollar-sign text-primary"></i></button>
+                      <?php endif; ?>
                       <button class="btn btn-sm btn-default"><i class="fa fa-fw fa-history text-primary"></i></button>
                     </div>
                   </div>

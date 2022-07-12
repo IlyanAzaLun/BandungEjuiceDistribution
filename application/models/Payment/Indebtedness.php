@@ -27,11 +27,12 @@ class Indebtedness extends MY_Model {
         , payment.is_cancelled
         , payment.cancel_note
         , payment.created_by
-        , MAX(payment.created_at) as created_at
+        , payment.created_at
         , payment.updated_by
         , payment.updated_at
         , payment.description
         , user_created.name as user_created');
+        // $this->db->join('(SELECT invoice_code, MAX(created_at) AS maxDate FROM invoice_payment) temp', 'temp.invoice_code = payment.invoice_code', 'right');
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
 		if ($data['date']['date_start'] != '') {
 			$this->db->group_start();
@@ -42,12 +43,14 @@ class Indebtedness extends MY_Model {
         $this->db->group_start();
         $this->db->where('payment.customer_code', $data['supplier_code']);
         $this->db->where('payment.leftovers >=', '0');
+        $this->db->group_start();
+        $this->db->where('payment.created_at', '(SELECT MAX(created_at) FROM invoice_payment WHERE invoice_code = payment.invoice_code)', false);
+        $this->db->group_end();
         $this->db->group_end();
         $this->db->group_by('payment.invoice_code');
 
-        return $this->db->last_query();
-
         return $this->db->get($this->table." payment")->result();
+
     }
 
     public function select_invoice($data)

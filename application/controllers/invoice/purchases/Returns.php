@@ -97,10 +97,10 @@ class Returns extends Purchase
 			);
 			try {
 				echo '<pre>';
-				// CREATE
+				//// CREATE
 				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 				$this->create_or_update_invoice($payment);
-				// $this->create_or_update_invoice_parent($payment);
+			/// $this->create_or_update_invoice_parent($payment);
 				$this->update_items($items);
 				$this->create_or_update_list_item_transcation($items);
 				$this->create_or_update_list_item_fifo($items);

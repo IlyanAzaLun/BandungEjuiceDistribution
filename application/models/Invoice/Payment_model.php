@@ -12,8 +12,7 @@ class Payment_model extends MY_Model
 
     public function get_payment_information_by_invoice_code($data)
     {
-        $this->db->where('invoice_code', $data);
-        return $this->db->get($this->table)->row();
+		return $this->db->get_where($this->table, ['invoice_code' => $data])->last_row();
     }
     
     public function update_by_code_invoice($code, $data)

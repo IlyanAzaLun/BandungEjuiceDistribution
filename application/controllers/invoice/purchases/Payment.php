@@ -31,6 +31,7 @@ class Payment extends MY_Controller
 		}else{
 			postAllowed();
 			$this->page_data['data_post'] = $this->input->post();
+			$this->session->set_flashdata('lolwut',$this->page_data['data_post']);
 			$date = preg_split('/[-]/', $this->page_data['data_post']['min']);
 			$this->page_data['data_post']['date'] = array(
 				'date_start' => trim(str_replace('/', '-', $date[0])), 
@@ -62,7 +63,16 @@ class Payment extends MY_Controller
 			unset($request->created_at);
 
 			$response = $this->payment_model->create($request);
-			var_dump($response);
+			if($response){
+				$this->activity_model->add("Create Payment Invoice, #" . $this->data['invoice_code'], (array) $payment);
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
+				redirect($_SERVER['HTTP_REFERER']);
+			}else{
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Failed');
+				redirect($_SERVER['HTTP_REFERER']);
+			}
 		}
 
 	}
