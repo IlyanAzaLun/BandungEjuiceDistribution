@@ -32,53 +32,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Search and Find our debt..</h3>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body">
-            <?php echo form_open('invoice/purchases/payment/debt', ['method' => 'POST', 'autocomplete' => 'off']); ?>
-            <div class="row">
-              <div class="col-10">
-                <div class="row">
-
-                  <div class="col-lg-5 col-sm-12">
-                    <div class="form-group input-group">
-                      <input class="form-control" type="text" id="min" name="min" value="<?=$data_post['min']?>">
-                      <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-7 col-sm-12"></div>
-                  <div class="col-lg-3 col-sm-12">
-                    <input class="form-control" type="hidden" id="supplier_code" name="supplier_code" value="<?=$data_post['supplier_code']?>" required>
-                    <div class="form-group">
-                      <input class="form-control" type="text" id="supplier_name" name="supplier_name" value="<?=$data_post['supplier_name']?>" required>
-                      <?= form_error('supplier_code', '<small class="text-danger">', '</small>') ?>
-                    </div>
-                  </div>
-                  <div class="col-lg-2 col-sm-12">
-                    <button type="submit" class="btn btn-info btn-block start">
-                      <span>Start search</span>&nbsp;&nbsp;
-                      <i class="fa fa-fw fa-search"></i>
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-              <div class="col-2">
-              <?php if (hasPermissions('sale_create')) : ?>
-                <!-- EMPTY -->
-              <?php endif ?>
-              </div>
-            </div>
-            <?php echo form_close(); ?>
-
-          </div>
-          <!-- /.card-body -->
-        </div>
         <!-- payment -->
         <div class="card" id="to_pay" style="display: none;">
 
@@ -126,60 +79,81 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- ./payment -->
         <!-- /.card -->
         <div class="card">
+            
+          <div class="card-header">
+            <h3 class="card-title">List History</h3>
+          </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-3 col sm-12"><b><?=lang('invoice_code')?></b></div>
-              <div class="col-md-1 col sm-12"><b><?=lang('created_at')?></b></div>
+              <div class="col-md-2 col sm-12"><b><?=lang('created_at')?></b></div>
               <div class="col-md-2 col sm-12"><b><?=lang('date_due')?></b></div>
-              <div class="col-md-1 col sm-12"><span class="float-right"><b><?=lang('grandtotal')?></b></span></div>
               <div class="col-md-1 col sm-22"><span class="float-right"><b><?=lang('payup')?></b></span></div>
               <div class="col-md-2 col sm-12"><span class="float-right"><b><?=lang('leftovers')?></b></span></div>
-              <div class="col-md-1 col sm-12"><b><?=lang('created_by')?></b></div>
+              <div class="col-md-2 col sm-12"><b><?=lang('created_by')?></b></div>
+              <div class="col-md-2 col sm-12"><b><?=lang('updated_by')?></b></div>
               <div class="col-md-1 col sm-12 text-center"><b><?=lang('option')?></b></div>
             </div>
             <?php $grandtotal = 0;$payup = 0;$leftovers = 0;?>
             <table class="table table-sm table-hover table-border">
-            <?php foreach ($data_list_debts as $key => $list):?>
+            <?php foreach ($response_data as $key => $list):?>
             <tr class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>" <?php echo(!hasPermissions('example') && (getCurrentcy($list->leftovers) <= 0))?'style="display:none;"':''?>>
               <td>
                 <div class="row">
-                  <div class="col-md-3 col sm-12"><?=$list->invoice_code?></div>
-                  <div class="col-md-1 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
+                  <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
                   <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->date_start)).' ~ '.date("d-m-Y",strtotime($list->date_due))?></div>
-                  <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->grand_total)?></span></div>
-                  <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup)?></span></div>
+                  <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup - $response_data[$key+1]->payup)?></span></div>
                   <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
-                  <div class="col-md-1 col sm-12"><?=$list->user_created?></div>
+                  <div class="col-md-2 col sm-12"><?=$list->user_created?></div>
+                  <div class="col-md-2 col sm-12"><?=$list->user_updated?></div>
                   <div class="col-md-1 col sm-12">
-                    <div class="btn-group btn-block" id="to_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
-                      <?php if(getCurrentcy($list->leftovers) > 0):?>
-                      <button class="btn btn-sm btn-default" id="to_pay"><i class="fa fa-fw fa-dollar-sign text-primary"></i></button>
-                      <?php endif; ?>
-                      <a href="<?= url('invoice/purchases/payment/history') ?>?invoice_code=<?=$list->invoice_code?>" class="btn btn-sm btn-default"><i class="fa fa-fw fa-history text-primary"></i></a>
+                    <div class="btn-group btn-block" id="edit_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
+                      <button class="btn btn-sm btn-default" id="edit_pay"><i class="fa fa-fw fa-edit text-primary"></i></button>
                     </div>
                   </div>
                 </div>
               </td>
+            </tr>
             <?php $grandtotal += $list->grand_total;$payup += $list->payup;$leftovers += $list->leftovers;?>
-            </tr>
             <?php endforeach; ?>
-            <tr>
-              <td>
-                  <div class="row">
-                    <div class="col-md-3 col sm-12"></div>
-                    <div class="col-md-1 col sm-12"></div>
-                    <div class="col-md-2 col sm-12"></div>
-                    <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($grandtotal)?></b></span></div>
-                    <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($payup)?></b></span></div>
-                    <div class="col-md-2 col sm-12"><span class="float-right"><b><?=getCurrentcy($leftovers)?></b></span></div>
-                    <div class="col-md-1 col sm-12"></div>
-                    <div class="col-md-1 col sm-12"></div>
-                  </div>
-              </td>
-            </tr>
             </table>  
           </div>          
         </div>
+
+        <!-- Information Purchase -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><?=lang('purchase_info')?></h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                <div class="col-lg-4 col-sm-12">
+                        <h6><?=lang('invoice_code')?>:</h6>
+                        <b><?=get('invoice_code')?></b>
+                    </div>
+                    <div class="col-md-2 col-lg-1 offset-lg-6 col-sm-12">
+                        <span class="float-right">
+                            <h6><?=lang('grandtotal')?>:</h6>
+                            <b><?=getCurrentcy($response_data[0]->grand_total)?></b>
+                        </span>
+                    </div>
+                    <div class="col-md-2 col-lg-1 col-sm-12">
+                        <span class="float-right">
+                            <h6><?=lang('payup')?>:</h6>
+                            <b><?=getCurrentcy($payup)?></b>
+                        </span>
+                    </div>
+                    
+                    <div class="col-md-2 col-lg-1 col-sm-12 mt-2">
+                        <button class="btn btn-primary btn-block" id="to_pay">
+                            <i class="fa fa-fw fa-dollar-sign"></i>&nbsp;&nbsp;
+                            <span><?=lang('payup')?></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Information Purchase -->
+
 
       </div>
       <!-- /.col -->
@@ -208,4 +182,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   });
 </script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/payment/debt/mainDebtSearch.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/payment/debt/mainDebtHistory.js"></script>

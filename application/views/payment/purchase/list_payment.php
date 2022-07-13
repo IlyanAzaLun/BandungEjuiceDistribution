@@ -229,12 +229,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return '';
           }
         },{
-          data: "id",
+          data: "invoice_code",
           orderable: false,
           render: function(data, type, row) {
             return `
                 <div class="btn-group d-flex justify-content-center">
-                    <a target="_blank" href="<?= url('items') ?>/edit?id=${row['id']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-tw fa-edit text-primary"></i></a>
+                    <a href="<?= url('invoice/purchases/payment/history') ?>?invoice_code=${row['invoice_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Edit items"><i class="fa fa-fw fa-history text-primary"></i></a>
                 </div>`;
           }
         },

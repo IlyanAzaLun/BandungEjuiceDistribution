@@ -573,6 +573,7 @@ $lang['payment'] = "Pembayaran";
 $lang['indebtedness'] = "Hutang Pembelian";
 $lang['payment_indebtedness'] = "Pembayaran Hutang";
 $lang['payment_indebtedness_list'] = "Daftar Hutang";
+$lang['history_payment_indebtedness'] = "Riwayat Pembayaran Hutang";
 
 $lang['receivables'] = "Piutang Penjualan";
 $lang['payment_receivables'] = "Pembayaran Piutang";

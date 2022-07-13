@@ -53,6 +53,38 @@ class Indebtedness extends MY_Model {
 
     }
 
+    public function fetch_history_payment_by_invoice_code($data)
+    {
+        $this->db->select('
+        payment.id
+        , payment.invoice_code
+        , payment.date_start
+        , payment.date_due
+        , payment.customer_code
+        , payment.grand_total
+        , payment.payup
+        , payment.leftovers
+        , payment.status_payment
+        , payment.payment_type
+        , payment.bank_id
+        , payment.is_cancelled
+        , payment.cancel_note
+        , payment.created_by
+        , payment.created_at
+        , payment.updated_by
+        , payment.updated_at
+        , payment.description
+        , user_created.name as user_created
+        , user_updated.name as user_updated');
+        $this->db->group_start();
+        $this->db->where('payment.invoice_code', $data['invoice_code']);
+        $this->db->group_end();
+        $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
+        $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
+        $this->db->order_by('payment.created_at', 'DESC');
+        return $this->db->get($this->table." payment")->result();
+    }
+
     public function select_invoice($data)
     {
         $this->db->group_start();

@@ -22,7 +22,7 @@ class Payment extends MY_Controller
 
 	public function debt()
 	{
-        ifPermissions('payment');
+        ifPermissions('total_debt_to');
 		$this->page_data['title'] = 'payment_indebtedness';
 		$this->page_data['page']->submenu_child = 'payment_indebtedness';
 		$this->form_validation->set_rules('supplier_code', 'Customer Name', 'required|trim');
@@ -42,17 +42,36 @@ class Payment extends MY_Controller
 		}
 	}
 
+	public function history()
+	{
+		ifPermissions('payment');
+		$this->page_data['title'] = 'history_payment_indebtedness';
+		$this->page_data['page']->submenu_child = 'payment_indebtedness';
+		$this->data['request_get'] = $this->input->get();
+		$this->page_data['response_data'] = $this->indebtedness->fetch_history_payment_by_invoice_code($this->data['request_get']);
+		echo '<pre>';
+		// var_dump($this->page_data['response_data']);
+		echo '</pre>';
+		// die();
+		$this->load->view('payment/purchase/history_payment_debt', $this->page_data);
+	}
+
+	public function edit_debt()
+	{
+		# code...
+	}
+
 	public function debt_to()
 	{
         ifPermissions('payment');
 		postAllowed();
-		$this->page_data['data_post'] = $this->input->post();
-		if(!($this->page_data['data_post']['id_payment'] && ((int) $this->page_data['data_post']['to_pay'] > 0))){
+		$this->page_data['requset_post'] = $this->input->post();
+		if(!($this->page_data['requset_post']['id_payment'] && ((int) $this->page_data['requset_post']['to_pay'] > 0))){
 			$this->session->set_flashdata('alert-type', 'danger');
 			$this->session->set_flashdata('alert', 'Faild, Worng information');
 			redirect('invoice/purchases/payment/debt');
 		}else{
-			$request = $this->payment_model->getById($this->page_data['data_post']['id_payment']);
+			$request = $this->payment_model->getById($this->page_data['requset_post']['id_payment']);
 			$dataPost = $this->input->post();
 			$request->leftovers = $request->leftovers - setCurrency($dataPost['to_pay']);
 			$request->payup = $request->payup + setCurrency($dataPost['to_pay']);
@@ -67,11 +86,11 @@ class Payment extends MY_Controller
 				$this->activity_model->add("Create Payment Invoice, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
-				redirect($_SERVER['HTTP_REFERER']);
+				redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);
 			}else{
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Failed');
-				redirect($_SERVER['HTTP_REFERER']);
+				redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);
 			}
 		}
 

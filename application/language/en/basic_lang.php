@@ -582,6 +582,7 @@ $lang['payment'] = "Payment";
 $lang['indebtedness'] = "Indebtedness";
 $lang['payment_indebtedness'] = "Debt Payments";
 $lang['payment_indebtedness_list'] = "Indebtedness List";
+$lang['history_payment_indebtedness'] = "History Debt Payment";
 
 $lang['receivables'] = "Receivables";
 $lang['payment_receivables'] = "Receivable Payments";
