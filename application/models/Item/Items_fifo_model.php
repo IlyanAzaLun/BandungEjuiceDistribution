@@ -233,6 +233,19 @@ class Items_fifo_model extends MY_Model
         $this->db->update($this->table, $data);
         return $id;
     }
+
+    ////where is_readable = 1, is_cancel = 0, where item_code set item_quantity = 0 
+    public function reset_fifo_by_item_code($data)
+    {
+        $this->db->where('is_readable', 1);
+        $this->db->where('is_cancelled', 0);
+        $this->db->where('reference_purchase', null, true);
+        $this->db->where('item_code', $data);
+        $this->db->update('fifo_items', array('item_quantity' => 0));
+        return true;
+
+    }
+
 }
 
 /* End of file Items_model.php */

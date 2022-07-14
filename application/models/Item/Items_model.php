@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Items_model extends MY_Model
 {
 
-	public $table = 'Items';
+	public $table = 'items';
 
 	public function __construct()
 	{
@@ -16,12 +16,13 @@ class Items_model extends MY_Model
 		$this->db->trans_start();
 		$this->db->where('item_code', $data);
 		if ($field) {
-			$data = $this->db->get($this->table)->row()->$field;
+			$resp = $this->db->get($this->table)->row_array();
+			$response = $resp[$field];
 		} else {
-			$data = $this->db->get($this->table)->row();
+			$response = $this->db->get($this->table)->row();
 		}
 		$this->db->trans_complete();
-		return $data;
+		return $response;
 	}
 }
 

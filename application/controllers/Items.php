@@ -100,76 +100,83 @@ class Items extends MY_Controller
         $i = 0;
         // RESET VALUE PREVIOUS QUANTITY TO ZERO
         $this->items_fifo_model->update(true, array('item_quantity' => 0));
-
+        $now = date('ym');
         foreach ($data as $key => $value) {
             if ($key == 1) {
                 continue;
             } else {
-                array_push($request, [
-                    'item_code' => $value['A'],
-                    'item_name' => $value['B'],
-                    'category' => $value['C'],
-                    'brand' => $value['M'],
-                    'brands' => $value['N'],
-                    'mg' => $value['D'],
-                    'ml' => $value['E'],
-                    'vg' => $value['F'],
-                    'pg' => $value['G'],
-                    'flavour' => $value['H'],
-                    'quantity' => $value['I'],
-                    'unit' => $value['J'],
-                    'capital_price' => $value['K'],
-                    'selling_price' => $value['L'],
-                    'customs' => $value['O'],
-                    'note' => $value['P'],
-                    'created_by' => logged('id'),
-                ]);
-                
-                //transaction
-                array_push($items_fifo, [
-                    'invoice_code' => 'IMPORT',
-                    'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
-                    'item_code' => $value['A'],
-                    'item_name' => $value['B'],
-                    'item_quantity' => $value['I'],
-                    'item_unit' => $value['J'],
-                    'item_capital_price' => $value['K'],
-                    'item_discount' => 0,
-                    'customer_code' => 0,
-                    'total_price' => 0,
-                    'created_by' => logged('id'),
-                ]);
-                array_push($items_transaction, [
-                    'invoice_code' => 'IMPORT',
-                    'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
-                    'item_code' => $value['A'],
-                    'item_name' => $value['B'],
-                    'item_current_quantity' => 0, // not used on fifo
-                    'item_quantity' => $value['I'],
-                    'item_unit' => $value['J'],
-                    'item_capital_price' => $value['K'],
-                    'item_selling_price' => $value['L'], // not used on fifo
-                    'item_status' => 'IN', // not used on fifo
-                    'item_discount' => 0,
-                    'item_description' => 0, // not used on fifo
-                    'index_list' => 0, // not used on fifo
-                    'customer_code' => 0,
-                    'total_price' => 0,
-                    'created_by' => logged('id'),
-                ]);
-                if($this->items_model->getByCodeItem($value['A'], 'item_code')){
-                    $data_positif[] = $request[$i];
+                if(!$value['A']){
+                    break;
                 }else{
-                    $data_negatif[] = $request[$i];
+                    array_push($request, [
+                        'item_code' => $value['A'],
+                        'item_name' => $value['B'],
+                        'category' => $value['C'],
+                        'brand' => $value['M'],
+                        'brands' => $value['N'],
+                        'mg' => $value['D'],
+                        'ml' => $value['E'],
+                        'vg' => $value['F'],
+                        'pg' => $value['G'],
+                        'flavour' => $value['H'],
+                        'quantity' => $value['I'],
+                        'unit' => $value['J'],
+                        'capital_price' => $value['K'],
+                        'selling_price' => $value['L'],
+                        'customs' => $value['O'],
+                        'note' => $value['P'],
+                        'created_by' => logged('id'),
+                    ]);
+                    //transaction
+                    array_push($items_fifo, [
+                        'invoice_code' => "IMPORT/$now",
+                        'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
+                        'item_code' => $value['A'],
+                        'item_name' => $value['B'],
+                        'item_quantity' => $value['I'],
+                        'item_unit' => $value['J'],
+                        'item_capital_price' => $value['K'],
+                        'item_discount' => 0,
+                        'customer_code' => 0,
+                        'total_price' => 0,
+                        'created_by' => logged('id'),
+                    ]);
+                    array_push($items_transaction, [
+                        'invoice_code' => "IMPORT/$now",
+                        'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
+                        'item_code' => $value['A'],
+                        'item_name' => $value['B'],
+                        'item_current_quantity' => 0, // not used on fifo
+                        'item_quantity' => $value['I'],
+                        'item_unit' => $value['J'],
+                        'item_capital_price' => $value['K'],
+                        'item_selling_price' => $value['L'], // not used on fifo
+                        'item_status' => 'IN', // not used on fifo
+                        'item_discount' => 0,
+                        'item_description' => 0, // not used on fifo
+                        'index_list' => 0, // not used on fifo
+                        'customer_code' => 0,
+                        'total_price' => 0,
+                        'created_by' => logged('id'),
+                    ]);
+                    if($this->items_model->getByCodeItem($value['A'], 'item_code')){
+                        $data_positif[] = $request[$i];
+                    }else{
+                        $data_negatif[] = $request[$i];
+                    }
+                    ////where is_readable = 1, is_cancel = 0, where item_code set item_quantity = 0 
+                    $this->items_fifo_model->reset_fifo_by_item_code($value['A']);
+
+                    $this->activity_model->add("New Item Upload, #" . $value['A'] . ", Created by User: #" . logged('id'));
+                    $i++;
                 }
-                $this->activity_model->add("New Item Upload, #" . $value['A'] . ", Created by User: #" . logged('id'));
-                $i++;
             }
         }
+
         // UPDATE OR CREATE ITEMS
         if (@$data_negatif) {
             if ($this->items_model->create_batch($data_negatif) && $this->items_model->update_batch($data_positif, 'item_code')) {
-				return true;
+                // 
 			}
         }else{
             $this->items_model->update_batch($data_positif, 'item_code');
@@ -258,16 +265,16 @@ class Items extends MY_Controller
     {
         $item = array();
         foreach ($data as $key => $value) {
-            array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row());
-            $data[$key]['item_id'] = $item[$key]->id;
-            $data[$key]['item_quantity'] = $item[$key]->quantity;
+            $item[$key] = $this->db->get_where('items', ['item_code' => $value['item_code']])->row_array();
+            $data[$key]['item_id'] = $item[$key]['id'];
+            $data[$key]['item_quantity'] = $item[$key]['quantity'];
             $data[$key]['item_order_quantity'] = $value['quantity'];
             $data[$key]['item_unit'] = $value['unit'];
             $data[$key]['item_capital_price'] = $value['capital_price'];
             $data[$key]['item_selling_price'] = $value['selling_price'];
             $data[$key]['status_type'] = $status_type;
             $data[$key]['status_transaction'] = __CLASS__;
-            $data[$key]['category'] = $item[$key]->category;
+            $data[$key]['category'] = $item[$key]['category'];
             $data[$key]['created_by'] = logged('id');
             unset($data[$key]['capital_price']);
             unset($data[$key]['is_active']);
@@ -876,6 +883,27 @@ class Items extends MY_Controller
             $response = $this->db->get('items')->result();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         };
+    }
+
+    public function test()
+    {
+        $this->db->trans_start();
+        $this->db->set('item_quantity', 0);
+        
+        $this->db->group_start();
+        $this->db->where('is_readable', 1);
+        $this->db->where('is_cancelled', 0);
+        $this->db->where('reference_purchase', null, true);
+        $this->db->group_end();
+        
+        $this->db->group_start();
+        $this->db->where_in('item_code', $data);
+        $this->db->group_end();
+        
+        $this->db->get('fifo_items')->result();
+        $this->db->trans_complete();
+
+        var_dump($this->db->last_query());
     }
 }
 
