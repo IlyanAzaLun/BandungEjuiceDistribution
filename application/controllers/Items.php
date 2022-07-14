@@ -98,9 +98,8 @@ class Items extends MY_Controller
         $items_fifo = [];
         $items_transaction = [];
         $i = 0;
-        // RESET VALUE PREVIOUS QUANTITY TO ZERO
-        $this->items_fifo_model->update(true, array('item_quantity' => 0));
         $now = date('ym');
+        $item = array();
         foreach ($data as $key => $value) {
             if ($key == 1) {
                 continue;
@@ -108,6 +107,7 @@ class Items extends MY_Controller
                 if(!$value['A']){
                     break;
                 }else{
+                    $item = $this->items_model->getByCodeItem($value['A']);
                     array_push($request, [
                         'item_code' => $value['A'],
                         'item_name' => $value['B'],
@@ -130,7 +130,7 @@ class Items extends MY_Controller
                     //transaction
                     array_push($items_fifo, [
                         'invoice_code' => "IMPORT/$now",
-                        'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
+                        'item_id' => $item->id,
                         'item_code' => $value['A'],
                         'item_name' => $value['B'],
                         'item_quantity' => $value['I'],
@@ -138,15 +138,15 @@ class Items extends MY_Controller
                         'item_capital_price' => $value['K'],
                         'item_discount' => 0,
                         'customer_code' => 0,
-                        'total_price' => 0,
+                        'total_price' => (int) $value['I'] * (int) $value['K'],
                         'created_by' => logged('id'),
                     ]);
                     array_push($items_transaction, [
                         'invoice_code' => "IMPORT/$now",
-                        'item_id' => $this->items_model->getByCodeItem($value['A'], 'id'),
+                        'item_id' => $item->id,
                         'item_code' => $value['A'],
                         'item_name' => $value['B'],
-                        'item_current_quantity' => 0, // not used on fifo
+                        'item_current_quantity' => (int) $item->quantity + (int) $value['I'], // not used on fifo
                         'item_quantity' => $value['I'],
                         'item_unit' => $value['J'],
                         'item_capital_price' => $value['K'],
@@ -164,7 +164,8 @@ class Items extends MY_Controller
                     }else{
                         $data_negatif[] = $request[$i];
                     }
-                    ////where is_readable = 1, is_cancel = 0, where item_code set item_quantity = 0 
+                    $request[$i]['invoice_reference'] = "IMPORT/$now";
+                    //where is_readable = 1, is_cancel = 0, where item_code set item_quantity = 0 
                     $this->items_fifo_model->reset_fifo_by_item_code($value['A']);
 
                     $this->activity_model->add("New Item Upload, #" . $value['A'] . ", Created by User: #" . logged('id'));
@@ -172,7 +173,6 @@ class Items extends MY_Controller
                 }
             }
         }
-
         // UPDATE OR CREATE ITEMS
         if (@$data_negatif) {
             if ($this->items_model->create_batch($data_negatif) && $this->items_model->update_batch($data_positif, 'item_code')) {
