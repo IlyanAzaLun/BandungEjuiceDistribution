@@ -17,6 +17,30 @@ class Purchase_model extends MY_Model
         return $this->db->get($this->table)->row();
     }
 
+    public function get_information_invoice_by_code($data)
+    {
+        $this->db->select('
+            payment.id,
+            purchase.invoice_code,
+            purchase.total_price,
+            purchase.discounts,
+            purchase.shipping_cost,
+            purchase.is_shipping_cost,
+            purchase.grand_total,
+            payment.leftovers,
+            payment.payup,
+            purchase.status_payment,
+            purchase.date_start,
+            purchase.date_due,
+            supplier.store_name,
+            supplier.owner_name
+        ');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = purchase.supplier');
+        $this->db->join('invoice_payment payment', 'payment.invoice_code = purchase.invoice_code');
+        $this->db->where('purchase.invoice_code', $data['invoice_code']);
+        return $this->db->get($this->table.' purchase')->last_row();
+    }
+
     public function get_code_invoice_purchase()
     {
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

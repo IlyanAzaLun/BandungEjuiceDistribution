@@ -394,6 +394,9 @@ class Items extends MY_Controller
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('item_code', $searchValue, 'both');
             $this->db->or_like('category', $searchValue, 'both');
+            $this->db->or_like('brand', $searchValue, 'after');
+            $this->db->or_like('brands', $searchValue, 'after');
+            $this->db->or_like('note', $searchValue, 'both');
         }
         $records = $this->db->get('items')->result();
         $totalRecordwithFilter = $records[0]->allcount;
@@ -404,6 +407,9 @@ class Items extends MY_Controller
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('item_code', $searchValue, 'both');
             $this->db->or_like('category', $searchValue, 'both');
+            $this->db->or_like('brand', $searchValue, 'after');
+            $this->db->or_like('brands', $searchValue, 'after');
+            $this->db->or_like('note', $searchValue, 'both');
         }
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
@@ -422,6 +428,8 @@ class Items extends MY_Controller
                 "weight" => (int)$record->weight,
                 "item_broken" => $record->broken,
                 "item_unit" => $record->unit,
+                "brand" => $record->brand,
+                "brands" => $record->brands,
                 "item_capital_price" => $record->capital_price,
                 "item_selling_price" => $record->selling_price,
                 "note" => $record->note,
@@ -878,32 +886,14 @@ class Items extends MY_Controller
             if ($search->value) {
                 $this->db->like('item_code', $search->value, 'both');
                 $this->db->or_like('item_name', $search->value, 'both');
+                $this->db->or_like('brand', $search->value, 'after');
+                $this->db->or_like('brands', $search->value, 'after');
+                $this->db->or_like('note', $search->value, 'both');
             }
             $this->db->order_by('quantity', 'DESC');
             $response = $this->db->get('items')->result();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         };
-    }
-
-    public function test()
-    {
-        $this->db->trans_start();
-        $this->db->set('item_quantity', 0);
-        
-        $this->db->group_start();
-        $this->db->where('is_readable', 1);
-        $this->db->where('is_cancelled', 0);
-        $this->db->where('reference_purchase', null, true);
-        $this->db->group_end();
-        
-        $this->db->group_start();
-        $this->db->where_in('item_code', $data);
-        $this->db->group_end();
-        
-        $this->db->get('fifo_items')->result();
-        $this->db->trans_complete();
-
-        var_dump($this->db->last_query());
     }
 }
 

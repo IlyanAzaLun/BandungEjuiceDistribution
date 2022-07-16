@@ -49,16 +49,56 @@ class Payment extends MY_Controller
 		$this->page_data['page']->submenu_child = 'payment_indebtedness';
 		$this->data['request_get'] = $this->input->get();
 		$this->page_data['response_data'] = $this->indebtedness->fetch_history_payment_by_invoice_code($this->data['request_get']);
-		echo '<pre>';
-		// var_dump($this->page_data['response_data']);
-		echo '</pre>';
-		// die();
+		$this->page_data['data_invoice'] = $this->purchase_model->get_information_invoice_by_code($this->data['request_get']);
 		$this->load->view('payment/purchase/history_payment_debt', $this->page_data);
 	}
 
 	public function edit_debt()
 	{
-		# code...
+		$this->page_data['data_post'] = $this->input->post();
+		if(@$this->page_data['data_post']['search']){
+			$this->db->trans_start();
+			$this->db->select('payment.*, bank.name, bank.no_account, bank.own_by');
+			$this->db->join('bank_information bank', 'bank.id = payment.bank_id');
+			$this->db->where('payment.id', $this->page_data['data_post']['search']['value']);
+			$response = $this->db->get('invoice_payment payment')->row();
+			$this->db->trans_complete();
+
+			$this->output->set_content_type('application/json')->set_output(json_encode($response));
+		}
+		elseif ($this->page_data['data_post']['id_payment']) {
+			// SELECT invoice_payment
+			$data = $this->indebtedness->getById($this->page_data['data_post']['id_payment']);
+			// topay - topay_current
+			$diffirence = setCurrency($this->page_data['data_post']['to_pay']) - setCurrency($this->page_data['data_post']['current_to_pay']);
+			// update invoice_payment where invoice_code = params and date < params
+			$this->db->trans_start();
+			$this->db->where('invoice_code', $data->invoice_code);
+			$this->db->where('created_at >=', $data->created_at);
+			$result = $this->db->get('invoice_payment')->result();
+			$this->db->trans_complete();
+			echo '<pre>';
+			foreach ($result as $key => $value) {
+				// $result[$key]->payup = $value->payup + $diffirence;
+				$result[$key]->leftovers = $value->leftovers - $diffirence;
+				$result[$key]->updated_by = logged('id');
+				$result[$key]->updated_at = date('Y-m-d H:i:s');
+			}
+			$response = $this->indebtedness->update_batch($result, 'id');
+			echo '</pre>';
+			if($response){
+				$this->indebtedness->update($this->page_data['data_post']['id_payment'], ['payup' => setCurrency($this->page_data['data_post']['to_pay'])]);
+				$this->activity_model->add("Create Payment Invoice, #" . $this->page_data['data_post']['invoice_code'], true);
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
+				redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['data_post']['invoice_code']);
+			}else{
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Failed');
+				redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['data_post']['invoice_code']);
+			}
+		}
+
 	}
 
 	public function debt_to()
@@ -74,7 +114,7 @@ class Payment extends MY_Controller
 			$request = $this->payment_model->getById($this->page_data['requset_post']['id_payment']);
 			$dataPost = $this->input->post();
 			$request->leftovers = $request->leftovers - setCurrency($dataPost['to_pay']);
-			$request->payup = $request->payup + setCurrency($dataPost['to_pay']);
+			$request->payup = setCurrency($dataPost['to_pay']);
 			$request->created_by = logged('id');
 			$request->bank_id = $dataPost['bank_id'];
 

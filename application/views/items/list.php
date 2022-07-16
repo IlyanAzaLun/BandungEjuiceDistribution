@@ -37,6 +37,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
                   <th><?= lang('category_item') ?></th>
+                  <th><?= 'Brand 1'?></th>
+                  <th><?= 'Brand 2'?></th>
                   <th><?= lang('item_quantity') ?></th>
                   <th><?= lang('broken') ?></th>
                   <th><?= lang('weight') ?></th>
@@ -55,6 +57,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
                   <th><?= lang('category_item') ?></th>
+                  <th><?= 'Brand 1'?></th>
+                  <th><?= 'Brand 2'?></th>
                   <th><?= lang('item_quantity') ?></th>
                   <th><?= lang('broken') ?></th>
                   <th><?= lang('weight') ?></th>
@@ -118,6 +122,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "category"
+        },
+        {
+          data: "brand"
+        },
+        {
+          visible: false,
+          data: "brands"
         },
         {
           data: 'item_quantity',

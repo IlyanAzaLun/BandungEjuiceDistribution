@@ -54,13 +54,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
               <div class="col-lg-3 col-sm-12">
                 <label for="to_pay"><?=lang('to_payup')?></label>
-                <input type="text" class="form-control currency" id="to_pay" name="to_pay" required>
+                <input type="hidden" id="to_pay" name="current_to_pay" value="0" required>
+                <input type="text" class="form-control currency" id="to_pay" name="to_pay" value="0" required>
               </div>
               
               <div class="col-lg-2 col-sm-12">
                 <label for="beneficiary_name"><?=lang('beneficiary_name')?></label>
-                <input type="hidden" class="form-control bank_name" id="id" name="bank_id" required>
-                <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" required>
+                <input type="hidden" class="form-control bank_name" id="id" name="bank_id" value="" required>
+                <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" value="" required>
               </div>
 
             </div>
@@ -101,7 +102,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="row">
                   <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
                   <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->date_start)).' ~ '.date("d-m-Y",strtotime($list->date_due))?></div>
-                  <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup - $response_data[$key+1]->payup)?></span></div>
+                  <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup)?></span></div>
                   <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
                   <div class="col-md-2 col sm-12"><?=$list->user_created?></div>
                   <div class="col-md-2 col sm-12"><?=$list->user_updated?></div>
@@ -144,7 +145,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     
                     <div class="col-md-2 col-lg-1 col-sm-12 mt-2">
-                        <button class="btn btn-primary btn-block" id="to_pay">
+                        <button class="btn btn-primary btn-block" id="to_pay" data-id="<?=$data_invoice->id?>" data-code_invoice="<?=$data_invoice->invoice_code?>">
                             <i class="fa fa-fw fa-dollar-sign"></i>&nbsp;&nbsp;
                             <span><?=lang('payup')?></span>
                         </button>

@@ -104,23 +104,32 @@ const main = () => {
         // To Edit
         $(document).on('click', 'button#edit_pay', function () {
             let toPayElement = $(this).parent('#edit_pay');
-            $("div.card#to_pay").toggle(200, "linear", function () {
-                $('table tr').removeClass('bg-primary');
-                $('#id_payment').val(toPayElement.data('id'));
-                $('#invoice_code').val(toPayElement.data('code_invoice'));
-                $('form#to_pay').attr('action', `${location.base}invoice/purchases/payment/edit_debt`);
-                toPayElement.parents('tr').addClass('bg-primary');
-            });
+            data_source.payment_information(toPayElement.data('id'), function (callback) {
+                if (callback != null) {
+                    $("div.card#to_pay").toggle(200, "linear", function () {
+                        $('table tr').removeClass('bg-primary');
+                        $('#id_payment').val(toPayElement.data('id'));
+                        $('#invoice_code').val(toPayElement.data('code_invoice'));
+                        $('input#to_pay').val(callback.payup !== null ? currency(callback.payup) : 0);
+                        $('input#bank_id').val(currency(callback.bank_id));
+                        $('input#beneficiary_name').val(callback.own_by);
+                        $('form#to_pay').attr('action', `${location.base}invoice/purchases/payment/edit_debt`);
+                        toPayElement.parents('tr').addClass('bg-primary');
+                    });
+                }
+                else {
+                    alert('This Parent of invoice, please edit on parent invoice!');
+                }
+            })
         })
         // To Pay
         $(document).on('click', 'button#to_pay', function () {
-            let toPayElement = $(this).parent('#edit_pay');
+            let toPayElement = $(this);
             $("div.card#to_pay").toggle(200, "linear", function () {
                 $('table tr').removeClass('bg-primary');
                 $('#id_payment').val(toPayElement.data('id'));
                 $('#invoice_code').val(toPayElement.data('code_invoice'));
                 $('form#to_pay').attr('action', `${location.base}invoice/purchases/payment/debt_to`);
-                toPayElement.parents('tr').addClass('bg-primary');
             });
         })
         $('#to_pay').on('removed.lte.cardwidget', function () {
