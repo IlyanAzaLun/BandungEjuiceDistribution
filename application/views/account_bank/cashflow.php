@@ -3,6 +3,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Daterange picker -->
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/daterangepicker/daterangepicker.css">
 
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.structure.min.css">
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.theme.min.css">
 <?php include viewPath('includes/header'); ?>
 
 <!-- Content Header (Page header) -->
@@ -61,6 +64,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th>no.</th>
                   <th><?= lang('created_at') ?></th>
                   <th><?= lang('updated_at') ?></th>
+                  <th><?= lang('invoice_code') ?></th>
+                  <th><?= lang('grandtotal') ?></th>
+                  <th><?= lang('leftovers') ?></th>
+                  <th><?= lang('store_name') ?></th>
+                  <th><?= lang('status_payment') ?></th>
+                  <th><?= lang('created_by') ?></th>
+                  <th><?= lang('updated_by') ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -111,20 +121,52 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         [5, 50, 100, 200, <?=$this->db->get('invoice_payment')->num_rows()?>],
         [5, 50, 100, 200, "All"]
       ],
-      order: [[ 3, "desc" ]],
+      order: [[ 1, "desc" ]],
       ajax: {
-        "url": "<?php echo url('invoice/payment/cashflow') ?>",
+        "url": "<?php echo url('master_information/account_bank/serverside_datatables_data_payment') ?>",
         "type": "POST",
         "data": function(d) {
           d.startDate = startdate;
           d.finalDate = enddate;
+          d.id_bank = <?=get('id')?>;
         }
       },
       columns: [
         {
+          visible: false,
+          data: "id"
+        },{
           data: "created_at"
         },{
+          visibel:false,
           data: "updated_at"
+        },{
+          data: "invoice_code"
+        },{
+          data: "grand_total",
+          render: function(data, type, row){
+            return currency(data)
+          }
+        },{
+          data: "leftovers",
+          render: function(data, type, row){
+            return currency(data)
+          }
+        },{
+          data: "store_name",
+          render: function(data, type, row){
+            return `${row['store_name']} / ${row['owner_name']}`
+          }
+        },{
+          data: "status_payment",
+          render: function(data, type, row){
+            return data=='1'?'withdrawl':'deposit'
+          }
+        },{
+          data: "user_create_name"
+        },{
+          visible: false,
+          data: "user_update_name"
         },
       ],
       buttons: [{

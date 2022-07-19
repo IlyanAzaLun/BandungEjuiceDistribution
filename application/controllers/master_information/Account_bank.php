@@ -147,6 +147,134 @@ class Account_bank extends MY_Controller
         $this->page_data['title'] = 'transaction';
         $this->load->view('account_bank/cashflow', $this->page_data);
     }
+    public function serverside_datatables_data_payment()
+    {
+        ifPermissions('account_bank_list');
+        $response = array();
+
+        $postData = $this->input->post();
+
+        ## Read value
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
+		$bank_id = $postData['id_bank'];
+
+        ## Total number of records without filtering
+        $this->db->select('count(*) as allcount');
+        $records = $this->db->get('invoice_payment payment')->result();
+        $totalRecords = $records[0]->allcount;
+
+        ## Total number of record with filtering
+        $this->db->select('count(payment.id) as allcount');
+        if ($searchValue != '') {
+            $this->db->group_start();
+            $this->db->like('payment.invoice_code', $searchValue, 'both');
+            $this->db->or_like('payment.customer_code', $searchValue, 'both');
+            $this->db->or_like('payment.description', $searchValue, 'both');
+            $this->db->or_like('supplier.store_name', $searchValue, 'both');
+            $this->db->or_like('supplier.store_name', $searchValue, 'both');
+            
+            $this->db->or_like('customer.owner_name', $searchValue, 'both');
+            $this->db->or_like('customer.owner_name', $searchValue, 'both');
+            $this->db->group_end();
+        }
+        $this->db->where('payment.bank_id', $bank_id);
+        $this->db->join('bank_information bank', 'bank.id = payment.bank_id', 'left');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
+        $this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
+        $records = $this->db->get('invoice_payment payment')->result();
+        $totalRecordwithFilter = $records[0]->allcount;
+
+        ## Fetch records
+        $this->db->select('
+              `payment`.`id`
+            , `payment`.`invoice_code`
+            , `payment`.`date_start`
+            , `payment`.`date_due`
+            , `payment`.`customer_code`
+            , `payment`.`grand_total`
+            ,  MAX(`payment`.`payup`) AS payup
+            ,  MIN(`payment`.`leftovers`) AS leftovers 
+            , `payment`.`status_payment`
+            , `payment`.`payment_type`
+            , `payment`.`bank_id`
+            , `payment`.`is_cancelled`
+            , `payment`.`cancel_note`
+            , `payment`.`created_at`
+            , `payment`.`updated_at`
+            , `payment`.`description`
+            ,  IFNULL(`supplier`.`store_name`, `customer`.`store_name`) AS store_name
+            ,  NVL2(`supplier`.`store_name`, `supplier`.`owner_name`, `customer`.`owner_name`) AS owner_name
+            , `user_create`.`name` AS `user_create_name`
+            , `user_update`.`name` AS `user_update_name`
+        ');
+        if ($searchValue != '') {
+            $this->db->group_start();
+            $this->db->like('payment.invoice_code', $searchValue, 'both');
+            $this->db->or_like('payment.customer_code', $searchValue, 'both');
+            $this->db->or_like('payment.description', $searchValue, 'both');
+            $this->db->or_like('supplier.store_name', $searchValue, 'both');
+            $this->db->or_like('supplier.owner_name', $searchValue, 'both');
+            
+            $this->db->or_like('customer.store_name', $searchValue, 'both');
+            $this->db->or_like('customer.owner_name', $searchValue, 'both');
+            $this->db->group_end();
+        }        
+        $this->db->join('bank_information bank', 'bank.id = payment.bank_id', 'left');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
+        $this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
+        $this->db->join('users user_create', 'user_create.id = payment.created_by', 'left');
+        $this->db->join('users user_update', 'user_update.id = payment.updated_by', 'left');
+        $this->db->where('payment.bank_id', $bank_id);
+        $this->db->group_by('payment.invoice_code');
+        $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->limit($rowperpage, $start);
+        $records = $this->db->get('invoice_payment payment')->result();
+
+        $data = array();
+
+        foreach ($records as $record) {
+
+            $data[] = array(
+                "id" => $record->id,
+                "invoice_code" => $record->invoice_code,
+                "date_start" => $record->date_start,
+                "date_due" => $record->date_due,
+                "customer_code" => $record->customer_code,
+                "grand_total" => $record->grand_total,
+                "payup" => $record->payup,
+                "leftovers" => $record->leftovers,
+                "status_payment" => $record->status_payment,
+                "payment_type" => $record->payment_type,
+                "bank_id" => $record->bank_id,
+                "is_cancelled" => $record->is_cancelled,
+                "cancel_note" => $record->cancel_note,
+                "created_at" => $record->created_at,
+                "updated_at" => $record->updated_at,
+                "description" => $record->description,
+                "store_name" => $record->store_name,
+                "owner_name" => $record->owner_name,
+                "user_create_name" => $record->user_create_name,
+                "user_update_name" => $record->user_update_name,
+            );
+        }
+        // var_dump($this->db->last_query());
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data
+        );
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
 
     public function serverside_datatables_data()
     {

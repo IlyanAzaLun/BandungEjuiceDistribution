@@ -10,15 +10,18 @@ class Payment_model extends MY_Model
         parent::__construct();
     }
 
-    public function get_payment_information_by_invoice_code($data)
+    public function get_payment_information_by_invoice_code($data, $row = false)
     {
-		return $this->db->get_where($this->table, ['invoice_code' => $data])->last_row();
+        if ($row == 'last') {
+            return $this->db->get_where($this->table, ['invoice_code' => $data])->last_row();
+        }
+        return $this->db->get_where($this->table, ['invoice_code' => $data])->first_row();
     }
     
     public function update_by_code_invoice($code, $data)
     {
         $this->db->where('invoice_code', $code);
         $this->db->update($this->table, $data);
-        return $code;    
+        return $code;
     }
 }

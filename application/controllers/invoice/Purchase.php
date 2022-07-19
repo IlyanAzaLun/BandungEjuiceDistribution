@@ -241,8 +241,9 @@ class Purchase extends Invoice_controller
 			$this->create_or_update_list_item_fifo($items);
 			$this->create_or_update_list_chart_cash($payment);
 
-			// UPDATE CURRENT FIFO TRANSACTION
+			// //UPDATE CURRENT FIFO TRANSACTION
 			$this->update_list_item_fifo_transaction($items);
+			echo "<hr>";
 			var_dump($this->db->last_query());
 
 			$this->db->trans_complete();
@@ -641,7 +642,9 @@ class Purchase extends Invoice_controller
 	 **/ 
 	private function create_or_update_list_chart_cash($data)
 	{
+		// SELECT invoice_payment
 		$response = $this->payment_model->get_payment_information_by_invoice_code($this->data['invoice_code']);
+
 		$request['invoice_code'] = $this->data['invoice_code'];
 		$request['date_start'] = $data['date_start'];
 		$request['date_due'] = $data['date_due'];
@@ -669,6 +672,27 @@ class Purchase extends Invoice_controller
 			$request['payup'] = $response->payup; // want to pay
 			$request['leftovers'] = $response->leftovers + $leftover; // remaind
 			//
+			// UPDATE ALL PAYMENT
+			// topay - topay_current
+			$diffirence = setCurrency($data['grand_total']) - $response->grand_total;
+			// update invoice_payment where invoice_code = params and date < params
+			$this->db->trans_start();
+			$this->db->where('invoice_code', $response->invoice_code);
+			$this->db->where('created_at >', $response->created_at);
+			$result = $this->db->get('invoice_payment')->result();
+			$this->db->trans_complete();
+
+			foreach ($result as $key => $value) {
+				// $result[$key]->payup = $value->payup + $diffirence;
+				$result[$key]->leftovers = $value->leftovers + $diffirence;
+				$result[$key]->updated_by = logged('id');
+				$result[$key]->updated_at = date('Y-m-d H:i:s');
+				$result[$key]->grand_total = setCurrency($data['grand_total']);
+			}
+			$response = $this->indebtedness->update_batch($result, 'id');
+
+			// END UPDATE ALL PAYMENT
+
 			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
 		} else {
 			$request['created_by'] = logged('id');
