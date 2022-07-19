@@ -12,10 +12,10 @@ class Payment_model extends MY_Model
 
     public function get_payment_information_by_invoice_code($data, $row = false)
     {
-        if ($row == 'last') {
-            return $this->db->get_where($this->table, ['invoice_code' => $data])->last_row();
-        }
-        return $this->db->get_where($this->table, ['invoice_code' => $data])->first_row();
+        
+        $this->db->where('invoice_code', $data);
+        $this->db->order_by('id', 'ASC');
+        return $this->db->get($this->table)->first_row();
     }
     
     public function update_by_code_invoice($code, $data)

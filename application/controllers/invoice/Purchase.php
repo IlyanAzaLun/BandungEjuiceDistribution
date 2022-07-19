@@ -231,7 +231,7 @@ class Purchase extends Invoice_controller
 				'transaction_source' => post('transaction_source'),
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 			);
-			// EDIT
+			////EDIT
 			echo '<pre>';
 			$this->db->trans_start();
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
@@ -241,7 +241,7 @@ class Purchase extends Invoice_controller
 			$this->create_or_update_list_item_fifo($items);
 			$this->create_or_update_list_chart_cash($payment);
 
-			// //UPDATE CURRENT FIFO TRANSACTION
+			////UPDATE CURRENT FIFO TRANSACTION
 			$this->update_list_item_fifo_transaction($items);
 			echo "<hr>";
 			var_dump($this->db->last_query());
@@ -427,7 +427,12 @@ class Purchase extends Invoice_controller
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items);
-			$this->create_or_update_list_chart_cash($payment);
+			// $this->create_or_update_list_chart_cash($payment);
+			$this->db->trans_start();
+			$this->db->set('is_cancelled', 1);
+			$this->db->where('invoice_code', $this->data['invoice_code']);
+			$this->db->update('invoice_payment');
+			$this->db->trans_complete();
 		} catch (\Throwable $th) {
 			echo "<pre>";
 			var_dump($th);
@@ -650,8 +655,6 @@ class Purchase extends Invoice_controller
 		$request['date_due'] = $data['date_due'];
 		$request['customer_code'] = $data['supplier'];
 		$request['grand_total'] = setCurrency($data['grand_total']);
-		
-		//
 		$request['payment_type'] = $data['payment_type'];
 		if($data['payment_type'] == 'cash'){
 			$request['payup'] = setCurrency($data['grand_total']); // want to pay
@@ -663,37 +666,35 @@ class Purchase extends Invoice_controller
 		$request['status_payment'] = 1; // "withdraw, come out"
 		$request['description'] = $data['note'];
 		if ($response) {
-			//set left ofer
-			$leftover = setCurrency($data['grand_total']) - (int) $response->grand_total;
-			$request['is_cancelled'] = $data['is_cancelled'];
-			$request['cancel_note']  = $data['cancel_note'];
-			$request['updated_by'] = logged('id');
-			$request['updated_at'] = date('Y-m-d H:i:s');
-			$request['payup'] = $response->payup; // want to pay
-			$request['leftovers'] = $response->leftovers + $leftover; // remaind
-			//
+			// SET LEFTOVER
 			// UPDATE ALL PAYMENT
-			// topay - topay_current
-			$diffirence = setCurrency($data['grand_total']) - $response->grand_total;
+			$diffirence = setCurrency($data['grand_total']) - (int) $response->grand_total;
 			// update invoice_payment where invoice_code = params and date < params
-			$this->db->trans_start();
-			$this->db->where('invoice_code', $response->invoice_code);
-			$this->db->where('created_at >', $response->created_at);
+			// $this->db->trans_start();
+			$this->db->where('invoice_payment.invoice_code', $response->invoice_code);
+			$this->db->where('invoice_payment.created_at >=', $response->created_at);
 			$result = $this->db->get('invoice_payment')->result();
-			$this->db->trans_complete();
-
+			// $this->db->trans_complete();
+			
 			foreach ($result as $key => $value) {
+				$result[$key]->invoice_code = $this->data['invoice_code'];
+				$result[$key]->date_start = $data['date_start'];
+				$result[$key]->date_due = $data['date_due'];
+				$result[$key]->customer_code = $data['supplier'];		
 				// $result[$key]->payup = $value->payup + $diffirence;
+				$result[$key]->cancel_note  = $data['cancel_note'];
+				$result[$key]->is_cancelled = $data['is_cancelled'];
 				$result[$key]->leftovers = $value->leftovers + $diffirence;
 				$result[$key]->updated_by = logged('id');
 				$result[$key]->updated_at = date('Y-m-d H:i:s');
 				$result[$key]->grand_total = setCurrency($data['grand_total']);
 			}
-			$response = $this->indebtedness->update_batch($result, 'id');
+
+			return $this->indebtedness->update_batch($result, 'id');
 
 			// END UPDATE ALL PAYMENT
 
-			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
+			// return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
 		} else {
 			$request['created_by'] = logged('id');
 			//	

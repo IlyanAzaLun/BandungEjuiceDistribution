@@ -97,7 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php $grandtotal = 0;$payup = 0;$leftovers = 0;?>
             <table class="table table-sm table-hover table-border">
             <?php foreach ($response_data as $key => $list):?>
-            <tr class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>" <?php echo(!hasPermissions('example') && (getCurrentcy($list->leftovers) <= 0))?'style="display:none;"':''?>>
+            <tr class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>">
               <td>
                 <div class="row">
                   <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
