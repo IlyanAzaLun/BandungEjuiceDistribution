@@ -366,11 +366,12 @@ const main = () => {
 
         //form submit
         $('form.form-validate').on('submit', function (event) {
+            $('button[type="submit"]').prop('disabled', true)
             validation_form(function (output) {
                 if (!output) {
                     event.preventDefault();
+                    $('button[type="submit"]').prop('disabled', false)
                     $('.loading').css({ "display": "none" });
-
                 }
             })
         })
