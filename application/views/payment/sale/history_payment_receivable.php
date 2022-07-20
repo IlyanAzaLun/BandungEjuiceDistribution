@@ -35,7 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <!-- payment -->
         <div class="card" id="to_pay" style="display: none;">
 
-        <?php echo form_open_multipart('invoice/purchases/payment/debt_to', ['class' => 'form-validate', 'id' => 'to_pay', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart('invoice/sales/payment/receivable_from', ['class' => 'form-validate', 'id' => 'to_pay', 'autocomplete' => 'off']); ?>
           
           <div class="card-header">
             <h3 class="card-title">Wont to pay ?</h3>
