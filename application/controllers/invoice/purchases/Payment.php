@@ -14,7 +14,6 @@ class Payment extends MY_Controller
     
     public function index()
     {
-        ifPermissions('payment');
 		$this->page_data['title'] = 'payment_indebtedness_list';
         $this->page_data['page']->submenu_child = 'indebtedness_list';
         $this->load->view('payment/purchase/list_payment', $this->page_data);
@@ -44,7 +43,6 @@ class Payment extends MY_Controller
 
 	public function history()
 	{
-		ifPermissions('payment');
 		$this->page_data['title'] = 'history_payment_indebtedness';
 		$this->page_data['page']->submenu_child = 'payment_indebtedness';
 		$this->data['request_get'] = $this->input->get();
@@ -103,7 +101,6 @@ class Payment extends MY_Controller
 
 	public function debt_to()
 	{
-        ifPermissions('payment');
 		postAllowed();
 		$this->page_data['requset_post'] = $this->input->post();
 		if(!($this->page_data['requset_post']['id_payment'] && ((int) $this->page_data['requset_post']['to_pay'] > 0))){

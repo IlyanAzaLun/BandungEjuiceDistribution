@@ -22,6 +22,30 @@ class Sale_model extends MY_Model
         return $this->db->get($this->table)->row();
     }
 
+    public function get_information_invoice_by_code($data)
+    {
+        $this->db->select('
+            payment.id,
+            sale.invoice_code,
+            sale.total_price,
+            sale.discounts,
+            sale.shipping_cost,
+            sale.is_shipping_cost,
+            sale.grand_total,
+            payment.leftovers,
+            payment.payup,
+            sale.status_payment,
+            sale.date_start,
+            sale.date_due,
+            customer.store_name,
+            customer.owner_name
+        ');
+        $this->db->join('customer_information customer', 'customer.customer_code = sale.customer');
+        $this->db->join('invoice_payment payment', 'payment.invoice_code = sale.invoice_code');
+        $this->db->where('sale.invoice_code', $data['invoice_code']);
+        return $this->db->get($this->table.' sale')->last_row();
+    }
+
     public function get_num_rows_sale()
     {
         $logged = logged('id');

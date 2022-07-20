@@ -6,6 +6,7 @@ class Payment extends MY_Controller
     public function __construct()
 	{
 		parent::__construct();
+		ifPermissions('payment');
 		$this->page_data['page']->title = 'Payment';
 		$this->page_data['page']->menu = 'Payment';
 		$this->page_data['page']->submenu = 'receivables';
@@ -13,9 +14,124 @@ class Payment extends MY_Controller
     
     public function index()
     {
+		$this->page_data['title'] = 'payment_receivables_list';
         $this->page_data['page']->submenu_child = 'receivables_list';
         $this->load->view('payment/sale/list_payment', $this->page_data);
     }
+	
+	public function receivable()
+	{
+		$this->page_data['title'] = 'payment_receivables';
+		$this->page_data['page']->submenu_child = 'payment_receivables';
+		$this->form_validation->set_rules('customer_code', 'Customer Name', 'required|trim');
+        if ($this->form_validation->run() == false) {
+			$this->load->view('payment/sale/receivable', $this->page_data);
+		}
+		else{
+			postAllowed();
+			$this->page_data['data_post'] = $this->input->post();
+			$this->session->set_flashdata('lolwut',$this->page_data['data_post']);
+			$date = preg_split('/[-]/', $this->page_data['data_post']['min']);
+			$this->page_data['data_post']['date'] = array(
+				'date_start' => trim(str_replace('/', '-', $date[0])), 
+				'date_end'	 => trim(str_replace('/', '-', $date[1]))
+			);
+			$this->page_data['data_list_receivables'] = $this->receivables->select_invoice_by_customer_code($this->page_data['data_post']);
+			$this->load->view('payment/sale/receivable_list', $this->page_data);
+		}
+	}
+
+	public function history()
+	{
+		$this->page_data['title'] = 'history_payment_receivable';
+		$this->page_data['page']->submenu_child = 'payment_receivables';
+		$this->data['request_get'] = $this->input->get();
+		$this->page_data['response_data'] = $this->receivables->fetch_history_payment_by_invoice_code($this->data['request_get']);
+		$this->page_data['data_invoice'] = $this->sale_model->get_information_invoice_by_code($this->data['request_get']);
+		$this->load->view('payment/sale/history_payment_receivable', $this->page_data);
+	}
+
+	public function edit_receivable()
+	{
+		$this->page_data['data_post'] = $this->input->post();
+		if(@$this->page_data['data_post']['search']){
+			$this->db->trans_start();
+			$this->db->select('payment.*, bank.name, bank.no_account, bank.own_by');
+			$this->db->join('bank_information bank', 'bank.id = payment.bank_id');
+			$this->db->where('payment.id', $this->page_data['data_post']['search']['value']);
+			$response = $this->db->get('invoice_payment payment')->row();
+			$this->db->trans_complete();
+
+			$this->output->set_content_type('application/json')->set_output(json_encode($response));
+		}
+		elseif ($this->page_data['data_post']['id_payment']) {
+			// SELECT invoice_payment
+			$data = $this->receivables->getById($this->page_data['data_post']['id_payment']);
+			// topay - topay_current
+			$diffirence = setCurrency($this->page_data['data_post']['to_pay']) - setCurrency($this->page_data['data_post']['current_to_pay']);
+			// update invoice_payment where invoice_code = params and date < params
+			$this->db->trans_start();
+			$this->db->where('invoice_code', $data->invoice_code);
+			$this->db->where('created_at >=', $data->created_at);
+			$result = $this->db->get('invoice_payment')->result();
+			$this->db->trans_complete();
+			echo '<pre>';
+			foreach ($result as $key => $value) {
+				// $result[$key]->payup = $value->payup + $diffirence;
+				$result[$key]->leftovers = $value->leftovers - $diffirence;
+				$result[$key]->updated_by = logged('id');
+				$result[$key]->updated_at = date('Y-m-d H:i:s');
+			}
+			$response = $this->receivables->update_batch($result, 'id');
+			echo '</pre>';
+			if($response){
+				$this->receivables->update($this->page_data['data_post']['id_payment'], ['payup' => setCurrency($this->page_data['data_post']['to_pay'])]);
+				$this->activity_model->add("Create Payment Invoice, #" . $this->page_data['data_post']['invoice_code'], true);
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
+				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['data_post']['invoice_code']);
+			}else{
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Failed');
+				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['data_post']['invoice_code']);
+			}
+		}
+
+	}
+
+	public function receivable_from()
+	{
+		postAllowed();
+		$this->page_data['requset_post'] = $this->input->post();
+		if(!($this->page_data['requset_post']['id_payment'] && ((int) $this->page_data['requset_post']['to_pay'] > 0))){
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Faild, Worng information');
+			redirect('invoice/sales/payment/receivable');
+		}else{
+			$request = $this->payment_model->getById($this->page_data['requset_post']['id_payment']);
+			$dataPost = $this->input->post();
+			$request->leftovers = $request->leftovers - setCurrency($dataPost['to_pay']);
+			$request->payup = setCurrency($dataPost['to_pay']);
+			$request->created_by = logged('id');
+			$request->bank_id = $dataPost['bank_id'];
+
+			unset($request->id);
+			unset($request->created_at);
+
+			$response = $this->payment_model->create($request);
+			if($response){
+				$this->activity_model->add("Create Payment Invoice, #" . $this->data['invoice_code'], (array) $payment);
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
+				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);
+			}else{
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'New Payment Invoice Failed');
+				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);
+			}
+		}
+
+	}
 
     public function serverside_datatables_data_payment_sale()
     {
