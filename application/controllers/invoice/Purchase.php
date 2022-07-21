@@ -670,14 +670,13 @@ class Purchase extends Invoice_controller
 			// UPDATE ALL PAYMENT
 			$diffirence = setCurrency($data['grand_total']) - (int) $response->grand_total;
 			// update invoice_payment where invoice_code = params and date < params
-			// $this->db->trans_start();
+			$this->db->trans_start();
 			$this->db->where('invoice_payment.invoice_code', $response->invoice_code);
 			$this->db->where('invoice_payment.created_at >=', $response->created_at);
 			$result = $this->db->get('invoice_payment')->result();
-			// $this->db->trans_complete();
+			$this->db->trans_complete();
 			
 			foreach ($result as $key => $value) {
-				$result[$key]->invoice_code = $this->data['invoice_code'];
 				$result[$key]->date_start = $data['date_start'];
 				$result[$key]->date_due = $data['date_due'];
 				$result[$key]->customer_code = $data['supplier'];		
@@ -689,7 +688,6 @@ class Purchase extends Invoice_controller
 				$result[$key]->updated_at = date('Y-m-d H:i:s');
 				$result[$key]->grand_total = setCurrency($data['grand_total']);
 			}
-
 			return $this->indebtedness->update_batch($result, 'id');
 
 			// END UPDATE ALL PAYMENT

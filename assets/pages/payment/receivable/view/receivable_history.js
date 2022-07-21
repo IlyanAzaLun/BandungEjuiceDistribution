@@ -113,7 +113,7 @@ const main = () => {
                         $('input#to_pay').val(callback.payup !== null ? currency(callback.payup) : 0);
                         $('input#bank_id').val(currency(callback.bank_id));
                         $('input#beneficiary_name').val(callback.own_by);
-                        $('form#to_pay').attr('action', `${location.base}invoice/purchases/payment/edit_debt`);
+                        $('form#to_pay').attr('action', `${location.base}invoice/sales/payment/edit_receivable`);
                         toPayElement.parents('tr').addClass('bg-primary');
                     });
                 }
@@ -129,7 +129,7 @@ const main = () => {
                 $('table tr').removeClass('bg-primary');
                 $('#id_payment').val(toPayElement.data('id'));
                 $('#invoice_code').val(toPayElement.data('code_invoice'));
-                $('form#to_pay').attr('action', `${location.base}invoice/purchases/payment/debt_to`);
+                $('form#to_pay').attr('action', `${location.base}invoice/sales/payment/receivable_from`);
             });
         })
         $('#to_pay').on('removed.lte.cardwidget', function () {

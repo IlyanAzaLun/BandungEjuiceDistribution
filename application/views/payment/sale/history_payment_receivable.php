@@ -183,4 +183,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   });
 </script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/payment/debt/mainDebtHistory.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/payment/receivable/mainReceivableHistory.js"></script>
