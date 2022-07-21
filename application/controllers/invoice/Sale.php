@@ -408,6 +408,12 @@ class Sale extends Invoice_controller
 		// update list_item_fifo only cancel..
 		$this->update_list_item_fifo_on_cancel($items); // PREPARE TOO FOR CANCEL CHILD 
 
+		$this->db->trans_start();
+		$this->db->set('is_cancelled', 1);
+		$this->db->where('invoice_code', $this->data['invoice_code']);
+		$this->db->update('invoice_payment');
+		$this->db->trans_complete();
+
 		$this->activity_model->add("Cancel Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 		$this->session->set_flashdata('alert-type', 'success');
 		$this->session->set_flashdata('alert', 'Cancel Sale Invoice Successfully');	
