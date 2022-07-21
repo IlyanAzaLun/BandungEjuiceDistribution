@@ -172,10 +172,10 @@ class Items_fifo_model extends MY_Model
                 , `is_readable`
                 , `is_cancelled`
             FROM fifo_items
-            WHERE item_code = '$data' AND (is_cancelled = 0 AND is_readable = 1)
+            WHERE item_code = '$data' AND (is_cancelled = 0 AND is_readable = 1) AND total_price > 0
             GROUP BY invoice, is_free
             ORDER BY created_at ASC)
-            SELECT * FROM RECURSIVES")->row();
+            SELECT * FROM RECURSIVES")->last_row();
         
         $this->db->trans_complete();
 
