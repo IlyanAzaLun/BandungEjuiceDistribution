@@ -34,6 +34,7 @@ class Shipper extends MY_Controller
 				'submit' => 'Yes do it',
 			);
 			$this->load->view('validation/shipper/pack', $this->page_data);
+			
 			$this->load->view('includes/modals', $this->page_data);
 		}else{
 			$this->data['invoice_code'] = get('invoice');
