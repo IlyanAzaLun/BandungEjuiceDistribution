@@ -118,14 +118,24 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                     <div class="row">
                         <!--  -->
                         <div class="col-lg-3 col-sm-12">
-                            <div class="form-group">
-                                <h6><?= lang('expedition_name') ?></h6>
-                                <select class="custom-select" name="expedition_name" id="expedition_name" required>
-                                    <option value="" selected disabled><?=lang('option')?></option>
-                                    <?php foreach ($expedition as $key => $value):?>
-                                        <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
-                                    <?php endforeach ?>
-                                </select>
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('is_controlled_by') ?></h6>
+                                        <input class="form-control" type="text" value="<?=logged('name')?>">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('expedition_name') ?></h6>
+                                        <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                                            <option value="" selected disabled><?=lang('option')?></option>
+                                            <?php foreach ($expedition as $key => $value):?>
+                                                <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-3 col-sm-12">

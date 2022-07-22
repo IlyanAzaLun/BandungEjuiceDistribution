@@ -609,6 +609,7 @@ $lang['receipt_code'] = "Kode Resi";
 $lang['weight_shipping_information'] = "Tambahkan Informasi Berat Barang";
 $lang['delivery_document_list'] = "Daftar Dokumen Pengiriman";
 $lang['delivery_document_create'] = "Tambahkan Dokumen Pengiriman";
+$lang['is_controlled_by'] = "Di QC Oleh";
 
 
 /**

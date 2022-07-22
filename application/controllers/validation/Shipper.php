@@ -657,9 +657,16 @@ class Shipper extends MY_Controller
 			$this->load->view('validation/shipper/quality_control', $this->page_data);
 		}else{
 			$this->data['invoice_code'] = $this->input->get('id')?$this->input->get('id'):$this->input->post('id');
+			echo '<pre>';
+			$transaction = $this->transaction_item_model->getByWhere(['invoice_code' => $this->data['invoice_code']]);
+			foreach ($transaction as $key => $value) {
+				$transaction[$key]->control_by = $this->input->post('is_controlled_by')[$key];
+			}
+			echo '</pre>';
+			$this->transaction_item_model->update_batch($transaction, 'id');
 			//information items
 			$payment = array(
-				'is_controlled_by' => logged('id'),
+				'is_controlled_by' => logged('name'),
 			);
 			if($this->sale_model->update_by_code($this->data['invoice_code'], $payment)){
 				$this->activity_model->add("Quality Control, #" . $this->data['invoice_code'], (array) $payment);

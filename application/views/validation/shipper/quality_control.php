@@ -149,7 +149,7 @@ $i = 0; $total_items = 0;?>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <input type="hidden" name="is_controlled_by[<?=$key?>]" value="0">
-                                                    <input type="checkbox" name="is_controlled_by[<?=$key?>]" data-bootstrap-switch data-off-color="danger" data-off-text="<i class='fa fa-fw fa-times'>" data-on-color="success" data-on-text="<i class='fa fa-fw fa-check'></i>" value="1">
+                                                    <input type="checkbox" name="is_controlled_by[<?=$key?>]"<?=(($value->control_by) && ($value->control_by !== '0'))?' checked':''?> data-bootstrap-switch data-off-color="danger" data-off-text="<i class='fa fa-fw fa-times'>" data-on-color="success" data-on-text="<i class='fa fa-fw fa-check'></i>" value="<?=logged('id')?>">
                                                 </div>
                                             </td>
                                             <td>

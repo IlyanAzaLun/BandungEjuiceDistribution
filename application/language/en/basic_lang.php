@@ -616,6 +616,7 @@ $lang['receipt_code'] = "Receipt Code";
 $lang['weight_shipping_information'] = "Append Weight Information";
 $lang['delivery_document_list'] = "Document List";
 $lang['delivery_document_create'] = "Document Create";
+$lang['is_controlled_by'] = "Is Controlled By";
 
 
 /**
