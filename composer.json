@@ -1,0 +1,10 @@
+{
+    "name": "ilyanazalun/bandungdjuicedistribution",
+    "description": "Bandung Ejuice Distribution",
+    "type": "project",
+    "license": "GPL",
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.21",
+        "dompdf/dompdf": "^1.2"
+    }
+}
