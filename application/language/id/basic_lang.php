@@ -599,6 +599,7 @@ $lang['is_completey_clear'] = "Semua Barang Sudah Sesuai ?";
  * Pengiriman
  */
 $lang['pack'] = "Koli";
+$lang['pack_by'] = "Di Packing Oleh";
 $lang['quality_control'] = "Kontrol Kualitas";
 $lang['page_shipping'] = "Halaman Pengiriman";
 $lang['shipping_list'] = "Pengiriman";

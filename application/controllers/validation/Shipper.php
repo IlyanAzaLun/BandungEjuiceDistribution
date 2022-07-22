@@ -41,6 +41,7 @@ class Shipper extends MY_Controller
 				'expedition' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'type_payment_shipping' => post('type_payment_shipping'),
+				'pack_by' => post('pack_by'),
 				'pack' => post('pack')
 			);
 			if($this->sale_model->update_by_code($this->data['invoice_code'], $information)){
@@ -54,6 +55,7 @@ class Shipper extends MY_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
+
 	public function update_address_destination()
 	{
 		ifPermissions('shipper_transaction_list');

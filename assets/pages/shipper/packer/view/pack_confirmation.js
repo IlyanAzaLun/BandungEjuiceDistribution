@@ -1,6 +1,8 @@
 import DataCustomer from "../data/DataCustomer.js";
+import DataUser from "../data/DataUser.js";
 
 const data_customer = new DataCustomer();
+const data_user = new DataUser();
 
 const main = () => {
     $(document).ready(function () {
@@ -18,5 +20,43 @@ const main = () => {
             });
         }
     });
+
+    $(document).ready(function () {
+        let requestmame = $('input#pack_by').val();
+        if (isNaN(requestmame)) {
+            data_user.user_info_search(requestmame, function (output) {
+                console.log(output)
+                // $('input#pack_by').val(output[0]['pack_by'])
+                return false;
+            });
+        }
+    });
+
+    $(document).on('keyup', 'input#pack_by', function () {
+        let valueElement = $(this).val();
+        let selfElement = $(this);
+        data_user.user_info_search(valueElement, function (data) {
+            let result = data.map(({
+                id, name, username,
+            }) => [
+                    id, name, username,
+                ]
+            );
+            $(`input#${selfElement.attr('id')}`).autocomplete({
+                source: result,
+                focus: function (event, ui) {
+                    $('input#pack_by').val(ui.item[1])
+                    return false;
+                },
+                select: function (event, ui) {
+                    $('input#pack_by').val(ui.item[1])
+                    return false;
+                }
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                return $('<li>').data("item.autocomplete", item)
+                    .append(`<div>${item[1]}</div>`).appendTo(ul)
+            }
+        })
+    })
 }
 export default main;

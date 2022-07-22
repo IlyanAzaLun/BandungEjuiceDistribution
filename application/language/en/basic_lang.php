@@ -606,6 +606,7 @@ $lang['is_completey_clear'] = "All Items is Complete Fit ?";
  * Shipping
  */
 $lang['pack'] = "Koli";
+$lang['pack_by'] = "Packing By";
 $lang['quality_control'] = "Quality Control";
 $lang['page_shipping'] = "Page Shipping";
 $lang['shipping_list'] = "Shipping List";

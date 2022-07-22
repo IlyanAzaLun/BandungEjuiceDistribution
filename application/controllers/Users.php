@@ -209,6 +209,9 @@ class Users extends MY_Controller {
 			$this->db->or_like('users.email', $search->value, 'both');
 			$this->db->group_end();
 		}
+		if($search->role){
+			$this->db->where('users.role', $search->role);
+		}
 		$response = $this->db->get('users')->result();
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
     }

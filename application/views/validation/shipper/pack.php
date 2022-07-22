@@ -122,7 +122,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-6 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('is_controlled_by') ?></h6>
-                                        <input class="form-control" type="text" value="<?=logged('name')?>">
+                                        <input class="form-control" type="text" disabled value="<?=logged('name')?>">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-sm-12">
@@ -138,9 +138,9 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <div class="row">
-                                <div class="col-lg-8 col-sm-12">
+                                <div class="col-lg-2 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('expedition_services') ?></h6>
                                         <select class="custom-select" name="services_expedition" id="services_expedition">
@@ -150,16 +150,20 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-4 col-sm-12">
+                                <div class="col-lg-2 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('pack') ?></h6>
                                         <input class="form-control" type="text" name="pack" id="pack" value="<?=$invoice->pack?>" required>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12">
-                            <div class="row">
+                                
+                                <div class="col-lg-4 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('pack_by') ?></h6>
+                                        <input class="form-control" type="text" name="pack_by" id="pack_by" value="<?=$invoice->pack_by?>" required>
+                                    </div>
+                                </div>
+
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('select_payment_shipping') ?></h6>
