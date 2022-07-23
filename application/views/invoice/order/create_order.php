@@ -306,6 +306,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
+  $(document).ready(function () {
+    $('input#store_name').focus();
+  })
   // $('body').addClass('sidebar-collapse');
   //Date range picker
   $('#created_at').daterangepicker({
