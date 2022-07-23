@@ -331,4 +331,77 @@ class Warehouse extends MY_Controller
 		}
 		return $request;
 	}
+
+	public function test()
+	{
+		// $this->db->trans_start();
+		
+		// QUERY 1
+		$this->db->select('
+			`order`.id as id, 
+			`order`.order_code as order_code, 
+			`order`.total_price as total_price, 
+			`order`.discounts as discounts, 
+			`order`.shipping_cost as shipping_cost, 
+			`order`.other_cost as other_cost, 
+			`order`.payment_type as payment_type, 
+			`order`.grand_total as grand_total, 
+			`order`.note as note, 
+			`order`.created_at as created_at, 
+			`order`.updated_at as updated_at, 
+			`order`.created_by as created_by, 
+			`order`.is_confirmed as is_confirmed,
+			`order`.is_cancelled as is_cancelled, 
+			`order`.is_created as is_created,
+			0 as controlled_by
+		');
+		$this->db->group_start();
+		$this->db->where('order.is_cancelled !=', 1);
+		$this->db->where('order.is_created', 0);
+		$this->db->where('order.is_confirmed', NULL, false);
+		$this->db->group_end();
+		$raw_order_query = $this->db->get_compiled_select('order_sale order', false);
+		$this->db->reset_query();
+
+		// QUERY 2
+		$this->db->select('
+			`sale`.id as id, 
+			`sale`.`invoice_code` as order_code, 
+			`sale`.`total_price` as total_price, 
+			`sale`.`discounts` as discounts, 
+			`sale`.`shipping_cost` as shipping_cost, 
+			`sale`.`other_cost` as other_cost, 
+			`sale`.`payment_type` as payment_type, 
+			`sale`.`grand_total` as grand_total, 
+			`sale`.`note` as note, 
+			`sale`.`created_at` as created_at, 
+			`sale`.`updated_at` as updated_at, 
+			`sale`.`created_by` as created_by, 
+			`sale`.`updated_by` as is_confirmed,
+			`sale`.`is_cancelled` as is_cancelled, 
+			1 as is_created,
+			`sale`.`is_controlled_by` as controlled_by
+		');
+		$this->db->join('invoice_transaction_list_item transactions', 'sale.invoice_code = transactions.invoice_code', 'LEFT');
+		$this->db->group_start();
+		$this->db->where('transactions.is_cancelled !=', 1);
+		$this->db->where('transactions.control_by', NULL, false);
+		$this->db->where('sale.is_controlled_by', NULL, false);
+		$this->db->where('sale.is_controlled_by', NULL, false);
+		$this->db->where('sale.is_transaction', 1);
+		$this->db->where('sale.is_child', 0);
+		$this->db->group_end();
+		$raw_sale_transaction = $this->db->get_compiled_select('invoice_selling sale', false);
+		$this->db->reset_query();
+		
+		// QUERY UNION
+		$result = $this->db->query("$raw_order_query UNION $raw_sale_transaction")->result();
+		// $this->db->trans_complete();
+		echo '<pre>';
+		var_dump($result);
+		echo '<hr>';
+		var_dump($this->db->last_query());
+		echo '</pre>';
+
+	}
 }
