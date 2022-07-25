@@ -744,6 +744,70 @@ class Items extends MY_Controller
             $totalRecordwithFilter = $records[0]->allcount;
 
             ## Fetch records
+            // QUERY 1
+            $this->db->select('
+                `id`, 
+                `index_list`, 
+                `invoice_code`, 
+                `item_id`, 
+                `item_code`, 
+                `item_name`, 
+                `item_capital_price`, 
+                `item_selling_price`, 
+                `item_current_quantity`, 
+                `item_quantity`, 
+                `item_unit`, 
+                `item_total_weight`, 
+                `item_discount`, 
+                `total_price`, 
+                `item_status`, 
+                `item_description`, 
+                `customer_code`, 
+                `is_cancelled`, 
+                `created_at`, 
+                `created_by`, 
+                `updated_at`, 
+                `updated_by`
+            ');
+            $this->db->group_start();
+            $this->db->where('is_cancelled',0);
+            $this->db->group_end();
+            $raw_invoice_query = $this->db->get_compiled_select('invoice_transaction_list_item', false);
+            $this->db->reset_query();
+            // QUERY 1 END
+            // QUERY 2
+            $this->db->select('
+                `id`, 
+                `index_list`, 
+                `order_code`, 
+                `item_id`, 
+                `item_code`, 
+                `item_name`, 
+                `item_capital_price`, 
+                `item_selling_price`, 
+                `item_quantity`, 
+                `item_order_quantity`, 
+                `item_unit`, 
+                0 AS item_total_weight,
+                `item_discount`, 
+                `item_total_price`, 
+                "OUT" AS item_status, 
+                `item_description`, 
+                `customer_code`, 
+                `is_cancelled`, 
+                `created_at`, 
+                `created_by`, 
+                `updated_at`, 
+                `updated_by` 
+            ');
+            $this->db->group_start();
+            $this->db->where('item_code',$item_code);
+            $this->db->where('is_cancelled',0);
+            $this->db->where('status_available',NULL);
+            $this->db->group_end();
+            $raw_order_query = $this->db->get_compiled_select('order_sale_list_item', false);
+            $this->db->reset_query();
+            // QUERY 2 END
             $this->db->select('
                 transaction.id as transaction_id
                 , transaction.invoice_code as invoice_code
@@ -798,34 +862,7 @@ class Items extends MY_Controller
             $this->db->where('item_code', $item_code);
             $this->db->order_by($columnName, $columnSortOrder);
             $this->db->limit($rowperpage, $start);
-            $records = $this->db->get("(SELECT *
-            FROM invoice_transaction_list_item UNION
-            SELECT 
-                `id`, 
-                `index_list`, 
-                `order_code`, 
-                `item_id`, 
-                `item_code`, 
-                `item_name`, 
-                `item_capital_price`, 
-                `item_selling_price`, 
-                `item_quantity` as item_current_quantity, 
-                `item_order_quantity` as item_quantity, 
-                `item_unit`, 
-                 0,
-                `item_discount`, 
-                `item_total_price`, 
-                'OUT' as item_status, 
-                `item_description`, 
-                `customer_code`, 
-                `is_cancelled`, 
-                `created_at`, 
-                `created_by`, 
-                `updated_at`, 
-                `updated_by` 
-            FROM 
-                `order_sale_list_item`
-            WHERE item_code = '$item_code' AND is_cancelled = 0 AND status_available IS NULL) transaction", FALSE)->result();
+            $records = $this->db->get("($raw_invoice_query UNION $raw_order_query) transaction", FALSE)->result();
             $data = array();
             
             foreach ($records as $record) {

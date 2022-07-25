@@ -334,8 +334,8 @@ class Warehouse extends MY_Controller
 
 	public function test()
 	{
-		// $this->db->trans_start();
-		
+		// QUERY FOR RETURN CLAIM ITEMS
+		$this->db->trans_start();
 		// QUERY 1
 		$this->db->select('
 			`order`.id as id, 
@@ -396,7 +396,7 @@ class Warehouse extends MY_Controller
 		
 		// QUERY UNION
 		$result = $this->db->query("$raw_order_query UNION $raw_sale_transaction")->result();
-		// $this->db->trans_complete();
+		$this->db->trans_complete();
 		echo '<pre>';
 		var_dump($result);
 		echo '<hr>';
