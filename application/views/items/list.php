@@ -91,9 +91,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   $(function() {
     $("#example2").DataTable({
 
-      dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
-                <'row'<'col-12'tr>>
-                <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
+      dom: `R<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
+            <'row'<'col-12'tr>>
+            <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
       processing: true,
       serverSide: true,
       responsive: true,

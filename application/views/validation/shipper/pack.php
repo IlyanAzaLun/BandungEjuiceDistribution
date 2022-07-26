@@ -138,9 +138,9 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="row">
-                                <div class="col-lg-2 col-sm-12">
+                                <div class="col-lg-8 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('expedition_services') ?></h6>
                                         <select class="custom-select" name="services_expedition" id="services_expedition">
@@ -150,20 +150,24 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                     </div>
                                 </div>
                                 
-                                <div class="col-lg-2 col-sm-12">
+                                <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('pack') ?></h6>
                                         <input class="form-control" type="text" name="pack" id="pack" value="<?=$invoice->pack?>" required>
                                     </div>
                                 </div>
-                                
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="row">
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('pack_by') ?></h6>
                                         <input class="form-control" type="text" name="pack_by" id="pack_by" value="<?=$invoice->pack_by?>" required>
                                     </div>
                                 </div>
-
+                                
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('select_payment_shipping') ?></h6>
@@ -171,6 +175,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                             <option value=""><?=lang('option')?></option>
                                             <option value="TAGIH TUJUAN" <?=$invoice->type_payment_shipping=="TAGIH TUJUAN"?'selected':''?>>TAGIH TUJUAN</option>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
+                                            <option value="TUNAI" <?=$invoice->type_payment_shipping=="TUNAI"?'selected':''?>>TUNAI</option>
                                             <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                         </select>
                                     </div>
