@@ -12,7 +12,7 @@ const main = () => {
         })
     }
     $(document).ready(function () {
-        // getTotalItemOnInvoice();
+        getTotalItemOnInvoice();
         $('.currency').each(function (index, field) {
             $(field).val(currency(currencyToNum($(field).val())));
         });
@@ -206,7 +206,7 @@ const main = () => {
         $(document).on('keyup', 'input[data-id="item_order_quantity"], input[data-id="item_selling_price"], input[data-id="discount"]', function () {
             let row = $(this).parents('tr').attr('class');
             sum_sub_total_item(row);
-            // getTotalItemOnInvoice();
+            getTotalItemOnInvoice();
         })
     });
 }
