@@ -583,10 +583,8 @@ class Report extends MY_Controller
         , transaction.item_capital_price
         , transaction.item_quantity
         , transaction.item_unit
-        , transaction.customer_code
         , transaction.is_cancelled
         , transaction.created_at
-        , transaction.created_by
         , transaction.updated_at
         , transaction.updated_by
         , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
@@ -622,7 +620,8 @@ class Report extends MY_Controller
 			$this->db->where("transaction.created_at >=", $dateStart);
 			$this->db->where("transaction.created_at <=", $dateFinal);
             $this->db->group_end();
-		}else{
+		}
+        else{
 			$this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}
         switch ($group_by) {
@@ -646,7 +645,8 @@ class Report extends MY_Controller
                 ,users.name
                 ,sale.is_have
                 ,is_have.name AS is_have_name');
-                $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
+                // $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
+                $this->db->group_by("yearmount, sale.is_have");
                 break;
                     
             case 'daily':
@@ -654,14 +654,15 @@ class Report extends MY_Controller
                 $this->db->group_by("yearmountday");
                 break;
             
-                case 'daily_by_user':
+            case 'daily_by_user':
                 # code...
                 $this->db->select('
                  transaction.created_by
                  ,users.name
                  ,sale.is_have
                  ,is_have.name AS is_have_name');
-                $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
+                // $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
+                $this->db->group_by("yearmountday, sale.is_have");
                 break;
 
             case 'daily_by_customer':
