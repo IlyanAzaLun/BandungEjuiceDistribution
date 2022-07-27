@@ -461,6 +461,7 @@ $lang['monthly_by_user'] = "Monthly User";
 $lang['monthly_by_customer'] = "Monthly Customer";
 $lang['select_group_by'] = "Select Group By";
 $lang['profit'] = "Profit";
+$lang['profit_pesudo'] = "Pesudo Profit";
 $lang['name'] = "Name";
 
 

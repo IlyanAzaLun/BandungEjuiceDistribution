@@ -589,6 +589,7 @@ class Report extends MY_Controller
         , transaction.updated_by
         , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
         , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+        , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
         , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
@@ -596,6 +597,7 @@ class Report extends MY_Controller
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
 		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
+		$this->db->join("items", "transaction.item_id = items.id", "left");
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
@@ -688,7 +690,6 @@ class Report extends MY_Controller
         }
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
-		// $records = $this->db->get('invoice_transaction_list_item transaction')->result();
 		$records = $this->db->get('fifo_items transaction')->result();
 		$data = array();
 		foreach ($records as $record) {
@@ -701,6 +702,7 @@ class Report extends MY_Controller
 				'invoice_code' => $record->invoice_code,
 				'customer_code' => $record->customer_code,
 				'store_name' => $record->store_name,
+				'pseudo_price' => $record->pseudo_price,
 				'item_capital_price' => $record->time_capital_price,
 				'item_selling_price' => $record->total_price,
 				'profit' => $record->profit,

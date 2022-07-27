@@ -456,6 +456,7 @@ $lang['monthly_by_user'] = "Bulanan User";
 $lang['monthly_by_customer'] = "Bulanan Pelanggan";
 $lang['select_group_by'] = "Pilih Pengelompokan";
 $lang['profit'] = "Laba";
+$lang['profit_pesudo'] = "Laba Semu";
 $lang['name'] = "Nama";
 
 /*

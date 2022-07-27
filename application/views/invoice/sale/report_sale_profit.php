@@ -101,8 +101,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <th><?=lang('customer_code')?></th>
                     <th><?=lang('store_name')?></th>
                     <th><?=lang('item_capital_price')?></th>
+                    <th><?=lang('item_shadow_selling_price')?></th>
                     <th><?=lang('item_selling_price')?></th>
                     <th><?=lang('profit')?></th>
+                    <th><?=lang('profit_pesudo')?></th>
                     <th><?=lang('name')?></th>
                 </tr>
             </thead>
@@ -181,6 +183,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     return data?currency(data):0;
                 }
             },{
+                data: "pseudo_price",
+                className: "bg-warning",
+                render: function(data, type, row){
+                    return data?currency(data):0;
+                }
+            },{
                 data: "item_selling_price",
                 render: function(data, type, row){
                     return data?currency(data):0;
@@ -189,6 +197,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 data: "profit",
                 render: function(data, type, row){
                     return data?currency(data):0;
+                }
+            },{
+                data: "pseudo_price",
+                className: "bg-warning",
+                render: function(data, type, row){
+                    return data?currency(row['item_selling_price'] - row['pseudo_price']):0;
                 }
             },{
                 data: "name",
