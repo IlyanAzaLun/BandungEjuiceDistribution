@@ -106,8 +106,14 @@ class Address extends MY_Controller
 
     public function detail()
     {
-        $this->page_data['information'] = $this->address_model->full_information(get('id'));
-        $this->load->view('addres/details', $this->page_data);
+        $this->form_validation->set_rules('id', 'Information', 'require|trim');
+        if($this->form_validation->run() == false){
+            // SHOW ONLY
+            $this->page_data['information'] = $this->address_model->full_information(get('id'));
+            $this->load->view('address/details', $this->page_data);
+        }else{
+            // PRINT
+        }
     }
 }
 
