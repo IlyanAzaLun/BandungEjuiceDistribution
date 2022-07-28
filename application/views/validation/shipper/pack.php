@@ -122,7 +122,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-6 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('is_controlled_by') ?></h6>
-                                        <input class="form-control" type="text" disabled value="<?=logged('name')?>">
+                                        <input class="form-control" type="text" name="is_controlled_by" value="<?=$invoice->is_controlled_by?>">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-sm-12">

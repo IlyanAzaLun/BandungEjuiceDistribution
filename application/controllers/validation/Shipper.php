@@ -39,6 +39,7 @@ class Shipper extends MY_Controller
 		}else{
 			$this->data['invoice_code'] = get('invoice');
 			$information = array(
+				'is_controlled_by' => post('is_controlled_by'),
 				'expedition' => post('expedition_name'),
 				'services_expedition' => post('services_expedition'),
 				'type_payment_shipping' => post('type_payment_shipping'),
