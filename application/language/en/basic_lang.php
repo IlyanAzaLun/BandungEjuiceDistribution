@@ -387,7 +387,7 @@ $lang['shipping_services'] = "Shipping services";
 /*
  * Address
  */
-$lang['address'] = "address";
+$lang['address'] = "Address";
 $lang['address_list'] = "List address";
 $lang['address_add'] = "Add address";
 $lang['address_edit'] = "Edit address";
@@ -402,6 +402,7 @@ $lang['address_update'] = "Update address";
 $lang['address_info_add'] = "Add More Information Data address";
 $lang['address_info_edit'] = "Edit Information Data address";
 $lang['is_open'] = "Is Open";
+$lang['warehouse_address_list'] = "Warehouse Address";
 
 /*
  * bank

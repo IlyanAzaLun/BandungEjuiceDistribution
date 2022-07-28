@@ -717,6 +717,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </a>
       </li>
       <?php endif ?>
+      
+      <?php if(hasPermissions('report_delivered')):?>
+      <li class="nav-item">
+        <a href="<?php echo url('validation/shipper/address') ?>" class="nav-link <?php echo ($page->submenu == 'list_address_shipping') ? 'active' : '' ?>">
+          <i class="far fa-circle nav-icon"></i>
+          <p> <?php echo lang('warehouse_address_list') ?> </p>
+        </a>
+      </li>
+      <?php endif ?>
+      
     </ul>
   </li>
   <?php endif ?>

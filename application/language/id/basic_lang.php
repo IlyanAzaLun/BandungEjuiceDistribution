@@ -398,6 +398,7 @@ $lang['address_update'] = "PerBarui alamat";
 $lang['address_info_add'] = "Tambahkan alamat Data Informasi Lainnya";
 $lang['address_info_edit'] = "Edit Informasi alamat Data";
 $lang['is_open'] = "Terbuka";
+$lang['warehouse_address_list'] = "Gudang Alamat";
 
 /*
  *bank

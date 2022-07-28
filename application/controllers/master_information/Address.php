@@ -18,7 +18,6 @@ class Address extends MY_Controller
 
     public function list()
     {
-
         ifPermissions('address_list');
         redirect('master_information/address/add');
     }
@@ -103,6 +102,12 @@ class Address extends MY_Controller
                 redirect("master_information/supplier/edit?id=" . $data['customer_code']);
             }
         }
+    }
+
+    public function detail()
+    {
+        $this->page_data['information'] = $this->address_model->full_information(get('id'));
+        $this->load->view('addres/details', $this->page_data);
     }
 }
 

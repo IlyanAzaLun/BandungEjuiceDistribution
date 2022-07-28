@@ -708,5 +708,11 @@ class Shipper extends MY_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
-	
+
+	public function address()
+	{
+		$this->page_data['title'] = 'address_list';
+		$this->page_data['page']->submenu = 'list_address_shipping';
+		$this->load->view('address/address', $this->page_data);
+	}	
 }
