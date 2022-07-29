@@ -97,9 +97,9 @@ class Address extends MY_Controller
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'New Address Update Successfully');
             if (preg_match('/PL/i', $data['customer_code'])) {
-                redirect("master_information/customer/edit?id=" . $data['customer_code']);
+                redirect("master_information/address/detail?id=$address");
             }else{
-                redirect("master_information/supplier/edit?id=" . $data['customer_code']);
+                redirect("master_information/address/detail?id=$address");
             }
         }
     }
