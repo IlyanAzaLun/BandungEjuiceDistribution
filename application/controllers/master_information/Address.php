@@ -117,7 +117,6 @@ class Address extends MY_Controller
             $options->set('isRemoteEnabled', true);
             $this->pdf->setOptions($options);
 
-
             $this->pdf->setPaper('A5', 'potrait');
             // $this->pdf->filename = $data['customer']->store_name."pdf";
             $this->pdf->load_view('address/print', $this->page_data);
