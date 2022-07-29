@@ -43,13 +43,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-sm table-bordered table-hover">
               <thead>
                 <tr>
-                  <th></th>
-                  <th>No.</th>
-                  <th><?= lang('customer_code') ?></th>
-                  <th><?= lang('store_name') ?></th>
-                  <th><?= lang('customer_owner') ?></th>
-                  <th><?= lang('note') ?></th>
-                  <th><?= lang('option') ?></th>
+                  <th width="2%"></th>
+                  <th width="2%">No.</th>
+                  <th width="20%"><?= lang('customer_code') ?></th>
+                  <th width="20%"><?= lang('store_name') ?></th>
+                  <th width="20%"><?= lang('customer_owner') ?></th>
+                  <th width="30%"><?= lang('note') ?></th>
+                  <th width="2%"><?= lang('option') ?></th>
                 </tr>
               </thead>
               <tbody>

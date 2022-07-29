@@ -106,13 +106,21 @@ class Address extends MY_Controller
 
     public function detail()
     {
-        $this->form_validation->set_rules('id', 'Information', 'require|trim');
+        $this->page_data['information'] = $this->address_model->full_information(get('id'));
+        $this->form_validation->set_rules('id', 'Information', 'required|trim');
         if($this->form_validation->run() == false){
-            // SHOW ONLY
-            $this->page_data['information'] = $this->address_model->full_information(get('id'));
             $this->load->view('address/details', $this->page_data);
         }else{
-            // PRINT
+            $this->load->library('pdf');
+        
+            $options = $this->pdf->getOptions();
+            $options->set('isRemoteEnabled', true);
+            $this->pdf->setOptions($options);
+
+
+            $this->pdf->setPaper('A5', 'potrait');
+            // $this->pdf->filename = $data['customer']->store_name."pdf";
+            $this->pdf->load_view('address/print', $this->page_data);
         }
     }
 }

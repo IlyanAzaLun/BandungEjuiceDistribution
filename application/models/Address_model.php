@@ -43,6 +43,7 @@ class Address_model extends MY_Model {
             , address_information.`is_active`
             , NVL2(customer_information.customer_code, 'CUSTOMER', 'SUPPLIER') AS type
             , IFNULL(customer_information.store_name,supplier_information.store_name) AS store_name
+            , IFNULL(customer_information.customer_type,supplier_information.supplier_type) AS customer_type
             , IFNULL(customer_information.owner_name,supplier_information.owner_name) AS owner_name");
         $this->db->join('customer_information', 'customer_information.customer_code = address_information.customer_code','left');
         $this->db->join('supplier_information', 'supplier_information.customer_code = address_information.customer_code','left');
