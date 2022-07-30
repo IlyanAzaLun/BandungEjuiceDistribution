@@ -403,6 +403,7 @@ $lang['address_info_add'] = "Add More Information Data address";
 $lang['address_info_edit'] = "Edit Information Data address";
 $lang['is_open'] = "Is Open";
 $lang['warehouse_address_list'] = "Warehouse Address";
+$lang['contact_us'] = "Contact Us";
 
 /*
  * bank

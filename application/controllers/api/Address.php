@@ -20,8 +20,7 @@ class Address extends REST_Controller {
      * @return Response
     */
 	public function index_get($searchValue = '', $id = 0)
-	{        
-        ifPermissions('address_list');
+	{
 		$response = array();
 
 		$postData = $this->input->get();

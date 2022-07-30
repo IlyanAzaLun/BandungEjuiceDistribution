@@ -35,7 +35,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                         <div class="row">
 
-                            <div class="col-sm-2">
+                            <div class="col-sm-12 col-lg-1">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('customer_code') ?></label>
@@ -44,16 +44,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-sm-2">
+                            <div class="col-sm-12 col-lg-2">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('store_name') ?></label>
                                     <input type="text" class="form-control form-control-sm" name="store_name" id="store_name" value="<?= $information->store_name ?>">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-12 col-lg-3">
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-8">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('customer_owner') ?></label>
@@ -62,7 +62,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12 col-lg-4">
                                         <div class="form-group">
                                             <label><?= lang('category_customer') ?></label>
                                             <select class="form-control select2" style="width: 100%;" name="customer_type" id="category" value="<?= set_value('category') ?>">
@@ -79,6 +79,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                 </div>
                             </div>
+
+                            <div class="col-sm-12 col-lg-2">
+                                <!-- text input -->
+                                <div class="form-group">
+                                    <label><?= lang('contact_us') ?></label>
+                                    <input type="text" class="form-control form-control-sm" name="contact_us" id="contact_us" value="<?= $information->contact_us ?>">
+                                </div>
+                            </div>
+
                             <div class="col">
                                 <!-- text input -->
                                 <div class="form-group">
@@ -100,6 +109,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <th><?= lang('zip') ?></th>
                                         <th><?= lang('contact_phone') ?></th>
                                         <th><?= lang('contact_mail') ?></th>
+                                        <th><?= lang('note') ?></th>
                                         <th><?= lang('created_at') ?></th>
                                         <th><?= lang('updated_at') ?></th>
                                         <th><?= lang('is_open') ?></th>
@@ -115,8 +125,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <td><?= $information->zip ?></td>
                                         <td><?= $information->contact_phone ?></td>
                                         <td><?= $information->contact_mail ?></td>
+                                        <td><?= $information->customer_note ?></td>
                                         <td><?= date(setting('datetime_format'), strtotime($information->created_at)) ?></td>
-                                        <td><?= date(setting('datetime_format'), strtotime($information->updated_at)) ?></td>
+                                        <td><?= $information->updated_at?date(setting('datetime_format'), strtotime($information->updated_at)):''; ?></td>
                                         <td <?= ($information->is_active) ? 'class="text-primary"' : 'class="text-danger"' ?>><?= ($information->is_active) ? 'Open' : 'Closed' ?></td>
                                     </tr>
                                 </tbody>
@@ -136,6 +147,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
+                        <div class="float-left">
+                            <a href="<?=url('master_information/address/edit?id='.get('id'))?>" class="btn btn-sm btn-warning float-right"><i class="fa fa-fw fa-edit"></i>&nbsp;&nbsp;<?=lang('edit')?></a>
+                        </div>
                         <div class="float-right">
                             <button type="submit" class="btn btn-sm btn-primary float-right"><i class="fa fa-fw fa-print"></i>&nbsp;&nbsp;<?=lang('print')?></button>
                             <button type="button" class="btn btn-sm btn-default mr-2" onclick="history.back()"><?=lang('back')?></button>

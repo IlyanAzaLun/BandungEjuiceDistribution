@@ -111,6 +111,28 @@ class Address extends MY_Controller
         if($this->form_validation->run() == false){
             $this->load->view('address/details', $this->page_data);
         }else{
+            // SAVE INFORMATION IF CHANGE
+            $this->db->trans_begin();
+            $this->db->where('customer_code', post('customer_code'));
+            $customer_information = $this->db->get('customer_information')->row();
+            $type = 'customer';
+            if(is_null($customer_information)){
+                $this->db->where('customer_code', post('customer_code'));
+                $customer_information = $this->db->get('supplier_information')->row();    
+                $type = 'supplier';
+            }
+            $customer_information->customer_code = post("customer_code");
+            $customer_information->store_name = strtoupper(post("store_name"));
+            $customer_information->owner_name = strtoupper(post("owner_name"));
+            $customer_information->contact_us = strtoupper(post("contact_us"));
+            if($type == 'customer' ){
+                $this->customer_model->update($customer_information->id ,$customer_information);
+            }else{
+                $this->supplier_model->update($customer_information->id ,$customer_information);
+            }
+            $this->db->trans_complete();
+            $this->page_data['information'] = $this->address_model->full_information(get('id'));  
+            // then print information
             $this->load->library('pdf');
         
             $options = $this->pdf->getOptions();

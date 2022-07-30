@@ -122,7 +122,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       responsive: true,
       autoWidth: false,
       lengthChange: true,
-      order: [[ 1, "desc" ]],
+      order: [[ 2, "desc" ]],
       lengthMenu: [
         [10, 25, 50, 100, 200, <?=$this->db->get('customer_information')->num_rows()?>], 
         [10, 25, 50, 100, 200, "All"]

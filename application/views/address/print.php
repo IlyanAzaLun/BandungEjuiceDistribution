@@ -83,11 +83,6 @@
                             <?php echo ($information->contact_phone)?$information->contact_phone:false?>
                         </th>
                     </tr>
-                    <tr>
-                        <th colspan="2" class="text-top text-left">
-                            PENGIRIM: <?= $information->note ?>
-                        </th>
-                    </tr>
                 </tbody>
             </table>
         </main>
