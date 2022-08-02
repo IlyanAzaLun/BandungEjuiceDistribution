@@ -746,14 +746,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </a>
     <ul class="nav nav-treeview">
       <li class="nav-item">
-        <a href="<?php echo url('document/delivery/list') ?>" class="nav-link <?php echo ($page->submenu == 'list') ? 'active' : '' ?>">
+        <a href="<?php echo url('document/delivery/list') ?>" class="nav-link <?php echo ($page->submenu == 'delivery_document_list') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('delivery_document_list') ?> </p>
         </a>
       </li>
       <?php if(hasPermissions('delivery_document_create')):?>
       <li class="nav-item">
-        <a href="<?php echo url('document/delivery/create') ?>" class="nav-link <?php echo ($page->submenu == 'create') ? 'active' : '' ?>">
+        <a href="<?php echo url('document/delivery/create') ?>" class="nav-link <?php echo ($page->submenu == 'delivery_document_create') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('delivery_document_create') ?> </p>
         </a>

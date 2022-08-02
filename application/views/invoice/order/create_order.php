@@ -215,7 +215,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="discount" id="discount" class="form-control" value="0" required>
+                      <input type="text" name="discount" id="discount" class="form-control" required>
                     </div>
                   </div>
                 </div>
@@ -226,7 +226,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" value="0" required>
+                      <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" required>
                     </div>
                   </div>
                 </div>

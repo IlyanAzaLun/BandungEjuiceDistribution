@@ -156,4 +156,6 @@ $autoload['model'] = array(
 	'account_bank_model',
 	'Payment/indebtedness',
 	'Payment/receivables',
+	'delivery_model',
+	'delivery_list_item_model',
 );

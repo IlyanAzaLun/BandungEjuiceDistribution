@@ -146,7 +146,7 @@ class Items extends MY_Controller
                         'item_id' => $item->id,
                         'item_code' => $value['A'],
                         'item_name' => $value['B'],
-                        'item_current_quantity' => (int) $item->quantity + (int) $value['I'], // not used on fifo
+                        'item_current_quantity' => (int) $value['I'], // not used on fifo
                         'item_quantity' => $value['I'],
                         'item_unit' => $value['J'],
                         'item_capital_price' => $value['K'],

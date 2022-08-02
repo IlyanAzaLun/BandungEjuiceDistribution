@@ -400,6 +400,9 @@ $lang['address_info_edit'] = "Edit Informasi alamat Data";
 $lang['is_open'] = "Terbuka";
 $lang['warehouse_address_list'] = "Gudang Alamat";
 $lang['contact_us'] = "Hubungi Kami";
+$lang['create_delivery_information'] = "Buat Informasi Pengiriman";
+$lang['information_delivery'] = "Informasi Pengiriman";
+$lang['delivery_code'] = "Kode Dokumen";
 
 /*
  *bank

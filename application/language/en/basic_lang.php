@@ -404,6 +404,8 @@ $lang['address_info_edit'] = "Edit Information Data address";
 $lang['is_open'] = "Is Open";
 $lang['warehouse_address_list'] = "Warehouse Address";
 $lang['contact_us'] = "Contact Us";
+$lang['create_delivery_information'] = "Create Information Delivery";
+$lang['information_delivery'] = "Information Delivery";
 
 /*
  * bank
@@ -621,6 +623,7 @@ $lang['weight_shipping_information'] = "Append Weight Information";
 $lang['delivery_document_list'] = "Document List";
 $lang['delivery_document_create'] = "Document Create";
 $lang['is_controlled_by'] = "Is Controlled By";
+$lang['delivery_code'] = "Delivery Code";
 
 
 /**
