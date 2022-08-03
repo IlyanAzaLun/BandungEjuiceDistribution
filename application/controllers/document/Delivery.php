@@ -104,10 +104,10 @@ class Delivery extends MY_Controller
 
 	public function edit()
 	{
+		$this->page_data['title'] = 'delivery_document_list';
+		$this->page_data['page']->submenu = 'delivery_document_list';
 		$this->page_data['header']  = $this->delivery_model->getById(get('id'));
-		$this->page_data['contens'] = $this->delivery_list_item_model->getByWhere(['delivery_code' => $header->delivery_code]);
-		
-		
+		$this->page_data['contens'] = $this->delivery_list_item_model->getByWhere(['delivery_code' => $this->page_data['header']->delivery_code]);	
 		$this->load->view('document/delivery/edit', $this->page_data);
 	}
 	

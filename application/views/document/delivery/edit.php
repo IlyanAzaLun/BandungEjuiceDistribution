@@ -47,7 +47,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-lg col-sm-12">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?=$header->customer_code?>" required>
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
@@ -176,6 +176,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
         </div>
         <!-- /.card-body -->
+        <div>
+          <pre><?php var_dump($header)?></pre>
+          <pre><?php var_dump($contens)?></pre>
+        </div>
       </div>
       <!-- Information Items -->
       <!-- Information payment START -->

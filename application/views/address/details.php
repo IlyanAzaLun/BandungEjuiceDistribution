@@ -84,7 +84,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('contact_us') ?></label>
-                                    <input type="text" class="form-control form-control-sm" name="contact_us" id="contact_us" value="<?= $information->contact_us ?>">
+                                    <input type="text" class="form-control form-control-sm" name="contact_us" id="contact_us" value="<?= $information->contact_us ?>" required>
                                 </div>
                             </div>
 

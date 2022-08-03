@@ -94,7 +94,7 @@
                     </tr>
                     <tr>
                         <th colspan="2" class="text-top text-left">
-                            PENGIRIM: <?= $customer->note ?>
+                            PENGIRIM: <?= $customer->contact_us ?>
                         </th>
                     </tr>
                 </tbody>

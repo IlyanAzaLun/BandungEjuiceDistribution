@@ -70,12 +70,15 @@ class Shipper extends MY_Controller
 			'city' => null,
 			'province' => null,
 			'zip' => null,
-			'note' => $data['note_customer'],
 			'updated_at' => date('Y-m-d H:i:s', time()),
 			'updated_by' => logged('id'),
 		);
+		$customer = array(
+			'contact_us' => $data['note_customer'], 
+			'owner_name' => $data['owner_name'],
+		);
 		if($this->address_model->updateByCustomerCode($data['customer_code'], $information)){
-			$this->customer_model->updateByCustomerCode($data['customer_code'], array('owner_name' => $data['owner_name']));
+			$this->customer_model->updateByCustomerCode($data['customer_code'], $customer);
 			$this->activity_model->add("Customer,#" . $data['customer_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Customer is Saved');

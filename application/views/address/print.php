@@ -83,6 +83,9 @@
                             <?php echo ($information->contact_phone)?$information->contact_phone:false?>
                         </th>
                     </tr>
+                    <tr>
+                        <th class="text-left" colspan="2">PENGIRIM: <?=$information->contact_us?></th>
+                    </tr>
                 </tbody>
             </table>
         </main>

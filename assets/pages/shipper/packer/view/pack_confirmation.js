@@ -15,7 +15,7 @@ const main = () => {
                 $('input#owner_name').val(`${output[0]['owner_name']}`)
                 $('input#contact_phone').val(`${output[0]['contact_phone']}`)
                 $('textarea#address').val(`${output[0]['address'] ? output[0]['address'] : ''} ${output[0]['village'] ? output[0]['village'] : ''} ${output[0]['sub_district'] ? output[0]['sub_district'] : ''} ${output[0]['city'] ? output[0]['city'] : ''} ${output[0]['province'] ? output[0]['province'] : ''} ${output[0]['zip'] ? output[0]['zip'] : ''}`)
-                $('input#note_customer').val(`${output[0]['note'] !== "" ? output[0]['note'] : 'BED - '}`)
+                $('input#contact_us').val(`${output[0]['contact_us'] !== "" ? output[0]['contact_us'] : 'BED - '}`)
                 return false;
             });
         }

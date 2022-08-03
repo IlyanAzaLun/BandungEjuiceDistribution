@@ -80,8 +80,8 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                         
                         <div class="col-lg col-sm-12">
                             <div class="form-group">
-                                <label for="note_customer"><?= lang('mailer') ?></label>
-                                <input readonly name="note_customer" id="note_customer" class="form-control">
+                                <label for="contact_us"><?= lang('contact_us') ?></label>
+                                <input readonly name="contact_us" id="contact_us" class="form-control">
                             </div>
                         </div>
                     </div>
