@@ -109,6 +109,7 @@ class Address extends MY_Controller
         $this->page_data['information'] = $this->address_model->full_information(get('id'));
         $this->form_validation->set_rules('id', 'Information', 'required|trim');
         if($this->form_validation->run() == false){
+            $this->page_data['expedition'] = $this->expedition_model->get();
             $this->load->view('address/details', $this->page_data);
         }else{
             // SAVE INFORMATION IF CHANGE
@@ -132,6 +133,7 @@ class Address extends MY_Controller
             }
             $this->db->trans_complete();
             $this->page_data['information'] = $this->address_model->full_information(get('id'));  
+            $this->page_data['post'] = $this->input->post();  
             // then print information
             $this->load->library('pdf');
         

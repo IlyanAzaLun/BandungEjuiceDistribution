@@ -31,9 +31,9 @@ class Delivery extends MY_Controller
 		if ($this->form_validation->run() == false) {
 			$this->page_data['title'] = 'create_delivery_information';
 			$this->page_data['page']->submenu = 'delivery_document_create';
+			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->load->view('document/delivery/create', $this->page_data);
-		}else{
-			
+		}else{			
 			// information invoice
 			$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			$random = substr(str_shuffle($permitted_chars), 0, 5);
@@ -64,6 +64,8 @@ class Delivery extends MY_Controller
 				'destination_address' => post('address'),
 				'total_price' => post('sub_total'),
 				'discounts' => post('discount'),
+				'expedition' => post('expedition_name'),
+				'services_expedition' => post('services_expedition'),
 				'shipping_cost' => post('shipping_cost'),
 				'other_cost' => post('other_cost'),
 				'grand_total' => post('grand_total'),
@@ -106,6 +108,7 @@ class Delivery extends MY_Controller
 	{
 		$this->page_data['title'] = 'delivery_document_list';
 		$this->page_data['page']->submenu = 'delivery_document_list';
+		$this->page_data['expedition'] = $this->expedition_model->get();
 		$this->page_data['header']  = $this->delivery_model->getById(get('id'));
 		$this->page_data['contens'] = $this->delivery_list_item_model->getByWhere(['delivery_code' => $this->page_data['header']->delivery_code]);	
 		$this->load->view('document/delivery/edit', $this->page_data);
@@ -121,6 +124,8 @@ class Delivery extends MY_Controller
 		$request['created_at'] = $data['created_at'];		
 		$request['destination_address'] = $data['destination_address'];		
 		$request['is_shipping_cost'] = $data['is_shipping_cost'];
+		$request['expedition'] = $data['expedition'];
+		$request['services_expedition'] = $data['services_expedition'];
 		if ($response) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['is_confirmed'] = $data['is_confirmed'];

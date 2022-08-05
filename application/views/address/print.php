@@ -84,7 +84,10 @@
                         </th>
                     </tr>
                     <tr>
-                        <th class="text-left" colspan="2">PENGIRIM: <?=$information->contact_us?></th>
+                        <th class="text-left" colspan="2" >
+                            PENGIRIM: <?=$information->contact_us?><br>
+                            EXPEDISI: <?=$post['expedition_name']?><?=($post['services_expedition'])?" - ".$post['services_expedition']:""?>
+                        </th>
                     </tr>
                 </tbody>
             </table>

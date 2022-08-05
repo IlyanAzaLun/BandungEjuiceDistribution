@@ -74,7 +74,7 @@ class Shipper extends MY_Controller
 			'updated_by' => logged('id'),
 		);
 		$customer = array(
-			'contact_us' => $data['note_customer'], 
+			'contact_us' => $data['contact_us'], 
 			'owner_name' => $data['owner_name'],
 		);
 		if($this->address_model->updateByCustomerCode($data['customer_code'], $information)){

@@ -88,7 +88,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col">
+                            <div class="col-lg-2 col-sm-12">
+                                <div class="form-group">
+                                    <h6><?= lang('expedition_name') ?></h6>
+                                    <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                                        <option value="" selected disabled><?=lang('option')?></option>
+                                        <?php foreach ($expedition as $key => $value):?>
+                                            <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-12">
+                                <div class="form-group">
+                                    <h6><?= lang('expedition_services') ?></h6>
+                                    <select class="custom-select" name="services_expedition" id="services_expedition">
+                                        <option value=""><?=lang('option')?></option>
+                                        <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-lg-12">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('note') ?></label>
@@ -172,4 +193,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
     $('.select2').select2();
+    $(document).ready(function(){
+        
+        $('#expedition_name').on('change', function(){
+            const expedition = $(this).find(":selected");
+            const services = expedition.data('services')
+            const service = services.split(',');
+            const data_services = expedition.data('service_selected');
+            $('#services_expedition').empty();
+            $('#services_expedition').append(`<option value="">Opsi</option>`)
+            service.forEach(element => {
+                $('#services_expedition').append(`<option value="${element}">${element}</option>`)
+            });
+        });
+
+    })
 </script>

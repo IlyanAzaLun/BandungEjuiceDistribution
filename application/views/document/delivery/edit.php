@@ -107,17 +107,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="input-0" id="main">
+                  <?php foreach ($contens as $key => $item): ?>
+                  <tr class="input-<?=$key?>" id="main">
                     <td class="text-center"><div class="form-control form-control-sm">1.</div></td>
                     <td>
-                      <input type="hidden" name="item_id[]" id="item_id" data-id="item_id">
-                      <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
+                      <input type="hidden" name="id[]" id="id" data-id="id" value="<?=$item->id?>">
+                      <input type="hidden" name="item_id[]" id="item_id" data-id="item_id" value="<?=$item->item_id?>">
+                      <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?=$item->item_code?>" required readonly>
                     </td>
-                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
-                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
+                    <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required readonly><?=$item->item_name?></textarea></td>
+                    <td><input class="form-control form-control-sm" type="text" data-id="note" readonly value="<?=$item->note?>"></td>
                     <td style="display:none" >
                       <div class="input-group input-group-sm">
-                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
+                        <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" value="<?=$item->item_quantity?>" data-id="item_quantity" required readonly>
                         <input type="hidden" name="item_unit[]" id="item_unit" data-id="item_unit">
                         <div class="input-group-append">
                           <span class="input-group-text" data-id="item_unit"></span>
@@ -126,20 +128,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </td>
                     <td>
                     <div class="input-group input-group-sm">
-                      <span class="input-group-prepend">
-                          <span class="input-group-text" data-id="item_quantity"></span>
-                      </span>
-                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="0" required>
+                      <input class="form-control form-control-sm" type="number" name="item_order_quantity[]" data-id="item_order_quantity" min="1" value="<?=$item->item_quantity?>" required readonly>
                       <input class="form-control form-control-sm" type="hidden" name="item_weight[]" data-id="item_weight" readonly>
-                      <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" readonly>
+                      <input class="form-control form-control-sm" type="hidden" name="item__total_weight[]" data-id="item__total_weight" value="<?=$item->item_total_weight?>" readonly>
                       <div class="input-group-append">
-                        <span class="input-group-text" data-id="item_unit"></span>
+                        <span class="input-group-text" data-id="item_unit"><?=$item->item_unit?></span>
                       </div>
                     </div>
-                    <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required readonly></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required readonly></td>
                     </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
+                    <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required readonly></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>
                     <td>
                       <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
@@ -150,11 +149,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </td>
                   </tr>
-                  <tr class="description input-0" style="display:none">
+                  <tr class="description input-<?=$key?>" style="display:none">
                       <td colspan="9">
                           <textarea class="form-control form-control-sm" name="description[]"></textarea>
                       </td>
                   </tr>
+                  <?php endforeach; ?>
                 </tbody>
               </table>
               <div class="float-left ml-1">
@@ -176,9 +176,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
         </div>
         <!-- /.card-body -->
-        <div>
-          <pre><?php var_dump($header)?></pre>
+        <div> 
           <pre><?php var_dump($contens)?></pre>
+          <pre><?php var_dump($header)?></pre>
         </div>
       </div>
       <!-- Information Items -->
@@ -190,12 +190,34 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card-body">
           <div class="row">
 
-            <div class="col-lg-6 col-sm-12">
+            <div class="col-lg-2 col-sm-12">
             </div>
+            <div class="col-lg-2 col-sm-12">
+              <div class="form-group">
+                <label for="expedition"><?= lang('expedition') ?></label>
+                <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                    <option value="" selected disabled><?=lang('option')?></option>
+                    <?php foreach ($expedition as $key => $value):?>
+                        <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $header->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
+                    <?php endforeach ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-sm-12">
+              <div class="form-group">
+                  <h6><?= lang('expedition_services') ?></h6>
+                  <select class="custom-select" name="services_expedition" id="services_expedition">
+                      <option value=""><?=lang('option')?></option>
+                      <option value="<?=$header->services_expedition?>" selected><?=$header->services_expedition?></option>
+                  </select>
+              </div>
+            </div>
+            
             <div class="col-lg-3 col-sm-12">
               <div class="form-group">
                 <label for="shipping_cost"><?= lang('shipping_cost') ?></label>
-                <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" required><?= set_value('shipping_cost') ?></input>
+                <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" required value="<?=$header->shipping_cost?>"><?= set_value('shipping_cost') ?></input>
               </div>
             </div>
 
@@ -252,6 +274,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   $(document).ready(function () {
     $('input#store_name').focus();
   })
+  
+
+  $('#expedition_name').on('change', function(){
+      const expedition = $(this).find(":selected");
+      const services = expedition.data('services')
+      const service = services.split(',');
+      const data_services = expedition.data('service_selected');
+      $('#services_expedition').empty();
+      $('#services_expedition').append(`<option value="">Opsi</option>`)
+      service.forEach(element => {
+          $('#services_expedition').append(`<option value="${element}">${element}</option>`)
+      });
+  });
   // $('body').addClass('sidebar-collapse');
   //Date range picker
   $('#created_at').daterangepicker({
@@ -270,4 +305,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderCreate.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/document/delivery/MainDocumentDeliveryEdit.js"></script>

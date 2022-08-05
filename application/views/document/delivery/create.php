@@ -137,10 +137,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </div>
                     <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>
+                    <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>
                     <td>
                       <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
@@ -186,12 +186,33 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card-body">
           <div class="row">
 
-            <div class="col-lg-6 col-sm-12">
+          <div class="col-lg-2 col-sm-12">
+            </div>
+          <div class="col-lg-2 col-sm-12">
+              <div class="form-group">
+                <label for="expedition"><?= lang('expedition') ?></label>
+                <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                    <option value="" selected disabled><?=lang('option')?></option>
+                    <?php foreach ($expedition as $key => $value):?>
+                        <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
+                    <?php endforeach ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-sm-12">
+              <div class="form-group">
+                  <h6><?= lang('expedition_services') ?></h6>
+                  <select class="custom-select" name="services_expedition" id="services_expedition">
+                      <option value=""><?=lang('option')?></option>
+                      <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?></option>
+                  </select>
+              </div>
             </div>
             <div class="col-lg-3 col-sm-12">
               <div class="form-group">
                 <label for="shipping_cost"><?= lang('shipping_cost') ?></label>
-                <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" required><?= set_value('shipping_cost') ?></input>
+                <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" required><?= set_value('shipping_cost') ?></input>
               </div>
             </div>
 
@@ -248,6 +269,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   $(document).ready(function () {
     $('input#store_name').focus();
   })
+  $('#expedition_name').on('change', function(){
+      const expedition = $(this).find(":selected");
+      const services = expedition.data('services')
+      const service = services.split(',');
+      const data_services = expedition.data('service_selected');
+      $('#services_expedition').empty();
+      $('#services_expedition').append(`<option value="">Opsi</option>`)
+      service.forEach(element => {
+          $('#services_expedition').append(`<option value="${element}">${element}</option>`)
+      });
+  });
   // $('body').addClass('sidebar-collapse');
   //Date range picker
   $('#created_at').daterangepicker({
@@ -266,4 +298,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainOrderCreate.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/document/delivery/MainDocumentDeliveryCreate.js"></script>
