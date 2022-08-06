@@ -21,6 +21,15 @@
         padding: 1px;}
     tr:nth-child(even) {
         background-color: #dddddd;}
+    
+    .footer {
+        margin-left: 0;}
+    .whosender {
+        float: right;
+        width: 50%;}
+    .whoreceive{
+        float: left;
+        width: 50%;}
 </style>
 </head>
 <body>
@@ -31,11 +40,14 @@
             Kelurahan Antapani Kidul, Kecamatan Antapani<br>
             Bandung, Jawa Barat - 40291<hr>
         </h5>
-        <div style="font-size: 12px;" class="justify">Nomor : xxx</div>
-        <div style="font-size: 12px;" class="justify">Tanggal : xxx</div>
-        <div style="font-size: 12px;" class="justify">Kepada : xxx</div>
-        <div style="font-size: 12px;" class="justify">Alamat : xxx</div>
-        <p class="justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit dolore repellat ab totam impedit aliquid molestias magni expedita optio, ad placeat, reiciendis voluptate quisquam aspernatur iure tempore, explicabo soluta quae.</p>
+        <div style="font-size: 12px;" class="justify">Nomor </div>
+        <div style="font-size: 12px;" class="justify">Tanggal </div>
+        <div style="font-size: 12px;" class="justify">Kepada </div>
+        <div style="font-size: 12px;" class="justify">Alamat </div>
+        <br>
+        <div style="font-size: 12px;" class="justify">Dengan hormat,</div>
+        <div style="font-size: 12px;" class="justify">Dengan surat ini kami mengirimkan barang dengan rincian sebagai berikut :</div>
+        <br>
         <table style="font-size: 12px;" class="table">
             <thead>
                 <tr>
@@ -45,17 +57,28 @@
                 </tr>
             </thead>
             <tbody>
+                <?php foreach ($contens as $key => $value):?>
                 <tr>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
+                    <td><?=$key+1?></td>
+                    <td><?=$value->item_name?></td>
+                    <td><?=$value->item_quantity?></td>
                 </tr>
+                <?php endforeach; ?>
                 <tr>
                     <th colspan="2">Total Jumlah Barang</th>
                     <th>10</th>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <br>
+    <div class="footer">
+        <div class="whoreceive">
+            <div style="font-size: 12px;" class="center">Yang Menerima,<br><br><br><br><br><br><br><br>Pt.asal</div>
+        </div>
+        <div class="whosender">
+            <div style="font-size: 12px;" class="center">Yang Meyerahkan,<br><br><br><br><br><br><br><br>(BANDUNG EJUICE DISTRIBUTION)</div>
+        </div>
     </div>
 </body>
 </html>

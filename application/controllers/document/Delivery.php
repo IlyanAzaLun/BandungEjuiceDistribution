@@ -181,7 +181,9 @@ class Delivery extends MY_Controller
         $options = $this->pdf->getOptions();
         $options->set('isRemoteEnabled', true);
         $this->pdf->setOptions($options);
-
+		
+		$this->page_data['header']  = $this->delivery_model->getById(get('id'));
+		$this->page_data['contens'] = $this->delivery_list_item_model->getByWhere(['delivery_code' => $this->page_data['header']->delivery_code]);	
 
 		$this->pdf->setPaper('A4', 'potrait');
 		// $this->pdf->filename = $data['customer']->store_name."pdf";
