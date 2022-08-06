@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('customer_code')?></label>
-                                <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" readonly value="<?=$customer_code?>">
+                                <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" value="<?=$customer_code?>">
                             </div>
                         </div>
 

@@ -86,9 +86,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row" id="order_item">
-            <div class="col-12 mb-2">
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#import_order_items"><i class="fa fa-fw fa-file-import"></i>&nbsp;<?=lang('import_order')?></button>
-            </div>
             <div class="col-12">
               <table class="table table-fixed table-sm" width="100%">
                 <thead>
@@ -100,9 +97,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th width="10%"><?= lang('note') ?></th>
                     <th width="12%"><?= lang('item_order_quantity') ?></th>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
-                    <th width="10%"><?= lang('item_selling_price') ?></th>
-                    <th width="7%"><?= lang('discount') ?></th>
-                    <th width="10%"><?= lang('total_price') ?></th>
+                    <th style="display:none;" width="10%"><?= lang('item_selling_price') ?></th>
+                    <th style="display:none;" width="7%"><?= lang('discount') ?></th>
+                    <th style="display:none;" width="10%"><?= lang('total_price') ?></th>
                     <th width="10%"><?= lang('option') ?></th>
                   </tr>
                 </thead>
@@ -137,10 +134,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </div>
                     <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                    <td style="display:none;><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
-                    <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>
+                    <td style="display:none;><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
+                    <td style="display:none;><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>
                     <td>
                       <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>

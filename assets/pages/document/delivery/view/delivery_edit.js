@@ -20,6 +20,9 @@ const main = () => {
         })
     }
     $(document).ready(function () {
+        $('.currency').each(function (index, field) {
+            $(field).val(currency(currencyToNum($(field).val())));
+        });
         // Find customer // limit.. this overload
         data_customer.user_info_search($('input#customer_code').val(), function (output) {
             $('input#customer_code').val(output[0]['customer_code'])
@@ -147,7 +150,7 @@ const main = () => {
             })
         });
         // discount to currency
-        $(document).on('keyup', 'input[data-id="discount"], input[data-id="total_price"], input[data-id="item_selling_price"], input[data-id="item_capital_price"]', function () {
+        $(document).on('keyup', '.currency', function () {
             $(this).val(currency(currencyToNum($(this).val())));
         })
 
@@ -188,9 +191,9 @@ const main = () => {
                     </div>
                 </td>
                 <td style="display:none;"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>                
+                <td style="display:none;><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                <td style="display:none;><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
+                <td style="display:none;><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>                
                 <td>
                     <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
@@ -244,9 +247,9 @@ const main = () => {
                     </div>
                 </td>
                 <td style="display:none;"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>                
+                <td style="display:none;><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
+                <td style="display:none;><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
+                <td style="display:none;><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>                
                 <td>
                     <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>

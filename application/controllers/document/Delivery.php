@@ -106,12 +106,86 @@ class Delivery extends MY_Controller
 
 	public function edit()
 	{
-		$this->page_data['title'] = 'delivery_document_list';
-		$this->page_data['page']->submenu = 'delivery_document_list';
-		$this->page_data['expedition'] = $this->expedition_model->get();
-		$this->page_data['header']  = $this->delivery_model->getById(get('id'));
-		$this->page_data['contens'] = $this->delivery_list_item_model->getByWhere(['delivery_code' => $this->page_data['header']->delivery_code]);	
-		$this->load->view('document/delivery/edit', $this->page_data);
+		$this->form_validation->set_rules('customer_code', lang('customer_code'), 'required|trim');
+		$this->form_validation->set_rules('item_id[]', "Item", 'required|trim');
+		if ($this->form_validation->run() == false) {
+			$this->page_data['title'] = 'delivery_document_list';
+			$this->page_data['page']->submenu = 'delivery_document_list';
+			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['header']  = $this->delivery_model->getById(get('id'));
+			$this->page_data['contens'] = $this->delivery_list_item_model->getByWhere(['delivery_code' => $this->page_data['header']->delivery_code]);	
+			
+			$this->page_data['modals'] = (object) array(
+				'id' => 'modal-remove-order',
+				'title' => 'Modals confirmation',
+				'link' => "document/delivery/remove?id=".get('id'),
+				'content' => 'delete',
+				'btn' => 'btn-danger',
+				'submit' => 'Yes do it',
+			);
+			$this->load->view('document/delivery/edit', $this->page_data);
+			$this->load->view('includes/modals');
+		}
+		else{
+			$this->data['delivery_code'] = post('delivery_code');	
+			$items = array();
+			foreach (post('item_code') as $key => $value) {
+				$items[$key]['id'] = post('id')[$key];
+				$items[$key]['item_id'] = post('item_id')[$key];
+				$items[$key]['item_code'] = post('item_code')[$key];
+				$items[$key]['item_name'] = post('item_name')[$key];
+				$items[$key]['item_quantity'] = post('item_quantity')[$key];
+				$items[$key]['item_order_quantity'] = post('item_order_quantity')[$key];
+				$items[$key]['item_unit'] = post('item_unit')[$key];
+				$items[$key]['item_description'] = post('description')[$key];
+				$items[$key]['customer_code'] = post('customer_code');
+				if($items[$key]['item_order_quantity'] == $items[$key]['item_quantity']){
+					unset($items[$key]);
+				}
+			}
+			$items = array_values($items);
+			$header = array(
+				'customer_code' => post('customer_code'),
+				'store_name' => post('store_name'),
+				'contact_phone' => post('contact_phone'),
+				'destination_address' => post('address'),
+				'shipping_cost' => post('shipping_cost'),
+				'is_shipping_cost' => post('shipping_cost_to_invoice'),
+				'expedition' => post('expedition_name'),
+				'services_expedition' => post('services_expedition'),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
+				'note' => post('note') == false? null : strtoupper(post('note')),
+			);
+			try {
+				$this->create_or_update_delivery($header);
+				$this->create_or_update_list_item_delivery($items);
+
+				$this->activity_model->add("Update Delivery Document, #" . $this->data['delivery_code'], (array) $payment);
+
+				$this->session->set_flashdata('alert-type', 'success');
+				$this->session->set_flashdata('alert', 'Create Order Successfully');
+				redirect('document/delivery/edit?id='.get('id'));
+
+			} catch (\Throwable $th) {
+				echo "<pre>";
+				var_dump($h);
+				echo "</pre>";
+			}
+		}
+	}
+
+	public function print()
+	{
+		$this->load->library('pdf');
+	
+        $options = $this->pdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $this->pdf->setOptions($options);
+
+
+		$this->pdf->setPaper('A4', 'potrait');
+		// $this->pdf->filename = $data['customer']->store_name."pdf";
+		$this->pdf->load_view('document/delivery/print', $this->page_data);
 	}
 	
 	protected function create_or_update_delivery($data)
@@ -126,20 +200,18 @@ class Delivery extends MY_Controller
 		$request['is_shipping_cost'] = $data['is_shipping_cost'];
 		$request['expedition'] = $data['expedition'];
 		$request['services_expedition'] = $data['services_expedition'];
-		if ($response) {
+		if ($response[0]) {
 			$request['is_cancelled'] = $data['is_cancelled'];
-			$request['is_confirmed'] = $data['is_confirmed'];
 			$request['updated_by'] = logged('id');
 			$request['updated_at'] = date('Y-m-d H:i:s');
 			//
-			return $this->delivery_model->update_by_code($this->data['delivery_code'], $request);
+			return $this->delivery_model->update($response[0]->id, $request);
 		} else {
 			$request['delivery_code'] = $this->data['delivery_code'];
 			$request['created_by'] = logged('id');
 			//	
 			return $this->delivery_model->create($request);
 		}
-		return $request;
 	}
 
 	public function create_or_update_list_item_delivery($data)
@@ -174,6 +246,20 @@ class Delivery extends MY_Controller
 		} else {
 			$this->delivery_list_item_model->update_batch($data_positif, 'id');
 			return true;
+		}
+	}
+
+	public function remove()
+	{
+		if($this->delivery_list_item_model->update(post('id'), array('is_canceled' => 1))){
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Delete List Item Successfully');
+			redirect('document/delivery/edit?id='.get('id'));
+		}
+		else {
+			$this->session->set_flashdata('alert-type', 'error');
+			$this->session->set_flashdata('alert', 'Fail List Item');
+			redirect('document/delivery/edit?id='.get('id'));
 		}
 	}
 
