@@ -103,8 +103,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <th><?=lang('item_capital_price')?></th>
                     <th><?=lang('item_shadow_selling_price')?></th>
                     <th><?=lang('item_selling_price')?></th>
+                    <th>selling price</th>
                     <th><?=lang('profit')?></th>
                     <th><?=lang('profit_pesudo')?></th>
+                    <th>actually profit</th>
                     <th><?=lang('name')?></th>
                 </tr>
             </thead>
@@ -189,6 +191,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     return data?currency(data):0;
                 }
             },{
+                data: "grand_total",
+                className: "bg-danger",
+                render: function(data, type, row){
+                    return data?currency(row['grand_total']):0;
+                }
+            },{
                 data: "item_selling_price",
                 render: function(data, type, row){
                     return data?currency(data):0;
@@ -203,6 +211,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 className: "bg-warning",
                 render: function(data, type, row){
                     return data?currency(row['item_selling_price'] - row['pseudo_price']):0;
+                }
+            },{
+                data: "grand_total",
+                className: "bg-danger",
+                render: function(data, type, row){
+                    return data?currency(row['grand_total'] - row['item_capital_price']):0;
                 }
             },{
                 data: "name",

@@ -598,6 +598,7 @@ class Report extends MY_Controller
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
 		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
 		$this->db->join("items", "transaction.item_id = items.id", "left");
+
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
@@ -629,6 +630,8 @@ class Report extends MY_Controller
         switch ($group_by) {
             case 'monthly':
                 # code...
+                $this->db->select('
+               ,SUM(sale.grand_total) AS grand_total');
                 $this->db->group_by("yearmount");
                 break;
 
@@ -636,7 +639,8 @@ class Report extends MY_Controller
                 # code...
                 $this->db->select('
                  transaction.customer_code
-                ,customer.store_name');
+                ,customer.store_name
+                ,SUM(sale.grand_total) AS grand_total');
                 $this->db->group_by("yearmount, transaction.customer_code");
                 break;
             
@@ -646,13 +650,16 @@ class Report extends MY_Controller
                  transaction.created_by
                 ,users.name
                 ,sale.is_have
-                ,is_have.name AS is_have_name');
+                ,is_have.name AS is_have_name
+                ,SUM(sale.grand_total) AS grand_total');
                 // $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
                 $this->db->group_by("yearmount, sale.is_have");
                 break;
                     
             case 'daily':
                 # code...
+                $this->db->select('
+               ,SUM(sale.grand_total) AS grand_total');
                 $this->db->group_by("yearmountday");
                 break;
             
@@ -662,7 +669,8 @@ class Report extends MY_Controller
                  transaction.created_by
                  ,users.name
                  ,sale.is_have
-                 ,is_have.name AS is_have_name');
+                 ,is_have.name AS is_have_name
+                 ,SUM(sale.grand_total) AS grand_total');
                 // $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
                 $this->db->group_by("yearmountday, sale.is_have");
                 break;
@@ -671,7 +679,8 @@ class Report extends MY_Controller
                 # code...
                 $this->db->select('
                  transaction.customer_code
-                ,customer.store_name');
+                ,customer.store_name
+                ,SUM(sale.grand_total) AS grand_total');
                 $this->db->group_by("yearmountday, transaction.customer_code");
                 break;
             
@@ -684,7 +693,8 @@ class Report extends MY_Controller
                 ,sale.is_have
                 ,is_have.name AS is_have_name
                 ,transaction.customer_code
-                ,customer.store_name');
+                ,customer.store_name
+                ,sale.grand_total');
                 $this->db->group_by("transaction.invoice_code");
                 break;
         }
@@ -705,6 +715,7 @@ class Report extends MY_Controller
 				'pseudo_price' => $record->pseudo_price,
 				'item_capital_price' => $record->time_capital_price,
 				'item_selling_price' => $record->total_price,
+				'grand_total' => $record->grand_total,
 				'profit' => $record->profit,
 				'name' => $record->name,
 			);
