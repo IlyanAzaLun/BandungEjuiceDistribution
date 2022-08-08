@@ -21,7 +21,6 @@
         padding: 1px;}
     tr:nth-child(even) {
         background-color: #dddddd;}
-    
     .footer {
         margin-left: 0;}
     .whosender {
@@ -40,10 +39,25 @@
             Kelurahan Antapani Kidul, Kecamatan Antapani<br>
             Bandung, Jawa Barat - 40291<hr>
         </h5>
-        <div style="font-size: 12px;" class="justify">Nomor </div>
-        <div style="font-size: 12px;" class="justify">Tanggal </div>
-        <div style="font-size: 12px;" class="justify">Kepada </div>
-        <div style="font-size: 12px;" class="justify">Alamat </div>
+        <table style="font-size: 12px;" class="table">
+            <tr style="background-color:#fff;">
+                <td style="border: 0;" width="10%">Nomor</td>
+                <td style="border: 0;" width="100%">: <?=$header->delivery_code?></td>
+            </tr>
+            <tr style="background-color:#fff;">
+                <td style="border: 0;" width="10%">Tanggal</td>
+                <td style="border: 0;" width="100%">: <?=$header->created_at?></td>
+            </tr>
+            <tr style="background-color:#fff;">
+                <td style="border: 0;" width="10%">Kepada</td>
+                <td style="border: 0;" width="100%">: <?=$header->store_name?></td>
+            </tr>
+            <tr style="background-color:#fff;">
+                <td style="border: 0; top;0;" width="10%">Alamat</td>
+                <td style="border: 0; top;0;" width="100%">: <?=$header->destination_address?></td>
+            </tr>
+        </table>
+
         <br>
         <div style="font-size: 12px;" class="justify">Dengan hormat,</div>
         <div style="font-size: 12px;" class="justify">Dengan surat ini kami mengirimkan barang dengan rincian sebagai berikut :</div>
@@ -57,16 +71,16 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($contens as $key => $value):?>
+                <?php $total_quantity = 0; foreach ($contens as $key => $value):?>
                 <tr>
                     <td><?=$key+1?></td>
                     <td><?=$value->item_name?></td>
-                    <td><?=$value->item_quantity?></td>
+                    <td style="float: right;text-align: right"><?=$value->item_quantity?></td>
                 </tr>
-                <?php endforeach; ?>
+                <?php $total_quantity+=$value->item_quantity; endforeach; ?>
                 <tr>
                     <th colspan="2">Total Jumlah Barang</th>
-                    <th>10</th>
+                    <th style="float: right;text-align: right"><?=$total_quantity?></th>
                 </tr>
             </tbody>
         </table>
@@ -74,7 +88,7 @@
     <br>
     <div class="footer">
         <div class="whoreceive">
-            <div style="font-size: 12px;" class="center">Yang Menerima,<br><br><br><br><br><br><br><br>Pt.asal</div>
+            <div style="font-size: 12px;" class="center">Yang Menerima,<br><br><br><br><br><br><br><br><?=$header->store_name?></div>
         </div>
         <div class="whosender">
             <div style="font-size: 12px;" class="center">Yang Meyerahkan,<br><br><br><br><br><br><br><br>(BANDUNG EJUICE DISTRIBUTION)</div>
