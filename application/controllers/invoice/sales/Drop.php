@@ -540,5 +540,24 @@ class Drop extends Sale
 		redirect('invoice/sales/drop/list_drop_items');
 	}
 	
+	public function remove_list()
+	{
+		$data_transaction_item = $this->transaction_item_model->getById(post('idorder'));
+		$data_fifo_item = $this->items_fifo_model->getById(post('idorder'));
+		$this->data['invoice_code'] = $data_transaction_item->invoice_code;
+		$data_transaction_item->item_order_quantity_current = $data_transaction_item->item_quantity;
+		$data_transaction_item->is_cancelled = 1;
+		$data_fifo_item->is_cancelled = 1;
+		$data_fifo_item->item_order_quantity = $data_fifo_item->item_quantity * -1;
 
+		$this->update_items([0 => (array) $data_transaction_item]);
+		$this->create_item_history([0 => (array) $data_transaction_item], ['CANCELED', 'CANCELED']);
+		$this->create_or_update_list_item_transcation([0 => (array) $data_transaction_item]); 		 
+		$this->update_list_item_fifo_on_cancel([0 => (array) $data_fifo_item]);
+
+		$this->activity_model->add("Cancel Items Drop Quantity Items, #" . $this->data['invoice_code'], (array) $payment);
+		$this->session->set_flashdata('alert-type', 'success');
+		$this->session->set_flashdata('alert', 'Cancel Drop Quantity Successfully');
+		redirect('invoice/sales/drop/edit_drop?id='.$this->data['invoice_code']);
+	}
 }

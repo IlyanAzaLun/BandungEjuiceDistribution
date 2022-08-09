@@ -100,7 +100,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
                         <a target="_blank" class="btn btn-default" id="detail" data-toggle="tooltip" data-placement="top" title="Open dialog information transaction item"><i class="fas fa-tw fa-info"></i></a>
-                        <button type="button" class="btn btn-default" disabled><i class="fa fa-tw fa-times"></i></button>
+                      <?php if (sizeof($items) <= 1) : ?>
+                        <button disabled type="button" class="btn btn-block btn-secondary"><i class="fa fa-tw fa-times"></i></button>
+                      <?php else : ?>
+                        <button type="button" class="btn btn-block btn-danger remove" data-id="<?=$value->item_code?>" data-indexlist="<?=$value->index_list?>" data-idorder="<?=$value->id?>" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-tw fa-times"></i></button>
+                      <?php endif ?>
                       </div>
                     </td>
                   </tr>
@@ -180,6 +184,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   $('body').addClass('sidebar-collapse');
   $(document).ready(function(){
       $('#exampleModal').on('shown.bs.modal', function(){
+          $(this).find('form').attr('action', '<?=url('invoice/sales/drop/cancel?id='.get('id'))?>')
           $('textarea').prop('required',true);
           $('textarea').focus();
       })
@@ -196,6 +201,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       });
   })
+  
+  $(document).ready(function () {
+      $('.remove').on('click', function(){
+          let id = $(this).data('id');
+          let indexList = $(this).data('indexlist');
+          let idOrder = $(this).data('idorder');
+          $('#exampleModal').on('shown.bs.modal', function(){
+              $(this).find('input#id').val(id);
+              $(this).find('input#idorder').val(idOrder);
+              $(this).find('input#indexlist').val(indexList);
+              $(this).find('form').attr('action', '<?=url('invoice/sales/drop/remove_list')?>')
+          })
+      })
+  });
 </script>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>

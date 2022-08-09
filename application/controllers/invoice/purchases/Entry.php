@@ -434,6 +434,26 @@ class Entry extends Purchase
 		redirect('invoice/purchases/entry/list_entry');
 	}
 
+	public function remove_list()
+	{
+		$data_transaction_item = $this->transaction_item_model->getById(post('idorder'));
+		$data_fifo_item = $this->items_fifo_model->getById(post('idorder'));
+		$this->data['invoice_code'] = $data_transaction_item->invoice_code;
+		$data_transaction_item->item_order_quantity_current = $data_transaction_item->item_current_quantity;
+		$data_transaction_item->is_cancelled = 1;
+		$data_fifo_item->is_cancelled = 1;
+
+		$this->create_item_history([0 => (array) $data_transaction_item], ['CANCELED', 'CANCELED']);
+		$this->update_items([0 => (array) $data_transaction_item]);
+		$this->create_or_update_list_item_transcation([0 => (array) $data_transaction_item]);
+		$this->create_or_update_list_item_fifo([0 => (array) $data_fifo_item]);
+
+		$this->activity_model->add("Cancel Items Entry Quantity Items, #" . $this->data['invoice_code'], (array) $payment);
+		$this->session->set_flashdata('alert-type', 'success');
+		$this->session->set_flashdata('alert', 'Cancel Entry Quantity Successfully');
+
+		redirect('invoice/purchases/entry/edit_entry?id='.$this->data['invoice_code']);
+	}
 }
 
 /* End of file Purchasing.php */
