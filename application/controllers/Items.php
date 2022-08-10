@@ -432,6 +432,7 @@ class Items extends MY_Controller
                 "brands" => $record->brands,
                 "item_capital_price" => $record->capital_price,
                 "item_selling_price" => $record->selling_price,
+                "shadow_selling_price" => $record->shadow_selling_price,
                 "note" => $record->note,
                 "is_active" => $record->is_active,
             );

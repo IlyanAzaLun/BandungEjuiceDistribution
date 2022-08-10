@@ -45,6 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
+                  <th><?= lang('item_shadow_selling_price') ?></th>
                   <th><?= lang('note') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
@@ -65,6 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('unit') ?></th>
                   <th><?= lang('item_capital_price') ?></th>
                   <th><?= lang('item_selling_price') ?></th>
+                  <th><?= lang('item_shadow_selling_price') ?></th>
                   <th><?= lang('note') ?></th>
                   <th><?= lang('option') ?></th>
                 </tr>
@@ -171,6 +173,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },
         {
           data: "item_selling_price",
+          orderable: false,
+          render: function(data, type, row) {
+            return (data) ? currency(data) : 0
+          }
+        },
+        {
+          data: "shadow_selling_price",
           orderable: false,
           render: function(data, type, row) {
             return (data) ? currency(data) : 0
