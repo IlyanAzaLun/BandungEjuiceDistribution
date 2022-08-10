@@ -523,16 +523,12 @@ class Drop extends Sale
 		$payment['is_cancelled'] = 1;
 		$payment['cancel_note'] = $this->input->post('note');
 		//
-		echo "<pre>";
-		var_dump($this->create_item_history( $items, ['CANCELED', 'CANCELED'])); //ok
-		var_dump($this->create_or_update_invoice($payment)); //
-		var_dump($this->update_items($items)); //
-		var_dump($this->create_or_update_list_item_transcation($items)); // ok
+		$this->create_item_history( $items, ['CANCELED', 'CANCELED']); //ok
+		$this->create_or_update_invoice($payment); //
+		$this->update_items($items); //
+		$this->create_or_update_list_item_transcation($items); // ok
 
-		var_dump($this->update_list_item_fifo_on_cancel($items)); // PREPARE TOO FOR CANCEL CHILD 
-
-		echo "</pre>";
-
+		$this->update_list_item_fifo_on_cancel($items); // PREPARE TOO FOR CANCEL CHILD 
 		$this->activity_model->add("Cancel Drop Quantity Items, #" . $this->data['invoice_code'], (array) $payment);
 		$this->session->set_flashdata('alert-type', 'success');
 		$this->session->set_flashdata('alert', 'Cancel Drop Quantity Successfully');
