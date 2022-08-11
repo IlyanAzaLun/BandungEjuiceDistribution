@@ -926,6 +926,9 @@ class Sale extends Invoice_controller
 			array_push($data['labels'], $record->mount);
 			
 			$data['datasets'][0]['label'] = 'Profit';
+			$data['datasets'][0]['backgroundColor'] = 'rgba(0, 109, 255, 0.39)';
+			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
+			
 			array_push($data['datasets'][0]['data'], bd_nice_number((int) $record->profit));
 		}
 		## Response
@@ -941,6 +944,7 @@ class Sale extends Invoice_controller
             , transaction.updated_at
             , DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
             , DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
+            , DATE_FORMAT(transaction.created_at, '%W') AS days
             , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
             , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
 			, SUM(CAST(transaction.total_price AS INT)) AS total_price
@@ -965,9 +969,12 @@ class Sale extends Invoice_controller
 		$data['labels'] = array();
 		$data['datasets'][]['data'] = array();
 		foreach ($records as $key => $record) {
-			array_push($data['labels'], $record->yearmountday);
+			array_push($data['labels'], $record->days);
 			
 			$data['datasets'][0]['label'] = 'Profit';
+			$data['datasets'][0]['backgroundColor'] = 'rgba(0, 109, 255, 0.39)';
+			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
+
 			array_push($data['datasets'][0]['data'], $record->profit);
 		}
 		## Response

@@ -27,12 +27,22 @@ const main = () => {
             scales: {
                 xAxes: [{
                     gridLines: {
-                        display: false,
+                        display: true,
                     }
                 }],
                 yAxes: [{
+                    ticks: {
+                        callback: function (value, index, values) {
+                            if (1000 < parseInt(value)) {
+                                return `Rp. ${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Juta`
+                            }
+                            else {
+                                return `Rp. ${value} Juta`;
+                            }
+                        }
+                    },
                     gridLines: {
-                        display: false,
+                        display: true,
                     }
                 }]
             }
@@ -76,7 +86,6 @@ const main = () => {
             url: location.base + 'invoice/sale/monthly_statistic', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
-                console.log(result)
                 salesChart.data = result;
                 salesChart.update();
             }
@@ -126,12 +135,9 @@ const main = () => {
                     borderWidth: 2,
                     lineTension: 0,
                     spanGaps: true,
-                    borderColor: '#efefef',
                     pointRadius: 3,
                     pointHoverRadius: 7,
-                    pointColor: '#efefef',
-                    pointBackgroundColor: '#efefef',
-                    data: [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
+                    data: ["2666", "2778", "4912", "3767", "6810", "5670", "4820", "15073", "10687", "8432"]
                 }
             ]
         }
@@ -145,22 +151,29 @@ const main = () => {
             scales: {
                 xAxes: [{
                     ticks: {
-                        fontColor: '#efefef',
                     },
                     gridLines: {
-                        display: false,
-                        color: '#efefef',
+                        display: true,
                         drawBorder: false,
                     }
                 }],
                 yAxes: [{
                     ticks: {
                         stepSize: 5000,
-                        fontColor: '#efefef',
+                        callback: function (value, index, values) {
+                            // if (parseInt(value) >= 1000) {
+                            //     return 'Rp. ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            // }
+                            if (1000000 < parseInt(value)) {
+                                return `Rp. ${Math.round((parseInt(value) / 1000000), 1).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Juta`
+                            }
+                            else {
+                                return 'Rp. ' + value;
+                            }
+                        }
                     },
                     gridLines: {
                         display: true,
-                        color: '#efefef',
                         drawBorder: false,
                     }
                 }]
@@ -170,11 +183,19 @@ const main = () => {
         // This will get the first returned node in the jQuery collection.
         var salesGraphChart = new Chart(salesGraphChartCanvas, {
             type: 'line',
-            data: salesGraphChartData,
+            data: {},
             options: salesGraphChartOptions
-        }
-        )
+        })
 
+        $.ajax({
+            type: 'POST', //post method
+            url: location.base + 'invoice/sale/daily_statistic', //ajaxformexample url
+            dataType: "json",
+            success: function (result, textStatus, jqXHR) {
+                salesGraphChart.data = result;
+                salesGraphChart.update();
+            }
+        });
     })
 }
 export default main;
