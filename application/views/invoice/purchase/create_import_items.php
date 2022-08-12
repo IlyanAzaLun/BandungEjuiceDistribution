@@ -139,7 +139,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </div>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?= explode(',',$value["H"])[0]?>" required></td>
-                    <td style="display:none"><input readonly  class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= ($this->items_model->getByCodeItem($value["B"], 'selling_price'));?>" required></td>
+                    <td style="display:none">
+                      <input class="form-control form-control-sm currency" type="text" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=1 required>
+                      <input readonly  class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= ($this->items_model->getByCodeItem($value["B"], 'selling_price'));?>" required>
+                    </td>
                     </td>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" value="<?= explode(',',$value["I"])[0]?>" required></td>
                     <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" value="<?= explode(',',$value["J"])[0]?>" required></td>

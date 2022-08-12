@@ -71,27 +71,27 @@ $i = 0;
                     </tr>
                     <tr>
                     <th colspan="2" rowspan="4" class="text-center">
-                        <h1 style="font-family: 'monospace';font-color: 'coral'">B.<span style="color:#FFBF00">E</span>.D</h1>
+                        <p style="font-size: 25px;font-family: 'monospace';font-color: 'coral-bold'">B.<span style="color:#FFBF00">E</span>.D</p>
                     </th>
                         <!-- <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th> -->
                         <th colspan="3"></th>
-                        <th>Invoice Code</th>
+                        <th><?=lang('invoice_code')?></th>
                         <th class="text-left" colspan="2">: <?=$_data_item_invoice_parent[0]->invoice_code?> </th>
                     </tr>
                     <tr>
-                        <th colspan="3"></th>
-                        <th>Created At</th>
+                        <th colspan="3" style="vertical-align:top; padding-left: 50px;"><?=lang('store_name')?>: <?=$customer->store_name?> (<?=$customer->owner_name?>)</th>
+                        <th><?=lang('created_at')?></th>
                         <th class="text-left" colspan="2">: <?=date_format(date_create($invoice_information_transaction->created_at),"d/M/Y")?> </th>
                     </tr>
                     <tr>
-                        <th colspan="2" style="vertical-align:top;"><?=lang('user_address')?>: <?=$destination?></th>
-                        <th colspan="2" >Date Start</th>
-                        <th colspan="2" >Date Due</th>
+                        <th colspan="3" style="vertical-align:top; padding-left: 50px;;"><?=lang('user_address')?>: <?=$destination?></th>
+                        <th colspan="1" style="background-color: #e9ecef"><?=lang('date_due')?></th>
+                        <th colspan="2" style="background-color: #e9ecef">: <?=date_format(date_create($invoice_information_transaction->date_start),"d/M/Y")?> ~ <?=date_format(date_create($invoice_information_transaction->date_due),"d/M/Y")?></th>
                     </tr>
                     <tr>
-                        <th colspan="2" style="vertical-align:top;"><?=lang('contacts')?>: <?=$contact?></th>
-                        <th colspan="2" class="text-left"><?=date_format(date_create($invoice_information_transaction->date_start),"d/M/Y")?> </th>
-                        <th colspan="2" class="text-left"><?=date_format(date_create($invoice_information_transaction->date_due),"d/M/Y")?> </th>
+                        <th colspan="2" style="vertical-align:top; padding-left: 50px;;"><?=lang('contacts')?>: <?=$contact?></th>
+                        <th colspan="2" class="text-left"></th>
+                        <th colspan="2" class="text-left"></th>
                     </tr>
                     <tr id="header">
                         <th  width="1%">No.</th>
@@ -140,8 +140,8 @@ $i = 0;
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th rowspan="2" style="vertical-align:top;">Note: </th>
-                        <th colspan="2" rowspan="2" class="text-left" style="vertical-align:top;"><?=$invoice_information_transaction->note?></th>
+                        <th rowspan="2" style="vertical-align:top;">Note</th>
+                        <th colspan="2" rowspan="2" class="text-left" style="vertical-align:top;">: <?=$invoice_information_transaction->note?></th>
                         <th class="text-right"><b><?=$total_item?></b></th>
                         <th colspan="3" class="text-right"><?=lang('total_price')?>: </th>
                         <th class="text-right"><?=getCurrentcy($invoice_information_transaction->total_price)?></th>
@@ -152,19 +152,19 @@ $i = 0;
                     </tr>
                     <tr>
                         <th colspan="2"><?=lang('bank_name')?></th>
-                        <th><?=$bank->name?></th>
+                        <th>: <?=$bank->name?></th>
                         <th colspan="4" class="text-right"><?=lang('shipping_cost')?>: </th>
                         <th class="text-right"><?=getCurrentcy($invoice_information_transaction->shipping_cost)?></th>
                     </tr>
                     <tr>
                         <th colspan="2"><?=lang('beneficiary_name')?></th>
-                        <th><?=$bank->own_by?></th>
+                        <th>: <?=$bank->own_by?></th>
                         <th colspan="4" class="text-right"><?=$invoice_information_transaction->expedition?>:</th>
                         <th class="text-left"><?=$invoice_information_transaction->services_expedition?> <?=$invoice_information_transaction->type_payment_shipping?></th>
                     </tr>
                     <tr>
                         <th colspan="2"><?=lang('no_account')?></th>
-                        <th><?=$bank->no_account?></th>
+                        <th>: <?=$bank->no_account?></th>
                         <th colspan="4" class="text-right"><?=lang('status_payment')?>:</th>
                         <th class="text-left"><?=$invoice_information_transaction->status_payment?lang('payed'):lang('credit')?></th>
                     </tr>

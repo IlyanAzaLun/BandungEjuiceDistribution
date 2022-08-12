@@ -1,8 +1,8 @@
 <?php 
 defined('BASEPATH') or exit('No direct script access allowed'); 
 $account_bank = "$bank->name: $bank->no_account, a/n $bank->own_by";
-$destination = "$customer->address $customer->village $customer->subdistric $customer->city $customer->province $customer->zip";
-$contact = "$customer->contact_phone $customer->contact_mail";
+$destination = "$supplier->address $supplier->village $supplier->subdistric $supplier->city $supplier->province $supplier->zip";
+$contact = "$supplier->contact_phone $supplier->contact_mail";
 $i = 0;
 ?>
 <html>
@@ -69,26 +69,27 @@ $i = 0;
                         <th colspan="8" class="text-left"><h3><?=lang('invoice_purchase')?></h3></th>
                     </tr>
                     <tr>
-                    <th colspan="2" rowspan="4" class="text-center"><h1 style="font-family: 'monospace';font-color: 'coral'">B.<span style="color:#FFBF00">E</span>.D</h1></th>
+                    <th colspan="2" rowspan="4" class="text-center">
+                        <p style="font-size: 25px;font-family: 'monospace';font-color: 'coral-bold'">B.<span style="color:#FFBF00">E</span>.D</p>
                         <!-- <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th> -->
                         <th colspan="3"></th>
-                        <th>Invoice Code</th>
+                        <th><?=lang('invoice_code')?></th>
                         <th class="text-left" colspan="2">: <?=$_data_item_invoice_parent[0]->invoice_code?> </th>
                     </tr>
                     <tr>
-                        <th colspan="3"></th>
-                        <th>Created At</th>
+                        <th colspan="3" style="vertical-align:top; padding-left: 50px;"><?=lang('store_name')?>: <?=$supplier->store_name?> <?=($supplier->owner_name)?"($supplier->owner_name)":""?></th>
+                        <th><?=lang('created_at')?></th>
                         <th class="text-left" colspan="2">: <?=date_format(date_create($invoice_information_transaction->created_at),"d/M/Y")?> </th>
                     </tr>
                     <tr>
-                        <th colspan="2" style="vertical-align:top;"><?=lang('user_address')?>: <?=$destination?></th>
-                        <th colspan="2" >Date Start</th>
-                        <th colspan="2" >Date Due</th>
+                        <th colspan="3" style="vertical-align:top; padding-left: 50px;;"><?=lang('user_address')?>: <?=$destination?></th>
+                        <th colspan="1" style="background-color: #e9ecef"><?=lang('date_due')?></th>
+                        <th colspan="2" style="background-color: #e9ecef">: <?=date_format(date_create($invoice_information_transaction->date_start),"d/M/Y")?> ~ <?=date_format(date_create($invoice_information_transaction->date_due),"d/M/Y")?></th>
                     </tr>
                     <tr>
-                        <th colspan="2" style="vertical-align:top;"><?=lang('contacts')?>: <?=$contact?></th>
-                        <th colspan="2" class="text-left"><?=date_format(date_create($invoice_information_transaction->date_start),"d/M/Y")?> </th>
-                        <th colspan="2" class="text-left"><?=date_format(date_create($invoice_information_transaction->date_due),"d/M/Y")?> </th>
+                        <th colspan="2" style="vertical-align:top; padding-left: 50px;;"><?=lang('contacts')?>: <?=$contact?></th>
+                        <th colspan="2" class="text-left"></th>
+                        <th colspan="2" class="text-left"></th>
                     </tr>
                     <tr id="header">
                         <th  width="1%">No.</th>
@@ -137,8 +138,8 @@ $i = 0;
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th rowspan="2" style="vertical-align:top;">Note: </th>
-                        <th colspan="2" rowspan="2" class="text-left" style="vertical-align:top;"><?=$invoice_information_transaction->note?></th>
+                        <th rowspan="2" style="vertical-align:top;">Note</th>
+                        <th colspan="2" rowspan="2" class="text-left" style="vertical-align:top;">: <?=$invoice_information_transaction->note?></th>
                         <th class="text-right"><b><?=$total_item?></b></th>
                         <th colspan="3" class="text-right"><?=lang('total_price')?>: </th>
                         <th class="text-right"><?=getCurrentcy($invoice_information_transaction->total_price)?></th>

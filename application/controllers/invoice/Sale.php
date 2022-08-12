@@ -308,7 +308,7 @@ class Sale extends Invoice_controller
 
 
 		$this->pdf->setPaper('A4', 'potrait');
-		$this->pdf->filename = "$customer->store_name.pdf";
+		$this->pdf->filename = $this->page_data['customer']->store_name.".pdf";
 		$this->pdf->load_view('invoice/sale/print_PDF', $this->page_data);
 	}
 
@@ -928,7 +928,7 @@ class Sale extends Invoice_controller
 			$data['datasets'][0]['label'] = 'Profit';
 			$data['datasets'][0]['backgroundColor'] = 'rgba(0, 109, 255, 0.39)';
 			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
-			
+
 			array_push($data['datasets'][0]['data'], bd_nice_number((int) $record->profit));
 		}
 		## Response
@@ -980,5 +980,4 @@ class Sale extends Invoice_controller
 		## Response
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
 	}
-
 }

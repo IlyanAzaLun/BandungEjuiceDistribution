@@ -45,10 +45,8 @@ class Purchase extends Invoice_controller
 				'btn' => 'btn-primary',
 				'submit' => 'Yes do it',
 			);
-
 			$this->load->view('invoice/purchase/create', $this->page_data);
 			$this->load->view('includes/modals', $this->page_data);
-
 		} else {
 			// information invoice
 			$this->data['invoice_code'] = $this->purchase_model->get_code_invoice_purchase();
@@ -98,23 +96,23 @@ class Purchase extends Invoice_controller
 				'transaction_source' => post('transaction_source'),
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 			);
-				//Create
-				echo '<pre>';
-				$this->db->trans_start();
-				$this->create_item_history($items, ['CREATE', 'UPDATE']);
-				$this->create_or_update_invoice($payment);
-				$this->update_items($items);
-				$this->create_or_update_list_item_transcation($items);
-				$this->create_or_update_list_item_fifo($items);
-				$this->create_or_update_list_chart_cash($payment);
-				$this->db->trans_complete();
-				echo "</pre>";
-				if($this->db->trans_status() === FALSE){
-					$this->session->set_flashdata('alert-type', 'danger');
-					$this->session->set_flashdata('alert', 'Creating Purchase Failed');	
-					redirect('invoice/purchase/list');
-					die();
-				}
+			//Create
+			echo '<pre>';
+			$this->db->trans_start();
+			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items);
+			$this->create_or_update_list_chart_cash($payment);
+			$this->db->trans_complete();
+			echo "</pre>";
+			if($this->db->trans_status() === FALSE){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Creating Purchase Failed');	
+				redirect('invoice/purchase/list');
+				die();
+			}
 			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Purchase Successfully');
@@ -308,7 +306,7 @@ class Purchase extends Invoice_controller
 
 	public function print_PDF()
 	{
-		$this->data_purchase();
+		$this->data_purchase();		
 		$this->load->library('pdf');
 	
         $options = $this->pdf->getOptions();
@@ -316,9 +314,8 @@ class Purchase extends Invoice_controller
         $this->pdf->setOptions($options);
 
 		$this->pdf->setPaper('A4', 'potrait');
-		$this->pdf->filename = "$supplier->store_name.pdf";
-		$this->pdf->load_view('invoice/purchase/print_PDF', $this->page_data);
-	
+		$this->pdf->filename = $this->page_data['supplier']->store_name.".pdf";
+		$this->pdf->load_view('invoice/purchase/print_PDF', $this->page_data);	
 	}
 	
 	public function print_delivery()
@@ -331,7 +328,7 @@ class Purchase extends Invoice_controller
         $this->pdf->setOptions($options);
 
 		$this->pdf->setPaper('A4', 'potrait');
-		$this->pdf->filename = "$supplier->store_name.pdf";
+		$this->pdf->filename = $this->page_data['supplier']->store_name.".pdf";
 		$this->pdf->load_view('invoice/purchase/print_delivery', $this->page_data);
 	
 	}

@@ -345,7 +345,7 @@ class Entry extends Purchase
 			//information payment
 			$payment = array(
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
-				'note' => post('note'),
+				'note' => post('note_information'),
 				'is_transaction' => 0,
 			);
 			// EDIT
@@ -374,6 +374,7 @@ class Entry extends Purchase
 		$response = $this->purchase_model->get_invoice_purchasing_by_code($this->data['invoice_code']);
 
 		$request['created_at'] = $data['created_at'];
+		$request['note'] = strtoupper($data['note']);
 		if ($response) {
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['is_cancelled'] = $data['is_cancelled'];
@@ -383,7 +384,6 @@ class Entry extends Purchase
 			//
 			return $this->purchase_model->update_by_code($this->data['invoice_code'], $request) ? true: false;
 		} else {
-			$request['note'] = $data['note'];
 			$request['invoice_code'] = $this->data['invoice_code'];
 			$request['is_transaction'] = $data['is_transaction'];
 			$request['created_by'] = logged('id');
