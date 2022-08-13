@@ -210,7 +210,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 data: "pseudo_price",
                 className: "bg-warning",
                 render: function(data, type, row){
-                    return data?currency(row['item_selling_price'] - row['pseudo_price']):0;
+                    return data?currency(row['item_selling_price'] - row['pseudo_price'] - currencyToNum(row['discounts']) + currencyToNum(row['shipping_cost'])):0;
                 }
             },{
                 data: "grand_total",

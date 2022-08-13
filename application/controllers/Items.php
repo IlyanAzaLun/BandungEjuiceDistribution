@@ -402,7 +402,7 @@ class Items extends MY_Controller
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
-        $this->db->select('*');
+        $this->db->select('*, CAST(quantity AS INT) as quantity');
         if ($searchQuery != '') {
             $this->db->like('item_name', $searchValue, 'both');
             $this->db->or_like('item_code', $searchValue, 'both');
@@ -424,7 +424,7 @@ class Items extends MY_Controller
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,
                 "category" => $record->category,
-                "item_quantity" => $record->quantity,
+                "quantity" => $record->quantity,
                 "weight" => (int)$record->weight,
                 "item_broken" => $record->broken,
                 "item_unit" => $record->unit,
@@ -919,6 +919,7 @@ class Items extends MY_Controller
     {
         if (ifPermissions('items_list')) {
             $search = (object) post('search');
+            $this->db->select('*, CAST(quantity AS INT) as quantity');
             $this->db->where('is_active', 1);
             $this->db->limit(15);
             if ($search->value) {

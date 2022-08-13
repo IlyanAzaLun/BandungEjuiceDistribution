@@ -133,10 +133,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "brands"
         },
         {
-          data: 'item_quantity',
-          orderable: false,
+          data: 'quantity',
           render: function(data, type, row) {
-            return `${row['item_quantity']}`;
+            return `${row['quantity']}`;
           }
         },
         {

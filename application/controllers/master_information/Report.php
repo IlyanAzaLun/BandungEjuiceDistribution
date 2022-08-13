@@ -631,7 +631,10 @@ class Report extends MY_Controller
             case 'monthly':
                 # code...
                 $this->db->select('
-               ,SUM(sale.grand_total) AS grand_total');
+               ,SUM(sale.grand_total) AS grand_total
+               ,SUM(sale.shipping_cost) AS shipping_cost
+               ,SUM(sale.discounts) AS discounts
+               ');
                 $this->db->group_by("yearmount");
                 break;
 
@@ -640,7 +643,10 @@ class Report extends MY_Controller
                 $this->db->select('
                  transaction.customer_code
                 ,customer.store_name
-                ,SUM(sale.grand_total) AS grand_total');
+                ,SUM(sale.grand_total) AS grand_total
+                ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.discounts) AS discounts
+                ');
                 $this->db->group_by("yearmount, transaction.customer_code");
                 break;
             
@@ -651,7 +657,10 @@ class Report extends MY_Controller
                 ,users.name
                 ,sale.is_have
                 ,is_have.name AS is_have_name
-                ,SUM(sale.grand_total) AS grand_total');
+                ,SUM(sale.grand_total) AS grand_total
+                ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.discounts) AS discounts
+                ');
                 // $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
                 $this->db->group_by("yearmount, sale.is_have");
                 break;
@@ -659,7 +668,10 @@ class Report extends MY_Controller
             case 'daily':
                 # code...
                 $this->db->select('
-               ,SUM(sale.grand_total) AS grand_total');
+               ,SUM(sale.grand_total) AS grand_total
+               ,SUM(sale.shipping_cost) AS shipping_cost
+               ,SUM(sale.discounts) AS discounts
+               ');
                 $this->db->group_by("yearmountday");
                 break;
             
@@ -670,7 +682,10 @@ class Report extends MY_Controller
                  ,users.name
                  ,sale.is_have
                  ,is_have.name AS is_have_name
-                 ,SUM(sale.grand_total) AS grand_total');
+                 ,SUM(sale.grand_total) AS grand_total
+                 ,SUM(sale.shipping_cost) AS shipping_cost
+                 ,SUM(sale.discounts) AS discounts
+                 ');
                 // $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
                 $this->db->group_by("yearmountday, sale.is_have");
                 break;
@@ -680,7 +695,10 @@ class Report extends MY_Controller
                 $this->db->select('
                  transaction.customer_code
                 ,customer.store_name
-                ,SUM(sale.grand_total) AS grand_total');
+                ,SUM(sale.grand_total) AS grand_total
+                ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.discounts) AS discounts
+                ');
                 $this->db->group_by("yearmountday, transaction.customer_code");
                 break;
             
@@ -694,7 +712,10 @@ class Report extends MY_Controller
                 ,is_have.name AS is_have_name
                 ,transaction.customer_code
                 ,customer.store_name
-                ,sale.grand_total');
+                ,sale.grand_total
+                ,sale.shipping_cost
+                ,sale.discounts
+                ');
                 $this->db->group_by("transaction.invoice_code");
                 break;
         }
@@ -715,6 +736,8 @@ class Report extends MY_Controller
 				'pseudo_price' => $record->pseudo_price,
 				'item_capital_price' => $record->time_capital_price,
 				'item_selling_price' => $record->total_price,
+				'shipping_cost' => $record->shipping_cost,
+				'discounts' => $record->discounts,
 				'grand_total' => $record->grand_total,
 				'profit' => $record->profit,
 				'name' => $record->name,
