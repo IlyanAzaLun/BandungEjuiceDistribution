@@ -564,6 +564,7 @@ $lang['sale_returns'] = "Pengembalian Penjualan";
 $lang['sale_return_list'] = "Pengembalian Penjualan";
 $lang['returns'] = "Pengembalian";
 $lang['invoice_sale'] = "Faktur Penjualan";
+$lang['import_sale'] = "Import Faktur Penjualan";
 
 /*
  * Payment

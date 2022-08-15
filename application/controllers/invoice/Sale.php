@@ -21,7 +21,16 @@ class Sale extends Invoice_controller
 		ifPermissions('sale_list');
 		$this->page_data['title'] = 'sale_list';
 		$this->page_data['page']->submenu = 'sale_list';
+		$this->page_data['modals'] = (object) array(
+			'id' => 'import_invoice_sale',
+			'title' => 'Modals Import Sale Items',
+			'link' => "invoice/sale/import",
+			'content' => 'upload',
+			'btn' => 'btn-primary',
+			'submit' => 'Yes do it',
+		);
 		$this->load->view('invoice/sale/list', $this->page_data);
+		$this->load->view('includes/modals', $this->page_data);
 	}
 
 	public function create()
@@ -140,6 +149,54 @@ class Sale extends Invoice_controller
 
 			redirect('invoice/sale/list');
 		}
+	}
+
+	public function import(){
+        if ($_FILES['file']['name'] == "") {
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Empty File, Please select file to import');
+            redirect('invoice/order/create');
+			die();
+        }
+		$this->page_data['data'] = $this->uploadlib->uploadFile();
+
+		// 
+		echo "<pre>";
+		$j = 0;
+		$i = 0;
+		unset($this->page_data['data'][1]);
+		$a = array_values($this->page_data['data']);
+		$b = $this->unique_multidim_array($a, 'A');
+		while ($i < count($a)) {
+			if($a[$i]["A"] == $a[$j]["A"]){
+				$b[$i]['item'][$j]=$a[$j];
+				$j++;
+			}else{
+				$i++;
+			}
+		}
+		foreach ($b as $key => $invoice) {
+			foreach ($invoice['item'] as $key => $item) {
+				$data_item = $this->items_model->getByWhere(array('item_code' => $item['C']));
+			}
+		}
+		echo "<pre>";
+	}
+
+	private function unique_multidim_array($array, $key)
+	{
+		$temp_array = array();
+		$i = 0;
+		$key_array = array();
+	
+		foreach($array as $val) {
+			if (!in_array($val[$key], $key_array)) {
+				$key_array[$i] = $val[$key];
+				$temp_array[$i] = $val;
+			}
+			$i++;
+		}
+		return $temp_array;
 	}
 
 	public function edit()

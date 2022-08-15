@@ -572,6 +572,8 @@ $lang['sale_return_list'] = "List Returns Sale";
 $lang['returns'] = "Returns";
 $lang['marketing'] = "Marketing";
 $lang['invoice_sale'] = "Invoice Sale";
+$lang['import_sale'] = "Import Invoice Sale";
+
 
 
 /*

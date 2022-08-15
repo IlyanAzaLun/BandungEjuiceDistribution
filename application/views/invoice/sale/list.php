@@ -30,6 +30,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
+            <div class="card-tools pull-right">
+              <?php if (hasPermissions('sale_create')) : ?>
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#import_invoice_sale"><i class="fa fa-plus"></i> <?php echo lang('import_sale') ?></button>
+              <?php endif ?>
+            </div>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -50,7 +55,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
               <div class="col-2">
               <?php if (hasPermissions('sale_create')) : ?>
-                <!-- EMPTY -->
               <?php endif ?>
               </div>
             </div>
