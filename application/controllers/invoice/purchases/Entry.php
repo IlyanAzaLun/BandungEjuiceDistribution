@@ -149,7 +149,8 @@ class Entry extends Purchase
 		supplier.customer_code as supplier_code, 
 		supplier.store_name as store_name, 
 		user.id as user_id, 
-		user.name as user_purchasing_create_by');
+		user.name as user_purchasing_create_by,
+		user_updated.name as user_purchasing_update_by');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('purchasing.invoice_code', $searchValue, 'after');
@@ -160,6 +161,7 @@ class Entry extends Purchase
 			$this->db->group_end();
 		}
 		$this->db->join('users user', 'user.id = purchasing.created_by', 'left');
+		$this->db->join('users user_updated', 'user_updated.id = purchasing.updated_by', 'left');
 		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
 		$this->db->where("purchasing.is_child", 0);
 		if ($dateStart != '') {
@@ -200,6 +202,7 @@ class Entry extends Purchase
 				'is_cancelled' => $record->is_cancelled,
 				'cancel_note' => $record->cancel_note,
 				'user_purchasing_create_by' => $record->user_purchasing_create_by,
+				'user_purchasing_update_by' => $record->user_purchasing_update_by,
 			);
 		}
 

@@ -101,6 +101,7 @@ class Order extends Invoice_controller
 				redirect("invoice/order/create");
 				return false;
 			}
+			//
 			$this->db->trans_start(TRUE);
 			$result_payment = $this->create_or_update_order($payment);
 			$this->create_or_update_list_item_order_sale($items);
@@ -145,22 +146,6 @@ class Order extends Invoice_controller
 		$this->load->view('invoice/order/create_import_items', $this->page_data);
 		$this->load->view('includes/modals', $this->page_data);
 
-	}
-
-	private function validation_items($data)
-	{
-		$item = array();
-		$result = array();
-		foreach ($data as $key => $value) {
-			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
-			if (($item[$key]->quantity - $value['item_order_quantity']) < 0) {
-				$result['error'][$key] = $data[$key];
-				unset($data[$key]);
-				continue;
-			}
-			$result['success'][$key] = $data[$key];
-		}
-		return $result;
 	}
 
 	public function edit()
@@ -239,19 +224,56 @@ class Order extends Invoice_controller
 				'is_confirmed' => null,
 			);
 			// EDIT
-			echo '<pre>';
-			echo '<hr>';
+			
+			// CREATE
+			$result = $this->validation_items($items);
+			$error = $result['error'];
+			$success = $result['success'];
+			$items = array_values($success);
+			$failed = array_values($error);
+			$error = array_column($failed, 'item_name');
+
+			if(!$items){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
+				redirect("invoice/order/create");
+				return false;
+			}
+			var_dump($result);
+			die();
+			//
 			$this->create_or_update_order($payment);
 			$this->create_or_update_list_item_order_sale($items);
 			$this->update_items($items);
-			echo '</pre>';
-		
+			
 			$this->activity_model->add("Update Order, #" . $this->data['order_code'], (array) $payment);
+			if($error){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error));
+				redirect("invoice/order/edit?id=$order_code");
+				return false;
+			}
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Update Order Successfully');
 			// redirect('invoice/order/edit?id='.get('id'));
 			redirect('invoice/order/list');
 		}
+	}
+
+	private function validation_items($data)
+	{
+		$item = array();
+		$result = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			if (($item[$key]->quantity - $value['item_order_quantity']) < 0) {
+				$result['error'][$key] = $data[$key];
+				unset($data[$key]);
+				continue;
+			}
+			$result['success'][$key] = $data[$key];
+		}
+		return $result;
 	}
 
 	public function info()
