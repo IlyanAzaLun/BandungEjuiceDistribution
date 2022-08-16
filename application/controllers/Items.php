@@ -512,6 +512,7 @@ class Items extends MY_Controller
         $this->db->order_by('history.created_at', 'desc');
         $this->db->order_by("history.$columnName", $columnSortOrder);
         $this->db->limit($rowperpage, $start);
+        $this->db->group_by('history.invoice_reference');
         $this->db->group_by('history.created_at');
         $records = $this->db->get('items_history history')->result();
 

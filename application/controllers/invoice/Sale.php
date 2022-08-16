@@ -176,11 +176,63 @@ class Sale extends Invoice_controller
 			}
 		}
 		foreach ($b as $key => $invoice) {
-			foreach ($invoice['item'] as $key => $item) {
-				$data_item = $this->items_model->getByWhere(array('item_code' => $item['C']));
+			$total_weight = 0;
+			$this->data['invoice_code'] = $invoice['A'];
+			foreach ($invoice['item'] as $index => $item) {
+				$data_item = $this->items_model->getByWhere(array('item_code' => $item['E']));
+				$items[$key][] = array(
+					"item_id" => $data_item[0]->id,
+					"item_code" => $data_item[0]->item_code,
+					"item_name" => $data_item[0]->item_name,
+					"item_quantity" => $data_item[0]->quantity,
+					"item_order_quantity" => $item['G'],
+					"item_unit" => $data_item[0]->unit,
+					"item__total_weight" => ((int) $data_item[0]->weight) * ((int) $item['G']),
+					"item_capital_price" => $data_item[0]->capital_price,
+					"item_selling_price" => $item['J'],
+					"item_discount" => null,
+					"total_price" => $item['K'],
+					"item_description" => null,
+					"customer_code" => $item['C'],
+					'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$item['B'])))),
+				);
+				$total_weight =+ ((int) $data_item[0]->weight) * ((int) $item['G']);
 			}
+			$payment = array(
+				'customer' => $invoice['C'],
+				'store_name' => $invoice['D'],
+				'contact_phone' => null,
+				'address' => null,
+				'total_price' => $invoice['K'],
+				'discounts' => $invoice['L'],
+				'shipping_cost' => 0,
+				'other_cost' => 0,
+				'grand_total' => $invoice['N'],
+				'total_weights_item' => $total_weight,
+				'expedition_name' => $invoice['W'],
+				'services_expedition' => null,
+				'payment_type' => $invoice['U'],
+				'status_payment' => TRUE,
+				'date_start' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$invoice['B'])))),
+				'date_due' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$invoice['B'])))),
+				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$invoice['B'])))),
+				'note' => $invoice['O'],
+				'reference_order' => null,
+				"is_have" => $invoice['P'],
+				'shipping_cost_to_invoice' => 0,
+				'transaction_destination' => $invoice['V'],
+			);
+			$this->db->trans_start();
+			$this->update_item_fifo($items[$key]); // UPDATE ON PURCHASE QUANTITY
+			$this->create_item_history($items[$key], ['CREATE', 'UPDATE']);
+			$this->create_or_update_invoice($payment);
+			$this->create_or_update_list_item_transcation($items[$key]);
+			$this->create_or_update_list_item_fifo($items[$key]); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
+			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
+			$this->update_items($items[$key]); // NOT USE HERE, BUT USED ON ORDER CREATE
+			$this->db->trans_complete();
 		}
-		echo "<pre>";
+		echo "</pre>";
 	}
 
 	private function unique_multidim_array($array, $key)
