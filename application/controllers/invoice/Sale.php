@@ -1027,6 +1027,12 @@ class Sale extends Invoice_controller
 			$this->db->group_end();
         }
 		$this->db->group_end();
+		
+		$this->db->group_start();
+		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -6 MONTH)',false);
+		$this->db->where("transaction.created_at <=", 'NOW()',false);
+		$this->db->group_end();
+
 		$this->db->group_by("yearmount");
 		$records = $this->db->get('fifo_items transaction')->result();
 		$data['labels'] = array();
