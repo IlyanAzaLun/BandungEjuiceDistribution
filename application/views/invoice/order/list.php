@@ -131,7 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       autoWidth: false,
       lengthChange: true,
       lengthMenu: [[10, 25, 50, 100, 200, <?=$this->db->count_all('order_sale')?>], [10, 25, 50, 100, 200, "All"]],
-      order: [[4, 'desc']],
+      order: [[1, 'desc']],
       ajax: {
         "url": "<?php echo url('invoice/order/serverside_datatables_data_order') ?>",
         "type": "POST",

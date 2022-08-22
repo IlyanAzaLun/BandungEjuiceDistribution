@@ -125,6 +125,7 @@ class Items extends MY_Controller
                         'selling_price' => $value['L'],
                         'customs' => $value['O'],
                         'note' => $value['P'],
+                        'weight' => $value['Q'],
                         'created_by' => logged('id'),
                     ]);
                     //transaction
