@@ -236,12 +236,9 @@ class Order extends Invoice_controller
 			if(!$items){
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
-				redirect("invoice/order/create");
+				redirect("invoice/order/edit?id=$order_code");
 				return false;
 			}
-			var_dump($result);
-			die();
-			//
 			$this->create_or_update_order($payment);
 			$this->create_or_update_list_item_order_sale($items);
 			$this->update_items($items);

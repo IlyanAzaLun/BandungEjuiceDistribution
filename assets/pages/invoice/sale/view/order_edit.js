@@ -142,6 +142,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('textarea[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
+                        $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', ui.item[2])
                         $(`.${parentElement}`).find('input[data-id="note"]').val(ui.item[7])
                         $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
@@ -157,6 +158,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('textarea[data-id="item_name"]').val(ui.item[1])
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
+                        $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', ui.item[2])
                         $(`.${parentElement}`).find('input[data-id="note"]').val(ui.item[7])
                         $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
                         $(`.${parentElement}`).find('span[data-id="item_unit"]').text(`${ui.item[3].toUpperCase()}`)
@@ -373,10 +375,15 @@ const main = () => {
         })
 
         //form submit
-        $('form.form-validate').on('submit', function (event) {
-            validation_form()
-
-            event.preventDefault();
+        $('form.form-validate:first').on('submit', function (event) {
+            $('button[type="submit"]').prop('disabled', true)
+            validation_form(function (output) {
+                if (!output) {
+                    event.preventDefault();
+                    $('button[type="submit"]').prop('disabled', false)
+                    $('.loading').css({ "display": "none" });
+                }
+            })
         })
     });
 }
