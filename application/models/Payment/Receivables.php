@@ -47,9 +47,8 @@ class Receivables extends MY_Model {
         // $this->db->group_end();
         $this->db->group_end();
         $this->db->group_by('payment.invoice_code');
-
+        $this->db->order_by('payment.created_at', 'ASC');
         return $this->db->get($this->table." payment")->result();
-
     }
 
     public function fetch_history_payment_by_invoice_code($data)

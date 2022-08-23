@@ -182,7 +182,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `${formatDate(row['date_start'], false)}~${formatDate(row['date_due'], false)}`
           }
         },{
-          data: "customer_code"
+          data: "customer_code",
+          render: function (data, type, row) {
+            let owner = row['owner_name']?` / ${row['owner_name']}`:'';
+            return `${row['store_name']}${owner}`
+          }
         },{
           data: "grand_total",
           render: function(data, type, row){

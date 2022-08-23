@@ -100,6 +100,14 @@ const main = () => {
             }
         });
 
+        $('#payment_type').on('change', function () {
+            if ($(this).val() == 'cash') {
+                $('#destination').attr('required', 'required');
+                return $('#source_destination').show();
+            }
+            $('#destination').removeAttr('required');
+            return $('#source_destination').hide();
+        })
 
         //if is consignment
         $(document).on('change', 'input#is_consignment', function (event) {

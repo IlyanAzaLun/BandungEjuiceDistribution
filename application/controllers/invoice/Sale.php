@@ -168,11 +168,17 @@ class Sale extends Invoice_controller
 		$a = array_values($this->page_data['data']);
 		$b = $this->unique_multidim_array($a, 'A');
 		while ($i < count($a)) {
-			if($a[$i]["A"] == $a[$j]["A"]){
-				$b[$i]['item'][$j]=$a[$j];
-				$j++;
-			}else{
-				$i++;
+			if (!$a[$i]['A']){
+				break;
+			}
+			else{
+				if($a[$i]["A"] == $a[$j]["A"]){
+					$b[$i]['item'][$j]=$a[$j];
+					$j++;
+				}
+				else{
+					$i++;
+				}
 			}
 		}
 		foreach ($b as $key => $invoice) {

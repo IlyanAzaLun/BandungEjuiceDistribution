@@ -85,7 +85,7 @@ class Payment extends MY_Controller
 			$response = $this->receivables->update_batch($result, 'id');
 			echo '</pre>';
 			if($response){
-				$this->receivables->update($this->page_data['data_post']['id_payment'], ['payup' => setCurrency($this->page_data['data_post']['to_pay'])]);
+				$this->receivables->update($this->page_data['data_post']['id_payment'], ['payup' => setCurrency($this->page_data['data_post']['to_pay']), 'description' => strtoupper($this->page_data['data_post']['note'])]);
 				$this->activity_model->add("Create Payment Invoice, #" . $this->page_data['data_post']['invoice_code'], true);
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
@@ -112,6 +112,7 @@ class Payment extends MY_Controller
 			$dataPost = $this->input->post();
 			$request->leftovers = $request->leftovers - setCurrency($dataPost['to_pay']);
 			$request->payup = setCurrency($dataPost['to_pay']);
+			$request->description = strtoupper($dataPost['note']);
 			$request->created_by = logged('id');
 			$request->bank_id = $dataPost['bank_id'];
 
@@ -203,6 +204,7 @@ class Payment extends MY_Controller
         , payment.updated_at
         , payment.description
 		, customer.store_name
+		, customer.owner_name
         , user_created.id as user_created_id
         , user_created.name as user_created_by
         , user_updated.id as user_updated_id
@@ -249,6 +251,8 @@ class Payment extends MY_Controller
 				"date_start"=> $record->date_start,
 				"date_due"=> $record->date_due,
 				"customer_code"=> $record->customer_code,
+				"store_name"=> $record->store_name,
+				"owner_name"=> $record->owner_name,
 				"grand_total"=> $record->grand_total,
 				"payup"=> $record->payup,
 				"leftovers"=> $record->leftovers,
