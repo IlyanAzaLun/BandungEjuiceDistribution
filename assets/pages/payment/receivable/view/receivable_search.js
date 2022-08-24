@@ -30,17 +30,17 @@ const main = () => {
                     source: result,
                     focus: function (event, ui) {
                         $('input#id').val(ui.item[0])
-                        $('input#beneficiary_name').val(ui.item[3])
+                        $('input#beneficiary_name').val(`${ui.item[1]}/${ui.item[3]}`)
                         return false;
                     },
                     select: function (event, ui) {
                         $('input#id').val(ui.item[0])
-                        $('input#beneficiary_name').val(ui.item[3])
+                        $('input#beneficiary_name').val(`${ui.item[1]}/${ui.item[3]}`)
                         return false;
                     }
                 }).data("ui-autocomplete")._renderItem = function (ul, item) {
                     return $('<li>').data("item.autocomplete", item)
-                        .append(`<div>${item[3]} / ${item[2]}</div>`).appendTo(ul)
+                        .append(`<div>${item[1]} / ${item[3]} / ${item[2]}</div>`).appendTo(ul)
                 }
             })
         })

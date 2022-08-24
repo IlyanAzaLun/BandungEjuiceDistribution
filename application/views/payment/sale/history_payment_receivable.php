@@ -62,7 +62,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <input type="hidden" class="form-control bank_name" id="id" name="bank_id" value="" required>
                 <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" value="" required>
               </div>
-
               <div class="col-12 mb-2">
                 <label for="note"><?=lang('note')?></label>
                 <textarea class="form-control" name="note" id="note"></textarea>
@@ -101,7 +100,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php $grandtotal = 0;$payup = 0;$leftovers = 0;?>
             <table class="table table-sm table-hover table-border">
             <?php foreach ($response_data as $key => $list):?>
-            <tr class="<?php if(getCurrentcy($list->leftovers) == 0){echo'text-success';}elseif(getCurrentcy($list->leftovers) <= 0){echo'text-warning';}elseif(count($response_data)-1 > $key){echo'text-danger';}?>">
+            <tr class="<?php if(getCurrentcy($list->leftovers) == 0){echo'text-success';}elseif(getCurrentcy($list->leftovers) <= 0){echo'text-orange';}elseif(count($response_data)-1 > $key){echo'text-danger';}?>">
             <!-- <tr class="<?php //echo(getCurrentcy($list->leftovers) <= 0)?>"> -->
               <td>
                 <div class="row">

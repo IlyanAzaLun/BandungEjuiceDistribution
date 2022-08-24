@@ -259,9 +259,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
                     <h6><?= lang('payment_type') ?></h6>
-                    <select class="custom-select" name="payment_type">
-                      <option value="cash" <?=($invoice->payment_type == "credit")?'selected':''?>><?= lang('cash') ?></option>
+                    <input type="hidden" name="payment_type" value="credit">
+                    <select class="custom-select" name="payment_type" <?=(!hasPermissions('sale_edit'))?'disabled':''?>>
                       <option value="credit" <?=($invoice->payment_type == "credit")?'selected':''?>><?= lang('credit') ?></option>
+                      <option value="cash" <?=($invoice->payment_type == "credit")?'selected':''?>><?= lang('cash') ?></option>
                     </select>
                   </div>
                 </div>

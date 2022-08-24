@@ -430,4 +430,4 @@ $i = 0; ?>
 </script>
 <!-- Jquery ui -->
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/purchase/MainPurchaseReturns.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainSalesReturn.js"></script>

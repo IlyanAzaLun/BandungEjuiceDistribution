@@ -30,17 +30,17 @@ const main = () => {
                     source: result,
                     focus: function (event, ui) {
                         $('input#id').val(ui.item[0])
-                        $('input#beneficiary_name').val(ui.item[3])
+                        $('input#beneficiary_name').val(`${ui.item[1]}/${ui.item[3]}`)
                         return false;
                     },
                     select: function (event, ui) {
                         $('input#id').val(ui.item[0])
-                        $('input#beneficiary_name').val(ui.item[3])
+                        $('input#beneficiary_name').val(`${ui.item[1]}/${ui.item[3]}`)
                         return false;
                     }
                 }).data("ui-autocomplete")._renderItem = function (ul, item) {
                     return $('<li>').data("item.autocomplete", item)
-                        .append(`<div>${item[3]} / ${item[2]}</div>`).appendTo(ul)
+                        .append(`<div>${item[1]} / ${item[3]} / ${item[2]}</div>`).appendTo(ul)
                 }
             })
         })
@@ -112,7 +112,7 @@ const main = () => {
                         $('#invoice_code').val(toPayElement.data('code_invoice'));
                         $('input#to_pay').val(callback.payup !== null ? currency(callback.payup) : 0);
                         $('input#bank_id').val(currency(callback.bank_id));
-                        $('input#beneficiary_name').val(callback.own_by);
+                        $('input#beneficiary_name').val(`${callback.name}/${callback.own_by}`);
                         $('form#to_pay').attr('action', `${location.base}invoice/sales/payment/edit_receivable`);
                         toPayElement.parents('tr').addClass('bg-primary');
                     });
