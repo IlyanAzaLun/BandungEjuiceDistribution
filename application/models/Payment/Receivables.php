@@ -41,7 +41,7 @@ class Receivables extends MY_Model {
 		}
         $this->db->group_start();
         $this->db->where('payment.customer_code', $data['customer_code']);
-        $this->db->where('payment.leftovers >=', '0');
+        // $this->db->where('payment.leftovers >=', '0');
         // $this->db->group_start();
         // $this->db->where('payment.created_at', '(SELECT MAX(created_at) FROM invoice_payment WHERE invoice_code = payment.invoice_code)', false);
         // $this->db->group_end();

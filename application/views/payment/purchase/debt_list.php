@@ -80,11 +80,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <!-- /.card-body -->
         </div>
         <!-- payment -->
-        <div class="card" id="to_pay" style="display: none;">
-
-        <?php // echo form_open_multipart('invoice/purchases/payment/debt_to', ['class' => 'form-validate', 'id' => 'to_pay', 'autocomplete' => 'off']); ?>
-<!--           
-          <div class="card-header">
+        <?php //echo form_open_multipart('invoice/purchases/payment/debt_to', ['class' => 'form-validate', 'id' => 'to_pay', 'autocomplete' => 'off']); ?>
+          <!-- <div class="card-header">
             <h3 class="card-title">Wont to pay ?</h3>
             <div class="card-tools">
               <button type="button" class="btn btn-sm bg-default remove" data-card-widget="remove"><i class="fas fa-times"></i></button>
@@ -124,9 +121,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </div>
             </div>
           </div> -->
-        <?php // echo form_close(); ?>
-
-        </div>
+        <?php //echo form_close(); ?>
         <!-- ./payment -->
         <!-- /.card -->
         <div class="card">
@@ -144,7 +139,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php $grandtotal = 0;$payup = 0;$leftovers = 0;?>
             <table class="table table-sm table-hover table-border">
             <?php foreach ($data_list_debts as $key => $list):?>
-            <tr id="row-<?=$key;?>"  class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>" <?php echo(!hasPermissions('example') && (getCurrentcy($list->leftovers) <= 0))?'style="display:none;"':''?>>
+            <tr id="row-<?=$key;?>" class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>" <?php echo(!hasPermissions('example') && (getCurrentcy($list->leftovers) <= 0))?'style="display:none;"':''?>>
               <td>
                 <div class="row">
                   <div class="col-md-3 col sm-12"><?=$list->invoice_code?></div>

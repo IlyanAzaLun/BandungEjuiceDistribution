@@ -80,7 +80,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <!-- /.card-body -->
         </div>
         <!-- payment -->
-        <div class="card" id="to_pay" style="display: none;">
         <?php //echo form_open_multipart('invoice/sales/payment/receivable_from', ['class' => 'form-validate', 'id' => 'to_pay', 'autocomplete' => 'off']); ?>
           <!-- <div class="card-header">
             <h3 class="card-title">Wont to pay ?</h3>
@@ -123,8 +122,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
           </div> -->
         <?php //echo form_close(); ?>
-
-        </div>
         <!-- ./payment -->
         <!-- /.card -->
         <div class="card">
