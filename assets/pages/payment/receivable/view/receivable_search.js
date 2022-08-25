@@ -101,16 +101,58 @@ const main = () => {
                 }
             })
         })
-        // To Pay
+        // //To Pay
+        // $(document).on('click', 'button#to_pay', function () {
+        //     let toPayElement = $(this).parent('#to_pay');
+        //     $("div.card#to_pay").toggle(200, "linear", function () {
+        //         $('table tr').removeClass('bg-primary');
+        //         $('#id_payment').val(toPayElement.data('id'));
+        //         $('#invoice_code').val(toPayElement.data('code_invoice'));
+        //         toPayElement.parents('tr').addClass('bg-primary')
+        //     });
+        // })
         $(document).on('click', 'button#to_pay', function () {
             let toPayElement = $(this).parent('#to_pay');
-            $("div.card#to_pay").toggle(200, "linear", function () {
-                $('table tr').removeClass('bg-primary');
-                $('#id_payment').val(toPayElement.data('id'));
-                $('#invoice_code').val(toPayElement.data('code_invoice'));
-                toPayElement.parents('tr').addClass('bg-primary')
-            });
+            let toselectedchild = toPayElement.parents('tr').attr('id');
+            $('table tr').removeClass('bg-primary');
+            toPayElement.parents('tr').addClass('bg-primary')
+            $(`tr.child-${toselectedchild}`).toggle(200, "linear", function () {
+                $('[class*=child-row-]').empty()
+                let html = `
+                <td class="callout callout-priamary">
+                    <form action="${location.base}/invoice/sales/payment/receivable_from" class="form-validate" id="to_pay" autocomplete="off" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                        <div class="row">
+                            <div class="col-lg-2 col-sm-12">
+                            <div class="form-group">
+                                <input type="hidden" id="id_payment" name="id_payment" value="${toPayElement.data('id')}" required>
+                                <input type="text" class="form-control" id="invoice_code" name="invoice_code" value="${toPayElement.data('code_invoice')}" readonly required>
+                            </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-12">
+                                <input type="text" class="form-control currency" id="to_pay" name="to_pay" placeholder="wont to paid..." required>
+                                <small class="text-danger">*numbers only !</small>
+                            </div>
+                            
+                            <div class="col-lg-2 col-sm-12">
+                                <input type="hidden" class="form-control bank_name" id="id" name="bank_id" required>
+                                <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" placeholder="search source found..." required>
+                            </div>
+                            <div class="col-lg">
+                                <textarea class="form-control" name="note" id="note"></textarea>
+                            </div>
+                            <div class="col-lg-1 col-sm-12">
+                            <button type="submit" class="btn btn-info btn-block start">
+                                <i class="fa fa-fw fa-coins"></i>&nbsp;&nbsp;
+                                <span><?=lang('payup')?></span>
+                            </button>
+                            </div>
+                        </div>
+                    </form>
+                </td>`;
+                $(this).append(`${html}`);
+            })
         })
+        // 
         $('#to_pay').on('removed.lte.cardwidget', function () {
             $('table tr').removeClass('bg-primary');
         });
