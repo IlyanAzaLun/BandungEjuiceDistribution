@@ -109,6 +109,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <input type="hidden" class="form-control bank_name" id="id" name="bank_id" required>
                 <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" required>
               </div>
+              <div class="col-12 mb-2">
+                <label for="note"><?=lang('note')?></label>
+                <textarea class="form-control" name="note" id="note"></textarea>
+              </div>
 
             </div>
             <div class="row">

@@ -107,7 +107,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="col-md-1 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
                   <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->date_start)).' ~ '.date("d-m-Y",strtotime($list->date_due))?></div>
                   <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup)?></span></div>
-                  <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
+                  <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy(abs($list->leftovers))?></span></div>
                   <div class="col-md-2 col sm-12"><?=$list->user_created?></div>
                   <div class="col-md-1 col sm-12"><?=$list->user_updated?></div>
                   <div class="col-md-2 col sm-12"><?=$list->description?></div>

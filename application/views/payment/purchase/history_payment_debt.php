@@ -57,11 +57,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <input type="hidden" id="to_pay" name="current_to_pay" value="0" required>
                 <input type="text" class="form-control currency" id="to_pay" name="to_pay" value="0" required>
               </div>
-              
               <div class="col-lg-2 col-sm-12">
                 <label for="beneficiary_name"><?=lang('beneficiary_name')?></label>
                 <input type="hidden" class="form-control bank_name" id="id" name="bank_id" value="" required>
                 <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" value="" required>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="note"><?=lang('note')?></label>
+                <textarea class="form-control" name="note" id="note"></textarea>
               </div>
 
             </div>
@@ -86,26 +89,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-2 col sm-12"><b><?=lang('created_at')?></b></div>
+              <div class="col-md-1 col sm-12"><b><?=lang('created_at')?></b></div>
               <div class="col-md-2 col sm-12"><b><?=lang('date_due')?></b></div>
               <div class="col-md-1 col sm-22"><span class="float-right"><b><?=lang('payup')?></b></span></div>
               <div class="col-md-2 col sm-12"><span class="float-right"><b><?=lang('leftovers')?></b></span></div>
-              <div class="col-md-2 col sm-12"><b><?=lang('created_by')?></b></div>
-              <div class="col-md-2 col sm-12"><b><?=lang('updated_by')?></b></div>
+              <div class="col-md-1 col sm-12"><b><?=lang('created_by')?></b></div>
+              <div class="col-md-1 col sm-12"><b><?=lang('updated_by')?></b></div>
+              <div class="col-md-3 col sm-12"><b><?=lang('note')?></b></div>
               <div class="col-md-1 col sm-12 text-center"><b><?=lang('option')?></b></div>
             </div>
             <?php $grandtotal = 0;$payup = 0;$leftovers = 0;?>
             <table class="table table-sm table-hover table-border">
             <?php foreach ($response_data as $key => $list):?>
-            <tr class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>">
+              <tr class="<?php if(getCurrentcy($list->leftovers) == 0){echo'text-success';}elseif(getCurrentcy($list->leftovers) <= 0){echo'text-orange';}elseif(count($response_data)-1 > $key){echo'text-danger';}?>">
               <td>
                 <div class="row">
-                  <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
+                  <div class="col-md-1 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
                   <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->date_start)).' ~ '.date("d-m-Y",strtotime($list->date_due))?></div>
                   <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup)?></span></div>
-                  <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
-                  <div class="col-md-2 col sm-12"><?=$list->user_created?></div>
-                  <div class="col-md-2 col sm-12"><?=$list->user_updated?></div>
+                  <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy(abs($list->leftovers))?></span></div>
+                  <div class="col-md-1 col sm-12"><?=$list->user_created?></div>
+                  <div class="col-md-1 col sm-12"><?=$list->user_updated?></div>
+                  <div class="col-md-3 col sm-12"><?=$list->description?></div>
                   <div class="col-md-1 col sm-12">
                     <div class="btn-group btn-block" id="edit_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
                       <button class="btn btn-sm btn-default" id="edit_pay"><i class="fa fa-fw fa-edit text-primary"></i></button>
