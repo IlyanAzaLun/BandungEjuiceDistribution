@@ -160,9 +160,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
           // DON'T REMOVE OR DELETE FETCH DATA, ONLY MARKING DATA
-          if(index['invoice_code'].match(/RET/) != null){
-            $(rows).eq(i).remove();
-          }
+          // if(index['invoice_code'].match(/RET/) != null){
+          //   $(rows).eq(i).remove();
+          // }
         })
       },
       columns: [
@@ -189,10 +189,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return shorttextfromback(data, 12, true)
           }
         },{
-          data: "store_name",
+          data: "supplier_store_name",
           orderable: false,
           render: function(data, type, row) {
-            return `${data} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
+            return `${data?data:row['customer_store_name']} <span class="float-right"><a href="${location.base}master_information/customer/edit?id=${row['customer_code']}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Information purchasing"><i class="fa fa-fw fa-eye text-primary"></i></a></span>`;
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },{
@@ -236,6 +236,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
+            if(row['invoice_code'].match(/RET/) != null){
+              return `<span>${shorttext(data, 100, true)}<div class="float-right badge badge-primary"><i class="fa fa-fw fa-undo"></i></div></span>`;
+            }
             return shorttext(data, 100, true)
             // return data
           }
