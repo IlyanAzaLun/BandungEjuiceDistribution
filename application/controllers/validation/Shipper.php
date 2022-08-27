@@ -724,7 +724,12 @@ class Shipper extends MY_Controller
 		ifPermissions('quality_control');
 		$this->form_validation->set_rules('id[]', lang('id'), 'required|trim');
 		if ($this->form_validation->run() == false) {
-			$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
+			## MEMBEDAKAN FAKTUR PEMBELIAN DAN FAKTUR PENJUALAN
+			if(preg_match('/^(RET)/i', get('id'))){
+				$this->page_data['invoice_sale'] = $this->purchase_model->get_invoice_purchasing_by_code(get('id'));
+			}else{
+				$this->page_data['invoice_sale'] = $this->sale_model->get_invoice_selling_by_code(get('id'));
+			}
 			$this->page_data['list_item_sale'] = $this->transaction_item_model->get_transaction_item_by_code_invoice(get('id'));
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->page_data['bank'] = $this->account_bank_model->get();
@@ -739,12 +744,15 @@ class Shipper extends MY_Controller
 				$transaction[$key]->control_by = $this->input->post('is_controlled_by')[$key];
 			}
 			echo '</pre>';
+			// die();
 			$this->transaction_item_model->update_batch($transaction, 'id');
 			//information items
 			$payment = array(
 				'is_controlled_by' => logged('name'),
 			);
-			if($this->sale_model->update_by_code($this->data['invoice_code'], $payment)){
+			## UPDATE JIKA FAKTUR RETURN PEMBELIAN
+			## UPDATE JIKA FAKTUR PENJUALAN
+			if($this->sale_model->update_by_code($this->data['invoice_code'], $payment) && $this->purchase_model->update_by_code($this->data['invoice_code'], $payment)){
 				$this->activity_model->add("Quality Control, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'Quality Control is Saved');

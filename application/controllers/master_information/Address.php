@@ -146,6 +146,44 @@ class Address extends MY_Controller
             $this->pdf->load_view('address/print', $this->page_data);
         }
     }
+
+    public function data_address()
+    {
+        if (hasPermissions('requst_data_customer')) {
+            $search = (object) post('search');
+            $this->db->limit(5);
+            $this->db->select("
+            IFNULL(customer_information.id,supplier_information.id) AS id
+            , IFNULL(customer_information.customer_code,supplier_information.customer_code) AS customer_code
+            , IFNULL(customer_information.store_name,supplier_information.store_name) AS store_name
+            , IFNULL(customer_information.owner_name,supplier_information.owner_name) AS owner_name
+            , IFNULL(customer_information.contact_us,supplier_information.contact_us) AS contact_us
+            , address_information.address
+            , address_information.village
+            , address_information.sub_district
+            , address_information.city
+            , address_information.province
+            , address_information.zip
+            , address_information.contact_phone
+            , address_information.contact_mail
+            ");
+            if (isset($search->value)) {
+                $this->db->like('customer_information.customer_code', $search->value, 'both');
+                $this->db->or_like('supplier_information.customer_code', $search->value, 'both');
+                $this->db->or_like('customer_information.store_name', $search->value, 'both');
+                $this->db->or_like('supplier_information.store_name', $search->value, 'both');
+                $this->db->or_like('customer_information.owner_name', $search->value, 'both');
+                $this->db->or_like('supplier_information.owner_name', $search->value, 'both');
+            }
+            $this->db->join('customer_information', 'customer_information.customer_code = address_information.customer_code','left');
+            $this->db->join('supplier_information', 'supplier_information.customer_code = address_information.customer_code','left');
+            $this->db->where('address_information.is_active', 1);
+            $response = $this->db->get('address_information')->result();
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        }else{
+            ifPermissions('order_create');
+        }
+    }
 }
 
 /* End of file Activity_logs.php */

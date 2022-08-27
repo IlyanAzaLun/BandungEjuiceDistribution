@@ -45,7 +45,7 @@ $i = 0; $total_items = 0;?>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('customer_code') ?></label>
-                                <input readonly type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice_sale->customer ?>" required>
+                                <input readonly type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice_sale->customer?$invoice_sale->customer:$invoice_sale->supplier ?>" required>
                                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -268,5 +268,4 @@ $i = 0; $total_items = 0;?>
     });
 </script>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
-
-<script type="module" src="<?php echo $url->assets ?>pages/invoice/sale/MainSaleCreate.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/shipper/quality_control//MainShipperQualityControl.js"></script>
