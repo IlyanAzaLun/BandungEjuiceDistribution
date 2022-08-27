@@ -102,7 +102,7 @@ class Shipper extends MY_Controller
 		}else{
 			$data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
 		}
-		$data['customer'] = $this->customer_model->get_information_customer(get('id'));
+		$data['customer'] = $this->customer_model->get_information_customer(get('id')) && $this->supplier_model->get_information_supplier(get('id'));
 		$data['loop'] = $data['invoice']->pack;
 	
 		$this->load->library('pdf');
