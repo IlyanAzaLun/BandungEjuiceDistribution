@@ -1,15 +1,14 @@
-import DataCustomer from "../data/DataCustomer.js";
+import DataAddress from "../data/DataAddress.js";
 import DataUser from "../data/DataUser.js";
 
-const data_customer = new DataCustomer();
+const data_address = new DataAddress();
 const data_user = new DataUser();
 
 const main = () => {
     $(document).ready(function () {
         let customer_code = $('input#customer_code').val();
         if (isNaN(customer_code)) {
-            data_customer.user_info_search(customer_code, function (output) {
-                console.log(output)
+            data_address.user_info_search(customer_code, function (output) {
                 $('input#customer_code').val(output[0]['customer_code'])
                 $('input#store_name').val(output[0]['store_name'])
                 $('input#owner_name').val(`${output[0]['owner_name']}`)
@@ -25,7 +24,6 @@ const main = () => {
         let requestmame = $('input#pack_by').val();
         if (isNaN(requestmame)) {
             data_user.user_info_search(requestmame, function (output) {
-                console.log(output)
                 // $('input#pack_by').val(output[0]['pack_by'])
                 return false;
             });

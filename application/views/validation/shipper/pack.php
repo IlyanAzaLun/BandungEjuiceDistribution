@@ -45,7 +45,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('customer_code') ?></label>
-                                <input readonly type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice->customer ?>" required>
+                                <input readonly type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice->customer?$invoice->customer:$invoice->supplier ?>" required>
                                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>

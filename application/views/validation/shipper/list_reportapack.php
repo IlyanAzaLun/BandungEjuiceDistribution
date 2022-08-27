@@ -77,7 +77,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th width="1%">no.</th>
                   <th width="7%"><?= lang('created_at') ?></th>
                   <th width="7%"><?= lang('updated_at') ?></th>
-                  <th width="5%"><?= lang('order_code') ?></th>
+                  <th width="5%"><?= lang('invoice_code') ?></th>
                   <th width="15%"><?= lang('store_name') ?></th>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
@@ -161,9 +161,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var rows = api.rows( {page:'current'} ).nodes();
         api.rows( {page:'current'} ).data().each(function(index, i){
             // DON'T REMOVE OR DELETE FETCH DATA, ONLY MARKING DATA
-            if(index['invoice_code'].match(/RET/) != null){
-              $(rows).eq(i).remove(); // DON'T DO THIS
-            }
+            // if(index['invoice_code'].match(/RET/) != null){
+              // $(rows).eq(i).remove(); // DON'T DO THIS
+            // }
           })
       },
       columns: [
@@ -193,6 +193,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "invoice_code",
           visible: false,
           render: function(data, type, row){
+            return data;
             return shorttextfromback(data, 12, true)
           }
         },{
@@ -243,6 +244,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
+            if(row['invoice_code'].match(/RET/) != null){
+              return `<span>${shorttext(data, 100, true)}<div class="float-right badge badge-primary"><i class="fa fa-fw fa-undo"></i></div></span>`;
+            }
             return shorttext(data, 80, true)
             // return data
           }
