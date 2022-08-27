@@ -103,6 +103,7 @@ $i = 0; $total_items = 0;?>
                                         <th width="7%"><?= lang('option') ?></th>
                                     </tr>
                                 </thead>
+                                <pre><?php //var_dump($list_item_sale);?></pre>
                                 <tbody>
                                     <!-- TO -->
                                     <?php foreach ($list_item_sale as $key => $value) : ?>
@@ -188,7 +189,7 @@ $i = 0; $total_items = 0;?>
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-                        <button type="button" class="btn btn-default mr-2" onclick="window.close()"><?= lang('cancel') ?></button>
+                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
                     </div>
                 </div>
             </div>

@@ -739,13 +739,13 @@ class Shipper extends MY_Controller
 		}else{
 			$this->data['invoice_code'] = $this->input->get('id')?$this->input->get('id'):$this->input->post('id');
 			echo '<pre>';
-			$transaction = $this->transaction_item_model->getByWhere(['invoice_code' => $this->data['invoice_code']]);
+			$transaction = $this->transaction_item_model->getByWhere(['invoice_code' => $this->data['invoice_code'], 'is_cancelled' => 0]);
 			foreach ($transaction as $key => $value) {
 				$transaction[$key]->control_by = $this->input->post('is_controlled_by')[$key];
 			}
-			echo '</pre>';
-			// die();
+			## UPDATE LIST ITEM FROM QUALITY TO PACKING LIST
 			$this->transaction_item_model->update_batch($transaction, 'id');
+			echo '</pre>';
 			//information items
 			$payment = array(
 				'is_controlled_by' => logged('name'),
