@@ -161,7 +161,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         api.rows( {page:'current'} ).data().each(function(index, i){
           // DON'T REMOVE OR DELETE FETCH DATA, ONLY MARKING DATA
             if(index['invoice_code'].match(/RET/) != null){
-              $(rows).eq(i).remove(); // DON'T DO THIS
+              //$(rows).eq(i).remove(); // DON'T DO THIS
             }
             if(index['receipt_code'] != null){
               $(rows).eq(i).addClass('bg-primary');
@@ -236,6 +236,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
+            if(row['invoice_code'].match(/RET/) != null){
+              return `<span>${shorttext(data, 100, true)}<div class="float-right badge badge-primary"><i class="fa fa-fw fa-undo"></i></div></span>`;
+            }
             return shorttext(data, 100, true)
             // return data
           }

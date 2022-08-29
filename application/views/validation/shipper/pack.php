@@ -202,7 +202,8 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
             <div class="card">
                 <div class="card-footer">
                     <div class="float-left">
-                        <a href="<?= url("validation/shipper/destination?id=$invoice->customer")."&invoice=".$data['invoice'] ?>" class="btn btn-info float-right"><i class="fa fa-tw fa-print"></i></a>
+                        <?php $temp = $invoice->customer?$invoice->customer:$invoice->supplier; ?>
+                        <a href="<?= url("validation/shipper/destination?id=$temp")."&invoice=".$data['invoice'] ?>" class="btn btn-info float-right"><i class="fa fa-tw fa-print"></i></a>
                     </div>
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
