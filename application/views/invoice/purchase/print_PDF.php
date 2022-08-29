@@ -69,8 +69,9 @@ $i = 0;
                         <th colspan="8" class="text-left"><h3><?=lang('invoice_purchase')?></h3></th>
                     </tr>
                     <tr>
-                    <th colspan="2" rowspan="4" class="text-center">
-                        <p style="font-size: 25px;font-family: 'monospace';font-color: 'coral-bold'">B.<span style="color:#FFBF00">E</span>.D</p>
+                        <th colspan="2" rowspan="4" class="text-center">
+                            <p style="font-size: 25px;font-family: 'monospace';font-color: 'coral-bold'">B.<span style="color:#FFBF00">E</span>.D</p>
+                        </th>
                         <!-- <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th> -->
                         <th colspan="3"></th>
                         <th><?=lang('invoice_code')?></th>

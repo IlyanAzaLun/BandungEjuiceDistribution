@@ -32,6 +32,17 @@ class Delivery extends MY_Controller
 			$this->page_data['title'] = 'create_delivery_information';
 			$this->page_data['page']->submenu = 'delivery_document_create';
 			$this->page_data['expedition'] = $this->expedition_model->get();
+			if (get('invoice')) {
+				if(preg_match('/^INV+\/PURCHASE|^RET+\/PURCHASE/i', get('invoice'))){
+					$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('invoice'));
+				}
+				if(preg_match('/^INV+\/SALE|^RET+\/SALE/i', get('invoice'))){
+					$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
+				}
+				$this->page_data['item_list'] = $this->transaction_item_model->get_transaction_item_by_code_invoice($this->page_data['invoice']->invoice_code);
+				$this->load->view('document/delivery/create_document', $this->page_data);
+				return false;
+			}
 			$this->load->view('document/delivery/create', $this->page_data);
 		}else{			
 			// information invoice
@@ -83,14 +94,11 @@ class Delivery extends MY_Controller
 				redirect("document/delivery/create");
 				return false;
 			}
-			echo '<pre>';
 			$this->db->trans_start(TRUE);
 			$result_payment = $this->create_or_update_delivery($payment);
-			echo '<br>';
 			$this->create_or_update_list_item_delivery($items);			
 			$this->activity_model->add("Create Delivery Document, #" . $this->data['delivery_code'], (array) $payment);
 			$this->db->trans_complete();
-			echo '</pre>';
 			$delivery_code = ($this->order_model->getRowById($result_payment, 'delivery_code'));
 			if($error){
 				$this->session->set_flashdata('alert-type', 'danger');
@@ -100,7 +108,7 @@ class Delivery extends MY_Controller
 			}
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Create Order Successfully');
-			redirect('document/delivery/list');
+			redirect("document/delivery/print?id=$result_payment");
 		}
     }
 

@@ -86,13 +86,25 @@
         </table>
     </div>
     <br>
+    <?php
+    if(preg_match('/^INV+\/SALE|^RET+\/PURCHASE/i', get('invoice'))): ?>
     <div class="footer">
         <div class="whoreceive">
-            <div style="font-size: 12px;" class="center">Yang Menerima,<br><br><br><br><br><br><br><br><?=$header->store_name?></div>
+            <div style="font-size: 12px;" class="center">Yang Menerima,<br><br><br><br><br><br><br><br>(BANDUNG EJUICE DISTRIBUTION)</div>
+        </div>
+        <div class="whosender">
+            <div style="font-size: 12px;" class="center">Yang Meyerahkan,<br><br><br><br><br><br><br><br>(<?=$header->store_name?>)</div>
+        </div>
+    </div>
+    <?php else: ?>
+    <div class="footer">
+        <div class="whoreceive">
+            <div style="font-size: 12px;" class="center">Yang Menerima,<br><br><br><br><br><br><br><br>(<?=$header->store_name?>)</div>
         </div>
         <div class="whosender">
             <div style="font-size: 12px;" class="center">Yang Meyerahkan,<br><br><br><br><br><br><br><br>(BANDUNG EJUICE DISTRIBUTION)</div>
         </div>
     </div>
+    <?php endif; ?>
 </body>
 </html>

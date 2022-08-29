@@ -1,10 +1,10 @@
-import DataCustomer from "../data/DataCustomer.js";
+import DataAddress from "../data/DataAddress.js";
 // import DataUser from "../data/DataUser.js";
 import DataItems from "../data/DataItems.js";
 import { sum_sub_total_item, sum_sub_total, sum_grand_total, validation_form } from "./calcualtion.js";
 
 // const data_user_marketing = new DataUser();
-const data_customer = new DataCustomer();
+const data_address = new DataAddress();
 const data_items = new DataItems();
 
 const main = () => {
@@ -40,7 +40,7 @@ const main = () => {
                 }
                 return fieldNo;
             }
-            data_customer.user_info_search(valueElement, function (data) {
+            data_address.user_info_search(valueElement, function (data) {
                 let result = data.map(({
                     customer_id, customer_code, store_name, owner_name, address, village,
                     sub_district, city, province, zip, contact_phone, contact_mail,
