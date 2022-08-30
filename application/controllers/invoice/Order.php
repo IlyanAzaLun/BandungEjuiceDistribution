@@ -725,6 +725,9 @@ class Order extends Invoice_controller
 			$this->session->set_flashdata('alert', 'Failed, need id Order to send this request!');
 			header('Location: ' . $_SERVER['HTTP_REFERER']);
 		}else{
+			$this->db->where('order_code', post('id'));
+			$this->db->update('order_sale_list_item', array('status_available' => 1));
+			$this->db->reset_query();
 			$request = array( 'is_confirmed' => 1, 'updated_by' =>  logged('id'));
 			$this->db->where('order_code', post('id'));
 			$result = $this->db->update('order_sale', $request);

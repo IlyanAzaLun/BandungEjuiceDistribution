@@ -140,7 +140,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     <td><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" value="<?= explode(',',$value["H"])[0]?>" required></td>
                     <td style="display:none">
-                      <input class="form-control form-control-sm currency" type="text" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=1 required>
+                      <input class="form-control form-control-sm currency" type="text" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=0 required>
                       <input readonly  class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" value="<?= ($this->items_model->getByCodeItem($value["B"], 'selling_price'));?>" required>
                     </td>
                     </td>
