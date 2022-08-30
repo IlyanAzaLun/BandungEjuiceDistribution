@@ -415,6 +415,9 @@ $i = 0; ?>
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
                         <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
                     </div>
+                    <div class="float-left">
+                        <a class="btn btn-info" href="<?=url("document/delivery/create?invoice=").get('id')?>"><?=lang('delivery_documents')?></a>
+                    </div>
                 </div>
             </div>
             <!-- /.card -->

@@ -376,6 +376,9 @@ $i = 0; ?>
             <!-- Information payment END -->
             <div class="card">
                 <div class="card-footer">
+                    <div class="float-left">
+                        <a class="btn btn-info" href="<?=url("document/delivery/create?invoice=").get('id')?>"><?=lang('delivery_documents')?></a>
+                    </div>
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
                         <button type="button" class="btn btn-default mr-2" onclick="history.back();"><?= lang('back') ?></button>
