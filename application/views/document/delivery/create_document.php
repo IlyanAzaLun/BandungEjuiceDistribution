@@ -43,11 +43,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <div class="card-body">
           <div class="row">
-            
             <div class="col-lg col-sm-12">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required value="">
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required value="<?=$invoice->customer?$invoice->customer:$invoice->supplier;?>">
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
