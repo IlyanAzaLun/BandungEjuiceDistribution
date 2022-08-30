@@ -188,6 +188,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <div class="row">
 
             <div class="col-lg-2 col-sm-12">
+              <div class="form-group">
+                <label for="type_invoice"><?= lang('type_invoice') ?></label>
+                <select class="custom-select" name="type_invoice" id="type_invoice" required>
+                    <option value="purchase" <?=($header->type_invoice == "purchase")?"selected":''?>><?=lang('purchase')?></option>
+                    <option value="purchase_returns" <?=($header->type_invoice == "purchase_returns")?"selected":''?>><?=lang('purchase_returns')?></option>
+                    <option value="sale" <?=($header->type_invoice == "sale")?"selected":''?>><?=lang('sale')?></option>
+                    <option value="sale_returns" <?=($header->type_invoice == "sale_returns")?"selected":''?>><?=lang('sale_returns')?></option>
+                </select>
+                <input type="hidden" name="invoice_reference" value="<?=$header->invoice_reference?>">
+              </div>
             </div>
             <div class="col-lg-2 col-sm-12">
               <div class="form-group">

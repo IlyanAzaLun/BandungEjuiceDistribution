@@ -563,6 +563,7 @@ $lang['order_invoice_has_created'] = "This Order Has Been Created!, Try To Check
  */
 $lang['page_sale'] = "Page Sale";
 
+$lang['sale'] = "Sales";
 $lang['sale_list'] = "List Sales ";
 $lang['sale_create'] = "Create Sale";
 $lang['sale_edit'] = "Edit Sale";
@@ -620,6 +621,7 @@ $lang['shipping_list'] = "Shipping List";
 $lang['shipping_report'] = "Report Shipping";
 $lang['delivered_report'] = "Report Delivered";
 $lang['delivery_documents'] = "Delivered Documents";
+$lang['type_invoice'] = "Type Invoice";
 $lang['receipt_code'] = "Receipt Code";
 $lang['weight_shipping_information'] = "Append Weight Information";
 $lang['delivery_document_list'] = "Document List";

@@ -184,62 +184,72 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <div class="row">
 
           <div class="col-lg-2 col-sm-12">
+            <div class="form-group">
+              <label for="type_invoice"><?= lang('type_invoice') ?></label>
+              <select class="custom-select" name="type_invoice" id="type_invoice" required>
+                  <option value="" selected disabled><?=lang('option')?></option>
+                  <option value="purchase"><?=lang('purchase')?></option>
+                  <option value="purchase_returns"><?=lang('purchase_returns')?></option>
+                  <option value="sale"><?=lang('sale')?></option>
+                  <option value="sale_returns"><?=lang('sale_returns')?></option>
+              </select>
             </div>
+          </div>
           <div class="col-lg-2 col-sm-12">
-              <div class="form-group">
-                <label for="expedition"><?= lang('expedition') ?></label>
-                <select class="custom-select" name="expedition_name" id="expedition_name" required>
-                    <option value="" selected disabled><?=lang('option')?></option>
-                    <?php foreach ($expedition as $key => $value):?>
-                        <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
-                    <?php endforeach ?>
+            <div class="form-group">
+              <label for="expedition"><?= lang('expedition') ?></label>
+              <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                  <option value="" selected disabled><?=lang('option')?></option>
+                  <?php foreach ($expedition as $key => $value):?>
+                      <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
+                  <?php endforeach ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-sm-12">
+            <div class="form-group">
+                <h6><?= lang('expedition_services') ?></h6>
+                <select class="custom-select" name="services_expedition" id="services_expedition">
+                    <option value=""><?=lang('option')?></option>
+                    <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?></option>
                 </select>
-              </div>
             </div>
+          </div>
+          <div class="col-lg-3 col-sm-12">
+            <div class="form-group">
+              <label for="shipping_cost"><?= lang('shipping_cost') ?></label>
+              <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" required><?= set_value('shipping_cost') ?></input>
+            </div>
+          </div>
 
-            <div class="col-lg-2 col-sm-12">
-              <div class="form-group">
-                  <h6><?= lang('expedition_services') ?></h6>
-                  <select class="custom-select" name="services_expedition" id="services_expedition">
-                      <option value=""><?=lang('option')?></option>
-                      <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?></option>
-                  </select>
-              </div>
+          <div class="col-lg-3 col-sm-12">
+            <div class="form-group">
+              <h6><?=lang('date')?></h6>
+                <div class="input-group">
+                  <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at"/>
+                  <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>
             </div>
-            <div class="col-lg-3 col-sm-12">
-              <div class="form-group">
-                <label for="shipping_cost"><?= lang('shipping_cost') ?></label>
-                <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" required><?= set_value('shipping_cost') ?></input>
-              </div>
-            </div>
+          </div>  
 
-            <div class="col-lg-3 col-sm-12">
+          <div class="col-lg-12 col-sm-12">
+            <div class="form-group">
+              <label for="note"><?= lang('note') ?></label>
+              <textarea type="text" name="note" id="note" class="form-control" required><?= set_value('note') ?></textarea>
+            </div>
+          </div>  
+          
+          <div class="col-lg-12 col-sm-12">
               <div class="form-group">
-                <h6><?=lang('date')?></h6>
-                  <div class="input-group">
-                    <input type="text" id="created_at" name="created_at" class="form-control" data-target="#created_at"/>
-                    <div class="input-group-append" data-target="#created_at" data-toggle="daterangepicker">
-                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
+                  <div class="custom-control custom-checkbox">
+                      <input type="hidden" name="shipping_cost_to_invoice" value=0>
+                      <input class="custom-control-input" type="checkbox" id="shipping_cost_to_invoice" name="shipping_cost_to_invoice" value=1>
+                      <label for="shipping_cost_to_invoice" class="custom-control-label"><?=strtolower(lang('is_shipping_cost_to_invoice'))?></label>
                   </div>
               </div>
-            </div>  
-
-            <div class="col-lg-12 col-sm-12">
-              <div class="form-group">
-                <label for="note"><?= lang('note') ?></label>
-                <textarea type="text" name="note" id="note" class="form-control" required><?= set_value('note') ?></textarea>
-              </div>
-            </div>  
-            
-            <div class="col-lg-12 col-sm-12">
-                <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                        <input type="hidden" name="shipping_cost_to_invoice" value=0>
-                        <input class="custom-control-input" type="checkbox" id="shipping_cost_to_invoice" name="shipping_cost_to_invoice" value=1>
-                        <label for="shipping_cost_to_invoice" class="custom-control-label"><?=strtolower(lang('is_shipping_cost_to_invoice'))?></label>
-                    </div>
-                </div>
             </div>
           </div>
         </div>

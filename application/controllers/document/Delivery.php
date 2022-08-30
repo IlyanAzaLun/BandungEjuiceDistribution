@@ -33,6 +33,10 @@ class Delivery extends MY_Controller
 			$this->page_data['page']->submenu = 'delivery_document_create';
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			if (get('invoice')) {
+				$invoice_reference = $this->delivery_model->getByWhere(array('invoice_reference' => get('invoice')));
+				if($invoice_reference){
+					redirect("document/delivery/edit?id=".$invoice_reference[0]->id);
+				}
 				if(preg_match('/^INV+\/PURCHASE|^RET+\/PURCHASE/i', get('invoice'))){
 					$this->page_data['invoice'] = $this->purchase_model->get_invoice_purchasing_by_code(get('invoice'));
 				}
@@ -80,6 +84,8 @@ class Delivery extends MY_Controller
 				'shipping_cost' => post('shipping_cost'),
 				'other_cost' => post('other_cost'),
 				'grand_total' => post('grand_total'),
+				'invoice_reference' => post('invoice_reference'),
+				'type_invoice' => post('type_invoice'),
 				'is_shipping_cost' => post('shipping_cost_to_invoice'),
 				'is_have' => post('is_have'),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
@@ -160,6 +166,7 @@ class Delivery extends MY_Controller
 				'shipping_cost' => post('shipping_cost'),
 				'is_shipping_cost' => post('shipping_cost_to_invoice'),
 				'expedition' => post('expedition_name'),
+				'type_invoice' => post('type_invoice'),
 				'services_expedition' => post('services_expedition'),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note') == false? null : strtoupper(post('note')),
@@ -168,7 +175,7 @@ class Delivery extends MY_Controller
 				$this->create_or_update_delivery($header);
 				$this->create_or_update_list_item_delivery($items);
 
-				$this->activity_model->add("Update Delivery Document, #" . $this->data['delivery_code'], (array) $payment);
+				$this->activity_model->add("Update Delivery Document, #" . $this->data['delivery_code'], (array) $header);
 
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'Create Order Successfully');
@@ -210,6 +217,8 @@ class Delivery extends MY_Controller
 		$request['is_shipping_cost'] = $data['is_shipping_cost'];
 		$request['expedition'] = $data['expedition'];
 		$request['services_expedition'] = $data['services_expedition'];
+		$request['invoice_reference'] = $data['invoice_reference'];
+		$request['type_invoice'] = $data['type_invoice'];
 		if ($response[0]) {
 			$request['is_cancelled'] = $data['is_cancelled'];
 			$request['updated_by'] = logged('id');

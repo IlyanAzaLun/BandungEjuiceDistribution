@@ -556,6 +556,7 @@ $lang['marketing'] = "Marketing";
  */
 $lang['page_sale'] = "Halaman Penjualan";
 
+$lang['sale'] = "Penjualan";
 $lang['sale_list'] = "Penjualan";
 $lang['sale_create'] = "Buat Penjualan";
 $lang['sale_edit'] = "Edit Penjualan";
@@ -613,6 +614,7 @@ $lang['shipping_list'] = "Pengiriman";
 $lang['shipping_report'] = "Laporkan Pengiriman";
 $lang['delivered_report'] = "Laporan Terkirim";
 $lang['delivery_documents'] = "Surat Pengiriman";
+$lang['type_invoice'] = "Tipe Faktur";
 $lang['receipt_code'] = "Kode Resi";
 $lang['weight_shipping_information'] = "Tambahkan Informasi Berat Barang";
 $lang['delivery_document_list'] = "Daftar Dokumen Pengiriman";
