@@ -305,12 +305,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <?php if ($invoice->is_cancelled == 0):?>
       <div class="card">
         <div class="card-footer">
-          <div class="float-left">
-            <a href="<?=url('invoice/order/cancel?id='.get('id'))?>" class="btn btn-danger mr-2" data-toggle="tooltip" data-placement="top" title="Remove this information"><i class="fa fa-fw fa-trash"></i>&nbsp;&nbsp;<?=lang('delete_data')?></a>
-          </div>
           <div class="float-right">
             <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
             <button type="button" class="btn btn-default mr-2" onclick="history.back()" ><?= lang('back') ?></button>
+          </div>
+          <div class="float-left">
+            <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#alertmodals" data-placement="top" title="Remove this information"><i class="fa fa-fw fa-trash"></i>&nbsp;&nbsp;<?=lang('delete_data')?></button>
           </div>
         </div>
       </div>
@@ -321,7 +321,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   </div>
 </section>
 <!-- /.content -->
-
+<div id="alertmodals" class="modal fade" id="btn" tabindex="-1" role="dialog" aria-labelledby="btnLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="btnLabel">Delete Information.?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Let me hidding on background...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="<?=url('invoice/order/cancel?id='.get('id'))?>" class="btn btn-danger mr-2" data-toggle="tooltip" data-placement="top" title="Remove this information">Yes ...</a>      
+      </div>
+    </div>
+  </div>
+</div>
 <?php include viewPath('includes/footer'); ?>
 <script>
   $('body').addClass('sidebar-collapse');
