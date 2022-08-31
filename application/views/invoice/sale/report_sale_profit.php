@@ -107,6 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <th><?=lang('profit')?></th>
                     <th><?=lang('profit_pesudo')?></th>
                     <th>actually profit</th>
+                    <th>calc</th>
                     <th><?=lang('name')?></th>
                 </tr>
             </thead>
@@ -217,6 +218,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 className: "bg-danger",
                 render: function(data, type, row){
                     return data?currency(row['grand_total'] - row['item_capital_price']):0;
+                }
+            },{
+                data: "calc",
+                className: "bg-primary",
+                render: function(data, type, row){
+                    return data?currency((row['grand_total'] - row['item_capital_price']) - row['calc']):row['grand_total'] - row['item_capital_price'];
                 }
             },{
                 data: "name",

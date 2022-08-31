@@ -592,11 +592,14 @@ class Report extends MY_Controller
         , transaction.updated_by
         , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
         , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+        , CAST(transaction.item_capital_price + (CAST(purchase.shipping_cost AS int) / CAST(items_purchase.item_total AS int)) AS decimal) AS calc
         , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
         , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
+		$this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
+        $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
 		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
@@ -744,6 +747,7 @@ class Report extends MY_Controller
 				'grand_total' => $record->grand_total,
 				'profit' => $record->profit,
 				'name' => $record->name,
+				'calc' => $record->calc,
 			);
 		}
 		## Response
