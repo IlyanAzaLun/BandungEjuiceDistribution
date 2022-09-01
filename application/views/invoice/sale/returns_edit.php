@@ -343,7 +343,7 @@ $i = 0; ?>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('expedition_services') ?></h6>
-                                <select class="custom-select" name="services_expedition" id="services_expedition" required>
+                                <select class="custom-select" name="services_expedition" id="services_expedition">
                                     <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?></option>
                                 </select>
                             </div>

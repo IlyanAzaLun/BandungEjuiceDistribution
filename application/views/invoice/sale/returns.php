@@ -267,7 +267,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group">
                                 <h6><?= lang('expedition_services') ?></h6>
-                                <select class="custom-select" name="services_expedition" id="services_expedition" required>
+                                <select class="custom-select" name="services_expedition" id="services_expedition">
                                     <option value="<?=$invoice->services_expedition?>"><?=$invoice->services_expedition?></option>
                                 </select>
                             </div>
