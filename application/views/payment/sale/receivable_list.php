@@ -80,48 +80,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <!-- /.card-body -->
         </div>
         <!-- payment -->
-        <?php //echo form_open_multipart('invoice/sales/payment/receivable_from', ['class' => 'form-validate', 'id' => 'to_pay', 'autocomplete' => 'off']); ?>
-          <!-- <div class="card-header">
-            <h3 class="card-title">Wont to pay ?</h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-sm bg-default remove" data-card-widget="remove"><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-lg-2 col-sm-12">
-                <div class="form-group">
-                  <label for="invoice_code"><?=lang('invoice_code')?></label>
-                  <input type="hidden" id="id_payment" name="id_payment" value="" required>
-                  <input type="text" class="form-control" id="invoice_code" name="invoice_code" value="" required>
-                </div>
-              </div>
-              <div class="col-lg-3 col-sm-12">
-                <label for="to_pay"><?=lang('to_payup')?></label>
-                <input type="text" class="form-control currency" id="to_pay" name="to_pay" required>
-              </div>
-              
-              <div class="col-lg-2 col-sm-12">
-                <label for="beneficiary_name"><?=lang('beneficiary_name')?></label>
-                <input type="hidden" class="form-control bank_name" id="id" name="bank_id" required>
-                <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" required>
-              </div>
-              <div class="col-12 mb-2">
-                <label for="note"><?=lang('note')?></label>
-                <textarea class="form-control" name="note" id="note"></textarea>
-              </div>
-
-            </div>
-            <div class="row">
-              <div class="col-lg-1 col-sm-12">
-                <button type="submit" class="btn btn-info btn-block start">
-                  <i class="fa fa-fw fa-coins"></i>&nbsp;&nbsp;
-                  <span><?=lang('payup')?></span>
-                </button>
-              </div>
-            </div>
-          </div> -->
-        <?php //echo form_close(); ?>
         <!-- ./payment -->
         <!-- /.card -->
         <div class="card">
@@ -150,7 +108,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
                   <div class="col-md-1 col sm-12"><?=$list->user_created?></div>
                   <div class="col-md-1 col sm-12">
-                    <div class="btn-group btn-block" id="to_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
+                    <div class="btn-group btn-block" id="to_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>" data-date="<?=$list->created_at?>">
                       <?php if(getCurrentcy($list->leftovers) > 0):?>
                       <button class="btn btn-sm btn-default" id="to_pay"><i class="fa fa-fw fa-dollar-sign text-primary"></i></button>
                       <?php endif; ?>

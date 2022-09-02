@@ -598,7 +598,7 @@ class Report extends MY_Controller
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
-		//$this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
+		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
         $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");

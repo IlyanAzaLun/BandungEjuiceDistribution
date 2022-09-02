@@ -117,7 +117,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         format: 'DD/MM/YYYY H:mm'
       }
     });
-    var groupColumn = 3;
+    var groupColumn = 3; 
     $('.ui-buttonset').draggable();
     var table = $("#example2").DataTable({
 

@@ -85,7 +85,11 @@ class Payment extends MY_Controller
 			$response = $this->receivables->update_batch($result, 'id');
 			echo '</pre>';
 			if($response){
-				$this->receivables->update($this->page_data['data_post']['id_payment'], ['payup' => setCurrency($this->page_data['data_post']['to_pay']), 'description' => strtoupper($this->page_data['data_post']['note'])]);
+				$this->receivables->update($this->page_data['data_post']['id_payment'], [
+					'payup' => setCurrency($this->page_data['data_post']['to_pay']), 
+					'description' => strtoupper($this->page_data['data_post']['note']),
+					'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$this->input->post('created_at')))))
+				]);
 				$this->activity_model->add("Create Payment Invoice, #" . $this->page_data['data_post']['invoice_code'], true);
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
@@ -115,9 +119,9 @@ class Payment extends MY_Controller
 			$request->description = strtoupper($dataPost['note']);
 			$request->created_by = logged('id');
 			$request->bank_id = $dataPost['bank_id'];
-
+			$request->created_at = ($dataPost['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$dataPost['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
+			// unset($request->created_at);
 			unset($request->id);
-			unset($request->created_at);
 
 			$response = $this->payment_model->create($request);
 			if($response){

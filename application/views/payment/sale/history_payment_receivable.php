@@ -62,6 +62,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <input type="hidden" class="form-control bank_name" id="id" name="bank_id" value="" required>
                 <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" value="" required>
               </div>
+              <div class="col-lg-2 col-sm-12">
+                <label for="created_at"><?=lang('created_at')?></label>
+                <input type="hidden" class="form-control bank_name" id="id" name="bank_id" value="" required>
+                <input type="text" class="form-control bank_name" id="created_at" name="created_at" value="" required>
+              </div>
               <div class="col-12 mb-2">
                 <label for="note"><?=lang('note')?></label>
                 <textarea class="form-control" name="note" id="note"></textarea>
@@ -182,13 +187,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
   $(function() {
     //Date range picker
-    $('#min').daterangepicker({
+    $('#created_at').daterangepicker({
+      singleDatePicker: true,
       showDropdowns: true,
       timePicker: true,
       timePicker24Hour: true,
       timePickerIncrement: 30,
       locale: {
-        format: 'DD/MM/YYYY H:mm'
+        format: 'DD/MM/YYYY H:mm:ss'
       }
     });
     $('.ui-buttonset').draggable();
