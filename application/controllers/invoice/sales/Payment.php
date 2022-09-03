@@ -135,7 +135,6 @@ class Payment extends MY_Controller
 				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);
 			}
 		}
-
 	}
 
     public function serverside_datatables_data_payment_sale()

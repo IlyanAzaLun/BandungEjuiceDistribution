@@ -223,7 +223,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 data: "calc",
                 className: "bg-primary",
                 render: function(data, type, row){
-                    return currency(row['calc']);
+                    return currency((row['grand_total'] - row['item_capital_price']) - row['calc']);
                 }
             },{
                 data: "name",

@@ -66,6 +66,7 @@ class Purchase extends Invoice_controller
 					"item_order_quantity" => post('item_order_quantity')[$key],
 					"item_unit" => post('item_unit')[$key],
 					"item_capital_price" => post('item_capital_price')[$key],
+					"is_upload" => post('is_upload')[$key]?1:0,
 					"item_capital_price_is_change" => post('item_capital_price_is_change')[$key],
 					"item_selling_price" => post('item_selling_price')[$key],
 					"item_discount" => post('item_discount')[$key],
@@ -145,7 +146,6 @@ class Purchase extends Invoice_controller
 		);
 		$this->load->view('invoice/purchase/create_import_items', $this->page_data);
 		$this->load->view('includes/modals', $this->page_data);
-
 	}
 
 	public function edit()
@@ -717,6 +717,10 @@ class Purchase extends Invoice_controller
 			$request[$key]['capital_price'] = $item[$key]->capital_price;
 			if ($value['item_capital_price_is_change'] == 1) {
 				$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
+			}else if($value['is_upload'] == 1){
+				if($item[$key]->capital_price < setCurrency($value['item_capital_price'])){
+					$request[$key]['capital_price'] = setCurrency($value['item_capital_price']);
+				}
 			}
 			$request[$key]['selling_price'] = setCurrency($value['item_selling_price']);
 			$request[$key]['updated_by'] = logged('id');
