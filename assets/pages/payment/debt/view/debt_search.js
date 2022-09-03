@@ -102,15 +102,6 @@ const main = () => {
             })
         })
         // To Pay
-        // $(document).on('click', 'button#to_pay', function () {
-        //     let toPayElement = $(this).parent('#to_pay');
-        //     $("div.card#to_pay").toggle(200, "linear", function () {
-        //         $('table tr').removeClass('bg-primary');
-        //         $('#id_payment').val(toPayElement.data('id'));
-        //         $('#invoice_code').val(toPayElement.data('code_invoice'));
-        //         toPayElement.parents('tr').addClass('bg-primary')
-        //     });
-        // })
         $(document).on('click', 'button#to_pay', function () {
             let toPayElement = $(this).parent('#to_pay');
             let toselectedchild = toPayElement.parents('tr').attr('id');
@@ -123,11 +114,17 @@ const main = () => {
                     <form action="${location.base}/invoice/purchases/payment/debt_to" class="form-validate" id="to_pay" autocomplete="off" enctype="multipart/form-data" method="post" accept-charset="utf-8">
                         <div class="row">
                             <div class="col-lg-2 col-sm-12">
-                            <div class="form-group">
-                                <input type="hidden" id="id_payment" name="id_payment" value="${toPayElement.data('id')}" required>
-                                <input type="text" class="form-control" id="invoice_code" name="invoice_code" value="${toPayElement.data('code_invoice')}" readonly required>
+                                <div class="form-group">
+                                    <input type="hidden" id="id_payment" name="id_payment" value="${toPayElement.data('id')}" required>
+                                    <input type="text" class="form-control" id="invoice_code" name="invoice_code" value="${toPayElement.data('code_invoice')}" readonly required>
+                                </div>
                             </div>
+                            
+                            <div class="col-lg-2 col-sm-12">
+                                <input type="text" class="form-control" id="created_at" name="created_at" required>
+                                <small class="text-danger">*date payment !</small>
                             </div>
+
                             <div class="col-lg-2 col-sm-12">
                                 <input type="text" class="form-control currency" id="to_pay" name="to_pay" placeholder="wont to paid..." required>
                                 <small class="text-danger">*numbers only !</small>
@@ -150,6 +147,13 @@ const main = () => {
                     </form>
                 </td>`;
                 $(this).append(`${html}`);
+                $('#created_at').daterangepicker({
+                    singleDatePicker: true,
+                    startDate: moment(toPayElement.data('date')).format('DD/MM/YYYY HH:mm:ss'),
+                    locale: {
+                        format: 'DD/MM/YYYY HH:mm:ss'
+                    }
+                })
             })
         })
         //

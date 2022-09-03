@@ -113,6 +113,8 @@ const main = () => {
                         $('input#to_pay').val(callback.payup !== null ? currency(callback.payup) : 0);
                         $('input#bank_id').val(currency(callback.bank_id));
                         $('input#beneficiary_name').val(callback.own_by);
+                        $('textarea#note').val(`${callback.description}`);
+                        $('input#created_at').val(`${moment(callback.created_at).format('DD/MM/YYYY HH:mm:ss')}`);
                         $('form#to_pay').attr('action', `${location.base}invoice/purchases/payment/edit_debt`);
                         toPayElement.parents('tr').addClass('bg-primary');
                     });
@@ -129,6 +131,11 @@ const main = () => {
                 $('table tr').removeClass('bg-primary');
                 $('#id_payment').val(toPayElement.data('id'));
                 $('#invoice_code').val(toPayElement.data('code_invoice'));
+                $('input#to_pay').val("");
+                $('input#bank_id').val("");
+                $('input#beneficiary_name').val("");
+                $('textarea#note').val("");
+                $('input#created_at').val(`${moment().format('DD/MM/YYYY HH:mm:ss')}`);
                 $('form#to_pay').attr('action', `${location.base}invoice/purchases/payment/debt_to`);
             });
         })

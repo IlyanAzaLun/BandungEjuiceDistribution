@@ -115,9 +115,9 @@ class Payment extends MY_Controller
 			$request->description = strtoupper($dataPost['note']);
 			$request->created_by = logged('id');
 			$request->bank_id = $dataPost['bank_id'];
-
+			$request->created_at = ($dataPost['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$dataPost['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
+			// unset($request->created_at);
 			unset($request->id);
-			unset($request->created_at);
 
 			$response = $this->payment_model->create($request);
 			if($response){
