@@ -57,8 +57,9 @@ $autoload['packages'] = array();
 | in the controller:
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
+	REMOVE UNIT TEST AFTER DEPLOY APLICATION
 */
-$autoload['libraries'] = array('session', 'database', 'parser', 'form_validation', 'uploadlib', 'email');
+$autoload['libraries'] = array('session', 'database', 'parser', 'form_validation', 'uploadlib', 'email', 'unit_test');
 
 /*
 | -------------------------------------------------------------------
