@@ -508,7 +508,8 @@ class Report extends MY_Controller
             $sheet->setCellValue("F1", "item_capital_price");
             $sheet->setCellValue("G1", "item_selling_price");
             $sheet->setCellValue("H1", "profit");
-            $sheet->setCellValue("I1", "name");
+            $sheet->setCellValue("I1", "average");
+            $sheet->setCellValue("J1", "name");
 
             foreach ($data as $key => $value) {
                 $sheet->setCellValue("A".$i, $value->created_at);
@@ -519,7 +520,8 @@ class Report extends MY_Controller
                 $sheet->setCellValue("F".$i, $value->item_capital_price);
                 $sheet->setCellValue("G".$i, $value->item_selling_price);
                 $sheet->setCellValue("H".$i, $value->grand_total-$value->item_capital_price);
-                $sheet->setCellValue("I".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
+                $sheet->setCellValue("I".$i, ($value->grand_total-$value->item_capital_price) - $value->calc);
+                $sheet->setCellValue("J".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
                 $i++;
             }
             // (E) SAVE FILE
