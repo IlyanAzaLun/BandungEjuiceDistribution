@@ -284,10 +284,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     return false;
                 });
                 table.draw();
-        })
+        });
         $('#sync').on('click', function(){
             table.draw();
-        })
+        });
     new $.fn.dataTable.ColReorder(table);
   });
 </script>
