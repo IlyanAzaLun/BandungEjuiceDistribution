@@ -97,7 +97,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php $grandtotal = 0;$payup = 0;$leftovers = 0;?>
             <table class="table table-sm table-hover table-border">
             <?php foreach ($data_list_receivables as $key => $list):?>
-            <tr id="row-<?=$key;?>" class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>" <?php echo(!hasPermissions('example') && (getCurrentcy($list->leftovers) <= 0))?'style="display:none;"':''?>>
+            <?php if(!(!hasPermissions('example') && (getCurrentcy($list->leftovers) <= 0))): ?>
+            <tr id="row-<?=$key;?>" class="<?php echo(getCurrentcy($list->leftovers) <= 0)?'bg-success':''?>">
               <td>
                 <div class="row">
                   <div class="col-md-3 col sm-12"><?=$list->invoice_code?></div>
@@ -120,6 +121,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php $grandtotal += $list->grand_total;$payup += $list->payup;$leftovers += $list->leftovers;?>
             </tr>
             <tr class="child-row-<?=$key;?>" style="display: none;"></tr>
+            <?php endif; ?>
             <?php endforeach; ?>
             <tr>
               <td>

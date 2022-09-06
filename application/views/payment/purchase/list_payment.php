@@ -141,7 +141,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         let regex = /RET/;
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['invoice_code']?index['invoice_code'].match(regex) != null:false){
-            $(rows).eq(i).remove();
+            // $(rows).eq(i).remove();
           }
         })
         api.rows( {page:'current'} ).data().each(function(index, i){
@@ -196,7 +196,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "leftovers",
           render: function(data, type, row){
-            return currency(data);
+            return currency(currencyToNum(row['grand_total']) - currencyToNum(row['payup']));
           }
         },{
           visible: false,

@@ -194,7 +194,7 @@ class Payment extends MY_Controller
         , payment.date_due
         , payment.customer_code
         , payment.grand_total
-        , payment.payup
+        , SUM(payment.payup) AS payup
         , payment.leftovers
         , payment.status_payment
         , payment.payment_type
@@ -232,19 +232,16 @@ class Payment extends MY_Controller
 			$this->db->where("payment.created_at <=", $dateFinal);
 			$this->db->group_end();
 		}
-		else{
-			// select by years
-			$this->db->like("payment.created_at", date("Y"), 'after');
-		}
 		// select reveivables
 		$this->db->where("sale.is_transaction", 1);
 		// is have receivables,
-		$this->db->where("payment.leftovers !=", 0);
+		// $this->db->where("payment.leftovers !=", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_payment payment')->result();
 		$data = array();
+		// var_dump($this->db->last_query());
 
 		foreach ($records as $record) {
 

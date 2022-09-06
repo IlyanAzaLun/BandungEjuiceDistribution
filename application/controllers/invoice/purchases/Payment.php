@@ -85,7 +85,11 @@ class Payment extends MY_Controller
 			$response = $this->indebtedness->update_batch($result, 'id');
 			echo '</pre>';
 			if($response){
-				$this->indebtedness->update($this->page_data['data_post']['id_payment'], ['payup' => setCurrency($this->page_data['data_post']['to_pay']), 'description' => strtoupper($this->page_data['data_post']['note'])]);
+				$this->indebtedness->update($this->page_data['data_post']['id_payment'], [
+					'payup' => setCurrency($this->page_data['data_post']['to_pay']), 
+					'description' => strtoupper($this->page_data['data_post']['note']),
+					'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$this->input->post('created_at')))))
+				]);
 				$this->activity_model->add("Create Payment Invoice, #" . $this->page_data['data_post']['invoice_code'], true);
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
@@ -199,7 +203,7 @@ class Payment extends MY_Controller
         , payment.date_due
         , payment.customer_code
         , payment.grand_total
-        , payment.payup
+        , SUM(payment.payup) AS payup
         , payment.leftovers
         , payment.status_payment
         , payment.payment_type
@@ -236,14 +240,10 @@ class Payment extends MY_Controller
 			$this->db->where("payment.created_at <=", $dateFinal);
 			$this->db->group_end();
 		}
-		else{
-			// select by years
-			$this->db->like("payment.created_at", date("Y"), 'after');
-		}
 		// select indebtness
 		$this->db->where("purchase.is_transaction", 1);
 		// is have indebtness,
-		$this->db->where("payment.leftovers !=", 0);
+		// $this->db->where("payment.leftovers !=", 0);
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);

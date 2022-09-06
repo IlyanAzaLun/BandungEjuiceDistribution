@@ -200,7 +200,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "leftovers",
           render: function(data, type, row){
-            return currency(data)
+            return currency(currencyToNum(row['grand_total']) - currencyToNum(row['payup']));
           }
         },{
           visible: false,
