@@ -88,11 +88,13 @@ function sum_grand_total() {
 
 function validation_form(callback) {
     let _total = [];
+    let _current = [];
     let unique_values = {};
     let list_of_values = [];
     let row;
     $('input[data-id="item_id"]').each(function (item, field) {
         _total[item] = 0;
+        _current[item] = 0;
         let parents = $(`input[data-id="item_id"][value="${field.value}"]`);
         row = parents.parents('tr#main').attr('class');
 
@@ -104,15 +106,17 @@ function validation_form(callback) {
         parents.each(function (index, res) {
             let part_row = $(this).parents('tr#main').attr('class');
             _total[item] += parseInt($(`tr#main.${part_row} input[data-id="item_order_quantity"]`).val());
+            _current[item] += parseInt($(`tr#main.${part_row} input[data-id="item_order_quantity_current"]`).val());
         });
-        validate(_total[item], field.value, callback)
+        validate(_total[item], _current[item], field.value, callback)
     })
 }
 
 
-function validate(data, item_id, callback) {
+function validate(data, curren, item_id, callback) {
+    curren = curren ? curren : 0;
     let row = $(`input[data-id="item_id"][value="${item_id}"]`).parents('tr#main').attr('class');
-    if (parseInt($(`tr#main.${row} input[data-id="item_order_quantity"]`).attr('max')) < data) {
+    if (parseInt($(`tr#main.${row} input[data-id="item_order_quantity"]`).attr('max')) + curren < data) {
         callback(false);
         $(`tr#main.${row} input[data-id="item_order_quantity"]`).addClass('is-invalid');
         return false;

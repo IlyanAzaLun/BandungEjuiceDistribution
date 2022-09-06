@@ -240,9 +240,10 @@ class Order extends Invoice_controller
 				return false;
 			}
 			$this->create_or_update_order($payment);
-			$this->create_or_update_list_item_order_sale($items);
-			$this->update_items($items);
-			
+			if(count($items) > 0){
+				$this->create_or_update_list_item_order_sale($items);
+				$this->update_items($items);
+			}
 			$this->activity_model->add("Update Order, #" . $this->data['order_code'], (array) $payment);
 			if($error){
 				$this->session->set_flashdata('alert-type', 'danger');
