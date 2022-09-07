@@ -216,8 +216,6 @@ class Order extends Invoice_controller
 				'grand_total' => post('grand_total'),
 				'payment_type' => post('payment_type'),
 				'status_payment' => (post('payment_type') == 'cash') ? 'payed' : 'credit',
-				'date_start' => date("Y-m-d H:i",strtotime($this->data['date']['date_start'])),
-				'date_due' => date("Y-m-d H:i",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note') == false? null : strtoupper(post('note')),
 				'is_have' => post('is_have'),
@@ -233,22 +231,22 @@ class Order extends Invoice_controller
 			$failed = array_values($error);
 			$error = array_column($failed, 'item_name');
 
-			if(!$items){
-				$this->session->set_flashdata('alert-type', 'danger');
-				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
-				redirect("invoice/order/edit?id=$order_code");
-				return false;
-			}
 			$this->create_or_update_order($payment);
 			if(count($items) > 0){
 				$this->create_or_update_list_item_order_sale($items);
 				$this->update_items($items);
 			}
+			if(!$items){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
+				redirect("invoice/order/edit?id=".get('id'));
+				return false;
+			}
 			$this->activity_model->add("Update Order, #" . $this->data['order_code'], (array) $payment);
 			if($error){
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error));
-				redirect("invoice/order/edit?id=$order_code");
+				redirect("invoice/order/edit?id=".get('id'));
 				return false;
 			}
 			$this->session->set_flashdata('alert-type', 'success');
