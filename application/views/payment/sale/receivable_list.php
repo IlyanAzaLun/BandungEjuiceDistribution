@@ -120,7 +120,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </td>
             <?php $grandtotal += $list->grand_total;$payup += $list->payup;$leftovers += $list->leftovers;?>
             </tr>
-            <tr class="child-row-<?=$key;?>" style="display: none;"></tr>
+            <tr class="child-row-<?=$key;?>" style="display: none;" data-display="false"></tr>
             <?php endif; ?>
             <?php endforeach; ?>
             <tr>
@@ -161,7 +161,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker24Hour: true,
       timePickerIncrement: 30,
       locale: {
-        format: 'DD/MM/YYYY H:mm'
+        format: 'DD/MM/YYYY HH:mm:ss'
       }
     });
     $('.ui-buttonset').draggable();

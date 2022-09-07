@@ -100,7 +100,6 @@ class Payment extends MY_Controller
 				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['data_post']['invoice_code']);
 			}
 		}
-
 	}
 
 	public function receivable_from()

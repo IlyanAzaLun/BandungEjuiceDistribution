@@ -2,7 +2,6 @@
     Development Goal
     to accomodate (support), each division will validate the activity other division.
     meanampung (menunjang) , memvalidasi kegiatan yang sedang berjalan, tiap divisi akan memvalidasi kegiatan divisi lain.
-
 # 
     Flowmap
     Input Item (Admin), jika pada pembelian barang belum tersedia. isi sesuai informasi barang...
@@ -14,7 +13,6 @@
     Packing (Shipping), lolos dari quality control akan di pack. untuk pengiriman,    
     Input Receipt (Shipping), input resi jika bagian shipping sudah melakukan pengiriman
     Payment (Admin), membutuhkan konfirmasi admin dalam pembayaran penjualan dan pembelian item.
-    
 # 
     Feature
     • Manajemen Barang

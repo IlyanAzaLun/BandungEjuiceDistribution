@@ -107,7 +107,7 @@ const main = () => {
             $('table tr').removeClass('bg-primary');
             toPayElement.parents('tr').addClass('bg-primary')
             $(`tr.child-${toselectedchild}`).toggle(200, "linear", function () {
-                $('[class*=child-row-]').empty()
+                // let isshowed = $(this).data('display');
                 let html = `
                 <td class="callout callout-priamary">
                     <form action="${location.base}/invoice/sales/payment/receivable_from" class="form-validate" id="to_pay" autocomplete="off" enctype="multipart/form-data" method="post" accept-charset="utf-8">
@@ -126,7 +126,6 @@ const main = () => {
                                 <input type="text" class="form-control currency" id="to_pay" name="to_pay" placeholder="wont to paid..." required>
                                 <small class="text-danger">*numbers only !</small>
                             </div>
-                            
                             <div class="col-lg-2 col-sm-12">
                                 <input type="hidden" class="form-control bank_name" id="id" name="bank_id" required>
                                 <input type="text" class="form-control bank_name" id="beneficiary_name" name="beneficiary_name" placeholder="search source found..." required>
@@ -143,7 +142,23 @@ const main = () => {
                         </div>
                     </form>
                 </td>`;
+
+                // WITHOUT MULTIPLE
+                $('[class*=child-row-]').empty()
                 $(this).append(`${html}`);
+                // END WITHOUT MULTIPLE
+
+                // WITH MULTIPLE PAYMENT
+                // if (isshowed) {
+                //     $(`.${toselectedchild}`).empty();
+                //     $(this).data('display', 'false');
+                // }
+                // else {
+                //     $(this).append(`${html}`);
+                //     $(this).data('display', 'true');
+                // }
+                // END WITH MULTIPLE PAYMENT
+
                 $('#created_at').daterangepicker({
                     singleDatePicker: true,
                     showDropdowns: true,
