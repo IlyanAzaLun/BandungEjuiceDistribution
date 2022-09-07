@@ -149,7 +149,12 @@ const main = () => {
                 $(this).append(`${html}`);
                 $('#created_at').daterangepicker({
                     singleDatePicker: true,
-                    startDate: moment(toPayElement.data('date')).format('DD/MM/YYYY HH:mm:ss'),
+                    showDropdowns: true,
+                    timePicker: true,
+                    timePicker24Hour: true,
+                    timePickerIncrement: 30,
+                    // startDate: moment(toPayElement.data('date')).format('DD/MM/YYYY HH:mm:ss'),
+                    startDate: moment().format('DD/MM/YYYY HH:mm:ss'),
                     locale: {
                         format: 'DD/MM/YYYY HH:mm:ss'
                     }
