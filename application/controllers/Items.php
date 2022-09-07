@@ -281,6 +281,7 @@ class Items extends MY_Controller
             unset($data[$key]['is_active']);
             unset($data[$key]['unit']);
             unset($data[$key]['quantity']);
+            unset($data[$key]['weight']);
             unset($data[$key]['selling_price']);
             unset($data[$key]['category']);
             unset($data[$key]['note']);
