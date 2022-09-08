@@ -20,7 +20,7 @@ class Receivables extends MY_Model {
         , payment.customer_code
         , payment.grand_total
         , SUM(payment.payup) AS payup
-        , MIN(payment.leftovers) AS leftovers
+        , MIN(CAST(payment.leftovers as INT)) AS leftovers
         , payment.status_payment
         , payment.payment_type
         , payment.bank_id

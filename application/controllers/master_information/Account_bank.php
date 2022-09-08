@@ -66,8 +66,17 @@ class Account_bank extends MY_Controller
         $this->form_validation->set_rules('own_by', lang('own_by'), 'required|trim');
 
         if ($this->form_validation->run() == false) {
+            $this->page_data['modals'] = (object) array(
+                'id' => 'modal-delete',
+                'title' => 'Modals delete account',
+                'link' => 'master_information/account_bank/delete',
+                'content' => 'delete',
+                'btn' => 'btn-danger',
+                'submit' => 'Delete it',
+            );
             $this->page_data['bank'] = $this->account_bank_model->getById(get('id'));
             $this->load->view('account_bank/update', $this->page_data);
+            $this->load->view('includes/modals', $this->page_data);
         } else {
             $data = [
                 'name' => strtoupper(post('name')),
@@ -85,6 +94,23 @@ class Account_bank extends MY_Controller
 
             redirect('master_information/account_bank/list');
         }
+    }
+
+    public function delete()
+    {
+        ifPermissions('account_bank_delete');
+        if($this->account_bank_model->update(post('id'), array('is_canceled' => 1))){
+            
+            $this->activity_model->add("Delete Account Bank #$account, Delete by User: #" . logged('id'), (array)$data);
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Delete Account Bank Successfully');
+        }else{
+            $this->session->set_flashdata('alert-type', 'error');
+            $this->session->set_flashdata('alert', 'Delete Account Bank Failed');
+
+        }
+        
+        redirect('master_information/account_bank/list');
     }
 
     public function balance()
@@ -327,6 +353,7 @@ class Account_bank extends MY_Controller
             $this->db->or_like('own_by', $searchValue, 'both');
         }
         $this->db->join('users user', 'user.id = bank.created_by', 'left');
+        $this->db->where('is_canceled', 0);
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('bank_information bank')->result();
@@ -370,6 +397,7 @@ class Account_bank extends MY_Controller
                 $this->db->or_like('bank_information.no_account', $search->value, 'after');
                 $this->db->or_like('bank_information.own_by', $search->value, 'after');
             }
+            $this->db->where('bank_information.is_canceled', 0);
             $response = $this->db->get('bank_information')->result();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         }else{

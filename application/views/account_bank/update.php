@@ -80,7 +80,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-primary float-right"><?=lang('save')?></button>
-                        <button type="button" class="btn btn-default mr-2"><?=lang('cancel')?></button>
+                        <button type="button" class="btn btn-default mr-2"><?=lang('back')?></button>
+                    </div>
+                    <div class="float-left">
+                        <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#modal-delete"><i class="fa fa-trash">&nbsp;&nbsp;</i><?=lang('cancel')?></button>
                     </div>
                 </div>
             <?php echo form_close(); ?>
@@ -98,7 +101,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>
-  $(document).ready(function(){
+  $(document).ready(function () {
+    $('#modal-delete').on('shown.bs.modal', function(){
+        $('.modal input#id').val('<?=get('id')?>');
+    })
     $('.currency').each(function (index, field) {
         $(field).val(currency(currencyToNum($(field).val())));
     });

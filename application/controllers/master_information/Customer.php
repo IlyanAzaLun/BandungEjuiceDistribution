@@ -29,8 +29,6 @@ class Customer extends MY_Controller
             'btn' => 'btn-primary',
             'submit' => 'Save changes',
         );
-
-
         $this->load->view('customer/list', $this->page_data);
         $this->load->view('includes/modals', $this->page_data);
     }
