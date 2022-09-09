@@ -196,6 +196,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "leftovers",
           render: function(data, type, row){
+            if((currencyToNum(row['grand_total']) - currencyToNum(row['payup'])) < 0){
+              return `<p class="text-warning">${currency(Math.abs(currencyToNum(row['grand_total']) - currencyToNum(row['payup'])))}</p>`;
+            }
             return currency(currencyToNum(row['grand_total']) - currencyToNum(row['payup']));
           }
         },{
