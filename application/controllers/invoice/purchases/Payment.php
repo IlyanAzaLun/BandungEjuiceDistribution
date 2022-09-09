@@ -112,6 +112,7 @@ class Payment extends MY_Controller
 			$this->session->set_flashdata('alert', 'Faild, Worng information');
 			redirect('invoice/purchases/payment/debt');
 		}else{
+			$next_request = false;
 			$request = $this->payment_model->getById($this->page_data['requset_post']['id_payment']);
 			$dataPost = $this->input->post();
 			$request->leftovers = $request->leftovers - setCurrency($dataPost['to_pay']);
@@ -121,9 +122,21 @@ class Payment extends MY_Controller
 			$request->bank_id = $dataPost['bank_id'];
 			$request->created_at = ($dataPost['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$dataPost['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
 			// unset($request->created_at);
-			unset($request->id);
 
-			$response = $this->payment_model->create($request);
+			//// FIND INVOICE NOT YET PAYID
+			echo '<pre>';
+			if($request->leftovers == 0){
+				//// UPDATE INVOICE PURCHASE TO PAID
+				$this->purchase_model->update_by_code($request->invoice_code, array('status_payment' => 1));
+				$this->db->reset_query();
+			}elseif($request->leftovers < 0){
+				//// UPDATE INVOICE PURCHASE TO PAID
+				$this->purchase_model->update_by_code($request->invoice_code, array('status_payment' => 1));
+				$this->db->reset_query();
+				
+				$response = $this->loop($request, $dataPost);
+			}
+			echo '</pre>';
 			if($response){
 				$this->activity_model->add("Create Payment Invoice, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
@@ -137,6 +150,42 @@ class Payment extends MY_Controller
 		}
 
 	}
+	private function loop($data, $post)
+	{
+		
+		unset($data->id);
+		$this->payment_model->create($data);
+		
+		//// FIND INVOICE
+		$this->db->where('supplier', $data->customer_code);
+		$this->db->where('status_payment', 0);
+		$temp = $this->db->get('invoice_purchasing')->row();
+		$this->db->reset_query();
+		//// FIND PAYMENT
+		$this->db->where('invoice_code', $temp->invoice_code);
+		$next_request = $this->db->get('invoice_payment')->last_row();
+		$this->db->reset_query();
+		$next_request->leftovers = $next_request->leftovers - abs($data->leftovers);
+		$next_request->payup = abs($data->leftovers);
+		$next_request->description = strtoupper($post['note']);
+		$next_request->created_by = logged('id');
+		$next_request->bank_id = $post['bank_id'];
+		$next_request->created_at = ($post['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$post['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
+		unset($next_request->id);
+		$this->payment_model->create($next_request);
+		$this->db->reset_query();
+		if($next_request->leftovers == 0){
+			$this->purchase_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
+			return true;
+		}
+		elseif($next_request->leftovers < 0){
+			$this->purchase_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
+			$this->db->reset_query();
+			$this->loop($next_request);
+		}
+		return false;
+	}
+
 	public function validation_currency_check($str)
 	{
 		if((int) $str > 0){
