@@ -125,16 +125,30 @@ class Payment extends MY_Controller
 
 			//// FIND INVOICE NOT YET PAYID
 			echo '<pre>';
-			if($request->leftovers == 0){
+			
+
+			//// IF LEFTOVER IS LARGE THEN ZERO WILL BE STOP HERE
+			if($request->leftovers > 0){
+				unset($request->id);
+				$response = $this->payment_model->create($request);
+				$this->db->reset_query();
+			}
+			//// IF LEFTOVER IS SMALLER THEN ZERO WILL BE CONTINUE TO DECREASE THE LEFTOVER
+			elseif($request->leftovers < 0){
 				//// UPDATE INVOICE PURCHASE TO PAID
 				$this->purchase_model->update_by_code($request->invoice_code, array('status_payment' => 1));
 				$this->db->reset_query();
-			}elseif($request->leftovers < 0){
-				//// UPDATE INVOICE PURCHASE TO PAID
-				$this->purchase_model->update_by_code($request->invoice_code, array('status_payment' => 1));
-				$this->db->reset_query();
-				
+				//// WILL BE LOOPED UNTIL LARGE OR DIVINE ZERO
 				$response = $this->loop($request, $dataPost);
+			}
+			//// IF LEFTOVER IS DIVINE ZERO WILL BE STOP HERE TO.
+			else{
+				unset($request->id);
+				$response = $this->payment_model->create($request);
+				$this->db->reset_query();
+				//// UPDATE INVOICE PURCHASE TO PAID
+				$this->purchase_model->update_by_code($request->invoice_code, array('status_payment' => 1));
+
 			}
 			echo '</pre>';
 			if($response){
@@ -152,7 +166,7 @@ class Payment extends MY_Controller
 	}
 	private function loop($data, $post)
 	{
-		
+		//// THIS IS PAYMENT WITH OVERPAID 
 		unset($data->id);
 		$this->payment_model->create($data);
 		
@@ -171,19 +185,28 @@ class Payment extends MY_Controller
 		$next_request->created_by = logged('id');
 		$next_request->bank_id = $post['bank_id'];
 		$next_request->created_at = ($post['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$post['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
-		unset($next_request->id);
-		$this->payment_model->create($next_request);
-		$this->db->reset_query();
-		if($next_request->leftovers == 0){
-			$this->purchase_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
+		
+		//// IF LEFTOVER IS LARGE THEN ZERO WILL BE STOP HERE
+		if($next_request->leftovers > 0){
+			unset($next_request->id);
+			$this->payment_model->create($next_request);
+			$this->db->reset_query();
 			return true;
 		}
+		//// IF LEFTOVER IS SMALLER THEN ZERO WILL BE CONTINUE TO DECREASE THE LEFTOVER
 		elseif($next_request->leftovers < 0){
 			$this->purchase_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
 			$this->db->reset_query();
-			$this->loop($next_request);
+			$this->loop($next_request, $post);
 		}
-		return false;
+		//// IF LEFTOVER IS DIVINE ZERO WILL BE STOP HERE TO.
+		else{
+			unset($next_request->id);
+			$this->payment_model->create($next_request);
+			$this->db->reset_query();	
+			$this->purchase_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
+			return true;
+		}
 	}
 
 	public function validation_currency_check($str)
