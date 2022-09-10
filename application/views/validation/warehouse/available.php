@@ -288,6 +288,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
             <button type="button" class="btn btn-default mr-2" onclick="window.close()"><?= lang('cancel') ?></button>
           </div>
+          <div class="float-left">
+            <a href="<?=url('validation/warehouse/print?id='.get('id'))?>" target="_blank" class="btn btn-info float-right"><?= lang('print') ?></a>
+          </div>
         </div>
       </div>
       <!-- /.card -->

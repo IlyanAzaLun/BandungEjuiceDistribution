@@ -243,6 +243,33 @@ class Warehouse extends MY_Controller
 		}
 	}
 
+	public function print()
+	{
+		ifPermissions('warehouse_order_validation_available');
+
+		echo '<pre>';
+		$this->page_data['invoice'] = $this->order_model->getByWhere(array('order_code' => get('id')));
+		$this->page_data['customer'] = $this->customer_model->getByWhere(array('customer_code' => $this->page_data['invoice'][0]->customer));
+		$this->db->reset_query();
+		if(count($this->page_data['invoice']) == 1){
+			$this->page_data['items'] = $this->order_list_item_model->getByWhere(array('order_code' => $this->page_data['invoice'][0]->order_code));
+			$this->db->reset_query();
+			$this->load->library('pdf');
+		
+			$options = $this->pdf->getOptions();
+			$options->set('isRemoteEnabled', true);
+			$this->pdf->setOptions($options);
+	
+			$this->pdf->setPaper('A5', 'potrait');
+			// $this->pdf->filename = $data['customer']->store_name."pdf";
+			$this->pdf->load_view('validation/warehouse/print', $this->page_data);
+			// 
+		}
+		echo '</pre>';
+		die();
+
+	}
+
 	public function report()
 	{
 		ifPermissions('warehouse_order_list');

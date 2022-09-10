@@ -354,15 +354,17 @@ class Sale extends Invoice_controller
 			$this->create_or_update_invoice($payment);
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
+			$this->db->reset_query();
 			$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
+			$this->db->reset_query();
 			// //Tranasction Payment
 			$this->create_or_update_list_chart_cash($payment);
+			$this->db->reset_query();
 			$this->db->trans_complete();
 			echo '</pre>';
 			$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Edit Sale Invoice Successfully');
-
 			redirect('invoice/sale/list');
 		}
 	}
