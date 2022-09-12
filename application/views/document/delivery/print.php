@@ -77,6 +77,11 @@
                     <td><?=$value->item_name?></td>
                     <td style="float: right;text-align: right"><?=$value->item_quantity?></td>
                 </tr>
+                <?php if(count($value->item_description)):?>
+                <tr>
+                    <td colspan="3" style="float: left;text-align: left"><?=$value->item_description?></td>
+                </tr>
+                <?php endif;?>
                 <?php $total_quantity+=$value->item_quantity; endforeach; ?>
                 <tr>
                     <th colspan="2">Total Jumlah Barang</th>
@@ -85,6 +90,8 @@
             </tbody>
         </table>
     </div>
+    <br>
+    <div style="font-size: 12px;" class="justify"><?=$header->note;?></div>
     <br>
     <?php
     if(preg_match('/sale$|purchase_return/i', $header->type_invoice)): ?>

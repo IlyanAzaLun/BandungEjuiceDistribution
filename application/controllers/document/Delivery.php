@@ -53,7 +53,10 @@ class Delivery extends MY_Controller
 			$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			$random = substr(str_shuffle($permitted_chars), 0, 5);
 			$now = date('ym');
-			$this->data['delivery_code'] = "DELVERY/$random/$now";			
+			$this->db->like('delivery_code', "SURAT-JALAN/BED/$now/", 'after');
+			$number = $this->db->get('delivery_head')->num_rows();
+			$this->db->reset_query();
+			$this->data['delivery_code'] = "SURAT-JALAN/BED/$now/$random/$number";			
 			foreach (post('item_code') as $key => $value) {
 				$items[] = array(
 					"item_id" => post('item_id')[$key],

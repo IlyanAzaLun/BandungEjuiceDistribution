@@ -95,26 +95,20 @@ class Returns extends Purchase
 				'is_child' => 1,
 				'is_cancelled' => 0,
 			);
-			try {
-				echo '<pre>';
-				//// CREATE
-				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				$this->create_or_update_invoice($payment);
-			/// $this->create_or_update_invoice_parent($payment);
-				$this->update_items($items);
-				$this->create_or_update_list_item_transcation($items);
-				$this->create_or_update_list_item_fifo($items);
-				echo '</pre>';
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
-				die();
-			}
+			echo '<pre>';
+			//// CREATE
+			$this->create_item_history($items, ['RETURNS', 'RETURNS']);
+			$this->create_or_update_invoice($payment);
+			//// $this->create_or_update_invoice_parent($payment);
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items);
+			$this->create_or_update_list_chart_cash($payment);
+			// var_dump($this->db->last_query());
+			echo '</pre>';
 			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Return Purchasing Successfully');
-
 			redirect('invoice/purchase/list');
 		}
 	}
@@ -125,6 +119,61 @@ class Returns extends Purchase
 		$this->page_data['title'] = 'returns';
 		$this->page_data['page']->submenu = 'list_purchase_returns';
 		$this->load->view('invoice/purchase/returns_list', $this->page_data);
+	}
+
+	private function create_or_update_list_chart_cash($data)
+	{
+		// SELECT invoice_payment
+		$response = $this->payment_model->get_payment_information_by_invoice_code($this->data['invoice_code_parents']);
+
+		$request['invoice_code'] = $this->data['invoice_code_parents'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['customer_code'] = $data['supplier'];
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		$request['payment_type'] = $data['payment_type'];
+		if($data['payment_type'] == 'cash'){
+			$request['payup'] = setCurrency($data['grand_total']); // want to pay
+			$request['leftovers'] = 0; // remaind
+		}else{
+			$request['payup'] = 0; // want to pay
+			$request['leftovers'] = setCurrency($data['grand_total']); // remaind
+		}
+		$request['status_payment'] = 1; // "withdraw, come out"
+		$request['description'] = $data['note'];
+		if ($response) {
+			// SET LEFTOVER
+			// UPDATE ALL PAYMENT
+			$diffirence = setCurrency($data['grand_total']) - (int) $response->grand_total;
+			// update invoice_payment where invoice_code = params and date < params
+			$this->db->trans_start();
+			$this->db->where('invoice_payment.invoice_code', $response->invoice_code);
+			$this->db->where('invoice_payment.created_at >=', $response->created_at);
+			$result = $this->db->get('invoice_payment')->result();
+			$this->db->trans_complete();
+			if($result){
+				foreach ($result as $key => $value) {
+					$result[$key]->date_start = $data['date_start'];
+					$result[$key]->date_due = $data['date_due'];
+					$result[$key]->customer_code = $data['supplier'];		
+					// $result[$key]->payup = $value->payup + $diffirence;
+					$result[$key]->cancel_note  = $data['cancel_note'];
+					$result[$key]->is_cancelled = $data['is_cancelled'];
+					$result[$key]->leftovers = $value->leftovers + $diffirence;
+					$result[$key]->updated_by = logged('id');
+					$result[$key]->updated_at = date('Y-m-d H:i:s');
+					$result[$key]->grand_total = setCurrency($data['grand_total']);
+				}
+				return $this->indebtedness->update_batch($result, 'id');
+			}
+			// END UPDATE ALL PAYMENT
+			return $this->payment_model->update_by_code_invoice($this->data['invoice_code_parents'], $request) ? true : false;
+		} else {
+			$request['created_by'] = logged('id');
+			//	
+			return $this->payment_model->create($request) ? true : false;
+		}
+		return false;
 	}
 
 	public function edit()

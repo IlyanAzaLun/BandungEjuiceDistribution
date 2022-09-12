@@ -233,16 +233,23 @@ class Purchase extends Invoice_controller
 			echo '<pre>';
 			$this->db->trans_start();
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			$this->db->reset_query();
 			$this->create_or_update_invoice($payment);
+			$this->db->reset_query();
 			$this->update_items($items);
+			$this->db->reset_query();
 			$this->create_or_update_list_item_transcation($items);
+			$this->db->reset_query();
 			$this->create_or_update_list_item_fifo($items);
+			$this->db->reset_query();
 			$this->create_or_update_list_chart_cash($payment);
+			$this->db->reset_query();
 
 			////UPDATE CURRENT FIFO TRANSACTION
 			$this->update_list_item_fifo_transaction($items);
+			$this->db->reset_query();
 			echo "<hr>";
-			var_dump($this->db->last_query());
+			// var_dump($this->db->last_query());
 
 			$this->db->trans_complete();
 			echo "</pre>";
@@ -672,24 +679,25 @@ class Purchase extends Invoice_controller
 			$this->db->where('invoice_payment.created_at >=', $response->created_at);
 			$result = $this->db->get('invoice_payment')->result();
 			$this->db->trans_complete();
-			
-			foreach ($result as $key => $value) {
-				$result[$key]->date_start = $data['date_start'];
-				$result[$key]->date_due = $data['date_due'];
-				$result[$key]->customer_code = $data['supplier'];		
-				// $result[$key]->payup = $value->payup + $diffirence;
-				$result[$key]->cancel_note  = $data['cancel_note'];
-				$result[$key]->is_cancelled = $data['is_cancelled'];
-				$result[$key]->leftovers = $value->leftovers + $diffirence;
-				$result[$key]->updated_by = logged('id');
-				$result[$key]->updated_at = date('Y-m-d H:i:s');
-				$result[$key]->grand_total = setCurrency($data['grand_total']);
-			}
-			return $this->indebtedness->update_batch($result, 'id');
 
+			if($result){			
+				foreach ($result as $key => $value) {
+					$result[$key]->date_start = $data['date_start'];
+					$result[$key]->date_due = $data['date_due'];
+					$result[$key]->customer_code = $data['supplier'];		
+					// $result[$key]->payup = $value->payup + $diffirence;
+					$result[$key]->cancel_note  = $data['cancel_note'];
+					$result[$key]->is_cancelled = $data['is_cancelled'];
+					$result[$key]->leftovers = $value->leftovers + $diffirence;
+					$result[$key]->updated_by = logged('id');
+					$result[$key]->updated_at = date('Y-m-d H:i:s');
+					$result[$key]->grand_total = setCurrency($data['grand_total']);
+				}
+				return $this->indebtedness->update_batch($result, 'id');
+			}
 			// END UPDATE ALL PAYMENT
 
-			// return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
+			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
 		} else {
 			$request['created_by'] = logged('id');
 			//	

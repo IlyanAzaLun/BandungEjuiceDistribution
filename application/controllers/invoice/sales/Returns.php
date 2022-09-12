@@ -103,17 +103,16 @@ class Returns extends Sale
 				'is_cancelled' => 0,
 			);
 			echo '<pre>';
-			// CREATE
+			//// CREATE
 			$this->create_item_history($items, ['RETURNS', 'RETURNS']);
 			$this->create_or_update_invoice($payment);
-			// $this->create_or_update_invoice_parent($payment); // ADD AND UPDATE PARENT INVOICE, INFORMATION 
+			//// $this->create_or_update_invoice_parent($payment); // ADD AND UPDATE PARENT INVOICE, INFORMATION 
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
-
 			$this->create_or_update_list_item_fifo($items);
-			var_dump($this->update_item_fifo($items));
-			// var_dump($this->db->get_compiled_insert());
-			var_dump($this->db->last_query());
+			$this->update_item_fifo($items);
+			$this->create_or_update_list_chart_cash($payment);
+			// $this->db->last_query();
 			echo '</pre>';
 			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
@@ -242,6 +241,67 @@ class Returns extends Sale
 		$this->page_data['title'] = 'returns';
 		$this->page_data['page']->submenu = 'sale_return_list';
 		$this->load->view('invoice/sale/returns_list', $this->page_data);
+	}
+
+	private function create_or_update_list_chart_cash($data)
+	{
+		$response = $this->payment_model->get_payment_information_by_invoice_code($this->data['invoice_code_parents']);
+		$request['invoice_code'] = $this->data['invoice_code_parents'];
+		$request['date_start'] = $data['date_start'];
+		$request['date_due'] = $data['date_due'];
+		$request['customer_code'] = $data['customer'];
+		$request['grand_total'] = setCurrency($data['grand_total']);
+		$request['payment_type'] = $data['payment_type'];
+		if($data['payment_type'] == 'cash'){
+			$request['payup'] = setCurrency($data['grand_total']); // want to pay
+			$request['leftovers'] = 0; // remaind
+		}else{
+			$request['payup'] = 0; // want to pay
+			$request['leftovers'] = setCurrency($data['grand_total']); // remaind
+		}
+		$request['status_payment'] = 0; // "deposit, come in"
+		$request['bank_id'] = $data['transaction_destination'];
+		$request['description'] = $data['note'];
+		if ($response) {
+			//SET LEFTOVER
+			//UPDATE ALL PAYMENT
+			$diffirence = setCurrency($data['grand_total']) - (int) $response->grand_total;
+			//UPDATE INVOICE_PAYMENT WHERE INVOICE_CODE = PARAMS AND DATE < PARAMS
+			$this->db->trans_start();
+			$this->db->where('invoice_payment.invoice_code', $response->invoice_code);
+			$this->db->where('invoice_payment.created_at >', $response->created_at);
+			$result = $this->db->get('invoice_payment')->result();
+			$this->db->trans_complete();
+			if($result){
+				/**
+				 * IF CONDITION, JIKA INVOICE YANG DIUBAH ADALAH LAMPAU DAN DAN MEMILIKI INVOICE SEBELUMNYA YANG BELUM LUNAS
+				 * AKAN MEMPENGARUHI INVOICE PEMBAYARAN SEBELUMNYA.
+				**/
+				foreach ($result as $key => $value) {
+					$result[$key]->date_start = $data['date_start'];
+					$result[$key]->date_due = $data['date_due'];
+					$result[$key]->customer_code = $data['customer'];
+					// $result[$key]->payup = $value->payup + $diffirence;
+					$result[$key]->cancel_note = $data['cancel_note'];
+					$result[$key]->is_cancelled = $data['is_cancelled'];
+					$result[$key]->leftovers = $value->leftovers + $diffirence;
+					$result[$key]->updated_by = logged('id');
+					$result[$key]->updated_at = date('Y-m-d H:i:s');
+					$result[$key]->grand_total = setCurrency($data['grand_total']);
+				}
+				return $this->payment_model->update_batch($result, 'id');
+			}else{
+				/**
+				 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
+				**/
+				return $this->payment_model->update_by_code_invoice($this->data['invoice_code_parents'], $request) ? true : false;
+			}
+		} else {
+			$request['created_by'] = logged('id');
+			//	
+			return $this->payment_model->create($request);
+		}
+		return false;
 	}
 	public function serverside_datatables_data_list_sale_returns()
 	{
