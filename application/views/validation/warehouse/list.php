@@ -75,6 +75,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <tr>
                   <th width="1%"></th>
                   <th width="1%">no.</th>
+                  <th width="7%">length date</th>
                   <th width="7%"><?= lang('created_at') ?></th>
                   <th width="5%"><?= lang('order_code') ?></th>
                   <th width="15%"><?= lang('store_name') ?></th>
@@ -180,6 +181,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           visible: false,
           render: function(data, type, row) {
             return row['id']
+          }
+        },{
+          data: "created_at",
+          visible: false,
+          render: function(data, type, row) {
+            return Math.abs(moment(data).diff(moment(), 'days'))
           }
         },{
           data: "created_at",

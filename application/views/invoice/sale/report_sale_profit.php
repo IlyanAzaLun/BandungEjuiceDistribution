@@ -103,11 +103,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <th><?=lang('item_capital_price')?></th>
                     <th><?=lang('item_shadow_selling_price')?></th>
                     <th><?=lang('item_selling_price')?></th>
-                    <th>selling price</th>
+                    <th>Selling Price</th>
                     <th><?=lang('profit')?></th>
                     <th><?=lang('profit_pesudo')?></th>
-                    <th>actually profit</th>
-                    <th>calc</th>
+                    <th>Actually Profit</th>
+                    <th><?=lang('other_cost')?></th>
+                    <th>Average Profit</th>
                     <th><?=lang('name')?></th>
                 </tr>
             </thead>
@@ -119,7 +120,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
   </div>
   <!-- /.card -->
-
+  <!-- /card -->
+  <div class="card">
+      <!-- /card-head -->
+    <div class="card-head">
+    </div>
+    <!-- /.card-head -->
+    <!-- /card-body -->
+    <div class="card-body" id="total_profit">
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
 </section>
 <!-- /.content -->
 
@@ -221,6 +233,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             },{
                 data: "calc",
+                className: "bg-danger",
+                render: function(data, type, row){
+                    return data?currency(row['calc']):0;
+                }
+            },{
+                data: "calc",
                 className: "bg-primary",
                 render: function(data, type, row){
                     return currency((row['grand_total'] - row['item_capital_price']) - row['calc']);
@@ -245,6 +263,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             ]
         });
+        table.on('draw', function () {
+            $.ajax({
+                method: "POST",
+                url: "<?php echo url('master_information/report/data_sale_items_profit') ?>",
+                data: {
+                        startDate: startdate,
+                        finalDate: enddate,
+                        users: users,
+                        customer: customer,
+                        group_by: group_by
+                    }
+                }).done(function( response ) {
+                    let data = [{}];
+                    data[0]['date'] = response[0]['created_at']
+                    data[0]['capital_price'] = currency(response[0]['time_capital_price'])
+                    data[0]['pesudo_price'] = currency(response[0]['pseudo_price'])
+                    data[0]['actuly_selling_price'] = currency(response[0]['grand_total'])
+                    data[0]['selling_price'] = currency(response[0]['total_price'])
+                    data[0]['profit'] = currency(response[0]['profit'])
+                    data[0]['profit_pesudo'] = response[0]['pseudo_price']?currency(response[0]['total_price'] - response[0]['pseudo_price'] - currencyToNum(response[0]['discounts']) + currencyToNum(response[0]['shipping_cost'])):0
+                    data[0]['actually_profit'] = currency(response[0]['grand_total'] - response[0]['time_capital_price'])
+                    data[0]['calc'] = currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])
+                    $("#total_profit").empty()
+                    $("#total_profit").append(`<pre>${JSON.stringify(data[0], null, 2)}</pre>`);
+            });
+        })
         $('#min').on('apply.daterangepicker', function(ev, picker) {
             startdate = picker.startDate.format('YYYY-MM-DD HH:mm');
             enddate = picker.endDate.format('YYYY-MM-DD HH:mm');
