@@ -286,8 +286,9 @@ class Payment extends MY_Controller
         , MAX(payment.created_at) as created_at
         , payment.updated_by
         , payment.updated_at
-        , payment.description
+        , MAX(payment.description) AS description
 		, supplier.store_name
+		, supplier.owner_name
         , user_created.id as user_created_id
         , user_created.name as user_created_by
         , user_updated.id as user_updated_id

@@ -140,6 +140,7 @@ class Returns extends Purchase
 			$request['leftovers'] = setCurrency($data['grand_total']); // remaind
 		}
 		$request['status_payment'] = 1; // "withdraw, come out"
+
 		$request['description'] = $data['note'];
 		if ($response) {
 			// SET LEFTOVER
@@ -152,12 +153,16 @@ class Returns extends Purchase
 			$result = $this->db->get('invoice_payment')->result();
 			$this->db->trans_complete();
 			if($result){
+				/**
+				 * IF CONDITION, JIKA INVOICE YANG DIUBAH ADALAH LAMPAU DAN DAN MEMILIKI INVOICE SEBELUMNYA YANG BELUM LUNAS
+				 * AKAN MEMPENGARUHI INVOICE PEMBAYARAN SEBELUMNYA.
+				**/
 				foreach ($result as $key => $value) {
 					$result[$key]->date_start = $data['date_start'];
 					$result[$key]->date_due = $data['date_due'];
 					$result[$key]->customer_code = $data['supplier'];		
 					// $result[$key]->payup = $value->payup + $diffirence;
-					$result[$key]->cancel_note  = $data['cancel_note'];
+					$result[$key]->cancel_note = $data['cancel_note'];
 					$result[$key]->is_cancelled = $data['is_cancelled'];
 					$result[$key]->leftovers = $value->leftovers + $diffirence;
 					$result[$key]->updated_by = logged('id');
@@ -166,8 +171,13 @@ class Returns extends Purchase
 				}
 				return $this->indebtedness->update_batch($result, 'id');
 			}
+			/**
+			 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
+			**/
+			else{
+				return $this->payment_model->update_by_code_invoice($this->data['invoice_code_parents'], $request) ? true : false;
+			}
 			// END UPDATE ALL PAYMENT
-			return $this->payment_model->update_by_code_invoice($this->data['invoice_code_parents'], $request) ? true : false;
 		} else {
 			$request['created_by'] = logged('id');
 			//	
@@ -207,7 +217,6 @@ class Returns extends Purchase
 			);
 			//information items
 			$items = array();
-			$item = array();
 			foreach (post('item_code') as $key => $value) {
 				// array_push($item, $this->db->get_where('items', ['item_code' => post('item_code')[$key]])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
@@ -260,23 +269,16 @@ class Returns extends Purchase
 				redirect('invoice/purchases/returns/edit?id='.get('id'));
 				die();
 			}
-			try {
-				// EDIT
-				echo '<pre>';
-				$this->create_item_history($items, ['RETURNS', 'RETURNS']);
-				$this->create_or_update_invoice($payment);
-				// $this->create_or_update_invoice_parent($payment);
-				$this->update_items($items);
-				$this->create_or_update_list_item_transcation($items);
-				var_dump($this->create_or_update_list_item_fifo($items));
-				var_dump($this->db->last_query());
-				echo '</pre>';
-			} catch (\Throwable $th) {
-				echo "<pre>";
-				var_dump($th);
-				echo "</pre>";
-				die();
-			}
+			// EDIT
+			echo '<pre>';
+			$this->create_item_history($items, ['RETURNS', 'RETURNS']);
+			$this->create_or_update_invoice($payment);
+			// $this->create_or_update_invoice_parent($payment);
+			$this->update_items($items);
+			$this->create_or_update_list_item_transcation($items);
+			$this->create_or_update_list_item_fifo($items);
+			$this->create_or_update_list_chart_cash($payment);
+			echo '</pre>';
 			$this->activity_model->add("Create Returns Purchasing, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Returns Purchasing Successfully');

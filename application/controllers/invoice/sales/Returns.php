@@ -110,8 +110,8 @@ class Returns extends Sale
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items);
-			$this->update_item_fifo($items);
 			$this->create_or_update_list_chart_cash($payment);
+			$this->update_item_fifo($items);
 			// $this->db->last_query();
 			echo '</pre>';
 			$this->activity_model->add("Create Purchasing, #" . $this->data['invoice_code'], (array) $payment);
@@ -155,7 +155,7 @@ class Returns extends Sale
 			);
 			//information items
 			$items = array();
-			$item = array();
+
 			foreach (post('item_code') as $key => $value) {
 				// array_push($item, $this->db->get_where('items', ['item_code' => post('item_code')[$key]])->row()); // Primary for find items with code item
 				$items[$key]['id'] = post('id')[$key];
@@ -219,12 +219,10 @@ class Returns extends Sale
 			$this->update_items($items);
 			$this->create_or_update_list_item_transcation($items);
 
-			var_dump($this->create_or_update_list_item_fifo($items));
-			var_dump($this->update_item_fifo($items));
-			$this->db->last_query();
-			// echo '<hr>';
-			// var_dump($this->db->get_compiled_insert());
-			// echo '<hr>';
+			$this->create_or_update_list_item_fifo($items);
+			$this->update_item_fifo($items);
+			$this->create_or_update_list_chart_cash($payment);
+
 			// var_dump($this->db->last_query());
 			echo '</pre>';
 			$this->activity_model->add("Create Returns Sales, #" . $this->data['invoice_code'], (array) $payment);
@@ -245,7 +243,9 @@ class Returns extends Sale
 
 	private function create_or_update_list_chart_cash($data)
 	{
+		// SELECT invoice_payment
 		$response = $this->payment_model->get_payment_information_by_invoice_code($this->data['invoice_code_parents']);
+
 		$request['invoice_code'] = $this->data['invoice_code_parents'];
 		$request['date_start'] = $data['date_start'];
 		$request['date_due'] = $data['date_due'];
@@ -269,7 +269,7 @@ class Returns extends Sale
 			//UPDATE INVOICE_PAYMENT WHERE INVOICE_CODE = PARAMS AND DATE < PARAMS
 			$this->db->trans_start();
 			$this->db->where('invoice_payment.invoice_code', $response->invoice_code);
-			$this->db->where('invoice_payment.created_at >', $response->created_at);
+			$this->db->where('invoice_payment.created_at >=', $response->created_at);
 			$result = $this->db->get('invoice_payment')->result();
 			$this->db->trans_complete();
 			if($result){
@@ -289,20 +289,23 @@ class Returns extends Sale
 					$result[$key]->updated_at = date('Y-m-d H:i:s');
 					$result[$key]->grand_total = setCurrency($data['grand_total']);
 				}
-				return $this->payment_model->update_batch($result, 'id');
-			}else{
-				/**
-				 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
-				**/
+				return $this->receivables->update_batch($result, 'id');
+			}
+			/**
+			 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
+			**/
+			else{
 				return $this->payment_model->update_by_code_invoice($this->data['invoice_code_parents'], $request) ? true : false;
 			}
+			// END UPDATE ALL PAYMENT
 		} else {
 			$request['created_by'] = logged('id');
 			//	
-			return $this->payment_model->create($request);
+			return $this->payment_model->create($request) ? true : false;
 		}
 		return false;
 	}
+
 	public function serverside_datatables_data_list_sale_returns()
 	{
 

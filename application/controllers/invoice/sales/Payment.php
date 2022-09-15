@@ -120,10 +120,28 @@ class Payment extends MY_Controller
 			$request->bank_id = $dataPost['bank_id'];
 			$request->created_at = ($dataPost['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$dataPost['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
 			// unset($request->created_at);
-			unset($request->id);
+			if($request->leftovers > 0){
+				unset($request->id);
+				$response = $this->payment_model->create($request);
+				$this->db->reset_query();
+			}
+			//// IF LEFTOVER IS SMALLER THEN ZERO WILL BE CONTINUE TO DECREASE THE LEFTOVER
+			elseif($request->leftovers < 0){
+				//// UPDATE INVOICE PURCHASE TO PAID
+				$this->sale_model->update_by_code($request->invoice_code, array('status_payment' => 1));
+				$this->db->reset_query();
+				//// WILL BE LOOPED UNTIL LARGE OR DIVINE ZERO
+				$response = $this->loop($request, $dataPost);
+			}
+			//// IF LEFTOVER IS DIVINE ZERO WILL BE STOP HERE TO.
+			else{
+				unset($request->id);
+				$response = $this->payment_model->create($request);
+				$this->db->reset_query();
+				//// UPDATE INVOICE PURCHASE TO PAID
+				$this->sale_model->update_by_code($request->invoice_code, array('status_payment' => 1));
 
-			$response = $this->payment_model->create($request);
-			if($response){
+			}if($response){
 				$this->activity_model->add("Create Payment Invoice, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
@@ -135,6 +153,52 @@ class Payment extends MY_Controller
 			}
 		}
 	}
+	
+	private function loop($data, $post)
+	{
+		//// THIS IS PAYMENT WITH OVERPAID 
+		unset($data->id);
+		$this->payment_model->create($data);
+		
+		//// FIND INVOICE
+		$this->db->where('customer', $data->customer_code);
+		$this->db->where('status_payment', 0);
+		$temp = $this->db->get('invoice_selling')->row();
+		$this->db->reset_query();
+		//// FIND PAYMENT
+		$this->db->where('invoice_code', $temp->invoice_code);
+		$next_request = $this->db->get('invoice_payment')->last_row();
+		$this->db->reset_query();
+		$next_request->leftovers = $next_request->leftovers - abs($data->leftovers);
+		$next_request->payup = abs($data->leftovers);
+		$next_request->description = strtoupper($post['note']);
+		$next_request->created_by = logged('id');
+		$next_request->bank_id = $post['bank_id'];
+		$next_request->created_at = ($post['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$post['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
+		
+		//// IF LEFTOVER IS LARGE THEN ZERO WILL BE STOP HERE
+		if($next_request->leftovers > 0){
+			unset($next_request->id);
+			$this->payment_model->create($next_request);
+			$this->db->reset_query();
+			return true;
+		}
+		//// IF LEFTOVER IS SMALLER THEN ZERO WILL BE CONTINUE TO DECREASE THE LEFTOVER
+		elseif($next_request->leftovers < 0){
+			$this->sale_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
+			$this->db->reset_query();
+			$this->loop($next_request, $post);
+		}
+		//// IF LEFTOVER IS DIVINE ZERO WILL BE STOP HERE TO.
+		else{
+			unset($next_request->id);
+			$this->payment_model->create($next_request);
+			$this->db->reset_query();	
+			$this->sale_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
+			return true;
+		}
+	}
+
 
     public function serverside_datatables_data_payment_sale()
     {
@@ -204,7 +268,7 @@ class Payment extends MY_Controller
         , MAX(payment.created_at) as created_at
         , payment.updated_by
         , payment.updated_at
-        , payment.description
+        , MAX(payment.description) as description
 		, customer.store_name
 		, customer.owner_name
         , user_created.id as user_created_id
@@ -270,7 +334,6 @@ class Payment extends MY_Controller
 				"user_updated_id"=> $record->user_updated_id,
 				"user_updated_by"=> $record->user_updated_by,
 				"payment_date_at"=> $record->payment_date_at,
-				"store_name"=>$record->store_name,
 			);
 		}
 
