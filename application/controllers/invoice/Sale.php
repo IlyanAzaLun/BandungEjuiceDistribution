@@ -349,14 +349,19 @@ class Sale extends Invoice_controller
 			echo '<pre>';
 			// // EDIT
 			$this->db->trans_start();
-			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
-			$this->create_item_history($items, ['CREATE', 'UPDATE']);
+			if(sizeof($items) > 0){
+				$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
+				$this->db->reset_query();
+				$this->create_item_history($items, ['CREATE', 'UPDATE']);
+				$this->db->reset_query();
+				$this->update_items($items);
+				$this->db->reset_query();
+				$this->create_or_update_list_item_transcation($items);
+				$this->db->reset_query();
+				$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
+				$this->db->reset_query();		
+			}
 			$this->create_or_update_invoice($payment);
-			$this->update_items($items);
-			$this->create_or_update_list_item_transcation($items);
-			$this->db->reset_query();
-			$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
-			$this->db->reset_query();
 			// //Tranasction Payment
 			$this->create_or_update_list_chart_cash($payment);
 			$this->db->reset_query();
@@ -728,6 +733,7 @@ class Sale extends Invoice_controller
 		$request['status_payment'] = 0; // "deposit, come in"
 		$request['bank_id'] = $data['transaction_destination'];
 		$request['description'] = $data['note'];
+		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			//SET LEFTOVER
 			//UPDATE ALL PAYMENT
@@ -735,10 +741,10 @@ class Sale extends Invoice_controller
 			//UPDATE INVOICE_PAYMENT WHERE INVOICE_CODE = PARAMS AND DATE < PARAMS
 			$this->db->trans_start();
 			$this->db->where('invoice_payment.invoice_code', $response->invoice_code);
-			$this->db->where('invoice_payment.created_at >', $response->created_at);
+			$this->db->where('invoice_payment.created_at >=', $response->created_at);
 			$result = $this->db->get('invoice_payment')->result();
 			$this->db->trans_complete();
-			if($result){
+			if(sizeof($result) > 1){
 				/**
 				 * IF CONDITION, JIKA INVOICE YANG DIUBAH ADALAH LAMPAU DAN DAN MEMILIKI INVOICE SEBELUMNYA YANG BELUM LUNAS
 				 * AKAN MEMPENGARUHI INVOICE PEMBAYARAN SEBELUMNYA.
@@ -755,13 +761,14 @@ class Sale extends Invoice_controller
 					$result[$key]->updated_at = date('Y-m-d H:i:s');
 					$result[$key]->grand_total = setCurrency($data['grand_total']);
 				}
-				return $this->payment_model->update_batch($result, 'id');
+				return $this->receivables->update_batch($result, 'id');
 			}else{
 				/**
 				 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
 				**/
 				return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request);
 			}
+			// END UPDATE ALL PAYMENT
 		} else {
 			$request['created_by'] = logged('id');
 			//	

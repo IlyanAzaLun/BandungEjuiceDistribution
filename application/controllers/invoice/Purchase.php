@@ -232,22 +232,26 @@ class Purchase extends Invoice_controller
 			////EDIT
 			echo '<pre>';
 			$this->db->trans_start();
-			$this->create_item_history($items, ['CREATE', 'UPDATE']);
-			$this->db->reset_query();
+			if(sizeof($items) > 0){
+				$this->create_item_history($items, ['CREATE', 'UPDATE']);
+				$this->db->reset_query();
+				$this->update_items($items);
+				$this->db->reset_query();
+				$this->create_or_update_list_item_transcation($items);
+				$this->db->reset_query();
+				$this->create_or_update_list_item_fifo($items);
+				$this->db->reset_query();
+			}
 			$this->create_or_update_invoice($payment);
-			$this->db->reset_query();
-			$this->update_items($items);
-			$this->db->reset_query();
-			$this->create_or_update_list_item_transcation($items);
-			$this->db->reset_query();
-			$this->create_or_update_list_item_fifo($items);
 			$this->db->reset_query();
 			$this->create_or_update_list_chart_cash($payment);
 			$this->db->reset_query();
 
-			////UPDATE CURRENT FIFO TRANSACTION
-			$this->update_list_item_fifo_transaction($items);
-			$this->db->reset_query();
+			if(sizeof($items) > 0){
+				////UPDATE CURRENT FIFO TRANSACTION
+				$this->update_list_item_fifo_transaction($items);
+				$this->db->reset_query();
+			}
 			echo "<hr>";
 			// var_dump($this->db->last_query());
 
@@ -669,6 +673,7 @@ class Purchase extends Invoice_controller
 		}
 		$request['status_payment'] = 1; // "withdraw, come out"
 		$request['description'] = $data['note'];
+		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			// SET LEFTOVER
 			// UPDATE ALL PAYMENT
@@ -680,7 +685,7 @@ class Purchase extends Invoice_controller
 			$result = $this->db->get('invoice_payment')->result();
 			$this->db->trans_complete();
 
-			if($result){			
+			if(sizeof($result) > 1){			
 				foreach ($result as $key => $value) {
 					$result[$key]->date_start = $data['date_start'];
 					$result[$key]->date_due = $data['date_due'];
@@ -694,10 +699,13 @@ class Purchase extends Invoice_controller
 					$result[$key]->grand_total = setCurrency($data['grand_total']);
 				}
 				return $this->indebtedness->update_batch($result, 'id');
+			}else{
+				/**
+				 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
+				**/
+				return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
 			}
 			// END UPDATE ALL PAYMENT
-
-			return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request) ? true : false;
 		} else {
 			$request['created_by'] = logged('id');
 			//	
