@@ -115,10 +115,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy(abs($list->leftovers))?></span></div>
                   <div class="col-md-1 col sm-12"><?=$list->user_created?></div>
                   <div class="col-md-1 col sm-12"><?=$list->user_updated?></div>
-                  <div class="col-md-2 col sm-12"><?=$list->description?> <?=$list->is_cancelled?></div>
+                  <div class="col-md-2 col sm-12"><?=$list->description?></div>
                   <div class="col-md-1 col sm-12">
                     <div class="btn-group btn-block" id="edit_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
-                    <?php if($key <= 1):?>
+                    <?php if($key+1 != sizeof($response_data)):?>
                       <button class="btn btn-sm btn-default" id="edit_pay"><i class="fa fa-fw fa-edit text-primary"></i></button>
                       <button class="btn btn-sm btn-default" id="remmove_pay_button" data-id="<?=$list->id?>" data-toggle="modal" data-target="#remmove_pay"><i class="fa fa-fw fa-trash text-primary"></i></button>
                     <?php endif;?>
