@@ -42,7 +42,10 @@ class Sale_model extends MY_Model
         ');
         $this->db->join('customer_information customer', 'customer.customer_code = sale.customer');
         $this->db->join('invoice_payment payment', 'payment.invoice_code = sale.invoice_code');
+        $this->db->group_start();
         $this->db->where('sale.invoice_code', $data['invoice_code']);
+        $this->db->where('payment.is_cancelled', null);
+        $this->db->group_end();
         return $this->db->get($this->table.' sale')->last_row();
     }
 

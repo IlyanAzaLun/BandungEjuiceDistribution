@@ -923,15 +923,17 @@ class Items extends MY_Controller
         if (ifPermissions('items_list')) {
             $search = (object) post('search');
             $this->db->select('*, CAST(quantity AS INT) as quantity');
-            $this->db->where('is_active', 1);
             $this->db->limit(15);
             if ($search->value) {
+                $this->db->group_start();
                 $this->db->like('item_code', $search->value, 'both');
                 $this->db->or_like('item_name', $search->value, 'both');
                 $this->db->or_like('brand', $search->value, 'after');
                 $this->db->or_like('brands', $search->value, 'after');
                 $this->db->or_like('note', $search->value, 'both');
+                $this->db->group_end();
             }
+            $this->db->where('is_active', 1);
             $this->db->order_by('quantity', 'DESC');
             $response = $this->db->get('items')->result();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));

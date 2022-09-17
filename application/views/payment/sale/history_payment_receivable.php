@@ -118,7 +118,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="col-md-2 col sm-12"><?=$list->description?></div>
                   <div class="col-md-1 col sm-12">
                     <div class="btn-group btn-block" id="edit_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>">
+                      <?php if($key <= 1):?>
                       <button class="btn btn-sm btn-default" id="edit_pay"><i class="fa fa-fw fa-edit text-primary"></i></button>
+                      <button class="btn btn-sm btn-default" id="remmove_pay_button" data-id="<?=$list->id?>" data-toggle="modal" data-target="#remmove_pay"><i class="fa fa-fw fa-trash text-primary"></i></button>
+                      <?php endif;?>
                     </div>
                   </div>
                 </div>
@@ -186,6 +189,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    $('#remmove_pay_button').on('click', function(){
+        let id = $(this).data('id');
+        $('#remmove_pay').on('shown.bs.modal', function(){
+            $(this).find('input#id').val(id);
+            $(this).find('textarea#note').prop('required', true)
+        })
+    });
+
     //Date range picker
     $('#created_at').daterangepicker({
       singleDatePicker: true,

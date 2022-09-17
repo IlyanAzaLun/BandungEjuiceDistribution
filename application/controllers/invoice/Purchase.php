@@ -672,7 +672,7 @@ class Purchase extends Invoice_controller
 			$request['leftovers'] = setCurrency($data['grand_total']); // remaind
 		}
 		$request['status_payment'] = 1; // "withdraw, come out"
-		$request['description'] = $data['note'];
+		$request['description'] = null;
 		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			// SET LEFTOVER

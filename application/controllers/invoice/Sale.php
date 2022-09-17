@@ -732,7 +732,7 @@ class Sale extends Invoice_controller
 		}
 		$request['status_payment'] = 0; // "deposit, come in"
 		$request['bank_id'] = $data['transaction_destination'];
-		$request['description'] = $data['note'];
+		$request['description'] = null;
 		$request['created_at'] = $data['created_at'];
 		if ($response) {
 			//SET LEFTOVER

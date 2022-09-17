@@ -37,7 +37,10 @@ class Purchase_model extends MY_Model
         ');
         $this->db->join('supplier_information supplier', 'supplier.customer_code = purchase.supplier');
         $this->db->join('invoice_payment payment', 'payment.invoice_code = purchase.invoice_code');
+        $this->db->group_start();
         $this->db->where('purchase.invoice_code', $data['invoice_code']);
+        $this->db->where('payment.is_cancelled', null);
+        $this->db->group_end();
         return $this->db->get($this->table.' purchase')->last_row();
     }
 

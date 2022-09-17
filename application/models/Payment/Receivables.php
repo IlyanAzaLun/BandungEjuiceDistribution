@@ -42,6 +42,7 @@ class Receivables extends MY_Model {
         $this->db->group_start();
         $this->db->where('payment.customer_code', $data['customer_code']);
         // $this->db->where('payment.leftovers >=', '0');
+        $this->db->where('payment.is_cancelled', null);
         // $this->db->group_start();
         // $this->db->where('payment.created_at', '(SELECT MAX(created_at) FROM invoice_payment WHERE invoice_code = payment.invoice_code)', false);
         // $this->db->group_end();
@@ -76,6 +77,7 @@ class Receivables extends MY_Model {
         , user_updated.name as user_updated');
         $this->db->group_start();
         $this->db->where('payment.invoice_code', $data['invoice_code']);
+        $this->db->where('payment.is_cancelled', null);
         $this->db->group_end();
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
         $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');

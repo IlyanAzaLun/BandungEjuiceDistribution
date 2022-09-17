@@ -48,7 +48,17 @@ class Payment extends MY_Controller
 		$this->data['request_get'] = $this->input->get();
 		$this->page_data['response_data'] = $this->indebtedness->fetch_history_payment_by_invoice_code($this->data['request_get']);
 		$this->page_data['data_invoice'] = $this->purchase_model->get_information_invoice_by_code($this->data['request_get']);
+		
+		$this->page_data['modals'] = (object) array(
+			'id' => 'remmove_pay',
+			'title' => 'Remove Payment',
+			'link' => "invoice/purchase/payment/delete",
+			'content' => 'delete',
+			'btn' => 'btn-primary',
+			'submit' => 'Yes do it',
+		);
 		$this->load->view('payment/purchase/history_payment_debt', $this->page_data);
+		$this->load->view('includes/modals', $this->page_data);
 	}
 
 	public function edit_debt()
@@ -58,7 +68,10 @@ class Payment extends MY_Controller
 			$this->db->trans_start();
 			$this->db->select('payment.*, bank.name, bank.no_account, bank.own_by');
 			$this->db->join('bank_information bank', 'bank.id = payment.bank_id');
+			$this->db->group_start();
 			$this->db->where('payment.id', $this->page_data['data_post']['search']['value']);
+			$this->db->where('payment.is_cancelled', null);
+			$this->db->group_end();
 			$response = $this->db->get('invoice_payment payment')->row();
 			$this->db->trans_complete();
 
@@ -100,7 +113,27 @@ class Payment extends MY_Controller
 				redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['data_post']['invoice_code']);
 			}
 		}
+	}
 
+	public function delete()
+	{
+		echo '<pre>';
+		$response = $this->payment_model->getById(post('id'));
+		$response->is_cancelled = 1;
+		$response->cancel_note = post('note');
+		$request = $this->payment_model->update($response->id, $response);
+		$this->db->reset_query();
+		echo '</pre>';
+		if($request){
+			$this->activity_model->add("Delete Payment Invoice, #" . $response->id, (array) $response);
+			$this->session->set_flashdata('alert-type', 'success');
+			$this->session->set_flashdata('alert', 'Delete Payment Invoice Successfully');
+			redirect('invoice/purchases/payment/history?invoice_code='.$response->invoice_code);
+		}else{
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Delete Payment Invoice Failed');
+			redirect('invoice/purchases/payment/history?invoice_code='.$response->invoice_code);
+		}
 	}
 
 	public function debt_to()
@@ -237,6 +270,7 @@ class Payment extends MY_Controller
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->where("payup !=", 0);
 		$records = $this->db->get('invoice_payment')->result();
 		$totalRecords = $records[0]->allcount;
 
@@ -263,7 +297,8 @@ class Payment extends MY_Controller
 		// select indebtness
 		$this->db->where("purchase.is_transaction", 1);
 		// is have indebtness,
-		$this->db->where("payment.leftovers !=", 0);
+		// $this->db->where("payment.leftovers !=", 0);
+		$this->db->where("payment.payup !=", 0);
 		$records = $this->db->get('invoice_payment payment')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -317,6 +352,10 @@ class Payment extends MY_Controller
 		$this->db->where("purchase.is_transaction", 1);
 		// is have indebtness,
 		// $this->db->where("payment.leftovers !=", 0);
+		$this->db->group_start();
+		$this->db->where("payment.is_cancelled", null);
+		$this->db->where("payment.payup !=", 0);
+		$this->db->group_end();
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);
