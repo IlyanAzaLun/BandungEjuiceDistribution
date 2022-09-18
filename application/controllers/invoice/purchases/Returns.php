@@ -149,7 +149,7 @@ class Returns extends Purchase
 			// update invoice_payment where invoice_code = params and date < params
 			$this->db->trans_start();
 			$this->db->where('invoice_payment.invoice_code', $response->invoice_code);
-			$this->db->where('invoice_payment.created_at >=', $response->created_at);
+			$this->db->where('invoice_payment.created_at >', $response->created_at);
 			$result = $this->db->get('invoice_payment')->result();
 			$this->db->trans_complete();
 			if($result){
@@ -169,14 +169,14 @@ class Returns extends Purchase
 					$result[$key]->updated_at = date('Y-m-d H:i:s');
 					$result[$key]->grand_total = setCurrency($data['grand_total']);
 				}
-				return $this->indebtedness->update_batch($result, 'id');
+				$this->indebtedness->update_batch($result, 'id');
 			}
 			/**
 			 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
 			**/
-			else{
-				return $this->payment_model->update_by_code_invoice($this->data['invoice_code_parents'], $request) ? true : false;
-			}
+			// else{
+			return $this->payment_model->update_by_code_invoice($this->data['invoice_code_parents'], $request) ? true : false;
+			// }
 			// END UPDATE ALL PAYMENT
 		} else {
 			$request['created_by'] = logged('id');
