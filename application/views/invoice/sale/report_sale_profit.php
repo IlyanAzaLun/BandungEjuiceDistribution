@@ -276,6 +276,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     }
                 }).done(function( response ) {
                     let data = [{}];
+                    const html = `
+                    <div class="float-right">
+                        <span class="text-default"><label>Capital Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['time_capital_price'])}</span><br></span>
+                        <span class="text-warning"><label>Pesudo Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['pseudo_price'])}</span><br></span>
+                        <span class="text-danger"><label>Actully Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['grand_total'])}</span><br></span>
+                        <span class="text-default"><label>Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['total_price'])}</span><br></span>
+                        <span class="text-default"><label>Profit</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['profit'])}</span><br></span>
+                        <span class="text-warning"><label>Profit Pesudo</label>&nbsp;:&nbsp;<span class="float-right">${response[0]['pseudo_price']?currency(response[0]['total_price'] - response[0]['pseudo_price'] - currencyToNum(response[0]['discounts']) + currencyToNum(response[0]['shipping_cost'])):0}</span><br></span>
+                        <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['grand_total'] - response[0]['time_capital_price'])}</span><br></span>
+                        <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right">${currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])}</span><br></span>
+                    </div>
+                    `;
                     data[0]['date'] = response[0]['created_at']
                     data[0]['capital_price'] = currency(response[0]['time_capital_price'])
                     data[0]['pesudo_price'] = currency(response[0]['pseudo_price'])
@@ -286,7 +298,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     data[0]['actually_profit'] = currency(response[0]['grand_total'] - response[0]['time_capital_price'])
                     data[0]['calc'] = currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])
                     $("#total_profit").empty()
-                    $("#total_profit").append(`<pre>${JSON.stringify(data[0], null, 2)}</pre>`);
+                    // $("#total_profit").append(`<pre>${JSON.stringify(data[0], null, 2)}</pre>`);
+                    $("#total_profit").append(html);
             });
         })
         $('#min').on('apply.daterangepicker', function(ev, picker) {
