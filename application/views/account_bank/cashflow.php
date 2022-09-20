@@ -160,7 +160,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "status_payment",
           render: function(data, type, row){
-            return data=='1'?'withdrawl':'deposit'
+            return data=='1'?'Kredit':'Debet'
           }
         },{
           data: "user_create_name"

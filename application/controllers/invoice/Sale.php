@@ -1095,10 +1095,23 @@ class Sale extends Invoice_controller
 			$this->db->group_end();
         }
 		$this->db->group_end();
-		$this->db->group_start();
-		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -7 DAY)',false);
-		$this->db->where("transaction.created_at <=", 'NOW()',false);
-		$this->db->group_end();
+
+		if(post('user_id') != ""){
+			$this->db->group_start();
+			$this->db->where("selling.is_have", post('user_id'));
+			$this->db->group_end();
+		}
+		if(post('date') != "") {
+			$this->db->group_start();
+			$this->db->where("transaction.created_at >=", post('date')['startdate']);
+			$this->db->where("transaction.created_at <=", post('date')['enddate']);
+			$this->db->group_end();
+		}else{
+			$this->db->group_start();
+			$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -7 DAY)',false);
+			$this->db->where("transaction.created_at <=", 'NOW()',false);
+			$this->db->group_end();
+		}
 		$this->db->group_by("yearmountday");
 		$records = $this->db->get('fifo_items transaction')->result();
 		$data['labels'] = array();

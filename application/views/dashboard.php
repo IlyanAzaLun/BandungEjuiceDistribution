@@ -103,7 +103,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </div>
               <div class="card-body">
                 <span>
-                  <div class="row">
+                  <div class="row" id="custom_graph">
                     <div class="col-5">
                       <span class="form-group">
                         <input type="text" class="form-control" name="date" id="min">
@@ -199,9 +199,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script type="module" src="<?php echo $url->assets ?>pages/dashboard/MainDashboard.js"></script>
 <script>
+  var startdate;
+  var enddate;
   $(function() {
-    var startdate;
-    var enddate;
     //Date range picker
     $('#min').daterangepicker({
       timePicker: true,
@@ -237,7 +237,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             return false;
           }
         });
-      table.draw();
       // window.location.replace(`${location.base}invoice/purchase/list?start=${startdate}&final=${enddate}`)
     });
     

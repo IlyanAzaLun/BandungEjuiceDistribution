@@ -191,15 +191,27 @@ const main = () => {
             options: salesGraphChartOptions
         })
 
-        $.ajax({
-            type: 'POST', //post method
-            url: location.base + 'invoice/sale/daily_statistic', //ajaxformexample url
-            dataType: "json",
-            success: function (result, textStatus, jqXHR) {
-                salesGraphChart.data = result;
-                salesGraphChart.update();
-            }
-        });
+        function request(date = "", user_id = "", user = "") {
+            $.ajax({
+                type: 'POST', //post method
+                url: location.base + 'invoice/sale/daily_statistic', //ajaxformexample url
+                data: {
+                    'date': {
+                        'startdate': startdate,
+                        'enddate': enddate
+                    },
+                    'user_id': user_id,
+                    'user': user
+                },
+                dataType: "json",
+                success: function (result, textStatus, jqXHR) {
+                    salesGraphChart.data = result;
+                    salesGraphChart.update();
+                }
+            });
+        }
+
+        request();
 
         $(document).on('keyup', 'input#user', function () {
             let valueElement = $(this).val();
@@ -231,7 +243,10 @@ const main = () => {
         });
 
         $(document).on('click', 'button#search', function () {
-
+            const date = $('#custom_graph input#min').val();
+            const user_id = $('#custom_graph input#user_id').val();
+            const user = $('#custom_graph input#user').val();
+            request(date, user_id, user);
         })
     })
 }
