@@ -27,9 +27,9 @@ class Receivables extends MY_Model {
         , payment.is_cancelled
         , payment.cancel_note
         , payment.created_by
-        , MAX(payment.created_at) AS created_at
+        , MIN(payment.created_at) AS created_at
+        , IFNULL(payment.updated_at, MAX(payment.created_at))  AS updated_at
         , payment.updated_by
-        , payment.updated_at
         , payment.description
         , user_created.name as user_created');
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
