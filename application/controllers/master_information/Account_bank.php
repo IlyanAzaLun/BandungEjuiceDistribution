@@ -226,8 +226,8 @@ class Account_bank extends MY_Controller
             , `payment`.`date_due`
             , `payment`.`customer_code`
             , `payment`.`grand_total`
-            ,  MAX(`payment`.`payup`) AS payup
-            ,  MIN(`payment`.`leftovers`) AS leftovers 
+            ,  SUM(`payment`.`payup`) AS payup
+            ,  `payment`.`leftovers` 
             , `payment`.`status_payment`
             , `payment`.`payment_type`
             , `payment`.`bank_id`
@@ -241,24 +241,27 @@ class Account_bank extends MY_Controller
             , `user_create`.`name` AS `user_create_name`
             , `user_update`.`name` AS `user_update_name`
         ');
+        $this->db->join('bank_information bank', 'bank.id = payment.bank_id', 'left');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
+        $this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
+        $this->db->join('users user_create', 'user_create.id = payment.created_by', 'left');
+        $this->db->join('users user_update', 'user_update.id = payment.updated_by', 'left');
         if ($searchValue != '') {
             $this->db->group_start();
             $this->db->like('payment.invoice_code', $searchValue, 'both');
             $this->db->or_like('payment.customer_code', $searchValue, 'both');
             $this->db->or_like('payment.description', $searchValue, 'both');
             $this->db->or_like('supplier.store_name', $searchValue, 'both');
-            $this->db->or_like('supplier.owner_name', $searchValue, 'both');
-            
+            $this->db->or_like('supplier.owner_name', $searchValue, 'both');            
             $this->db->or_like('customer.store_name', $searchValue, 'both');
             $this->db->or_like('customer.owner_name', $searchValue, 'both');
             $this->db->group_end();
-        }        
-        $this->db->join('bank_information bank', 'bank.id = payment.bank_id', 'left');
-        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
-        $this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
-        $this->db->join('users user_create', 'user_create.id = payment.created_by', 'left');
-        $this->db->join('users user_update', 'user_update.id = payment.updated_by', 'left');
+        }
+        $this->db->group_start();
         $this->db->where('payment.bank_id', $bank_id);
+        $this->db->where('payment.is_cancelled', null);
+        $this->db->where("payment.payup !=", 0);
+        $this->db->group_end();
         $this->db->group_by('payment.invoice_code');
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
@@ -345,15 +348,18 @@ class Account_bank extends MY_Controller
         ,bank.created_at
         ,bank.created_by
         ,bank.updated_at
-        ,bank.updated_by
-        ');
-        if ($searchValue != '') {
-            $this->db->like('name', $searchValue, 'both');
-            $this->db->or_like('no_account', $searchValue, 'both');
-            $this->db->or_like('own_by', $searchValue, 'both');
-        }
+        ,bank.updated_by');
         $this->db->join('users user', 'user.id = bank.created_by', 'left');
-        $this->db->where('is_canceled', 0);
+        if ($searchValue != '') {
+            $this->db->group_start();
+            $this->db->like('bank.name', $searchValue, 'both');
+            $this->db->or_like('bank.no_account', $searchValue, 'both');
+            $this->db->or_like('bank.own_by', $searchValue, 'both');
+            $this->db->group_end();
+        }
+        $this->db->group_start();
+        $this->db->where('bank.is_canceled', 0);
+        $this->db->group_end();
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('bank_information bank')->result();

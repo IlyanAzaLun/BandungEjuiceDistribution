@@ -67,6 +67,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('invoice_code') ?></th>
                   <th><?= lang('grandtotal') ?></th>
                   <th><?= lang('leftovers') ?></th>
+                  <th><?= lang('payup') ?></th>
                   <th><?= lang('store_name') ?></th>
                   <th><?= lang('status_payment') ?></th>
                   <th><?= lang('created_by') ?></th>
@@ -149,6 +150,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },{
           data: "leftovers",
+          render: function(data, type, row){
+            if(currencyToNum(row['leftovers'])< 0){
+              return `<p class="text-warning">${currency(Math.abs(currencyToNum(row['leftovers'])))}</p>`;
+            }
+            return currency(currencyToNum(row['leftovers']));
+
+            // return currency(data)
+          }
+        },{
+          data: "payup",
           render: function(data, type, row){
             return currency(data)
           }

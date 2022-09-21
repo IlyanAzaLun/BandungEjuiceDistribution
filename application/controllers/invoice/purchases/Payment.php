@@ -315,6 +315,8 @@ class Payment extends MY_Controller
         , payment.status_payment
         , payment.payment_type
         , payment.bank_id
+		, bank.name
+        , bank.own_by
         , payment.is_cancelled
         , payment.cancel_note
         , payment.created_by
@@ -330,6 +332,11 @@ class Payment extends MY_Controller
         , user_updated.name as user_updated_by
         , IF(payment.updated_at, payment.updated_at, payment.created_at) as payment_date_at
         ');
+		$this->db->join('invoice_purchasing purchase', 'payment.invoice_code = purchase.invoice_code', 'left');
+        $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
+        $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
+        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
+		$this->db->join('bank_information bank', 'payment.bank_id = bank.id', 'left');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
@@ -338,10 +345,6 @@ class Payment extends MY_Controller
 			$this->db->or_like('supplier.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
-        $this->db->join('invoice_purchasing purchase', 'payment.invoice_code = purchase.invoice_code', 'left');
-        $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
-        $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
-        $this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
 		if ($dateStart != '') {
 			$this->db->group_start();
 			$this->db->where("payment.created_at >=", $dateStart);
@@ -377,6 +380,8 @@ class Payment extends MY_Controller
 				"status_payment"=> $record->status_payment,
 				"payment_type"=> lang($record->payment_type),
 				"bank_id"=> $record->bank_id,
+				"name"=> $record->name,
+				"own_by"=> $record->own_by,
 				"is_cancelled"=> $record->is_cancelled,
 				"cancel_note"=> $record->cancel_note,
 				"created_by"=> $record->created_by,

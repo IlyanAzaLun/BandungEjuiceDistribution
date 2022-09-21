@@ -28,6 +28,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <section class="content">
 
   <!-- Default card -->
+  <pre><?php var_dump($invoice->payment_type);?></pre>
 
   <div class="row">
     <div class="col-12">
@@ -262,7 +263,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <input type="hidden" name="payment_type" value="credit">
                     <select class="custom-select" name="payment_type" <?=(!hasPermissions('sale_edit'))?'disabled':''?>>
                       <option value="credit" <?=($invoice->payment_type == "credit")?'selected':''?>><?= lang('credit') ?></option>
-                      <option value="cash" <?=($invoice->payment_type == "credit")?'selected':''?>><?= lang('cash') ?></option>
+                      <option value="cash" <?=($invoice->payment_type == "cash")?'selected':''?>><?= lang('cash') ?></option>
                     </select>
                   </div>
                 </div>

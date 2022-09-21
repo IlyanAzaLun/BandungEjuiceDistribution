@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('grandtotal')?></th>
                   <th><?= lang('payup')?></th>
                   <th><?= lang('leftovers')?></th>
-                  <th><?= lang('status_payment')?></th>
+                  <th><?= lang('beneficiary_name')?></th>
                   <th><?= lang('payment_type')?></th>
                   <th><?= lang('bank_id')?></th>
                   <th><?= lang('note')?></th>
@@ -206,8 +206,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return currency(currencyToNum(row['grand_total']) - currencyToNum(row['payup']));
           }
         },{
-          visible: false,
-          data: "status_payment"
+          data: "name",
+          render: function(data, type, row){
+            let child = row['own_by']!=''?' / '+row['own_by']:'';
+            return `${data+child}`
+          }
         },{
           visible: false,
           data: "payment_type"
