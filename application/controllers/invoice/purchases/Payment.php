@@ -277,11 +277,13 @@ class Payment extends MY_Controller
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
 		$this->db->join('invoice_purchasing purchase', 'payment.invoice_code = purchase.invoice_code', 'left');
+		$this->db->join('supplier_information supplier', 'supplier.customer_code = payment.customer_code', 'left');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
 			$this->db->or_like('payment.customer_code', $searchValue, 'both');
 			$this->db->or_like('payment.description', $searchValue, 'both');
+			$this->db->or_like('supplier.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {

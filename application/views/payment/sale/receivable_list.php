@@ -87,8 +87,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="row">
               <div class="col-md-2 col sm-12"><b><?=lang('invoice_code')?></b></div>
               <div class="col-md-1 col sm-12"><b><?=lang('created_at')?></b></div>
+              <div class="col-md-1 col sm-12"><b><?=lang('payup_at')?></b></div>
               <div class="col-md-1 col sm-12"><b><?=lang('updated_at')?></b></div>
-              <div class="col-md-2 col sm-12"><b><?=lang('date_due')?></b></div>
+              <div class="col-md-1 col sm-12"><b><?=lang('counter_day')?></b></div>
               <div class="col-md-1 col sm-12"><span class="float-right"><b><?=lang('grandtotal')?></b></span></div>
               <div class="col-md-1 col sm-22"><span class="float-right"><b><?=lang('payup')?></b></span></div>
               <div class="col-md-2 col sm-12"><span class="float-right"><b><?=lang('leftovers')?></b></span></div>
@@ -105,7 +106,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="col-md-2 col sm-12"><?=$list->invoice_code?></div>
                   <div class="col-md-1 col sm-12"><?=date("d-m-Y",strtotime($list->created_at))?></div>
                   <div class="col-md-1 col sm-12"><?=date("d-m-Y",strtotime($list->updated_at))?></div>
-                  <div class="col-md-2 col sm-12"><?=date("d-m-Y",strtotime($list->date_start)).' ~ '.date("d-m-Y",strtotime($list->date_due))?></div>
+                  <div class="col-md-1 col sm-12"><?=date("d-m-Y",strtotime($list->last_payment_at))?></div>
+                  <div class="col-md-1 col sm-12"><?=date_diff(date_create($list->created_at), date_create(date("d-m-Y")))->format("%a");?></div>
+                  <!-- <div class="col-md-2 col sm-12"><?//=date("d-m-Y",strtotime($list->date_start)).' ~ '.date("d-m-Y",strtotime($list->date_due))?></div> -->
                   <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->grand_total)?></span></div>
                   <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup)?></span></div>
                   <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
@@ -130,7 +133,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <div class="row">
                     <div class="col-md-2 col sm-12"></div>
                     <div class="col-md-1 col sm-12"></div>
-                    <div class="col-md-2 col sm-12"></div>
+                    <div class="col-md-1 col sm-12"></div>
+                    <div class="col-md-1 col sm-12"></div>
                     <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($grandtotal)?></b></span></div>
                     <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($payup)?></b></span></div>
                     <div class="col-md-2 col sm-12"><span class="float-right"><b><?=getCurrentcy($leftovers)?></b></span></div>

@@ -28,6 +28,7 @@ class Receivables extends MY_Model {
         , payment.cancel_note
         , payment.created_by
         , MIN(payment.created_at) AS created_at
+        , MAX(payment.created_at)  AS last_payment_at
         , IFNULL(payment.updated_at, MAX(payment.created_at))  AS updated_at
         , payment.updated_by
         , payment.description

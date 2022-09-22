@@ -271,6 +271,7 @@ $lang['updated_at'] = "Updated At";
 $lang['date'] = "Date";
 $lang['day'] = "Days";
 $lang['number_of_day'] = "Total Days";
+$lang['counter_day'] = "Counter Days";
 $lang['status_active'] = "This Data will not be displayed if the status is turned off";
 
 /*
@@ -582,6 +583,7 @@ $lang['import_sale'] = "Import Invoice Sale";
  */
 $lang['payup'] = "Payup";
 $lang['to_payup'] = "Amount To Be Paid";
+$lang['payup_at'] = "Last Payup at";
 $lang['leftovers'] = "Leftover";
 
 $lang['page_payment'] = "Page Payment";

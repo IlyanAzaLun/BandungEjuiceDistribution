@@ -270,7 +270,8 @@ $lang['updated_by'] = "Diperbarui Oleh";
 $lang['updated_at'] = "Diperbarui Pada";
 $lang['date'] = "Tanggal";
 $lang['day'] = "Hari";
-$lang['number_of_day'] = "Jumlah hari";
+$lang['number_of_day'] = "Jumlah Hari";
+$lang['counter_day'] = "hitungan Hari";
 $lang['status_active'] = "Data Ini Tidak Akan Ditampilkan Jika Status dimatikan";
 
 /*
@@ -574,6 +575,7 @@ $lang['import_sale'] = "Import Faktur Penjualan";
 $lang['payment'] = "Pembayaran";
 $lang['to_payup'] = "Nominal Yang Akan Bayar";
 $lang['payup'] = "Di Bayar";
+$lang['payup_at'] = "Terakhir Dibayar pada";
 $lang['leftovers'] = "Sisa Bayar";
 $lang['page_payment'] = "Halaman Pembayaran";
 $lang['payment'] = "Pembayaran";

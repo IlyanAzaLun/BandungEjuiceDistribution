@@ -254,18 +254,24 @@ class Payment extends MY_Controller
 
 		## Total number of records without filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->group_start();
+		$this->db->where("is_cancelled", null);
 		$this->db->where("payup !=", 0);
+		$this->db->group_end();
 		$records = $this->db->get('invoice_payment')->result();
 		$totalRecords = $records[0]->allcount;
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
 		$this->db->join('invoice_selling sale', 'payment.invoice_code = sale.invoice_code', 'left');
+		$this->db->join('customer_information customer', 'customer.customer_code = payment.customer_code', 'left');
+
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('payment.invoice_code', $searchValue, 'both');
 			$this->db->or_like('payment.customer_code', $searchValue, 'both');
 			$this->db->or_like('payment.description', $searchValue, 'both');
+			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {
@@ -279,10 +285,13 @@ class Payment extends MY_Controller
 			$this->db->like("payment.created_at", date("Y"), 'after');
 		}
 		// select reveivables
+		$this->db->group_start();
 		$this->db->where("sale.is_transaction", 1);
 		// is have receivables,
 		// $this->db->where("payment.leftovers !=", 0);
+		$this->db->where("payment.is_cancelled", null);
 		$this->db->where("payment.payup !=", 0);
+		$this->db->group_end();
 		$records = $this->db->get('invoice_payment payment')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -305,7 +314,7 @@ class Payment extends MY_Controller
         , payment.cancel_note
         , payment.created_by
         , MAX(payment.created_at) as created_at
-        , payment.updated_by
+        , MAX(payment.updated_by) as updated_by
         , payment.updated_at
         , MAX(payment.description) as description
 		, customer.store_name
