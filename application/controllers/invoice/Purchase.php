@@ -771,12 +771,14 @@ class Purchase extends Invoice_controller
 
 		## Total number of record with filtering
 		$this->db->select('count(*) as allcount');
+		$this->db->join('supplier_information supplier', 'supplier.customer_code = purchasing.supplier', 'left');
 		if ($searchValue != '') {
 			$this->db->group_start();
 			$this->db->like('purchasing.invoice_code', $searchValue, 'both');
 			$this->db->or_like('purchasing.supplier', $searchValue, 'both');
 			$this->db->or_like('purchasing.note', $searchValue, 'both');
 			$this->db->or_like('purchasing.created_at', $searchValue, 'both');
+			$this->db->or_like('supplier.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
 		if ($dateStart != '') {

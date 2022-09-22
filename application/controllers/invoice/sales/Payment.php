@@ -352,6 +352,7 @@ class Payment extends MY_Controller
 		$this->db->where("payment.is_cancelled", null);
 		$this->db->where("payment.payup !=", 0);
 		$this->db->group_end();
+		$this->db->order_by('payment.created_at', 'desc');
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
 		$this->db->limit($rowperpage, $start);

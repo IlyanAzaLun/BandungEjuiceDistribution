@@ -135,6 +135,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col-md-1 col sm-12"></div>
                     <div class="col-md-1 col sm-12"></div>
                     <div class="col-md-1 col sm-12"></div>
+                    <div class="col-md-1 col sm-12"></div>
                     <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($grandtotal)?></b></span></div>
                     <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($payup)?></b></span></div>
                     <div class="col-md-2 col sm-12"><span class="float-right"><b><?=getCurrentcy($leftovers)?></b></span></div>
