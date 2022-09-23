@@ -147,6 +147,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         api.rows( {page:'current'} ).data().each(function(index, i){
           if(index['is_cancelled'] == 1){
             $(rows).eq(i).addClass('bg-danger');
+            <?php if(!hasPermissions('example')):?>
+              $(rows).eq(i).remove();
+            <?php endif;?>
           }
         })
       },
@@ -158,12 +161,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "invoice_code"
         },{
           data: "payment_date_at",
+          visible: false,
           render: function(data, type, row){
             return data?formatDate(data):''
           }
         },{
           data: "created_at",
-          visible: false,
           render: function(data, type, row){
             return data?formatDate(data):'';
           }

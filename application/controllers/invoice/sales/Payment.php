@@ -312,11 +312,11 @@ class Payment extends MY_Controller
         , bank.own_by
         , payment.is_cancelled
         , payment.cancel_note
+        , MAX(payment.updated_by) AS updated_by
+        , MAX(payment.created_at) AS created_at
         , payment.created_by
-        , MAX(payment.created_at) as created_at
-        , MAX(payment.updated_by) as updated_by
         , payment.updated_at
-        , MAX(payment.description) as description
+        , MAX(payment.description) AS description
 		, customer.store_name
 		, customer.owner_name
         , user_created.id as user_created_id
@@ -325,6 +325,7 @@ class Payment extends MY_Controller
         , user_updated.name as user_updated_by
         , IF(payment.updated_at, payment.updated_at, payment.created_at) as payment_date_at
         ');
+		//$this->db->join('invoice_payment p2', '(payment.invoice_code = p2.invoice_code AND (payment.created_at < p2.created_at OR (payment.created_at = p2.created_at AND payment.id < p2.id)))', 'left');
 		$this->db->join('invoice_selling sale', 'payment.invoice_code = sale.invoice_code', 'left');
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
         $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
@@ -351,14 +352,15 @@ class Payment extends MY_Controller
 		// $this->db->where("payment.leftovers !=", 0);
 		$this->db->where("payment.is_cancelled", null);
 		$this->db->where("payment.payup !=", 0);
+		//$this->db->where("p2.id", null);
 		$this->db->group_end();
-		$this->db->order_by('payment.created_at', 'desc');
-		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->group_by('payment.invoice_code');
+		$this->db->order_by('payment.created_at', 'desc');
+		$this->db->order_by('payment.id', 'desc');
+		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
 		$records = $this->db->get('invoice_payment payment')->result();
 		$data = array();
-		// var_dump($this->db->last_query());
 
 		foreach ($records as $record) {
 
