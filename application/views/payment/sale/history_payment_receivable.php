@@ -189,13 +189,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
-    $('#remmove_pay_button').on('click', function(){
-        let id = $(this).data('id');
-        $('#remmove_pay').on('shown.bs.modal', function(){
-            $(this).find('input#id').val(id);
-            $(this).find('textarea#note').prop('required', true)
-        })
-    });
 
     //Date range picker
     $('#created_at').daterangepicker({

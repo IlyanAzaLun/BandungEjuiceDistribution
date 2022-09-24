@@ -176,12 +176,14 @@ class Payment extends MY_Controller
 				//// UPDATE INVOICE PURCHASE TO PAID
 				$this->sale_model->update_by_code($request->invoice_code, array('status_payment' => 1));
 
-			}if($response){
+			}
+			if($response){
 				$this->activity_model->add("Create Payment Invoice, #" . $this->data['invoice_code'], (array) $payment);
 				$this->session->set_flashdata('alert-type', 'success');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Successfully');
 				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);
-			}else{
+			}
+			else{
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'New Payment Invoice Failed');
 				redirect('invoice/sales/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);

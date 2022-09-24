@@ -111,7 +111,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <!-- <div class="col-md-2 col sm-12"><?//=date("d-m-Y",strtotime($list->date_start)).' ~ '.date("d-m-Y",strtotime($list->date_due))?></div> -->
                   <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->grand_total)?></span></div>
                   <div class="col-md-1 col sm-12"><span class="float-right"><?=getCurrentcy($list->payup)?></span></div>
-                  <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy($list->leftovers)?></span></div>
+                  <div class="col-md-2 col sm-12"><span class="float-right"><?=getCurrentcy(($list->leftovers < 0)?0:$list->leftovers)?></span></div>
                   <div class="col-md-1 col sm-12"><?=$list->user_created?></div>
                   <div class="col-md-1 col sm-12">
                     <div class="btn-group btn-block" id="to_pay" data-id="<?=$list->id?>" data-code_invoice="<?=$list->invoice_code?>" data-date="<?=$list->created_at?>">
@@ -123,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </div>
                 </div>
               </td>
-            <?php $grandtotal += $list->grand_total;$payup += $list->payup;$leftovers += $list->leftovers;?>
+            <?php $grandtotal += $list->grand_total;$payup += $list->payup;$leftovers += ($list->leftovers < 0)?0:$list->leftovers;?>
             </tr>
             <tr class="child-row-<?=$key;?>" style="display: none;" data-display="false"></tr>
             <?php endif; ?>

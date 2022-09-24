@@ -106,7 +106,6 @@ const main = () => {
             let toPayElement = $(this).parent('#edit_pay');
             data_source.payment_information(toPayElement.data('id'), function (callback) {
                 if (callback != null) {
-                    console.log(callback)
                     $("div.card#to_pay").toggle(200, "linear", function () {
                         $('table tr').removeClass('bg-primary');
                         $('#id_payment').val(toPayElement.data('id'));
@@ -125,6 +124,24 @@ const main = () => {
                 }
             })
         })
+        // TO DELETE
+        $(document).on('click', 'button#remmove_pay_button', function () {
+            let id = $(this).data('id');
+            data_source.payment_information(id, function (callback) {
+                if (callback != null) {
+                    $('#remmove_pay').on('shown.bs.modal', function () {
+                        $(this).find('input#id').val(id);
+                        $(this).find('textarea#note').prop('required', true)
+                    })
+                }
+                else {
+                    alert('This Parent of invoice, please delete on parent invoice!');
+                    $('#remmove_pay').on('shown.bs.modal', function () {
+                        $('#remmove_pay').modal('hide');
+                    });
+                }
+            })
+        });
         // To Pay
         $(document).on('click', 'button#to_pay', function () {
             let toPayElement = $(this);
