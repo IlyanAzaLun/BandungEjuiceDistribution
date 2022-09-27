@@ -172,6 +172,34 @@ const main = () => {
                     }
                 })
             })
+            $(document).ready(function (e) {
+
+                let disableConfirmation = false;
+                $(window).on('beforeunload', event => {
+                    const confirmationText = 'Are you sure?';
+                    if (!disableConfirmation) {
+                        event.returnValue = confirmationText; // Gecko, Trident, Chrome 34+
+                        disableConfirmation = false;
+                        return confirmationText; // Gecko, WebKit, Chrome <34
+                    } else {
+                        // Set flag back to false, just in case
+                        // user stops loading page after clicking a link.
+                        disableConfirmation = false;
+                    }
+                });
+                $('a').on('click', function () {
+                    disableConfirmation = true;
+                });
+                $('form').submit(function () {
+                    disableConfirmation = true;
+                    $('.loading').css({ "display": "block" });
+                });
+                $('button#close-loading').on('click', function () {
+                    disableConfirmation = false;
+                    $('.loading').css({ "display": "none" });
+                })
+
+            })
         })
         // 
         $('#to_pay').on('removed.lte.cardwidget', function () {

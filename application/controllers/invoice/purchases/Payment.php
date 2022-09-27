@@ -172,6 +172,11 @@ class Payment extends MY_Controller
 				$this->purchase_model->update_by_code($request->invoice_code, array('status_payment' => 1));
 				$this->db->reset_query();
 				//// WILL BE LOOPED UNTIL LARGE OR DIVINE ZERO
+				
+				//// THIS IS PAYMENT WITH OVERPAID 
+				unset($request->id);
+				$this->payment_model->create($request);
+				$this->db->reset_query();
 				$response = $this->loop($request, $dataPost);
 			}
 			//// IF LEFTOVER IS DIVINE ZERO WILL BE STOP HERE TO.
@@ -200,18 +205,22 @@ class Payment extends MY_Controller
 	private function loop($data, $post)
 	{
 		//// THIS IS PAYMENT WITH OVERPAID 
-		unset($data->id);
-		$this->payment_model->create($data);
 		
 		//// FIND INVOICE
 		$this->db->where('supplier', $data->customer_code);
 		$this->db->where('status_payment', 0);
 		$temp = $this->db->get('invoice_purchasing')->row();
 		$this->db->reset_query();
+		if(!$temp){
+			return true;
+		}
 		//// FIND PAYMENT
 		$this->db->where('invoice_code', $temp->invoice_code);
 		$next_request = $this->db->get('invoice_payment')->last_row();
 		$this->db->reset_query();
+		if(!$next_request->invoice_code){
+			return true;
+		}
 		$next_request->leftovers = $next_request->leftovers - abs($data->leftovers);
 		$next_request->payup = abs($data->leftovers);
 		$next_request->description = strtoupper($post['note']);
@@ -229,6 +238,9 @@ class Payment extends MY_Controller
 		//// IF LEFTOVER IS SMALLER THEN ZERO WILL BE CONTINUE TO DECREASE THE LEFTOVER
 		elseif($next_request->leftovers < 0){
 			$this->purchase_model->update_by_code($next_request->invoice_code, array('status_payment' => 1));
+			$this->db->reset_query();
+			unset($next_request->id);
+			$this->payment_model->create($next_request);
 			$this->db->reset_query();
 			$this->loop($next_request, $post);
 		}
