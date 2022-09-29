@@ -146,6 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                     </div>
                     <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td style="display:none"><input readonly class="form-control form-control-sm" type="text" name="shadow_selling_price[]" data-id="shadow_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>

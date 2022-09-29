@@ -121,9 +121,9 @@ const main = () => {
             let selfElement = $(this);
             data_items.item_info_search(valueElement, function (data) {
                 let result = data.map(({
-                    item_code, item_name, quantity, unit, capital_price, selling_price, id, note, weight
+                    item_code, item_name, quantity, unit, capital_price, selling_price, id, note, weight, shadow_selling_price
                 }) => [
-                        item_code, item_name, quantity, unit, capital_price, selling_price, id, note, weight
+                        item_code, item_name, quantity, unit, capital_price, selling_price, id, note, weight, shadow_selling_price
                     ]
                 );
                 $('input[data-id="item_code"], textarea[data-id="item_name"]').autocomplete({
@@ -140,11 +140,12 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
+                        $(`.${parentElement}`).find('input[data-id="shadow_selling_price"]').val(currency(currencyToNum(ui.item[9])))
                         $(`.${parentElement}`).find('input[data-id="item_weight"]').val(ui.item[8])
                         $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}&customer=${$('input#customer_code').val()}`)
                         $(`.${parentElement}`).find('button#new-window').attr('data-id', `${ui.item[0]}`)
                         $(`.${parentElement}`).find('button#new-window').attr('data-customer', `${$('input#customer_code').val()}`)
-
+                        console.log(ui.item[9]);
                         return false
                     },
                     select: function (event, ui) {
@@ -158,6 +159,7 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_unit"]').val(`${ui.item[3].toUpperCase()}`)
                         $(`.${parentElement}`).find('input[data-id="item_selling_price"]').val(currency(currencyToNum(ui.item[5])))
                         $(`.${parentElement}`).find('input[data-id="item_capital_price"]').val(currency(currencyToNum(ui.item[4])))
+                        $(`.${parentElement}`).find('input[data-id="shadow_selling_price"]').val(currency(currencyToNum(ui.item[9])))
                         $(`.${parentElement}`).find('input[data-id="item_weight"]').val(ui.item[8])
                         $(`.${parentElement}`).find('a#detail').attr('href', `${location.base}items/info_transaction?id=${ui.item[0]}&customer=${$('input#customer_code').val()}`)
                         $(`.${parentElement}`).find('button#new-window').attr('data-id', `${ui.item[0]}`)
@@ -214,6 +216,7 @@ const main = () => {
                     </div>
                 </td>
                 <td style="display:none;"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                <td style="display:none"><input class="form-control form-control-sm" type="text" name="shadow_selling_price[]" data-id="shadow_selling_price" readonly required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>                
@@ -270,6 +273,7 @@ const main = () => {
                     </div>
                 </td>
                 <td style="display:none;"><input readonly class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                <td style="display:none"><input class="form-control form-control-sm" type="text" name="shadow_selling_price[]" data-id="shadow_selling_price" readonly required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly></td>                
@@ -322,7 +326,7 @@ const main = () => {
             getTotalItemOnInvoice();
 
             // validation price
-            if (currencyToNum($(`.${row} input[data-id="item_capital_price"]`).val()) > currencyToNum($(`.${row} input[data-id="item_selling_price"]`).val())) {
+            if (currencyToNum($(`.${row} input[data-id="shadow_selling_price"]`).val()) > currencyToNum($(`.${row} input[data-id="item_selling_price"]`).val())) {
                 $(`.${row} input[data-id="item_selling_price"]`).addClass('is-invalid');
             } else {
                 $(`.${row} input[data-id="item_selling_price"]`).removeClass('is-invalid');

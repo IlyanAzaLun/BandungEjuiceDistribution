@@ -108,6 +108,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       timePicker24Hour: true,
       timePickerIncrement: 30,
       startDate: moment().startOf('years').format('DD/MM/YYYY H:mm'),
+      endDate: moment().startOf('hour').add(23, 'hour'),
       locale: {
         format: 'DD/MM/YYYY H:mm'
       }
