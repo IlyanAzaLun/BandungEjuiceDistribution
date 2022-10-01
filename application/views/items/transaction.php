@@ -51,6 +51,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                   </div>
                   <div class="col-2">
+                    <div class="input-group">
+                        <select name="type" id="type" class="form-control">
+                            <option value="sale" selected>History <?=lang('sale')?></option>
+                            <option value="purchase">History <?=lang('purchase')?></option>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="col-2">
                       <div class="input-group">
                         <input type="text" name="customer_name" id="customer_name" class="form-control" placeholder="<?= lang('find_customer_name') ?>" autocomplete="false" required>
                         <input type="hidden" name="customer" id="customer" class="form-control">
@@ -88,6 +96,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <th><?= lang('status_transaction') ?></th>
                     <th><?= lang('item_quantity') ?></th>
                     <th><?= lang('item_capital_price') ?></th>
+                    <th><?= lang('item_shadow_selling_price') ?></th>
                     <th><?= lang('item_selling_price') ?></th>
                     <th><?= lang('item_discount') ?></th>
                     <th><?= lang('total_price') ?></th>
@@ -114,6 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <th><?= lang('status_transaction') ?></th>
                         <th><?= lang('item_quantity') ?></th>
                         <th><?= lang('item_capital_price') ?></th>
+                        <th><?= lang('item_shadow_selling_price') ?></th>
                         <th><?= lang('item_selling_price') ?></th>
                         <th><?= lang('item_discount') ?></th>
                         <th><?= lang('total_price') ?></th>
@@ -143,6 +153,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    var type;
     var startdate;
     var enddate;
     var customer;
@@ -178,6 +189,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         "url": "<?php echo url('items/serverside_datatables_data_items_transaction') ?>",
         "type": "POST",
         "data": function(d) {
+            d.Dtype = type;
             d.startDate = startdate;
             d.finalDate = enddate;
             d.DCustomer = customer;
@@ -256,7 +268,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 data: "item_in",
                 render: function(data, type, row) {
                     let result = `${data} ${row['item_unit']}`
-                    return data;
+                    // return data;
                     return `${(data)?result: ''}`
                 }
             },
@@ -264,7 +276,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 data: "item_out",
                 render: function(data, type, row) {
                     let result = `${data} ${row['item_unit']}`
-                    return data;
+                    // return data;
                     return `${(data)?result: ''}`
                 }
             },
@@ -287,6 +299,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 data: "item_capital_price",
                 render: function(data, type, row) {
                     return data ? currency(data) : 0;
+                }
+            },
+            {
+                data: "shadow_selling_price",
+                render: function(data, type, row) {
+                    return data ? currency(data) : currency(row['shadow_selling_price']);
                 }
             },
             {
@@ -369,9 +387,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
         table.draw();
     });
-    $('#customer_name, #supplier_name').on('change', function(){
+    $('#type, #customer_name, #supplier_name').on('change', function(){
         customer = $('#customer').val();
         supplier = $('#supplier').val();
+        type = $('#type').val();
         $.fn.dataTableExt.afnFiltering.push(
         function(settings, searchData, index, rowData, counter){
             if(customer == "" || supplier == ""){

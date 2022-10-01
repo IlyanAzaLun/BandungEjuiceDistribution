@@ -264,6 +264,7 @@ const main = () => {
 
             // Total items
             getTotalItemOnInvoice();
+            shipping_cost_to_invoice();
         })
         // get sub total
         $('input#sub_total').val(currency(sum_sub_total()));
@@ -286,7 +287,7 @@ const main = () => {
 
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
-
+            shipping_cost_to_invoice();
         })
         // get grand total
         $('input#grand_total').val(currency(sum_grand_total()));
@@ -302,6 +303,7 @@ const main = () => {
                     console.log(event.type)
                     break;
             }
+            shipping_cost_to_invoice();
         });
 
         //if is consignment
@@ -312,10 +314,22 @@ const main = () => {
                 $('input#is_consignment').prop('checked', false)
             }
         })
+        //shipping_cost
+        $(document).on('change', 'input#shipping_cost_to_invoice', function (event) {
+            shipping_cost_to_invoice();
+        })
         //consignment();
         $(document).on('change', 'input#is_consignment', function (event) {
             //consignment();
         })
+        shipping_cost_to_invoice();
+        function shipping_cost_to_invoice() {
+            if ($('input#shipping_cost_to_invoice').is(':checked')) {
+                $('input#grand_total').val(currency(sum_grand_total()));
+            } else {
+                $('input#grand_total').val(currency(sum_grand_total() - currencyToNum($('input#shipping_cost').val())));
+            }
+        }
         function consignmnet() {
             if ($('input#is_consignment').is(':checked')) {
                 $('input#sub_total, input#grand_total').val(0);

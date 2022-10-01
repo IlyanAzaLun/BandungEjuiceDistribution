@@ -711,6 +711,7 @@ class Items extends MY_Controller
             $dateFinal = $postData['finalDate'];    
             $customer = $postData['DCustomer']?$postData['DCustomer']:$postData['getCustomer'];
             $supplier = $postData['DSupplier'];
+            $type = $postData['Dtype'];
 
             ## Total number of records without filtering
             $this->db->select('count(*) as allcount');
@@ -821,6 +822,7 @@ class Items extends MY_Controller
                 , transaction.item_name as item_name
                 , transaction.item_capital_price as item_capital_price
                 , transaction.item_selling_price as item_selling_price
+                , items.shadow_selling_price
                 , transaction.item_current_quantity as item_current_quantity
                 , transaction.item_quantity as item_quantity
                 , IF(transaction.item_status = "IN",  transaction.item_quantity, NULL) as item_in
@@ -844,12 +846,18 @@ class Items extends MY_Controller
             $this->db->join('users user_updated', 'user_updated.id=transaction.updated_by', 'left');
             $this->db->join('supplier_information supplier', 'supplier.customer_code = transaction.customer_code', 'left');
             $this->db->join('customer_information customer', 'customer.customer_code = transaction.customer_code', 'left');
+            $this->db->join('items', 'items.item_code = transaction.item_code', 'left');
             if ($searchValue != '') {
                 $this->db->group_start();
-                $this->db->like('item_name', $searchValue, 'both');
-                $this->db->or_like('item_code', $searchValue, 'both');
+                $this->db->like('transaction.item_name', $searchValue, 'both');
+                $this->db->or_like('transaction.item_code', $searchValue, 'both');
                 $this->db->or_like('transaction.customer_code', $searchValue, 'both');
                 $this->db->group_end();
+            }
+            if($type == 'purchase'){
+                $this->db->like('transaction.invoice_code', 'INV/PURCHASE/', 'after');
+            }else{
+                $this->db->like('transaction.invoice_code', 'INV/SALE/', 'both');
             }
             if ($customer || $supplier) {
                 $this->db->group_start();
@@ -863,7 +871,7 @@ class Items extends MY_Controller
                 $this->db->where("transaction.created_at <=", $dateFinal);
                 $this->db->group_end();                
             }
-            $this->db->where('item_code', $item_code);
+            $this->db->where('transaction.item_code', $item_code);
             $this->db->order_by($columnName, $columnSortOrder);
             $this->db->limit($rowperpage, $start);
             $records = $this->db->get("($raw_invoice_query UNION $raw_order_query) transaction", FALSE)->result();
@@ -883,6 +891,7 @@ class Items extends MY_Controller
                     "item_unit" => $record->item_unit,
                     "item_capital_price" => $record->item_capital_price,
                     "item_selling_price" => $record->item_selling_price,
+                    "shadow_selling_price" => $record->shadow_selling_price,
                     "item_discount" => $record->item_discount,
                     "total_price" => $record->total_price,
                     "item_status" => $record->item_status,
