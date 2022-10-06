@@ -328,7 +328,7 @@ class Payment extends MY_Controller
         , MAX(payment.created_at) AS created_at
         , payment.created_by
         , payment.updated_at
-        , p2.description 
+        , MAX(payment.description) AS description 
 		, customer.store_name
 		, customer.owner_name
         , user_created.id as user_created_id
@@ -337,7 +337,7 @@ class Payment extends MY_Controller
         , user_updated.name as user_updated_by
         , IF(payment.updated_at, payment.updated_at, payment.created_at) as payment_date_at
         ');
-		$this->db->join("(SELECT * FROM invoice_payment ORDER BY id DESC LIMIT $start, $rowperpage) p2", '(payment.invoice_code = p2.invoice_code AND (payment.created_at < p2.created_at OR (payment.created_at = p2.created_at AND payment.id < p2.id)))', 'left');
+		//$this->db->join("(SELECT * FROM invoice_payment ORDER BY id DESC LIMIT $start, $rowperpage) p2", '(payment.invoice_code = p2.invoice_code AND (payment.created_at < p2.created_at OR (payment.created_at = p2.created_at AND payment.id < p2.id)))', 'left');
 		$this->db->join('invoice_selling sale', 'payment.invoice_code = sale.invoice_code',  'left');
         $this->db->join('users user_created', 'user_created.id=payment.created_by', 'left');
         $this->db->join('users user_updated', 'user_updated.id=payment.updated_by', 'left');
