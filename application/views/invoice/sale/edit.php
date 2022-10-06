@@ -419,10 +419,10 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-                        <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
+                        <a href="<?= url("/invoice/sale/create") ?>" class="btn btn-sm btn-default mr-2"><i class="fa fa-fw fa-plus"></i>&nbsp;&nbsp;<?=lang('add')?></a>
                     </div>
                     <div class="float-left">
-                        <a class="btn btn-info" href="<?=url("document/delivery/create?invoice=").get('id')?>"><?=lang('delivery_documents')?></a>
+                        <a target="_blank" href="<?= url("/invoice/sale/print_PDF?id=$invoice_information_transaction->invoice_code") ?>" class="btn btn-sm btn-default"><i class="fa fa-fw fa-file-pdf"></i>&nbsp;&nbsp;<?=lang('print')?></a>
                     </div>
                 </div>
             </div>

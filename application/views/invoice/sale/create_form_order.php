@@ -261,10 +261,10 @@
                                             <div class="form-group">
                                                 <h6><?= lang('date_due') ?></h6>
                                                 <div class="input-group mb-3">
-                                                <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
-                                                <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
+                                                    <input type="text" id="date_due" name="date_due" class="form-control" data-target="#date_due">
+                                                    <div class="input-group-append" data-target="#date_due" data-toggle="daterangepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

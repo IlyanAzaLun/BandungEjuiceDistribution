@@ -33,6 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="card-tools pull-right">
               <?php if (hasPermissions('sale_create')) : ?>
                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#import_invoice_sale"><i class="fa fa-plus"></i> <?php echo lang('import_sale') ?></button>
+                <a href="<?=url('invoice/sale/create')?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('create_sale') ?></a>
               <?php endif ?>
             </div>
           </div>
@@ -234,7 +235,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "note",
           orderable: false,
           render: function(data, type, row) {
-            return shorttext(data, 100, true)
+            return row['cancel_note']?row['cancel_note']:shorttext(data, 100, true)
             // return data
           }
         },{

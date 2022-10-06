@@ -464,7 +464,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </p>
     </a>
     <ul class="nav nav-treeview">
-      <li class="nav-item">
+      <li class="nav-item" style="display:none;">
         <a href="<?php echo url('invoice/order/list') ?>" class="nav-link <?php echo ($page->submenu == 'order_list') ? 'active' : '' ?>">
           <i class="far fa-circle nav-icon"></i>
           <p> <?php echo lang('order_list') ?> </p>

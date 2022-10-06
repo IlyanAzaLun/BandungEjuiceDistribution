@@ -43,17 +43,12 @@ class Sale extends Invoice_controller
 		$this->form_validation->set_rules('grand_total', lang('grandtotal'), 'required|trim');
 
 		if ($this->form_validation->run() == false) {
-			$this->page_data['order'] = $this->order_model->get_order_selling_by_code(get('id'));
-			$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));
+			if (get('id')) {
+				$this->page_data['order'] = $this->order_model->get_order_selling_by_code(get('id'));
+				$this->page_data['items'] = $this->order_list_item_model->get_order_item_by_code_order(get('id'));	
+			}
 			$this->page_data['expedition'] = $this->expedition_model->get();
 			$this->page_data['bank'] = $this->account_bank_model->get();
-			
-			if($this->page_data['order']->is_confirmed != '1'){
-				$this->session->set_flashdata('alert-type', 'danger');
-				$this->session->set_flashdata('alert', 'Failed Worng Information');
-				redirect('invoice/order/list');	
-				die();
-			}
 			if(!(hasPermissions('fetch_all_invoice_sales') || $this->page_data['order']->is_have == logged('id'))){
 				$this->session->set_flashdata('alert-type', 'danger');
 				$this->session->set_flashdata('alert', 'Failed Worng Information');
@@ -65,14 +60,6 @@ class Sale extends Invoice_controller
 			$this->page_data['page']->submenu = 'sale_list';
 			$this->load->view('invoice/sale/form', $this->page_data);
 		}else{
-			$this->data['order_code'] = $this->input->get('id')?$this->input->get('id'):false;
-			$is_created = $this->sale_model->is_created_sales_($this->data['order_code']);
-			if($is_created){
-				$this->session->set_flashdata('alert-type', 'danger');
-				$this->session->set_flashdata('alert', 'New Sale Invoice Are Fail Created');
-				redirect('invoice/sale/list');	
-				die();
-			}
 			$this->data['invoice_code'] = $this->sale_model->get_code_invoice_sale();
 			$date = preg_split('/[-]/', $this->input->post('date_due'));
 			$this->data['date'] = array(
@@ -119,7 +106,7 @@ class Sale extends Invoice_controller
 				'date_due' => date("Y-m-d H:i:s",strtotime($this->data['date']['date_due'])),
 				'created_at' => date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',post('created_at'))))),
 				'note' => post('note') == false ? null : strtoupper(post('note')),
-				'reference_order' => $this->data['order_code'],
+				'reference_order' => null,
 				"is_have" => post('is_have'),
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 				'transaction_destination' => post('transaction_destination'),
@@ -134,7 +121,7 @@ class Sale extends Invoice_controller
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
 			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
-			// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
+			$this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			$this->db->trans_complete();
 			echo '</pre>';
 			if($this->db->trans_status() === FALSE){
@@ -147,7 +134,7 @@ class Sale extends Invoice_controller
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'New Sale Invoice Successfully');
 
-			redirect('invoice/sale/list');
+			redirect('invoice/sale/edit?id='.$this->data['invoice_code']);
 		}
 	}
 
