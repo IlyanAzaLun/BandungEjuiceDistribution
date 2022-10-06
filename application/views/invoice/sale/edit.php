@@ -280,7 +280,19 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div class="col-lg-3 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('other_cost') ?> :</h6>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Rp</span>
+                                            </div>
+                                            <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= $_data_invoice_parent->other_cost ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-12"  style="display:none">
                                     <div class="form-group">
                                         <h6><?= lang('shipping_cost') ?> :</h6>
                                         <div class="input-group mb-3">
@@ -290,17 +302,6 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                             <input type="text" name="shipping_cost" id="shipping_cost" class="form-control currency" value="<?= $_data_invoice_parent->shipping_cost ?>" required>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12" style="display:none">
-                            <div class="form-group">
-                                <h6><?= lang('other_cost') ?> :</h6>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= $_data_invoice_parent->other_cost ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -419,7 +420,7 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                 <div class="card-footer">
                     <div class="float-right">
                         <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-                        <a href="<?= url("/invoice/sale/create") ?>" class="btn btn-sm btn-default mr-2"><i class="fa fa-fw fa-plus"></i>&nbsp;&nbsp;<?=lang('add')?></a>
+                        <a href="<?= url("/invoice/sale/create") ?>" class="btn btn-primary mr-2"><i class="fa fa-fw fa-plus"></i>&nbsp;&nbsp;<?=lang('sale_create')?></a>
                     </div>
                     <div class="float-left">
                         <a target="_blank" href="<?= url("/invoice/sale/print_PDF?id=$invoice_information_transaction->invoice_code") ?>" class="btn btn-sm btn-default"><i class="fa fa-fw fa-file-pdf"></i>&nbsp;&nbsp;<?=lang('print')?></a>

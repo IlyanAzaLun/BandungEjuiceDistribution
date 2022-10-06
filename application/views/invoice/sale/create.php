@@ -155,6 +155,17 @@
                 </div>
                 <div class="col-lg-3 col-sm-12">
                   <div class="form-group">
+                    <h6><?= lang('other_cost') ?> :</h6>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Rp</span>
+                      </div>
+                      <input type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-sm-12" style="display: none">
+                  <div class="form-group">
                     <h6><?= lang('shipping_cost') ?> :</h6>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
@@ -163,17 +174,6 @@
                       <input type="text" name="shipping_cost" id="shipping_cost" class="form-control" value="0" required>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-sm-12" style="display: none">
-              <div class="form-group">
-                <h6><?= lang('other_cost') ?> :</h6>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Rp</span>
-                  </div>
-                  <input readonly type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
                 </div>
               </div>
             </div>
