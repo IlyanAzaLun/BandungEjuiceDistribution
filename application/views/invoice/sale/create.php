@@ -53,6 +53,7 @@
                     <th width="2%">No.</th>
                     <th width="10%"><?= lang('item_code') ?></th>
                     <th><?= lang('item_name') ?></th>
+                    <th><?= lang('note') ?></th>
                     <th style="display:none"><?= lang('item_quantity') ?></th>
                     <th width="10%"><?= lang('item_order_quantity') ?></th>
                     <th style="display:none"><?= lang('item_capital_price') ?></th>
@@ -71,6 +72,7 @@
                       <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                     </td>
                     <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
+                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                     <td style="display:none">
                       <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
@@ -95,7 +97,10 @@
                     <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>
+                    <td>
+                      <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required>
+                      <input class="form-control form-control-sm" type="hidden" name="total_price_cap[]" data-id="total_price_cap" value="0" required>
+                    </td>                
                     <td>
                       <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>

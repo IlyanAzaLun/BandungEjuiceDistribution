@@ -1,7 +1,7 @@
 import DataCustomer from "../data/DataCustomer.js";
 import DataUser from "../data/DataUser.js";
 import DataItems from "../data/DataItems.js";
-import { sum_sub_total_item, sum_sub_total, sum_grand_total } from "./order_create-calcualtion.js";
+import { sum_sub_total_item, sum_sub_total, sum_grand_total, sum_cap_sub_total } from "./order_create-calcualtion.js";
 
 const data_user_marketing = new DataUser();
 const data_customer = new DataCustomer();
@@ -227,7 +227,10 @@ const main = () => {
                     <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
-                    <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
+                    <td>
+                        <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required>
+                        <input class="form-control form-control-sm" type="hidden" name="total_price_cap[]" data-id="total_price_cap" value="0" required>
+                    </td>
                     <td>
                         <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                             <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
@@ -280,7 +283,10 @@ const main = () => {
                 <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" readonly required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
-                <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
+                <td>
+                    <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required>
+                    <input class="form-control form-control-sm" type="hidden" name="total_price_cap[]" data-id="total_price_cap" value="0" required>
+                </td>                
                 <td>
                     <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                         <button type="button" id="description" class="btn btn-default"><i class="fas fa-tw fa-ellipsis-h"></i></button>
@@ -331,6 +337,12 @@ const main = () => {
             } else {
                 $(`.${row} input[data-id="item_selling_price"]`).removeClass('is-invalid');
             }
+            // validation price discount
+            if (($('input#discount').val() != 0) && (sum_cap_sub_total() >= currencyToNum($('input#grand_total').val()))) {
+                $(`input#discount`).addClass('is-invalid');
+            } else {
+                $(`input#discount`).removeClass('is-invalid');
+            }
 
             $(`.${row} input[data-id="item__total_weight"]`).val($(`.${row} input[data-id="item_order_quantity"]`).val() * $(`.${row} input[data-id="item_weight"]`).val())
 
@@ -363,6 +375,12 @@ const main = () => {
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
 
+            // validation price discount
+            if (($('input#discount').val() != 0) && (sum_cap_sub_total() >= currencyToNum($('input#grand_total').val()))) {
+                $(`input#discount`).addClass('is-invalid');
+            } else {
+                $(`input#discount`).removeClass('is-invalid');
+            }
             //
             shipping_cost_to_invoice();
         })
