@@ -65,12 +65,11 @@ class Transaction_item_model extends MY_Model {
         if($data != ''){
             $date = preg_split('/[-]/', trim($data["min"]));
             $data['date'] = array(
-                'date_start' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[0]))), "Y-m-d"), 
-                'date_finish' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[1]))), "Y-m-d")
+                'date_start' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[0]))), "Y-m-d").' 00:00:00', 
+                'date_finish' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[1]))), "Y-m-d").' 23:59:59'
             );
         }
-		$this->db->select("
-        transaction.id
+		$this->db->select("transaction.id
         , transaction.item_id
         , transaction.item_code
         , transaction.item_name
