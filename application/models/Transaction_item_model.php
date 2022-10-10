@@ -133,6 +133,7 @@ class Transaction_item_model extends MY_Model {
                 $this->db->select('
                ,SUM(sale.grand_total) AS grand_total
                ,SUM(sale.shipping_cost) AS shipping_cost
+               ,SUM(sale.other_cost) AS other_cost
                ,SUM(sale.discounts) AS discounts
                ');
                 $this->db->group_by("yearmount");
@@ -145,6 +146,7 @@ class Transaction_item_model extends MY_Model {
                 ,customer.store_name
                 ,SUM(sale.grand_total) AS grand_total
                 ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.other_cost) AS other_cost
                 ,SUM(sale.discounts) AS discounts
                 ');
                 $this->db->group_by("yearmount, transaction.customer_code");
@@ -159,6 +161,7 @@ class Transaction_item_model extends MY_Model {
                 ,is_have.name AS is_have_name
                 ,SUM(sale.grand_total) AS grand_total
                 ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.other_cost) AS other_cost
                 ,SUM(sale.discounts) AS discounts
                 ');
                 // $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
@@ -170,6 +173,7 @@ class Transaction_item_model extends MY_Model {
                 $this->db->select('
                ,SUM(sale.grand_total) AS grand_total
                ,SUM(sale.shipping_cost) AS shipping_cost
+               ,SUM(sale.other_cost) AS other_cost
                ,SUM(sale.discounts) AS discounts
                ');
                 $this->db->group_by("yearmountday");
@@ -184,6 +188,7 @@ class Transaction_item_model extends MY_Model {
                  ,is_have.name AS is_have_name
                  ,SUM(sale.grand_total) AS grand_total
                  ,SUM(sale.shipping_cost) AS shipping_cost
+                 ,SUM(sale.other_cost) AS other_cost
                  ,SUM(sale.discounts) AS discounts
                  ');
                 // $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
@@ -197,6 +202,7 @@ class Transaction_item_model extends MY_Model {
                 ,customer.store_name
                 ,SUM(sale.grand_total) AS grand_total
                 ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.other_cost) AS other_cost
                 ,SUM(sale.discounts) AS discounts
                 ');
                 $this->db->group_by("yearmountday, transaction.customer_code");
@@ -214,6 +220,7 @@ class Transaction_item_model extends MY_Model {
                 ,customer.store_name
                 ,sale.grand_total
                 ,sale.shipping_cost
+                ,sale.other_cost
                 ,sale.discounts
                 ');
                 $this->db->group_by("transaction.invoice_code");

@@ -499,41 +499,41 @@ class Report extends MY_Controller
             $sheet->setTitle("Account Bank");
 
             $data = $this->transaction_item_model->get_report_items_profit($this->input->post());
-            $i = 2;
-            $sheet->setCellValue("A1", "created_at");
-            $sheet->setCellValue("B1", "updated_at");
-            $sheet->setCellValue("C1", "invoice_code");
-            $sheet->setCellValue("D1", "customer_code");
-            $sheet->setCellValue("E1", "store_name");
-            $sheet->setCellValue("F1", "item_capital_price");
-            $sheet->setCellValue("G1", "item_selling_price");
-            $sheet->setCellValue("H1", "discounts");
-            $sheet->setCellValue("I1", "shipping_cost");
-            $sheet->setCellValue("J1", "profit");
-            $sheet->setCellValue("K1", "average");
-            $sheet->setCellValue("L1", "name");
+            $i = 3;
+            $sheet->setCellValue("B2", "created_at");
+            $sheet->setCellValue("C2", "updated_at");
+            $sheet->setCellValue("D2", "invoice_code");
+            $sheet->setCellValue("E2", "customer_code");
+            $sheet->setCellValue("F2", "store_name");
+            $sheet->setCellValue("G2", "item_capital_price");
+            $sheet->setCellValue("H2", "item_selling_price");
+            $sheet->setCellValue("I2", "discounts");
+            $sheet->setCellValue("J2", "shipping_cost");
+            $sheet->setCellValue("K2", "other_cost");
+            $sheet->setCellValue("L2", "profit");
+            $sheet->setCellValue("M2", "name");
             // Here
             foreach ($data as $key => $value) {
-                $sheet->setCellValue("A".$i, $value->created_at);
-                $sheet->setCellValue("B".$i, $value->updated_at);
-                $sheet->setCellValue("C".$i, $value->invoice_code);
-                $sheet->setCellValue("D".$i, $value->customer_code);
-                $sheet->setCellValue("E".$i, $value->store_name);
-                $sheet->setCellValue("F".$i, $value->time_capital_price);
-                $sheet->setCellValue("G".$i, $value->total_price);
-                $sheet->setCellValue("H".$i, $value->discounts);
-                $sheet->setCellValue("I".$i, $value->shipping_cost);
-                $sheet->setCellValue("J".$i, $value->total_price-$value->time_capital_price);
-                $sheet->setCellValue("K".$i, ($value->grand_total-$value->time_capital_price) - $value->calc);
-                $sheet->setCellValue("L".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
+                $sheet->setCellValue("B".$i, $value->created_at);
+                $sheet->setCellValue("C".$i, $value->updated_at);
+                $sheet->setCellValue("D".$i, $value->invoice_code);
+                $sheet->setCellValue("E".$i, $value->customer_code);
+                $sheet->setCellValue("F".$i, $value->store_name);
+                $sheet->setCellValue("G".$i, $value->time_capital_price);
+                $sheet->setCellValue("H".$i, $value->total_price);
+                $sheet->setCellValue("I".$i, $value->discounts);
+                $sheet->setCellValue("J".$i, $value->shipping_cost);
+                $sheet->setCellValue("K".$i, $value->other_cost);
+                $sheet->setCellValue("L".$i, $value->grand_total-$value->time_capital_price);
+                $sheet->setCellValue("M".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
                 $i++;
             }
-            $sheet->setCellValue("F".$i, "=SUM(F2:F$i)");
-            $sheet->setCellValue("G".$i, "=SUM(G2:G$i)");
-            $sheet->setCellValue("H".$i, "=SUM(H2:H$i)");
-            $sheet->setCellValue("I".$i, "=SUM(I2:I$i)");
-            $sheet->setCellValue("J".$i, "=SUM(J2:J$i)");
-            $sheet->setCellValue("K".$i, "=SUM(K2:K$i)");
+            $sheet->setCellValue("G".$i, "=SUM(G3:G$i)");
+            $sheet->setCellValue("H".$i, "=SUM(H3:H$i)");
+            $sheet->setCellValue("I".$i, "=SUM(I3:I$i)");
+            $sheet->setCellValue("J".$i, "=SUM(J3:J$i)");
+            $sheet->setCellValue("K".$i, "=SUM(K3:K$i)");
+            $sheet->setCellValue("L".$i, "=SUM(L3:L$i)");
             // (E) SAVE FILE
             $writer = new Xlsx($spreadsheet);
             $fileName = post('params').'-'. date("Y-m-d-His") .'.xlsx';
@@ -652,6 +652,7 @@ class Report extends MY_Controller
                 $this->db->select('
                ,SUM(sale.grand_total) AS grand_total
                ,SUM(sale.shipping_cost) AS shipping_cost
+               ,SUM(sale.other_cost) AS other_cost
                ,SUM(sale.discounts) AS discounts
                ');
                 $this->db->group_by("yearmount");
@@ -664,6 +665,7 @@ class Report extends MY_Controller
                 ,customer.store_name
                 ,SUM(sale.grand_total) AS grand_total
                 ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.other_cost) AS other_cost
                 ,SUM(sale.discounts) AS discounts
                 ');
                 $this->db->group_by("yearmount, transaction.customer_code");
@@ -678,6 +680,7 @@ class Report extends MY_Controller
                 ,is_have.name AS is_have_name
                 ,SUM(sale.grand_total) AS grand_total
                 ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.other_cost) AS other_cost
                 ,SUM(sale.discounts) AS discounts
                 ');
                 // $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
@@ -689,6 +692,7 @@ class Report extends MY_Controller
                 $this->db->select('
                ,SUM(sale.grand_total) AS grand_total
                ,SUM(sale.shipping_cost) AS shipping_cost
+               ,SUM(sale.other_cost) AS other_cost
                ,SUM(sale.discounts) AS discounts
                ');
                 $this->db->group_by("yearmountday");
@@ -703,6 +707,7 @@ class Report extends MY_Controller
                  ,is_have.name AS is_have_name
                  ,SUM(sale.grand_total) AS grand_total
                  ,SUM(sale.shipping_cost) AS shipping_cost
+                 ,SUM(sale.other_cost) AS other_cost
                  ,SUM(sale.discounts) AS discounts
                  ');
                 // $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
@@ -716,6 +721,7 @@ class Report extends MY_Controller
                 ,customer.store_name
                 ,SUM(sale.grand_total) AS grand_total
                 ,SUM(sale.shipping_cost) AS shipping_cost
+                ,SUM(sale.other_cost) AS other_cost
                 ,SUM(sale.discounts) AS discounts
                 ');
                 $this->db->group_by("yearmountday, transaction.customer_code");
@@ -733,6 +739,7 @@ class Report extends MY_Controller
                 ,customer.store_name
                 ,sale.grand_total
                 ,sale.shipping_cost
+                ,sale.other_cost
                 ,sale.discounts
                 ');
                 $this->db->group_by("transaction.invoice_code");
@@ -756,6 +763,7 @@ class Report extends MY_Controller
 				'item_capital_price' => $record->time_capital_price,
 				'item_selling_price' => $record->total_price,
 				'shipping_cost' => $record->shipping_cost,
+				'other_cost' => $record->other_cost,
 				'discounts' => $record->discounts,
 				'grand_total' => $record->grand_total,
 				'profit' => $record->profit,
@@ -835,6 +843,7 @@ class Report extends MY_Controller
                 $this->db->select('
                     ,SUM(sale.grand_total) AS grand_total
                     ,SUM(sale.shipping_cost) AS shipping_cost
+                    ,SUM(sale.other_cost) AS other_cost
                     ,SUM(sale.discounts) AS discounts
                ');
                 $this->db->group_by("year");
@@ -845,6 +854,7 @@ class Report extends MY_Controller
                 $this->db->select('
                     ,SUM(sale.grand_total) AS grand_total
                     ,SUM(sale.shipping_cost) AS shipping_cost
+                    ,SUM(sale.other_cost) AS other_cost
                     ,SUM(sale.discounts) AS discounts
                 ');
                 $this->db->group_by("yearmount");

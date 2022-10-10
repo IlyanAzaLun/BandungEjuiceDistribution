@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="card-tools pull-right">
               <?php if (hasPermissions('sale_create')) : ?>
                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#import_invoice_sale"><i class="fa fa-plus"></i> <?php echo lang('import_sale') ?></button>
-                <a href="<?=url('invoice/sale/create')?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('create_sale') ?></a>
+                <a href="<?=url('invoice/sale/create')?>" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> <?php echo lang('sale_create') ?></a>
               <?php endif ?>
             </div>
           </div>
