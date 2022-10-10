@@ -98,7 +98,7 @@ class Transaction_item_model extends MY_Model {
 		$this->db->join("(SELECT invoice_code, SUM(item_quantity) item_quantity FROM invoice_transaction_list_item GROUP BY invoice_code) list_items", "list_items.invoice_code = transaction.reference_purchase", "left");
 
         $this->db->where("sale.is_transaction", 1);
-        $this->db->where("transaction.is_cancelled", 0);
+        $this->db->where("sale.is_cancelled", 0);
         
         if($data['customer_code'] != ''){
             $this->db->select('
@@ -226,6 +226,7 @@ class Transaction_item_model extends MY_Model {
                 $this->db->group_by("transaction.invoice_code");
                 break;
         }
+        $this->db->order_by('id', 'DESC');
 		return $this->db->get('fifo_items transaction')->result();
         // return $this->db->get('invoice_transaction_list_item transaction')->result();
     }

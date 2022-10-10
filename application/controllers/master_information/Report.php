@@ -611,7 +611,7 @@ class Report extends MY_Controller
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
 		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
-        $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
+        $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
 		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
@@ -619,7 +619,7 @@ class Report extends MY_Controller
 		$this->db->join("(SELECT invoice_code, SUM(item_quantity) item_quantity FROM invoice_transaction_list_item GROUP BY invoice_code) list_items", "list_items.invoice_code = transaction.reference_purchase", "left");
 
         $this->db->where("sale.is_transaction", 1);
-        $this->db->where("transaction.is_cancelled", 0);
+        $this->db->where("sale.is_cancelled", 0);
         if($customer != ''){
             $this->db->select('
             transaction.customer_code
@@ -802,7 +802,7 @@ class Report extends MY_Controller
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
 		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
-        $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
+        $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
 		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
@@ -810,7 +810,7 @@ class Report extends MY_Controller
 		$this->db->join("(SELECT invoice_code, SUM(item_quantity) item_quantity FROM invoice_transaction_list_item GROUP BY invoice_code) list_items", "list_items.invoice_code = transaction.reference_purchase", "left");
 
         $this->db->where("sale.is_transaction", 1);
-        $this->db->where("transaction.is_cancelled", 0);
+        $this->db->where("sale.is_cancelled", 0);
         if($customer != ''){
             $this->db->select('
             transaction.customer_code

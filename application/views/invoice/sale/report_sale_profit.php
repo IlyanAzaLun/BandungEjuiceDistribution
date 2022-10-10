@@ -199,6 +199,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             },{
                 data: "pseudo_price",
+                visible: false,
                 className: "bg-warning",
                 render: function(data, type, row){
                     return data?currency(data):0;
@@ -211,16 +212,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             },{
                 data: "item_selling_price",
+                visible: false,
                 render: function(data, type, row){
                     return data?currency(data):0;
                 }
             },{
                 data: "profit",
+                visible: false,
                 render: function(data, type, row){
                     return data?currency(data):0;
                 }
             },{
                 data: "pseudo_price",
+                visible: false,
                 className: "bg-warning",
                 render: function(data, type, row){
                     return data?currency(row['item_selling_price'] - row['pseudo_price'] - currencyToNum(row['discounts']) + currencyToNum(row['shipping_cost'])):0;
@@ -239,6 +243,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             },{
                 data: "calc",
+                visible: false,
                 className: "bg-primary",
                 render: function(data, type, row){
                     return currency((row['grand_total'] - row['item_capital_price']) - row['calc']);
@@ -285,18 +290,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="row">
                                     <div class="col-6">
                                         <span class="text-default"><label>Discount</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['discounts']))}</span></br></span>
-                                        <span class="text-default"><label>Shipping Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['shipping_cost']))}</span></br></span>
+                                        <span class="text-primary"><label>Shipping Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['calc']))}</span></br></span>
                                         <span class="text-default"><label>Other Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['other_cost']))}</span></br></span>
                                     </div>
                                     <div class="col-6">
-                                        <span class="text-default"><label>Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['total_price'])}</span><br></span>
-                                        <span class="text-warning"><label>Pesudo Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['pseudo_price'])}</span><br></span>
+                                        <span class="text-default" style="display:none"><label>Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['total_price'])}</span><br></span>
+                                        <span class="text-warning" style="display:none"><label>Pesudo Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['pseudo_price'])}</span><br></span>
                                         <span class="text-danger"><label>Actully Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['grand_total'])}</span><br></span>
                                         <span class="text-default"><label>Capital Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['time_capital_price'])}</span><br></span>
-                                        <span class="text-default"><label>Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'])}</b></span><br></span>
-                                        <span class="text-warning"><label>Profit Pesudo</label>&nbsp;:&nbsp;<span class="float-right"><b>${response[0]['pseudo_price']?currency(response[0]['total_price'] - response[0]['pseudo_price'] - currencyToNum(response[0]['discounts']) + currencyToNum(response[0]['shipping_cost'])):0}</b></span><br></span>
+                                        <span class="text-default" style="display:none"><label>Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'])}</b></span><br></span>
+                                        <span class="text-warning" style="display:none"><label>Profit Pesudo</label>&nbsp;:&nbsp;<span class="float-right"><b>${response[0]['pseudo_price']?currency(response[0]['total_price'] - response[0]['pseudo_price'] - currencyToNum(response[0]['discounts']) + currencyToNum(response[0]['shipping_cost'])):0}</b></span><br></span>
                                         <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['grand_total'] - response[0]['time_capital_price'])}</b></span><br></span>
-                                        <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span>
+                                        <span class="text-primary" style="display:none"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span>
                                     </div>
                                 </div>
                             </div>
