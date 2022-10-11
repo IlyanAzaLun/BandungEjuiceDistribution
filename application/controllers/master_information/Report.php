@@ -486,7 +486,7 @@ class Report extends MY_Controller
     {
         $this->form_validation->set_rules('params', 'Parameter', 'required|trim');
         if ($this->form_validation->run() == false) {
-            $this->page_data['title'] = 'sale_profit';
+            $this->page_data['title'] = 'sale';
             $this->page_data['page']->submenu = 'report_sale';
             $this->page_data['page']->submenu_child = 'report_sale_profit';
             // $this->page_data['data'] = $this->transaction_item_model->get_report_items_profit();
@@ -857,6 +857,256 @@ class Report extends MY_Controller
                     ,SUM(sale.shipping_cost) AS shipping_cost
                     ,SUM(sale.other_cost) AS other_cost
                     ,SUM(sale.discounts) AS discounts
+                ');
+                $this->db->group_by("yearmount");
+                break;
+        }
+		$records = $this->db->get('fifo_items transaction')->result();
+        $this->output->set_content_type('application/json')->set_output(json_encode($records));
+    }
+
+    //Puechase
+    public function serverside_datatables_data_purchase_items_profit()
+    {
+        $response = array();
+
+		$postData = $this->input->post();
+
+		## Read value
+		$draw = $postData['draw'];
+		$start = $postData['start'];
+		$rowperpage = $postData['length']; // Rows display per page
+		$columnIndex = $postData['order'][0]['column']; // Column index
+		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+		$searchValue = $postData['search']['value']; // Search value
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
+		$customer = $postData['customer'];
+		$user = $postData['users'];
+		$group_by = $postData['group_by'];
+		$logged = logged('id');
+
+		## Total number of records without filtering
+		$this->db->select('count(*) as allcount');
+        $this->db->like('invoice_code', 'INV/PURCHASE/', 'after');
+        $this->db->where('is_cancelled', 0);
+        $this->db->group_by('invoice_code');
+		// $records = $this->db->get('invoice_transaction_list_item')->result();
+		$records = $this->db->get('fifo_items')->result();
+		$totalRecords = $records[0]->allcount;
+
+		## Total number of record with filtering
+		$this->db->select('count(transaction.invoice_code) as allcount');
+        $this->db->join('invoice_purchasing purchase', 'transaction.invoice_code=purchase.invoice_code', 'left');
+        $this->db->where('purchase.is_transaction', 1);
+        $this->db->where('transaction.is_cancelled', 0);
+		if ($dateStart != '') {
+            $this->db->group_start();
+            $this->db->where("transaction.created_at >=", $dateStart);
+			$this->db->where("transaction.created_at <=", $dateFinal);
+            $this->db->group_end();
+		}else{            
+            $this->db->like("transaction.created_at", date("Y-m"), 'after');
+		}
+		// $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+		$records = $this->db->get('fifo_items transaction')->result();
+		$totalRecordwithFilter = $records[0]->allcount;
+		
+        ## Fetch records
+		$this->db->select("transaction.id
+        , transaction.is_cancelled
+        , transaction.created_at
+        , transaction.updated_at
+        , transaction.updated_by
+        , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
+        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount");
+		$this->db->join("users", "transaction.created_by = users.id", "left");
+        $this->db->join("supplier_information customer", "customer.customer_code = transaction.customer_code", "left");
+        $this->db->join("invoice_purchasing purchase", "transaction.invoice_code = purchase.invoice_code", "left");
+		$this->db->join("items", "transaction.item_id = items.id", "left");
+
+        $this->db->where("purchase.is_transaction", 1);
+        $this->db->where("purchase.is_cancelled", 0);
+        // $this->db->where("transaction.is_cancelled", 0);
+        if($customer != ''){
+            $this->db->select('
+            transaction.customer_code
+           ,customer.store_name');
+            $this->db->where("transaction.customer_code", $customer);
+        }
+		if ($dateStart != '') {
+            $this->db->group_start();
+			$this->db->where("transaction.created_at >=", $dateStart);
+			$this->db->where("transaction.created_at <=", $dateFinal);
+            $this->db->group_end();
+		}
+        else{
+			$this->db->like("transaction.created_at", date("Y-m"), 'after');
+		}
+        switch ($group_by) {
+            case 'monthly':
+                # code...
+                $this->db->select('
+               ,SUM(purchase.total_price) AS total_price
+               ,SUM(purchase.grand_total) AS grand_total
+               ,SUM(purchase.shipping_cost) AS shipping_cost
+               ,SUM(purchase.other_cost) AS other_cost
+               ,SUM(purchase.discounts) AS discounts
+               ');
+                $this->db->group_by("yearmount");
+                break;
+
+            case 'monthly_by_customer':
+                # code...
+                $this->db->select('
+                 transaction.customer_code
+                ,customer.store_name
+                ,SUM(purchase.total_price) AS total_price
+                ,SUM(purchase.grand_total) AS grand_total
+                ,SUM(purchase.shipping_cost) AS shipping_cost
+                ,SUM(purchase.other_cost) AS other_cost
+                ,SUM(purchase.discounts) AS discounts
+                ');
+                $this->db->group_by("yearmount, transaction.customer_code");
+                break;
+
+            case 'daily':
+                # code...
+                $this->db->select('
+               ,SUM(purchase.total_price) AS total_price
+               ,SUM(purchase.grand_total) AS grand_total
+               ,SUM(purchase.shipping_cost) AS shipping_cost
+               ,SUM(purchase.other_cost) AS other_cost
+               ,SUM(purchase.discounts) AS discounts
+               ');
+                $this->db->group_by("yearmountday");
+                break;
+            
+            case 'daily_by_customer':
+                # code...
+                $this->db->select('
+                 transaction.customer_code
+                ,customer.store_name
+                ,SUM(purchase.total_price) AS total_price
+                ,SUM(purchase.grand_total) AS grand_total
+                ,SUM(purchase.shipping_cost) AS shipping_cost
+                ,SUM(purchase.other_cost) AS other_cost
+                ,SUM(purchase.discounts) AS discounts
+                ');
+                $this->db->group_by("yearmountday, transaction.customer_code");
+                break;
+            
+            default:
+                # code...
+                $this->db->select('
+                 transaction.invoice_code
+                ,transaction.created_by
+                ,users.name
+                ,transaction.customer_code
+                ,customer.store_name
+                ,purchase.total_price
+                ,purchase.grand_total
+                ,purchase.shipping_cost
+                ,purchase.other_cost
+                ,purchase.discounts
+                ');
+                $this->db->group_by("transaction.invoice_code");
+                break;
+        }
+		$this->db->order_by($columnName, $columnSortOrder);
+		$this->db->limit($rowperpage, $start);
+		$records = $this->db->get('fifo_items transaction')->result();
+		$data = array();
+		foreach ($records as $record) {
+
+			$data[] = array(
+				'created_at' => $record->created_at,
+				'updated_at' => $record->updated_at,
+				'invoice_code' => $record->invoice_code,
+				'customer_code' => $record->customer_code,
+				'store_name' => $record->store_name,
+				'total_price' => $record->total_price,
+				'shipping_cost' => $record->shipping_cost,
+				'other_cost' => $record->other_cost,
+				'discounts' => $record->discounts,
+				'grand_total' => $record->grand_total,
+				'name' => $record->name,
+			);
+		}
+		## Response
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $totalRecords,
+			"iTotalDisplayRecords" => $totalRecordwithFilter,
+			"aaData" => $data,
+		);
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+    public function data_purchase_items_profit()
+    {		
+        $postData = $this->input->post();
+		$dateStart = $postData['startDate'];
+		$dateFinal = $postData['finalDate'];
+		$customer = $postData['customer'];
+		$user = $postData['users'];
+		$group_by = $postData['group_by'];
+
+        
+		$this->db->select("
+        , transaction.item_capital_price
+        , transaction.created_at
+        , DATE_FORMAT(transaction.created_at, '%Y') AS year
+        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+        , CAST(SUM(CAST(`purchase`.`shipping_cost` AS INT)) / list_items.item_quantity AS INT) AS calc,
+        , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
+        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
+        , SUM(CAST(transaction.total_price AS INT)) AS total_price
+        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
+		$this->db->join("users", "transaction.created_by = users.id", "left");
+		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
+        $this->db->join("supplier_information customer", "customer.customer_code = transaction.customer_code", "left");
+        $this->db->join("invoice_purchasing purchase", "transaction.invoice_code=purchase.invoice_code", "left");
+		$this->db->join("items", "transaction.item_id = items.id", "left");
+		$this->db->join("(SELECT invoice_code, SUM(item_quantity) item_quantity FROM invoice_transaction_list_item GROUP BY invoice_code) list_items", "list_items.invoice_code = transaction.reference_purchase", "left");
+
+        $this->db->where("purchase.is_transaction", 1);
+        $this->db->where("purchase.is_cancelled", 0);
+        // $this->db->where("transaction.is_cancelled", 0);
+        if($customer != ''){
+            $this->db->select('
+            transaction.customer_code
+           ,customer.store_name');
+            $this->db->where("transaction.customer_code", $customer);
+        }
+		if ($dateStart != '') {
+            $this->db->group_start();
+			$this->db->where("transaction.created_at >=", $dateStart);
+			$this->db->where("transaction.created_at <=", $dateFinal);
+            $this->db->group_end();
+		}
+        else{
+			$this->db->like("transaction.created_at", date("Y-m"), 'after');
+		}
+        switch ($group_by) {
+            case 'monthly':
+                # code...
+                $this->db->select('
+                    ,SUM(purchase.grand_total) AS grand_total
+                    ,SUM(purchase.shipping_cost) AS shipping_cost
+                    ,SUM(purchase.other_cost) AS other_cost
+                    ,SUM(purchase.discounts) AS discounts
+               ');
+                $this->db->group_by("year");
+                break;
+            
+            default:
+                # code...
+                $this->db->select('
+                    ,SUM(purchase.grand_total) AS grand_total
+                    ,SUM(purchase.shipping_cost) AS shipping_cost
+                    ,SUM(purchase.other_cost) AS other_cost
+                    ,SUM(purchase.discounts) AS discounts
                 ');
                 $this->db->group_by("yearmount");
                 break;
