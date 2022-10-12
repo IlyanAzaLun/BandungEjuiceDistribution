@@ -64,11 +64,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
   //Date range picker
   $('#min').daterangepicker({
-      timePicker: true,
+      timePicker: false,
       timePicker24Hour: true,
       timePickerIncrement: 30,
+      startDate: moment().startOf('month').format('DD/MM/YYYY H:mm'),
       locale: {
-        format: 'YYYY/MM/DD H:mm'
+          format: 'DD/MM/YYYY H:mm'
       }
-    });
 </script>

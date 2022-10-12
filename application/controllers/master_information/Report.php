@@ -375,7 +375,7 @@ class Report extends MY_Controller
         // (C) CREATE A NEW SPREADSHEET + WORKSHEET
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle("Account Bank");
+        $sheet->setTitle("Transaction-Items");
         $dates = preg_split('/[-]/', $this->input->post('min'));
         $this->data['date'] = array(
             'date_start' => trim(str_replace('/', '-', $dates[0])), 
@@ -414,14 +414,6 @@ class Report extends MY_Controller
         $data = $this->transaction_item_model->get_report_items_transaction($this->data, $this->input->post());
         $i = 2;
         
-        echo '<pre>';
-        var_dump($this->input->post());
-        echo '</br>';
-        var_dump($this->data);
-        echo '</br>';
-        var_dump($this->db->last_query());
-        echo '</pre>';
-        die();
         $sheet->setCellValue("A1", "invoice_code");
         $sheet->setCellValue("B1", "item_code");
         $sheet->setCellValue("C1", "item_name");
