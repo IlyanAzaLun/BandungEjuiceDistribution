@@ -102,7 +102,6 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                         <th width="10%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
-                                        <th width="10%"><?= lang('note') ?></th>
                                         <th width="12%"><?= lang('item_order_quantity') ?></th>
                                         <th style="display:none"><?= lang('item_capital_price') ?></th>
                                         <th width="10%"><?= lang('item_selling_price') ?></th>
@@ -123,7 +122,6 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required readonly>
                                             </td>
                                             <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required readonly><?= $value->item_name ?></textarea></td>
-                                            <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" value="<?= $this->items_model->getByCodeItem($value->item_code, 'note') ?>" required readonly></td>
                                             <td style="display:none">
                                                 <div class=" input-group input-group-sm">
                                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">

@@ -146,7 +146,6 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_id"]').val(ui.item[6])
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('textarea[data-id="item_name"]').val(ui.item[1])
-                        $(`.${parentElement}`).find('input[data-id="note"]').val(`${ui.item[7]}`)
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
                         $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', ui.item[2])
                         $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
@@ -162,7 +161,6 @@ const main = () => {
                         $(`.${parentElement}`).find('input[data-id="item_id"]').val(ui.item[6])
                         $(`.${parentElement}`).find('input[data-id="item_code"]').val(ui.item[0])
                         $(`.${parentElement}`).find('textarea[data-id="item_name"]').val(ui.item[1])
-                        $(`.${parentElement}`).find('input[data-id="note"]').val(`${ui.item[7]}`)
                         $(`.${parentElement}`).find('input[data-id="item_quantity"]').val(`${ui.item[2]}`)
                         $(`.${parentElement}`).find('input[data-id="item_order_quantity"]').attr('max', ui.item[2])
                         $(`.${parentElement}`).find('span[data-id="item_quantity"]').text(`${ui.item[2].toUpperCase()}`)
@@ -201,7 +199,6 @@ const main = () => {
                         <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                     </td>
                     <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required></textarea></td>
-                    <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                     <td style="display:none">
                         <div class="input-group input-group-sm">
                             <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
@@ -257,7 +254,6 @@ const main = () => {
                     <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" required>
                 </td>
                 <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required ></textarea></td>
-                <td><input class="form-control form-control-sm" type="text" data-id="note"></td>
                 <td style="display:none">
                     <div class="input-group input-group-sm">
                         <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required>
