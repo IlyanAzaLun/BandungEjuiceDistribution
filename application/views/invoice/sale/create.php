@@ -282,26 +282,6 @@
       </div>
       <script>
         document.addEventListener("DOMContentLoaded", () => {
-          $('input#store_name').on('change', function(){
-            $.ajax({
-              url: location.base + 'master_information/account_bank/data_bank',
-              method: 'POST',
-              dataType: 'JSON',
-              data: {
-                  'search': {
-                      'value': $('input#store_name').val()
-                  },
-                  'length': 10
-              },
-              beforeSend: function () {
-                  $('.loading').show()
-              },
-              success: function (result) {
-                  $('.loading').hide()
-                  $(`select#destination option[value=${result[0]['id']}]`).attr('selected', true)
-              }
-          })
-          })
           $('#created_at').daterangepicker({
             startDate: moment(),
             singleDatePicker: true,

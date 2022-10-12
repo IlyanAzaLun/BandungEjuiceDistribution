@@ -23,6 +23,26 @@ const main = () => {
     }
     $(document).ready(function () {
         getTotalItemOnInvoice();
+        $('input#store_name').on('change', function () {
+            $.ajax({
+                url: location.base + 'master_information/account_bank/data_bank',
+                method: 'POST',
+                dataType: 'JSON',
+                data: {
+                    'search': {
+                        'value': $('input#store_name').val()
+                    },
+                    'length': 10
+                },
+                beforeSend: function () {
+                    $('.loading').show()
+                },
+                success: function (result) {
+                    $('.loading').hide()
+                    $(`select#destination option[value=${result[0]['id']}]`).attr('selected', true)
+                }
+            })
+        })
         let customer_code = $('input#customer_code').val();
         if (isNaN(customer_code)) {
             data_customer.user_info_search(customer_code, function (output) {
