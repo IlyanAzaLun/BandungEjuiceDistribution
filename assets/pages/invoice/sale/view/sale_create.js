@@ -374,8 +374,10 @@ const main = () => {
             // validation price discount
             if (($('input#discount').val() != 0) && (sum_cap_sub_total() >= currencyToNum($('input#grand_total').val()))) {
                 $(`input#discount`).addClass('is-invalid');
+                $(`input#other_cost`).addClass('is-invalid');
             } else {
                 $(`input#discount`).removeClass('is-invalid');
+                $(`input#other_cost`).removeClass('is-invalid');
             }
             //
             shipping_cost_to_invoice();

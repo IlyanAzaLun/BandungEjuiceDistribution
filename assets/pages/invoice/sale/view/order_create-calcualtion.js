@@ -134,7 +134,7 @@ function sum_grand_total() {
     let shipping_cost = Number(currencyToNum($('input#shipping_cost').val()));
     let other_cost = Number(currencyToNum($('input#other_cost').val()));
 
-    let grand_total = sub_total - discount + shipping_cost + other_cost;
+    let grand_total = sub_total - discount + shipping_cost - other_cost;
 
     return grand_total;
 }
