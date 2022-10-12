@@ -41,16 +41,24 @@ class Transaction_item_model extends MY_Model {
             ,user_updated.id as id_user_updated
             ,user_updated.name as user_updated'
         );
+        $this->db->group_start();
         $this->db->like('transaction.invoice_code', $data['params'], 'after');
         $this->db->where('transaction.is_cancelled', 0);
+        $this->db->group_end();
         if ($data['date']['date_start'] != '') {
+            $this->db->group_start();
 			$this->db->where("transaction.created_at >=", $data['date']['date_start']);
 			$this->db->where("transaction.created_at <=", $data['date']['date_due']);
+            $this->db->group_end();
 		}else{
+            $this->db->group_start();
 			$this->db->like("transaction.created_at", date("Y-m"), 'after');
+            $this->db->group_end();
 		}
         if($parameter['item_code']){
+            $this->db->group_start();
             $this->db->where('transaction.item_code', $parameter['item_code']);
+            $this->db->group_end();
         }
         $this->db->join('users user_created', 'transaction.created_by = user_created.id', 'left');
         $this->db->join('users user_updated', 'transaction.updated_by = user_updated.id', 'left');

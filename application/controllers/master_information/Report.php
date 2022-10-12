@@ -368,6 +368,7 @@ class Report extends MY_Controller
         header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
         $writer->save('php://output');
     }
+    
     public function download_report_transaction_items()
     {
         ifPermissions('download_file');
@@ -412,6 +413,15 @@ class Report extends MY_Controller
         }
         $data = $this->transaction_item_model->get_report_items_transaction($this->data, $this->input->post());
         $i = 2;
+        
+        echo '<pre>';
+        var_dump($this->input->post());
+        echo '</br>';
+        var_dump($this->data);
+        echo '</br>';
+        var_dump($this->db->last_query());
+        echo '</pre>';
+        die();
         $sheet->setCellValue("A1", "invoice_code");
         $sheet->setCellValue("B1", "item_code");
         $sheet->setCellValue("C1", "item_name");
