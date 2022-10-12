@@ -71,7 +71,7 @@ $i = 0;
                     </tr>
                     <tr>
                     <th colspan="2" rowspan="4" class="text-center">
-                        <p style="font-size: 25px;font-family: 'monospace';font-color: 'coral-bold'">B.<span style="color:#FFBF00">E</span>.D</p>
+                        <p style="font-size: 15px;font-family: 'monospace';font-color: 'coral-bold'"><?=explode(' ',$customer->store_name)[0];?><span style="color:#FFBF00"><?=explode(' ',$customer->store_name)[1];?></span></p>
                     </th>
                         <!-- <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th> -->
                         <th colspan="3"></th>
