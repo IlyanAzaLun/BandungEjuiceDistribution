@@ -151,6 +151,11 @@ $i = 0;
                         <th class="text-right"><?=getCurrentcy($invoice_information_transaction->discounts)?></th>
                     </tr>
                     <tr>
+                        <th colspan="3"></th>
+                        <th colspan="4" class="text-right"><?=lang('other_cost')?>: </th>
+                        <th class="text-right"><?=getCurrentcy($invoice_information_transaction->other_cost)?></th>
+                    </tr>
+                    <tr>
                         <th colspan="2"><?=lang('bank_name')?></th>
                         <th>: <?=$bank->name?></th>
                         <th colspan="4" class="text-right"><?=lang('shipping_cost')?>: </th>
