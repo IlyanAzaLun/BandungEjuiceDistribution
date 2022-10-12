@@ -19,6 +19,13 @@ class Transaction_item_model extends MY_Model {
 
     public function get_report_items_transaction($data, $parameter = false)
     {
+        if($data != ''){
+            $date = preg_split('/[-]/', trim($parameter["min"]));
+            $data['date'] = array(
+                'date_start' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[0]))), "Y-m-d").' 00:00:00', 
+                'date_finish' => date_format(date_create(str_replace('/','-', str_replace(' ','',$date[1]))), "Y-m-d").' 23:59:59'
+            );
+        }
         $this->db->select(
             'transaction.*
             ,supplier.store_name
@@ -45,7 +52,7 @@ class Transaction_item_model extends MY_Model {
         $this->db->where('transaction.is_cancelled', 0);
         if ($data['date']['date_start'] != '') {
 			$this->db->where("transaction.created_at >=", $data['date']['date_start']);
-			$this->db->where("transaction.created_at <=", $data['date']['date_due']);
+			$this->db->where("transaction.created_at <=", $data['date']['date_finish']);
 		}else{
 			$this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}
