@@ -209,6 +209,7 @@ class Payment extends MY_Controller
 		//// FIND INVOICE
 		$this->db->where('supplier', $data->customer_code);
 		$this->db->where('status_payment', 0);
+		$this->db->where('is_child', 0);
 		$temp = $this->db->get('invoice_purchasing')->row();
 		$this->db->reset_query();
 		if(!$temp){
