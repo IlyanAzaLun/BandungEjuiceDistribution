@@ -867,7 +867,7 @@ class Report extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($records));
     }
 
-    //Puechase
+    //Puechase 
     public function serverside_datatables_data_purchase_items_profit()
     {
         $response = array();
@@ -1045,6 +1045,7 @@ class Report extends MY_Controller
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+
     public function data_purchase_items_profit()
     {		
         $postData = $this->input->post();
@@ -1059,12 +1060,7 @@ class Report extends MY_Controller
         , transaction.item_capital_price
         , transaction.created_at
         , DATE_FORMAT(transaction.created_at, '%Y') AS year
-        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
-        , CAST(SUM(CAST(`purchase`.`shipping_cost` AS INT)) / list_items.item_quantity AS INT) AS calc,
-        , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
-        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
-        , SUM(CAST(transaction.total_price AS INT)) AS total_price
-        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
+        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
 		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
         $this->db->join("supplier_information customer", "customer.customer_code = transaction.customer_code", "left");
@@ -1094,6 +1090,7 @@ class Report extends MY_Controller
             case 'monthly':
                 # code...
                 $this->db->select('
+                    ,SUM(purchase.total_price) AS total_price
                     ,SUM(purchase.grand_total) AS grand_total
                     ,SUM(purchase.shipping_cost) AS shipping_cost
                     ,SUM(purchase.other_cost) AS other_cost
@@ -1105,6 +1102,7 @@ class Report extends MY_Controller
             default:
                 # code...
                 $this->db->select('
+                    ,SUM(purchase.total_price) AS total_price
                     ,SUM(purchase.grand_total) AS grand_total
                     ,SUM(purchase.shipping_cost) AS shipping_cost
                     ,SUM(purchase.other_cost) AS other_cost

@@ -200,7 +200,6 @@ class Payment extends MY_Controller
 				redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['requset_post']['invoice_code']);
 			}
 		}
-
 	}
 	private function loop($data, $post)
 	{

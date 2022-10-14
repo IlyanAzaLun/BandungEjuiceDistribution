@@ -253,7 +253,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <span class="text-default"><label>Discount</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['discounts']))}</span></br></span>
                                     <span class="text-primary"><label>Other Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['other_cost']))}</span></br></span>
                                     <span class="text-default"><label>Shipping Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['shipping_cost']))}</span></br></span>
-                                    <span class="text-default"><label>Total Purchase</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['total_price'])}</span><br></span>
+                                    <span class="text-default"><label>Total Purchase</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['total_price']))}</span><br></span>
+                                    <span class="text-default"><label>Total Purchase</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['grand_total'])}</span><br></span>
                                 </div>
                             </div>
                         </div>
