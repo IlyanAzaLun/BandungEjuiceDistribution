@@ -404,15 +404,24 @@ class Items extends MY_Controller
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
-        $this->db->select('*, CAST(quantity AS INT) as quantity');
+        $this->db->select('purchase_transactions.item_quantity AS transaction_quantity, purchase_transactions.created_at AS restock_date, sale_transactions.created_at AS sales_date, items.*, CAST(items.quantity AS INT) as quantity');
+        // ONE TO MANY QUERY, to get last date data information on each infromation data
+        // Reference : https://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
+        $this->db->join("(SELECT id, item_code, item_id, item_quantity, created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') purchase_transactions", 'purchase_transactions.item_id = items.id', 'left');
+        $this->db->join("(SELECT id,item_id,created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') p2", '(p2.item_id = items.id AND (purchase_transactions.created_at < p2.created_at OR (purchase_transactions.created_at = p2.created_at AND purchase_transactions.id < p2.id)))', 'left');
+        // END OF ONE TO MANY QUERY
+        $this->db->join("(SELECT id, item_id, item_code, MAX(created_at) AS created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/SALE/%' GROUP BY item_id) sale_transactions", 'sale_transactions.item_id = items.id', 'left');
         if ($searchQuery != '') {
-            $this->db->like('item_name', $searchValue, 'both');
-            $this->db->or_like('item_code', $searchValue, 'both');
-            $this->db->or_like('category', $searchValue, 'both');
-            $this->db->or_like('brand', $searchValue, 'after');
-            $this->db->or_like('brands', $searchValue, 'after');
-            $this->db->or_like('note', $searchValue, 'both');
+            $this->db->group_start();
+            $this->db->like('items.item_name', $searchValue, 'both');
+            $this->db->or_like('items.item_code', $searchValue, 'both');
+            $this->db->or_like('items.category', $searchValue, 'both');
+            $this->db->or_like('items.brand', $searchValue, 'after');
+            $this->db->or_like('items.brands', $searchValue, 'after');
+            $this->db->or_like('items.note', $searchValue, 'both');
+            $this->db->group_end();
         }
+        $this->db->where('p2.id', null);
         $this->db->order_by($columnName, $columnSortOrder);
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('items')->result();
@@ -422,6 +431,9 @@ class Items extends MY_Controller
         foreach ($records as $record) {
 
             $data[] = array(
+                "restock_date" => $record->restock_date,
+                "transaction_quantity" => $record->transaction_quantity,
+                "sales_date" => $record->sales_date,
                 "id" => $record->id,
                 "item_code" => $record->item_code,
                 "item_name" => $record->item_name,

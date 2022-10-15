@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 class Report extends MY_Controller
 {
@@ -435,7 +436,7 @@ class Report extends MY_Controller
         $sheet->setCellValue("U1", "sub_district");
         $sheet->setCellValue("V1", "city");
         $sheet->setCellValue("W1", "province");
-        $sheet->setCellValue("Z1", "zip");
+        $sheet->setCellValue("X1", "zip");
         $sheet->setCellValue("Y1", "contact_phone");
         $sheet->setCellValue("Z1", "contact_mail");
         $sheet->setCellValue("AA1", "user_created");
@@ -465,7 +466,7 @@ class Report extends MY_Controller
             $sheet->setCellValue("U".$i, $value->sub_district);
             $sheet->setCellValue("V".$i, $value->city);
             $sheet->setCellValue("W".$i, $value->province);
-            $sheet->setCellValue("Z".$i, $value->zip);
+            $sheet->setCellValue("X".$i, $value->zip);
             $sheet->setCellValue("Y".$i, $value->contact_phone);
             $sheet->setCellValue("Z".$i, $value->contact_mail);
             $sheet->setCellValue("AA".$i, $value->user_created);
@@ -474,8 +475,8 @@ class Report extends MY_Controller
             $i++;
         }
         // (E) SAVE FILE
-        $writer = new Xlsx($spreadsheet);
-		$fileName = post('params').'-'. date("Y-m-d-His") .'.xlsx';
+        $writer = new Csv($spreadsheet);
+		$fileName = post('params').'-'. date("Y-m-d-His") .'.csv';
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
         $writer->save('php://output');

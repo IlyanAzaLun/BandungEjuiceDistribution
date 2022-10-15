@@ -33,6 +33,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <table id="example2" class="table table-sm table-bordered table-hover" style="font-size: 12px;">
               <thead>
                 <tr>
+                  <th>restock_date</th>
+                  <th>restock_date</th>
+                  <th>last_sale_date</th>
                   <th>No.</th>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
@@ -54,6 +57,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </tbody>
               <tfoot>
                 <tr>
+                  <th>restock_date</th>
+                  <th>restock_date</th>
+                  <th>last_sale_date</th>
                   <th>No.</th>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
@@ -107,7 +113,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         "type": "POST",
       },
       columns: [{
-          data: "id"
+          data: "restock_date",
+          render: function (data, type, row) {
+            return data?formatDate(data):0
+          }
+        },{
+          data: "transaction_quantity",
+          render: function(data, type, row){
+            return data-row['quantity']
+          }
+        },{
+          data: "sales_date",
+          render: function (data, type, row) {
+            return data?formatDate(data):0
+          }
+        },{
+          data: "id",
+          visible: false
         },
         {
           data: "item_code",
