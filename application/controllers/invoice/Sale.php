@@ -1059,9 +1059,7 @@ class Sale extends Invoice_controller
 		$this->db->group_by("yearmount, selling.is_have");
 		$records = $this->db->get('fifo_items transaction')->result();
 		$user = array_unique(array_column($records, 'is_have'));		
-		// HERE IM STUCK
 		$data['labels'] = array_unique(array_column($records, 'mount'));
-		$data['labels'] = array_values($data['labels']);
 		foreach ($records as $key => $value) {
 			$rand1 = rand(0, 255);
 			$rand2 = rand(0, 255);
@@ -1072,6 +1070,8 @@ class Sale extends Invoice_controller
 			$data['datasets'][array_search($value->is_have, $user)]['backgroundColor'] = "rgba($rand2, $rand1, $rand3, 0.39)";
 			$data['datasets'][array_search($value->is_have, $user)]['borderColor'] = "rgba($rand2, $rand1, $rand3, 0.30)";
 		}
+		// TIDY UP DATA ARRAY
+		$data['labels'] = array_values($data['labels']);
 		$data['datasets'] = array_values($data['datasets']);
 		## Response
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
