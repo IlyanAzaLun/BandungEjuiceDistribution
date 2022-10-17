@@ -1036,8 +1036,11 @@ class Sale extends Invoice_controller
             , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
 			, SUM(CAST(transaction.total_price AS INT)) AS total_price
 			,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+			, selling.is_have
+			, user.name
 		");
 		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code');
+		$this->db->join('users user', 'user.id = selling.is_have');
 		$this->db->group_start();
         $this->db->where('transaction.is_cancelled', 0);
         if(!$haspermission){
@@ -1049,23 +1052,27 @@ class Sale extends Invoice_controller
 		$this->db->group_end();
 		
 		$this->db->group_start();
-		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -6 MONTH)',false);
+		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -3 MONTH)',false);
 		$this->db->where("transaction.created_at <=", 'NOW()',false);
 		$this->db->group_end();
 
-		$this->db->group_by("yearmount");
+		$this->db->group_by("yearmount, selling.is_have");
 		$records = $this->db->get('fifo_items transaction')->result();
-		$data['labels'] = array();
-		$data['datasets'][]['data'] = array();
-		foreach ($records as $key => $record) {
-			array_push($data['labels'], $record->mount);
+		$user = array_unique(array_column($records, 'is_have'));		
+		// HERE IM STUCK
+		$data['labels'] = array_unique(array_column($records, 'mount'));
+		$data['labels'] = array_values($data['labels']);
+		foreach ($records as $key => $value) {
+			$rand1 = rand(0, 255);
+			$rand2 = rand(0, 255);
+			$rand3 = rand(0, 255);
+			$data['datasets'][array_search($value->is_have, $user)]['data'][] = $value->profit;
 			
-			$data['datasets'][0]['label'] = 'Profit';
-			$data['datasets'][0]['backgroundColor'] = 'rgba(0, 109, 255, 0.39)';
-			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
-
-			array_push($data['datasets'][0]['data'], bd_nice_number((int) $record->profit));
+			$data['datasets'][array_search($value->is_have, $user)]['label'] = $value->name;
+			$data['datasets'][array_search($value->is_have, $user)]['backgroundColor'] = "rgba($rand2, $rand1, $rand3, 0.39)";
+			$data['datasets'][array_search($value->is_have, $user)]['borderColor'] = "rgba($rand2, $rand1, $rand3, 0.30)";
 		}
+		$data['datasets'] = array_values($data['datasets']);
 		## Response
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
 	}
@@ -1128,4 +1135,52 @@ class Sale extends Invoice_controller
 		## Response
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
 	}
+	public function test()
+	{
+		$user = logged('id');
+        $haspermission = hasPermissions('dashboard_staff');
+		$this->db->select("
+            , transaction.created_at
+            , transaction.updated_at
+            , DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
+            , DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
+            , DATE_FORMAT(transaction.created_at, '%M') AS mount
+            , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
+            , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
+			, SUM(CAST(transaction.total_price AS INT)) AS total_price
+			,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+		");
+		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code');
+		$this->db->group_start();
+        $this->db->where('transaction.is_cancelled', 0);
+        if(!$haspermission){
+			$this->db->group_start();
+			$this->db->where("transaction.created_by", $user);
+			$this->db->or_where("selling.is_have", $user);
+			$this->db->group_end();
+        }
+		$this->db->group_end();
+		
+		$this->db->group_start();
+		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -6 MONTH)',false);
+		$this->db->where("transaction.created_at <=", 'NOW()',false);
+		$this->db->group_end();
+
+		$this->db->group_by("yearmount");
+		$records = $this->db->get('fifo_items transaction')->result();
+		$data['labels'] = array();
+		$data['datasets'][]['data'] = array();
+		foreach ($records as $key => $record) {
+			array_push($data['labels'], $record->mount);
+
+			$data['datasets'][0]['label'] = 'Profit';
+			$data['datasets'][0]['backgroundColor'] = 'rgba(0, 109, 255, 0.39)';
+			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
+
+			array_push($data['datasets'][0]['data'], bd_nice_number((int) $record->profit));
+		}
+		## Response
+		$this->output->set_content_type('application/json')->set_output(json_encode($data));
+	}
+
 }
