@@ -592,7 +592,7 @@ class Report extends MY_Controller
 		$records = $this->db->get('fifo_items transaction')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 		
-        ## Fetch records
+        ## Fetch records //
 		$this->db->select("transaction.id
         , transaction.item_id
         , transaction.item_code

@@ -1,11 +1,28 @@
 import DataUser from "../data/DataUser.js";
+import DataCustomer from "../data/DataCustomer.js";
 
+const data_customer = new DataCustomer();
 const data_user_marketing = new DataUser();
 
 const main = () => {
     $(document).ready(function () {
         'use strict'
 
+        function colorize(opaque, hover, ctx) {
+            const v = ctx.parsed;
+            const c = v < -50 ? '#D60000'
+                : v < 0 ? '#F46300'
+                    : v < 50 ? '#0358B6'
+                        : '#44DE28';
+
+            const opacity = hover ? 1 - Math.abs(v / 150) - 0.2 : 1 - Math.abs(v / 150);
+
+            return opaque ? c : Utils.transparentize(c, opacity);
+        }
+
+        function hoverColorize(ctx) {
+            return colorize(false, true, ctx);
+        }
         /* jQueryKnob */
         $('.knob').knob()
 
@@ -25,8 +42,17 @@ const main = () => {
         var salesChartOptions = {
             maintainAspectRatio: false,
             responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Total Selling Monthly'
+                },
+            },
+            interaction: {
+                intersect: true,
+            },
             legend: {
-                display: false
+                display: true
             },
             scales: {
                 xAxes: [{
@@ -37,12 +63,7 @@ const main = () => {
                 yAxes: [{
                     ticks: {
                         callback: function (value, index, values) {
-                            if (1000 < parseInt(value)) {
-                                return `Rp. ${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Juta`
-                            }
-                            else {
-                                return `Rp. ${value} Juta`;
-                            }
+                            return `Rp. ${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
                         }
                     },
                     gridLines: {
@@ -60,7 +81,7 @@ const main = () => {
         });
         $.ajax({
             type: 'POST', //post method
-            url: location.base + 'invoice/sale/monthly_statistic', //ajaxformexample url
+            url: location.base + 'dashboard/monthly_statistic', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
                 salesChart.data = result;
@@ -95,14 +116,20 @@ const main = () => {
         //Create pie or douhnut chart
         // You can switch between pie and douhnut using the method below.
         var pieChart = new Chart(pieChartCanvas, {
-            type: 'doughnut',
+            type: 'pie',
             data: {},
-            options: pieOptions
+            options: pieOptions,
+            elements: {
+                arc: {
+                    backgroundColor: colorize.bind(null, false, false),
+                    hoverBackgroundColor: hoverColorize
+                }
+            }
         });
 
         $.ajax({
             type: 'POST', //post method
-            url: location.base + 'invoice/sale/monthly_statistic', //ajaxformexample url
+            url: location.base + 'dashboard/expense_statment', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
                 pieChart.data = result;
@@ -175,17 +202,19 @@ const main = () => {
             options: salesGraphChartOptions
         })
 
-        function request(date = "", user_id = "", user = "") {
+        function request(date = "", data = "") {
             $.ajax({
                 type: 'POST', //post method
-                url: location.base + 'invoice/sale/daily_statistic', //ajaxformexample url
+                url: location.base + 'dashboard/daily_statistic', //ajaxformexample url
                 data: {
                     'date': {
                         'startdate': startdate,
                         'enddate': enddate
                     },
-                    'user_id': user_id,
-                    'user': user
+                    'user_id': data['user_id'],
+                    'user': data['user'],
+                    'customer_id': data['customer_id'],
+                    'customer': data['customer']
                 },
                 dataType: "json",
                 success: function (result, textStatus, jqXHR) {
@@ -197,6 +226,7 @@ const main = () => {
 
         request();
 
+        // USER
         $(document).on('keyup', 'input#user', function () {
             let valueElement = $(this).val();
             let selfElement = $(this);
@@ -225,12 +255,44 @@ const main = () => {
                 }
             })
         });
+        // CUSTOMER
+        $(document).on('keyup', 'input#customer', function () {
+            let valueElement = $(this).val();
+            let selfElement = $(this);
+            data_customer.customer_info_search(valueElement, function (data) {
+                let result = data.map(({
+                    id, store_name, owner_name,
+                }) => [
+                        id, store_name, owner_name,
+                    ]
+                );
+                $(`input#${selfElement.attr('id')}`).autocomplete({
+                    source: result,
+                    focus: function (event, ui) {
+                        $('input#customer_id').val(ui.item[0])
+                        $('input#customer').val(ui.item[1])
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        $('input#customer_id').val(ui.item[0])
+                        $('input#customer').val(ui.item[1])
+                        return false;
+                    }
+                }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                    return $('<li>').data("item.autocomplete", item)
+                        .append(`<div>${item[1]}</div>`).appendTo(ul)
+                }
+            })
+        });
 
         $(document).on('click', 'button#search', function () {
             const date = $('#custom_graph input#min').val();
-            const user_id = $('#custom_graph input#user_id').val();
-            const user = $('#custom_graph input#user').val();
-            request(date, user_id, user);
+            const data = [];
+            data['user_id'] = $('#custom_graph input#user_id').val();
+            data['user'] = $('#custom_graph input#user').val();
+            data['customer_id'] = $('#custom_graph input#customer_id').val();
+            data['customer'] = $('#custom_graph input#customer').val();
+            request(date, data);
         })
     })
 }

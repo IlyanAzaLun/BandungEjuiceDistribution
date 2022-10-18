@@ -110,11 +110,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </span>
                       
                       <div class="row mt-2">
-                        <div class="col-8 form-group">
+                        <!-- Search By -->
+                        <div class="col-4 form-group">
                           <input type="text" class="form-control" name="user" id="user" placeholder="Select Marketing"  autocomplete="false">
                           <input type="hidden" name="user_id" id="user_id" class="form-control" readonly>
                         </div>
-                        
+                        <div class="col-4 form-group">
+                          <input type="text" class="form-control" name="customer" id="customer" placeholder="Select By Customer"  autocomplete="false">
+                          <input type="hidden" name="customer_id" id="customer_id" class="form-control" readonly>
+                        </div>
+                        <!--  -->
                         <div class="col-4">
                           <button class="btn btn-block btn-primary" id="search"><i class="fa fa-search"></i>&nbsp;&nbsp;Search</button>
                         </div>
@@ -130,50 +135,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- ./row-grouping -->
         <!-- Main row -->
         <div class="row">
-          <!-- Left col -->
-          <section class="col-lg-5 connectedSortable">
-            <!-- Custom tabs (Charts with tabs)-->
+          
+          <!-- right col (We are only adding the ID to make the widgets sortable)-->
+          <section class="col-lg-8 connectedSortable">
+
+            <!-- solid sales graph -->
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                  <i class="fas fa-chart-pie mr-1"></i>
-                  <?=lang('dashboard_sales')?>
-                </h3>
-                <div class="card-tools">
-                  <ul class="nav nav-pills ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link active" href="#revenue-chart" data-toggle="tab"><?php echo lang('dashboard_area');?></a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#sales-chart" data-toggle="tab"><?php echo lang('dashboard_donut');?></a>
-                    </li>
-                  </ul>
-                </div>
-              </div><!-- /.card-header -->
-              <div class="card-body">
-                <div class="tab-content p-0">
-                  <!-- Morris chart - Sales -->
-                  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 650px;">
-                    <canvas id="revenue-chart-canvas" height="650" style="height: 650px;"></canvas>                         
-                   </div>
-                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 650px;">
-                    <canvas id="sales-chart-canvas" height="650" style="height: 650px;"></canvas>                         
-                  </div>  
-                </div>
-              </div><!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </section>
-          <!-- /.Left col -->
-          <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-lg-7 connectedSortable">
-
-            <!-- solid sales graph -->
-            <div class="card ">
-              <div class="card-header">
-                <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  <?php echo lang('dashboard_sales') ?>
+                  <?php echo lang('dashboard_sales') ?> Daily
                 </h3>
                 <div class="card-tools">
                 </div>
@@ -185,7 +156,63 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- /.card -->
           </section>
+          <section class="col-lg-4 connectedSortable">
+
+            <!-- solid sales graph -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-th mr-1"></i>
+                  <?php echo lang('dashboard_sales') ?> Daily
+                </h3>
+                <div class="card-tools">
+                </div>
+              </div>
+              <div class="card-body">
+                <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>                         
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </section>
           <!-- right col -->
+          <!-- Left col -->
+          <section class="col-lg-12 connectedSortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-chart-pie mr-1"></i>
+                  <?=lang('dashboard_sales')?> Monthly
+                </h3>
+                <div class="card-tools">
+                  <ul class="nav nav-pills ml-auto">
+                    <!-- <li class="nav-item">
+                      <a class="nav-link active" href="#revenue-chart" data-toggle="tab"><?php echo lang('dashboard_area');?></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#sales-chart" data-toggle="tab"><?php echo lang('dashboard_donut');?></a>
+                    </li> -->
+                  </ul>
+                </div>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 700px;">
+                    <canvas id="revenue-chart-canvas" height="700" style="height: 700px;"></canvas>                         
+                   </div>
+                   <!-- 
+                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 700px;">
+                    <canvas id="sales-chart-canvas" height="700" style="height: 700px;"></canvas>                         
+                  </div>
+                   -->  
+                </div>
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </section>
+          <!-- /.Left col -->
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
