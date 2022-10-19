@@ -15,7 +15,7 @@ class Dashboard extends MY_Controller {
 	public function expense_statment_daily()
 	{
 		$this->db->select('
-		  SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Purchase" 
+		  SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Capital Price" 
         , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
 		');
 		$this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m%d') = ", "concat(year(now()), month(now()), day(now()))", false);
@@ -29,12 +29,21 @@ class Dashboard extends MY_Controller {
 
 	public function expense_statment_monthly()
 	{
-		$this->db->select('
-		  SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Purchase" 
-        , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
-		');
-		$this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
-		$result = $this->db->get('fifo_items transaction')->result_array()[0];
+		$this->db->select('SUM(CAST(invoice_selling.grand_total AS INT)) AS "Total Selling"');
+		$this->db->where("DATE_FORMAT(invoice_selling.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
+		$result = $this->db->get('invoice_selling')->row_array();
+		
+		$this->db->select('SUM(CAST(invoice_purchasing.grand_total AS INT)) AS "Total Purchasing"');
+		$this->db->where("DATE_FORMAT(invoice_purchasing.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
+		$result = array_merge($result, $this->db->get('invoice_purchasing')->row_array());
+		
+		// $this->db->select('
+		//   SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Purchase" 
+        // , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
+		// ');
+		// $this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
+		// $result = $this->db->get('fifo_items transaction')->row_array();
+
 		$data['datasets'][]['data'] = array_values($result);
 		$data['datasets'][0]['backgroundColor'] = array_values(array("#2ecc71", "#3498db"));
 		$data['labels'] = array_keys($result);

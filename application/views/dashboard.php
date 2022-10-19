@@ -94,7 +94,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- /.row -->
         <!-- row-grouping -->
         <div class="row">
-          <div class="col-12 col-lg-4">
+
+          <div class="col-12 col-lg">
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
@@ -131,7 +132,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </div>
             </div>
           </div>
-          <div class="col-12 col-lg-8">
+          <div class="col-12 col-lg-8" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
@@ -146,11 +147,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h4 for="info-daily">Today Overview</h4>
                         <table class="table table-striped">
                           <tr>
-                            <td>Total Sales :</td>
+                            <td>Total Selling Price :</td>
                             <td width="100" class="text-right"><b id="today_total_sales">0</b></td>
                           </tr>
                           <tr>
-                            <td>Total Purchase :</td>
+                            <td>Total Capital Price :</td>
                             <td width="100" class="text-right"><b id="today_total_purchase">0</b></td>
                           </tr>
                         </table>
@@ -174,16 +175,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </div>
                 </span>
               </div>
-
             </div>
           </div>
+
         </div>
         <!-- ./row-grouping -->
         <!-- Main row -->
         <div class="row">
           
           <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-lg-8 connectedSortable">
+          <section class="col-12 col-lg-8 connectedSortable">
 
             <!-- solid sales graph -->
             <div class="card">
@@ -202,7 +203,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- /.card -->
           </section>
-          <section class="col-lg-4 connectedSortable">
+          <section class="col-12 col-lg connectedSortable"  <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
 
             <!-- solid sales graph -->
             <div class="card">
@@ -222,8 +223,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- /.card -->
           </section>
           <!-- right col -->
+        </div>
+        <div class="row">
           <!-- Left col -->
-          <section class="col-lg-12 connectedSortable">
+          <section class="col-12 col-lg-12 connectedSortable">
             <!-- Custom tabs (Charts with tabs)-->
             <div class="card">
               <div class="card-header">
