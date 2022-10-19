@@ -107,7 +107,7 @@ const main = () => {
         }
         var pieOptions = {
             legend: {
-                display: false
+                display: true
             },
             maintainAspectRatio: false,
             responsive: true,
@@ -119,21 +119,28 @@ const main = () => {
             type: 'pie',
             data: {},
             options: pieOptions,
-            elements: {
-                arc: {
-                    backgroundColor: colorize.bind(null, false, false),
-                    hoverBackgroundColor: hoverColorize
-                }
-            }
         });
 
         $.ajax({
             type: 'POST', //post method
-            url: location.base + 'dashboard/expense_statment', //ajaxformexample url
+            url: location.base + 'dashboard/expense_statment_daily', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
+                $('b#today_total_sales').text(currency(result.datasets[0]['data'][1]))
+                $('b#today_total_purchase').text(currency(result.datasets[0]['data'][0]))
+            }
+        });
+        $.ajax({
+            type: 'POST', //post method
+            url: location.base + 'dashboard/expense_statment_monthly', //ajaxformexample url
+            dataType: "json",
+            success: function (result, textStatus, jqXHR) {
+                console.log(result)
                 pieChart.data = result;
                 pieChart.update();
+
+                $('b#monthly_total_sales').text(currency(result.datasets[0]['data'][1]))
+                $('b#monthly_total_purchase').text(currency(result.datasets[0]['data'][0]))
             }
         });
 

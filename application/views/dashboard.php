@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div class="icon">
                 <i class="ion ion-close"></i>
               </div>
-              <a href="#" class="small-box-footer"><?php echo lang('dashboard_more_info');?><i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?=url('invoice/order/list')?>" class="small-box-footer"><?php echo lang('dashboard_more_info');?><i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -94,33 +94,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- /.row -->
         <!-- row-grouping -->
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-12 col-lg-4">
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                  <i class="fas fa-search"></i>
+                  <i class="fas fa-search"></i>&nbsp;Find Sales Daily Chart
                 </h3>
               </div>
               <div class="card-body">
                 <span>
                   <div class="row" id="custom_graph">
-                    <div class="col-5">
+                    <div class="col-12 col-lg-12">
                       <span class="form-group">
                         <input type="text" class="form-control" name="date" id="min">
                       </span>
                       
                       <div class="row mt-2">
                         <!-- Search By -->
-                        <div class="col-4 form-group">
+                        <div class="col-4 col-lg-4 form-group">
                           <input type="text" class="form-control" name="user" id="user" placeholder="Select Marketing"  autocomplete="false">
                           <input type="hidden" name="user_id" id="user_id" class="form-control" readonly>
                         </div>
-                        <div class="col-4 form-group">
+                        <div class="col-4 col-lg-4 form-group">
                           <input type="text" class="form-control" name="customer" id="customer" placeholder="Select By Customer"  autocomplete="false">
                           <input type="hidden" name="customer_id" id="customer_id" class="form-control" readonly>
                         </div>
                         <!--  -->
-                        <div class="col-4">
+                        <div class="col-4 col-lg-4">
                           <button class="btn btn-block btn-primary" id="search"><i class="fa fa-search"></i>&nbsp;&nbsp;Search</button>
                         </div>
                       </div>
@@ -129,6 +129,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </div>
                 </span>
               </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-8">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-dollar-sign"></i> Report Overview
+                </h3>
+              </div>
+              <div class="card-body">
+                <span>
+                  <div class="row">
+                    <div class="col-lg-6 col-12">
+                      <div class="form-group">
+                        <h4 for="info-daily">Today Overview</h4>
+                        <table class="table table-striped">
+                          <tr>
+                            <td>Total Sales :</td>
+                            <td width="100" class="text-right"><b id="today_total_sales">0</b></td>
+                          </tr>
+                          <tr>
+                            <td>Total Purchase :</td>
+                            <td width="100" class="text-right"><b id="today_total_purchase">0</b></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-12">
+                      <div class="form-group">
+                          <h4 for="info-monthly">Monthly Overview</h4>
+                          <table class="table table-striped">
+                          <tr>
+                            <td>Total Sales :</td>
+                            <td width="100" class="text-right"><b id="monthly_total_sales">0</b></td>
+                          </tr>
+                          <tr>
+                            <td>Total Purchase :</td>
+                            <td width="100" class="text-right"><b id="monthly_total_purchase">0</b></td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </span>
+              </div>
+
             </div>
           </div>
         </div>
@@ -163,7 +209,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  <?php echo lang('dashboard_sales') ?> Daily
+                  <?php echo lang('dashboard_sales') ?> Monthly
                 </h3>
                 <div class="card-tools">
                 </div>

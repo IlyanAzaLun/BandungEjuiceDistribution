@@ -12,15 +12,31 @@ class Dashboard extends MY_Controller {
 		$this->load->view('dashboard', $this->page_data);
 	}
 	
-	public function expense_statment()
+	public function expense_statment_daily()
 	{
 		$this->db->select('
-		  SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Capital Price" 
-        , SUM(CAST(transaction.total_price AS INT)) AS "Selling Price"
+		  SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Purchase" 
+        , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
+		');
+		$this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m%d') = ", "concat(year(now()), month(now()), day(now()))", false);
+		$result = $this->db->get('fifo_items transaction')->result_array()[0];
+		$data['datasets'][]['data'] = array_values($result);
+		$data['datasets'][0]['backgroundColor'] = array_values(array("#2ecc71", "#3498db"));
+		$data['labels'] = array_keys($result);
+		
+		$this->output->set_content_type('application/json')->set_output(json_encode($data));
+	}
+
+	public function expense_statment_monthly()
+	{
+		$this->db->select('
+		  SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Purchase" 
+        , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
 		');
 		$this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
 		$result = $this->db->get('fifo_items transaction')->result_array()[0];
 		$data['datasets'][]['data'] = array_values($result);
+		$data['datasets'][0]['backgroundColor'] = array_values(array("#2ecc71", "#3498db"));
 		$data['labels'] = array_keys($result);
 		
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
@@ -99,7 +115,7 @@ class Dashboard extends MY_Controller {
             , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
             , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
 			, SUM(CAST(transaction.total_price AS INT)) AS total_price
-			,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+			,SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS profit
 		");
 		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code');
 		$this->db->group_start();
