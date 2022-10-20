@@ -117,8 +117,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <input type="hidden" name="user_id" id="user_id" class="form-control" readonly>
                         </div>
                         <div class="col-4 col-lg-4 form-group">
-                          <input type="text" class="form-control" name="customer" id="customer" placeholder="Select By Customer"  autocomplete="false">
-                          <input type="hidden" name="customer_id" id="customer_id" class="form-control" readonly>
+                          <div class="input-group">
+                            <select class="form-control" name="group_by" id="group_by">
+                                <option value="daily" selected><?=lang('daily')?></option>
+                                <option value="monthly"><?=lang('monthly')?></option>
+                            </select>
+                          </div>
                         </div>
                         <!--  -->
                         <div class="col-4 col-lg-4">
@@ -191,7 +195,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  <?php echo lang('dashboard_sales') ?> Daily
+                  <?php echo lang('dashboard_sales') ?>
                 </h3>
                 <div class="card-tools">
                 </div>

@@ -135,7 +135,6 @@ const main = () => {
             url: location.base + 'dashboard/expense_statment_monthly', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
-                console.log(result)
                 pieChart.data = result;
                 pieChart.update();
 
@@ -181,7 +180,6 @@ const main = () => {
                 }],
                 yAxes: [{
                     ticks: {
-                        stepSize: 5000,
                         callback: function (value, index, values) {
                             // if (parseInt(value) >= 1000) {
                             //     return 'Rp. ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -220,8 +218,7 @@ const main = () => {
                     },
                     'user_id': data['user_id'],
                     'user': data['user'],
-                    'customer_id': data['customer_id'],
-                    'customer': data['customer']
+                    'group_by': data['group_by']
                 },
                 dataType: "json",
                 success: function (result, textStatus, jqXHR) {
@@ -262,43 +259,13 @@ const main = () => {
                 }
             })
         });
-        // CUSTOMER
-        $(document).on('keyup', 'input#customer', function () {
-            let valueElement = $(this).val();
-            let selfElement = $(this);
-            data_customer.customer_info_search(valueElement, function (data) {
-                let result = data.map(({
-                    id, store_name, owner_name,
-                }) => [
-                        id, store_name, owner_name,
-                    ]
-                );
-                $(`input#${selfElement.attr('id')}`).autocomplete({
-                    source: result,
-                    focus: function (event, ui) {
-                        $('input#customer_id').val(ui.item[0])
-                        $('input#customer').val(ui.item[1])
-                        return false;
-                    },
-                    select: function (event, ui) {
-                        $('input#customer_id').val(ui.item[0])
-                        $('input#customer').val(ui.item[1])
-                        return false;
-                    }
-                }).data("ui-autocomplete")._renderItem = function (ul, item) {
-                    return $('<li>').data("item.autocomplete", item)
-                        .append(`<div>${item[1]}</div>`).appendTo(ul)
-                }
-            })
-        });
 
         $(document).on('click', 'button#search', function () {
             const date = $('#custom_graph input#min').val();
             const data = [];
             data['user_id'] = $('#custom_graph input#user_id').val();
             data['user'] = $('#custom_graph input#user').val();
-            data['customer_id'] = $('#custom_graph input#customer_id').val();
-            data['customer'] = $('#custom_graph input#customer').val();
+            data['group_by'] = $('#custom_graph select#group_by').val();
             request(date, data);
         })
     })
