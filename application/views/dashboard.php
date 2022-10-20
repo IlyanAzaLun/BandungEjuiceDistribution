@@ -203,7 +203,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- /.card -->
           </section>
-          <section class="col-12 col-lg connectedSortable"  <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
+          <section class="col-12 col-lg-4 connectedSortable"  <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
 
             <!-- solid sales graph -->
             <div class="card">
