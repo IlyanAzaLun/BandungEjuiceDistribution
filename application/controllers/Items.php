@@ -404,11 +404,33 @@ class Items extends MY_Controller
         $totalRecordwithFilter = $records[0]->allcount;
 
         ## Fetch records
+        /***
+        // THIS QUERY TO SLOW RESPONSE TO DISPLAY RESULT
         $this->db->select('purchase_transactions.item_quantity AS transaction_quantity, purchase_transactions.created_at AS restock_date, sale_transactions.created_at AS sales_date, items.*, CAST(items.quantity AS INT) as quantity');
         // ONE TO MANY QUERY, to get last date data information on each infromation data
         // Reference : https://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
         $this->db->join("(SELECT id, item_code, item_id, item_quantity, created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') purchase_transactions", 'purchase_transactions.item_id = items.id', 'left');
         $this->db->join("(SELECT id,item_id,created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') p2", '(p2.item_id = items.id AND (purchase_transactions.created_at < p2.created_at OR (purchase_transactions.created_at = p2.created_at AND purchase_transactions.id < p2.id)))', 'left');
+        ***/
+        $this->db->select('invoice_transaction_list_item.total_item_quantity AS transaction_quantity, invoice_transaction_list_item.created_at AS restock_date, sale_transactions.created_at AS sales_date, items.*, CAST(items.quantity AS INT) as quantity');
+        // ONE TO MANY QUERY, to get last date data information on each infromation data
+        // Reference : https://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
+        $this->db->join("(SELECT id, item_code, item_id, created_at,
+                                DATE_FORMAT(created_at, '%y%m%d') AS ordered_at,
+                                SUM(item_quantity) AS total_item_quantity
+                        FROM invoice_transaction_list_item 
+                        WHERE 
+                                invoice_code LIKE 'INV/PURCHASE/%'
+                        GROUP BY item_code, DATE_FORMAT(created_at, '%y%m%d'))
+                        invoice_transaction_list_item", 'invoice_transaction_list_item.item_id = items.id', 'left');
+        $this->db->join("(
+                        SELECT id, item_code, item_id, created_at,
+                            MAX(DATE_FORMAT(created_at, '%y%m%d')) AS ordered_at,
+                            SUM(item_quantity) AS total_item_quantity
+                        FROM invoice_transaction_list_item 
+                        WHERE
+                                invoice_code LIKE 'INV/PURCHASE/%'
+                        GROUP BY item_code) p2", '(items.item_code = p2.item_code AND (invoice_transaction_list_item.ordered_at < p2.ordered_at OR (invoice_transaction_list_item.ordered_at = p2.ordered_at AND invoice_transaction_list_item.id < p2.id)))', 'left');
         // END OF ONE TO MANY QUERY
         $this->db->join("(SELECT id, item_id, item_code, MAX(created_at) AS created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/SALE/%' GROUP BY item_id) sale_transactions", 'sale_transactions.item_id = items.id', 'left');
         if ($searchQuery != '') {
