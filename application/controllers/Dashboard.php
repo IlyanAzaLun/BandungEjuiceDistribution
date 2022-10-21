@@ -240,7 +240,11 @@ class Dashboard extends MY_Controller {
 			array_push($data['datasets'][0]['data'], bd_nice_number((int) $record->profit));
 		}
 		## Response
-		$this->output->set_content_type('application/json')->set_output(json_encode($data));
+		$this->output
+			->set_status_header(200)
+			->set_content_type('application/json', 'utf-8')
+			->set_output(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+		exit;
 	}
 
 }
