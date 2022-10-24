@@ -409,8 +409,10 @@ $lang['delivery_code'] = "Kode Dokumen";
  *bank
  */
 $lang['bank'] = "Bank";
+$lang['account'] = "Akun";
+$lang['chart_of_account'] = "Chart of Account";
 $lang['pages_account_bank'] = "Rekening Bank";
-$lang['account_bank_list'] = "Akun";
+$lang['account_bank_list'] = "Daftar Akun";
 $lang['account_bank_add'] = "Tambah Akun Baru";
 $lang['account_bank_edit'] = "Ubah Informasi Akun";
 $lang['info_add'] = "Tambahkan Informasi Lebih Lanjut";

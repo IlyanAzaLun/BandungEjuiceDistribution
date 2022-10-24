@@ -374,11 +374,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
       <a href="#" class="nav-link  <?php echo ($page->menu == 'account_bank') ? 'active' : '' ?>">
         <i class="nav-icon fas fa-database"></i>
         <p>
-          <?php echo lang('pages_account_bank') ?>
+          <?php echo lang('account') ?>
           <i class="right fas fa-angle-left"></i>
         </p>
       </a>
       <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="<?php echo url('master_information/account_bank') ?>" class="nav-link <?php echo ($page->submenu == 'account') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p> Chart Of <?php echo lang('account') ?> </p>
+          </a>
+        </li>
         <li class="nav-item">
           <a href="<?php echo url('master_information/account_bank/list') ?>" class="nav-link <?php echo ($page->submenu == 'account_bank_list') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>

@@ -412,6 +412,8 @@ $lang['information_delivery'] = "Information Delivery";
  * bank
  */
 $lang['bank'] = "Bank";
+$lang['account'] = "Account";
+$lang['chart_of_account'] = "Chart of Account";
 $lang['pages_account_bank'] = "Account Bank";
 $lang['account_bank_list'] = "List Account";
 $lang['account_bank_add'] = "Add New Account";
