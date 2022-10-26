@@ -676,6 +676,8 @@ class Shipper extends MY_Controller
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
+			$this->db->or_like('sale.expedition', $searchValue, 'both');
+			$this->db->or_like('sale.pack_by', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
@@ -805,6 +807,8 @@ class Shipper extends MY_Controller
 			$this->db->or_like('info.customer', $searchValue, 'both');
 			$this->db->or_like('info.note', $searchValue, 'both');
 			$this->db->or_like('info.created_at', $searchValue, 'both');
+			$this->db->or_like('info.expedition', $searchValue, 'both');
+			$this->db->or_like('info.pack_by', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
 		}
