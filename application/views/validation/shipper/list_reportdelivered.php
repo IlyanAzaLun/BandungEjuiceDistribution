@@ -74,16 +74,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th width="1%"></th>
-                  <th width="2%">no.</th>
+                  <th width="5%">no.</th>
                   <th width="5%"><?= lang('created_at') ?></th>
-                  <th><?= lang('order_code') ?></th>
+                  <th width="5%"><?= lang('order_code') ?></th>
                   <th width="13%"><?= lang('store_name') ?></th>
-                  <th><?= lang('total_price') ?></th>
-                  <th><?= lang('discount') ?></th>
-                  <th><?= lang('shipping_cost') ?></th>
-                  <th><?= lang('other_cost') ?></th>
-                  <th><?= lang('grandtotal') ?></th>
-                  <th><?= lang('payment_type') ?></th>
+                  <th width="5%"><?= lang('expedition') ?></th>
+                  <th width="5%"><?= lang('expedition_services') ?></th>
+                  <th width="5%"><?= lang('payment_type') ?></th>
+                  <th width="5%"><?= lang('pack_by') ?></th>
+                  <th width="5%"><?= lang('pack') ?></th>
+                  <th width="5%"><?= lang('receipt_code') ?></th>
                   <th width="20%"><?= lang('note') ?></th>
                   <th width="10%"><?= lang('created_by') ?></th>
                   <th width="10%"><?= lang('updated_by') ?></th>
@@ -196,41 +196,34 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return `<a href="${location.base}master_information/customer/edit?id=${row['customer_code']}">${shorttext(data, 12, true)}</a>`
           }
         },{
-          data: "total_price",
-          visible: false,
+          data: "expedition",
           render: function(data, type, row) {
-            return currency(data)
+            return (data != 0)?data:'';
           }
         },{
-          data: "discounts",
-          visible: false,
+          data: "services_expedition",
           render: function(data, type, row) {
-            return currency(data)
+            return (data != 0)?data:'';
           }
         },{
-          data: "shipping_cost",
-          visible: false,
+          data: "type_payment_shipping",
           render: function(data, type, row) {
-            return currency(data)
+            return (data != 0)?data:'';
           }
         },{
-          data: "other_cost",
-          visible: false,
+          data: "pack_by",
           render: function(data, type, row) {
-            return currency(data)
+            return (data != 0)?data:'';
           }
         },{
-          data: "grand_total",
-          visible: false,
+          data: "pack",
           render: function(data, type, row) {
-            return currency(data)
+            return (data != 0)?data:'';
           }
         },{
-          data: "payment_type",
-          orderable: false,
-          visible: false,
+          data: "receipt_code",
           render: function(data, type, row) {
-            return data
+            return (data != 0)?data:'';
           }
         },{
           data: "note",

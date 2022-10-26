@@ -82,9 +82,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th><?= lang('total_price') ?></th>
                   <th><?= lang('discount') ?></th>
                   <th><?= lang('shipping_cost') ?></th>
-                  <th><?= lang('other_cost') ?></th>
-                  <th><?= lang('grandtotal') ?></th>
-                  <th><?= lang('payment_type') ?></th>
                   <th width="20%"><?= lang('note') ?></th>
                   <th width="7%"><?= lang('created_by') ?></th>
                   <th width="7%"><?= lang('updated_by') ?></th>
@@ -220,25 +217,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           visible: false,
           render: function(data, type, row) {
             return currency(data)
-          }
-        },{
-          data: "other_cost",
-          visible: false,
-          render: function(data, type, row) {
-            return currency(data)
-          }
-        },{
-          data: "grand_total",
-          visible: false,
-          render: function(data, type, row) {
-            return currency(data)
-          }
-        },{
-          data: "payment_type",
-          orderable: false,
-          visible: false,
-          render: function(data, type, row) {
-            return data
           }
         },{
           data: "note",
