@@ -45,7 +45,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('customer_code') ?></label>
-                                <input readonly type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice->customer?$invoice->customer:$invoice->supplier ?>" required>
+                                <input readonly type="text" name="customer_code" id="customer_code" class="form-control form-control-sm" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" value="<?= $invoice->customer?$invoice->customer:$invoice->supplier ?>" required>
                                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -53,7 +53,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="store_name"><?= lang('store_name') ?></label>
-                                <input readonly type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
+                                <input readonly type="text" name="store_name" id="store_name" class="form-control form-control-sm" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
                                 <?= form_error('store_name', '<small class="text-danger">', '</small>') ?>
                             </div>
                         </div>
@@ -61,28 +61,28 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="owner_name"><?= lang('name') ?></label>
-                                <input type="text" name="owner_name" id="owner_name" class="form-control" value="<?= set_value('owner_name') ?>">
+                                <input type="text" name="owner_name" id="owner_name" class="form-control form-control-sm" value="<?= set_value('owner_name') ?>">
                             </div>
                         </div>
                         
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="contact_phone"><?= lang('contact_phone') ?><small class="text-primary"> (whatsapp)</small></label>
-                                <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="<?= set_value('contact_phone') ?>">
+                                <input type="text" name="contact_phone" id="contact_phone" class="form-control form-control-sm" value="<?= set_value('contact_phone') ?>">
                             </div>
                         </div>
 
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="address"><?= lang('address_destination') ?></label>
-                                <textarea type="text" name="address" id="address" class="form-control" required><?= set_value('address') ?></textarea>
+                                <textarea type="text" name="address" id="address" class="form-control form-control-sm" required><?= set_value('address') ?></textarea>
                             </div>
                         </div>
                         
                         <div class="col-lg col-sm-12">
                             <div class="form-group">
                                 <label for="contact_us"><?= lang('contact_us') ?></label>
-                                <input name="contact_us" id="contact_us" class="form-control">
+                                <input name="contact_us" id="contact_us" class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
@@ -102,7 +102,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                     <div class="row">
                     <div class="col-sm-12">
                             <div class="form-group">
-                                <textarea type="text" class="form-control"></textarea>
+                                <textarea type="text" class="form-control form-control-sm"></textarea>
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-6 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('is_controlled_by') ?></h6>
-                                        <input class="form-control" type="text" name="is_controlled_by" value="<?=$invoice->is_controlled_by?>">
+                                        <input class="form-control form-control-sm" type="text" name="is_controlled_by" value="<?=$invoice->is_controlled_by?>">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-sm-12">
@@ -153,7 +153,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('pack') ?></h6>
-                                        <input class="form-control" type="text" name="pack" id="pack" value="<?=$invoice->pack?>" required>
+                                        <input class="form-control form-control-sm" type="text" name="pack" id="pack" value="<?=$invoice->pack?>" required>
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('pack_by') ?></h6>
-                                        <input class="form-control" type="text" name="pack_by" id="pack_by" value="<?=$invoice->pack_by?>" required>
+                                        <input class="form-control form-control-sm" type="text" name="pack_by" id="pack_by" value="<?=$invoice->pack_by?>" required>
                                     </div>
                                 </div>
                                 
@@ -188,7 +188,7 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg col-sm-12">
                                     <div class="form-group">
                                         <label for="note"><?= lang('note') ?></label>
-                                        <textarea name="note" id="note" class="form-control"><?= $invoice->note ?></textarea>
+                                        <textarea name="note" id="note" class="form-control form-control-sm"><?= $invoice->note ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -298,3 +298,9 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
 <script src="<?php echo $url->assets ?>plugins/jquery-ui/jquery-ui.min.js"></script>
 
 <script type="module" src="<?php echo $url->assets ?>pages/shipper/packer/MainShipperPacker.js"></script>
+<script>
+    $("select.custom-select:not(.dont-select-me)").select2({
+        placeholder: "Select option",
+        allowClear: true
+    });
+</script>

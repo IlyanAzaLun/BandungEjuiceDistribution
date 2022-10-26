@@ -28,7 +28,7 @@ class Shipper extends MY_Controller
 			}else{
 				$this->page_data['invoice'] = $this->sale_model->get_invoice_selling_by_code(get('invoice'));
 			}
-			$this->page_data['expedition'] = $this->expedition_model->get();
+			$this->page_data['expedition'] = $this->expedition_model->getByWhere(array('is_active' => 1), array('order' => array('expedition_name','asc')));
 			$this->page_data['modals'] = (object) array(
 				'id' => 'modal-confirmation-order',
 				'title' => 'Modals confirmation',
