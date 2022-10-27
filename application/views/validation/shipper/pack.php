@@ -171,8 +171,8 @@ $i = 0; $total_items = 0; $data = $this->input->get();?>
                                 <div class="col-lg-4 col-sm-12">
                                     <div class="form-group">
                                         <h6><?= lang('select_payment_shipping') ?></h6>
-                                        <select class="custom-select" name="type_payment_shipping" id="type_payment_shipping">
-                                            <option value=""><?=lang('option')?></option>
+                                        <select class="form-control form-control-sm" name="type_payment_shipping" id="type_payment_shipping">
+                                            <option value="" <?=$invoice->type_payment_shipping==""?'selected':''?>><?=lang('option')?></option>
                                             <option value="TAGIH TUJUAN" <?=$invoice->type_payment_shipping=="TAGIH TUJUAN"?'selected':''?>>TAGIH TUJUAN</option>
                                             <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
                                             <option value="TUNAI" <?=$invoice->type_payment_shipping=="TUNAI"?'selected':''?>>TUNAI</option>

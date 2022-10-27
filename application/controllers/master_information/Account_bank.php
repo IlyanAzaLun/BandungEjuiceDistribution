@@ -191,7 +191,7 @@ class Account_bank extends MY_Controller
     public function cashflow()
     {
         ifPermissions('cashflow');
-        $this->page_data['page']->submenu = 'account_bank_edit';
+        $this->page_data['page']->submenu = 'account';
         $this->page_data['title'] = 'transaction';
         $this->load->view('account_bank/cashflow', $this->page_data);
     }
@@ -289,6 +289,13 @@ class Account_bank extends MY_Controller
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('invoice_payment payment')->result();
 
+        // GET TOTAL CASH IN to this BANK ID
+        $this->db->select('SUM(IF(payment.payup > payment.grand_total, payment.grand_total, payment.payup)) AS total_payup');
+        $this->db->where('payment.bank_id', $bank_id);
+        $this->db->where('payment.is_cancelled', null);
+        $this->db->where('payment.payup !=', 0);
+        $get_total = $this->db->get('invoice_payment payment')->row();
+
         $data = array();
 
         foreach ($records as $record) {
@@ -322,7 +329,8 @@ class Account_bank extends MY_Controller
             "draw" => intval($draw),
             "iTotalRecords" => $totalRecords,
             "iTotalDisplayRecords" => $totalRecordwithFilter,
-            "aaData" => $data
+            "aaData" => $data,
+            "ffooterData" => $get_total
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }

@@ -76,8 +76,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               </thead>
               <tbody>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="6" class="text-right">Total <?=lang('payup')?>: </th>
+                  <th id="total_payup">0</th>
+                  <th colspan="4"></th>
+                </tr>
+              </tfoot>
             </table>
-
           </div>
           <!-- /.card-body -->
         </div>
@@ -132,9 +138,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           d.id_bank = <?=get('id')?>;
         }
       },
+      "initComplete": function(settings, json) {
+        $('#total_payup').text(currency(json.ffooterData.total_payup))
+      },
       columns: [
         {
-          visible: false,
           data: "id"
         },{
           data: "created_at"
@@ -145,7 +153,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           data: "invoice_code"
         },{
           data: "grand_total",
-          render: function(data, type, row){
+          render: function(data, type, row, raw){
             return currency(data)
           }
         },{
@@ -176,7 +184,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "user_create_name"
         },{
-          visible: false,
           data: "user_update_name"
         },
       ],
@@ -198,7 +205,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
-        console.log($(this))
     })
     $('#example2 tbody').on( 'click', 'td.group', function () {
         table.search($(this).text()).draw();
