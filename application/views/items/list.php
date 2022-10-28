@@ -34,8 +34,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th>restock_date</th>
-                  <th>restock_date</th>
-                  <th>last_sale_date</th>
+                  <th>last sale items per restock</th>
+                  <th>last sale date</th>
                   <th>No.</th>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
@@ -58,8 +58,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <tfoot>
                 <tr>
                   <th>restock_date</th>
-                  <th>restock_date</th>
-                  <th>last_sale_date</th>
+                  <th>last sale items per restock</th>
+                  <th>last sale date</th>
                   <th>No.</th>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
@@ -120,7 +120,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         },{
           data: "transaction_quantity",
           render: function(data, type, row){
-            return data-row['quantity']
+            return `${data} / ${(data-row['quantity'] > 0)?data-row['quantity']:0}`
           }
         },{
           data: "sales_date",
