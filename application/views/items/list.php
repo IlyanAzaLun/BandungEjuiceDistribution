@@ -34,6 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <thead>
                 <tr>
                   <th>No.</th>
+                  <th><?= 'last restock items' ?></th>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
                   <th><?= lang('category_item') ?></th>
@@ -55,6 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <tfoot>
                 <tr>
                   <th>No.</th>
+                  <th><?= 'last restock items' ?></th>
                   <th><?= lang('item_code') ?></th>
                   <th><?= lang('item_name') ?></th>
                   <th><?= lang('category_item') ?></th>
@@ -108,6 +110,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       },
       columns: [{
           data: "id"
+        },
+        {
+          data: "restock_date",
+          render: function(data, type, row){
+            return data?formatDate(data):'';
+          }
         },
         {
           data: "item_code",
