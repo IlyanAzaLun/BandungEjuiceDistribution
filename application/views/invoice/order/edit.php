@@ -28,8 +28,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <section class="content">
 
   <!-- Default card -->
-  <pre><?php var_dump($invoice->payment_type);?></pre>
-
   <div class="row">
     <div class="col-12">
       <div class="callout callout-info">

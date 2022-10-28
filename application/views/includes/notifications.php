@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script>
 		setTimeout(function() {
 			$('#alert-<?php echo $time ?>').hide().remove();
-		}, 5000)
+		}, 12000)
 	</script>
 	
 <?php endif ?>
