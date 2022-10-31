@@ -174,7 +174,10 @@ const main = () => {
                             </span>
                         </div>
                     </td>
-                    <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <td>
+                        <input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required>
+                        <input class="form-control form-control-sm" type="hidden" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=0>
+                    </td>
                     <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
@@ -229,7 +232,10 @@ const main = () => {
                         </span>
                     </div>
                 </td>
-                <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                <td>
+                    <input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required>
+                    <input class="form-control form-control-sm" type="hidden" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=0>
+                </td>
                 <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
@@ -248,6 +254,19 @@ const main = () => {
             </tr>`;
             $('tbody').append(html)
         })
+        // CHANGE PRICE
+        $(document).on('focusin', 'input[data-id="item_capital_price"]', function () {
+            $(this).data('val', $(this).val());
+        }).on('focusout', 'input[data-id="item_capital_price"]', function () {
+            let prev = $(this).data('val');
+            let current = $(this).val();
+            let row = $(this).parents('tr').attr('class');
+            if (prev != current) {
+                if (confirm('Sure to change capital price.?')) {
+                    $(`tr.${row}`).find('input[data-id="item_capital_price_is_change"]').val(1)
+                }
+            }
+        });
         // Description item from list
         $(document).on('click', 'button#description', function () {
             let row = $(this).parents('tr').attr('class');
