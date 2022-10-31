@@ -175,6 +175,7 @@ const main = () => {
                         </div>
                     </td>
                     <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                    <input class="form-control form-control-sm" type="hidden" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=0>
                     <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
@@ -230,6 +231,7 @@ const main = () => {
                     </div>
                 </td>
                 <td><input class="form-control form-control-sm" type="text" name="item_capital_price[]" data-id="item_capital_price" required></td>
+                <input class="form-control form-control-sm" type="hidden" name="item_capital_price_is_change[]" data-id="item_capital_price_is_change" value=0>
                 <td style="display:none"><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required></td>                
