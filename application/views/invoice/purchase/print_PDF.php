@@ -70,7 +70,7 @@ $i = 0;
                     </tr>
                     <tr>
                         <th colspan="2" rowspan="4" class="text-center">
-                            <p style="font-size: 25px;font-family: 'monospace';font-color: 'coral-bold'">B.<span style="color:#FFBF00">E</span>.D</p>
+                            <p style="font-size: 25px;font-family: 'monospace';font-color: 'coral-bold'">E.<span style="color:#007bff">V</span>.O</p>
                         </th>
                         <!-- <th colspan="2" rowspan="4" class="text-center"><img width="50px" src="<?php echo url('uploads/company/').setting('company_icon')?>" alt=""></th> -->
                         <th colspan="3"></th>
@@ -183,7 +183,7 @@ $i = 0;
                     </tr>
                     <tr>
                         <th class="text-center">(..................................)</th>
-                        <th class="text-center">(Bandung Ejuice Distribution.)</th>
+                        <th class="text-center">(EVO.)</th>
                         <th class="text-center" style="color:white">(..................................)</th>
                         <th class="text-center" style="color:white">(..................................)</th>
                     </tr>

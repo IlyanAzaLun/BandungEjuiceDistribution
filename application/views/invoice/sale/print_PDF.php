@@ -197,7 +197,7 @@ $i = 0;
                     <th class="text-center" colspan="4">&nbsp;</th>
                 </tr>
                 <tr>
-                    <th class="text-center">( Bandung Ejuice Distribution. )</th>
+                    <th class="text-center">( EVO. )</th>
                     <th class="text-center">(..................................)</th>
                     <th class="text-center" style="color:white">(..................................)</th>
                     <th class="text-center" style="color:white">(..................................)</th>
