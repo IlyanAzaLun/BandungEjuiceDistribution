@@ -845,6 +845,7 @@ class Sale extends Invoice_controller
 		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
 		$searchValue = $postData['search']['value']; // Search value
+		$type = $postData['Dtype'];
 		$dateStart = $postData['startDate'];
 		$dateFinal = $postData['finalDate'];
 		$logged = logged('id');
@@ -888,6 +889,20 @@ class Sale extends Invoice_controller
 		}
 		if(!$is_super_user){
 			$this->db->where("sale.is_cancelled", 0);
+		}else{
+			switch ($type) {
+				case 'fixed':
+					$this->db->where("sale.is_cancelled", 1);
+					break;
+				
+				case 'delete':
+					$this->db->where("sale.is_cancelled", 0);
+					break;
+				
+				default:
+					# code...
+					break;
+			}
 		}
 		$this->db->group_start();
 		$this->db->where("sale.is_transaction", 1);
@@ -955,6 +970,20 @@ class Sale extends Invoice_controller
 		}
 		if(!$is_super_user){
 			$this->db->where("sale.is_cancelled", 0);
+		}else{
+			switch ($type) {
+				case 'fixed':
+					$this->db->where("sale.is_cancelled", 0);
+					break;
+				
+				case 'deleted':
+					$this->db->where("sale.is_cancelled", 1);
+					break;
+				
+				default:
+					# code...
+					break;
+			}
 		}
 		$this->db->group_start();
 		$this->db->where("sale.is_transaction", 1);
