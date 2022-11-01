@@ -1,11 +1,28 @@
 import DataUser from "../data/DataUser.js";
+import DataCustomer from "../data/DataCustomer.js";
 
+const data_customer = new DataCustomer();
 const data_user_marketing = new DataUser();
 
 const main = () => {
     $(document).ready(function () {
         'use strict'
 
+        function colorize(opaque, hover, ctx) {
+            const v = ctx.parsed;
+            const c = v < -50 ? '#D60000'
+                : v < 0 ? '#F46300'
+                    : v < 50 ? '#0358B6'
+                        : '#44DE28';
+
+            const opacity = hover ? 1 - Math.abs(v / 150) - 0.2 : 1 - Math.abs(v / 150);
+
+            return opaque ? c : Utils.transparentize(c, opacity);
+        }
+
+        function hoverColorize(ctx) {
+            return colorize(false, true, ctx);
+        }
         /* jQueryKnob */
         $('.knob').knob()
 
@@ -25,8 +42,17 @@ const main = () => {
         var salesChartOptions = {
             maintainAspectRatio: false,
             responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Total Selling Monthly'
+                },
+            },
+            interaction: {
+                intersect: true,
+            },
             legend: {
-                display: false
+                display: true
             },
             scales: {
                 xAxes: [{
@@ -37,12 +63,7 @@ const main = () => {
                 yAxes: [{
                     ticks: {
                         callback: function (value, index, values) {
-                            if (1000 < parseInt(value)) {
-                                return `Rp. ${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Juta`
-                            }
-                            else {
-                                return `Rp. ${value} Juta`;
-                            }
+                            return `Rp. ${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
                         }
                     },
                     gridLines: {
@@ -58,36 +79,9 @@ const main = () => {
             data: {},
             options: salesChartOptions
         });
-        var salesChartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'Digital Goods',
-                    backgroundColor: 'rgba(60,141,188,0.9)',
-                    borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false,
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: [28, 48, 40, 19, 86, 27, 90]
-                },
-                {
-                    label: 'Electronics',
-                    backgroundColor: 'rgba(210, 214, 222, 1)',
-                    borderColor: 'rgba(210, 214, 222, 1)',
-                    pointRadius: false,
-                    pointColor: 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor: '#c1c7d1',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                },
-            ]
-        }
         $.ajax({
             type: 'POST', //post method
-            url: location.base + 'invoice/sale/monthly_statistic', //ajaxformexample url
+            url: location.base + 'dashboard/monthly_statistic', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
                 salesChart.data = result;
@@ -113,17 +107,40 @@ const main = () => {
         }
         var pieOptions = {
             legend: {
-                display: false
+                display: true
             },
             maintainAspectRatio: false,
             responsive: true,
         }
+
         //Create pie or douhnut chart
         // You can switch between pie and douhnut using the method below.
         var pieChart = new Chart(pieChartCanvas, {
-            type: 'doughnut',
-            data: pieData,
-            options: pieOptions
+            type: 'pie',
+            data: {},
+            options: pieOptions,
+        });
+
+        $.ajax({
+            type: 'POST', //post method
+            url: location.base + 'dashboard/expense_statment_daily', //ajaxformexample url
+            dataType: "json",
+            success: function (result, textStatus, jqXHR) {
+                $('b#today_total_sales').text(currency(result.datasets[0]['data'][1]))
+                $('b#today_total_purchase').text(currency(result.datasets[0]['data'][0]))
+            }
+        });
+        $.ajax({
+            type: 'POST', //post method
+            url: location.base + 'dashboard/expense_statment_monthly', //ajaxformexample url
+            dataType: "json",
+            success: function (result, textStatus, jqXHR) {
+                pieChart.data = result;
+                pieChart.update();
+
+                $('b#monthly_total_sales').text(currency(result.datasets[0]['data'][1]))
+                $('b#monthly_total_purchase').text(currency(result.datasets[0]['data'][0]))
+            }
         });
 
         // Sales graph chart
@@ -163,7 +180,6 @@ const main = () => {
                 }],
                 yAxes: [{
                     ticks: {
-                        stepSize: 5000,
                         callback: function (value, index, values) {
                             // if (parseInt(value) >= 1000) {
                             //     return 'Rp. ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -191,17 +207,18 @@ const main = () => {
             options: salesGraphChartOptions
         })
 
-        function request(date = "", user_id = "", user = "") {
+        function request(date = "", data = "") {
             $.ajax({
                 type: 'POST', //post method
-                url: location.base + 'invoice/sale/daily_statistic', //ajaxformexample url
+                url: location.base + 'dashboard/daily_statistic', //ajaxformexample url
                 data: {
                     'date': {
                         'startdate': startdate,
                         'enddate': enddate
                     },
-                    'user_id': user_id,
-                    'user': user
+                    'user_id': data['user_id'],
+                    'user': data['user'],
+                    'group_by': data['group_by']
                 },
                 dataType: "json",
                 success: function (result, textStatus, jqXHR) {
@@ -213,6 +230,7 @@ const main = () => {
 
         request();
 
+        // USER
         $(document).on('keyup', 'input#user', function () {
             let valueElement = $(this).val();
             let selfElement = $(this);
@@ -244,9 +262,11 @@ const main = () => {
 
         $(document).on('click', 'button#search', function () {
             const date = $('#custom_graph input#min').val();
-            const user_id = $('#custom_graph input#user_id').val();
-            const user = $('#custom_graph input#user').val();
-            request(date, user_id, user);
+            const data = [];
+            data['user_id'] = $('#custom_graph input#user_id').val();
+            data['user'] = $('#custom_graph input#user').val();
+            data['group_by'] = $('#custom_graph select#group_by').val();
+            request(date, data);
         })
     })
 }
