@@ -622,7 +622,7 @@ class Report extends MY_Controller
 
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("sale.is_cancelled", 0);
-        // $this->db->where("transaction.is_cancelled", 0);
+        $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
             $this->db->select('
             transaction.customer_code
