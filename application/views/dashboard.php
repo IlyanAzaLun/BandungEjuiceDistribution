@@ -207,7 +207,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- /.card -->
           </section>
-          <section class="col-12 col-lg-4 connectedSortable"  <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
+          <section class="col-12 col-lg-4 connectedSortable" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
 
             <!-- solid sales graph -->
             <div class="card">
@@ -230,7 +230,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <div class="row">
           <!-- Left col -->
-          <section class="col-12 col-lg-12 connectedSortable">
+          <section class="col-12 col-lg-12 connectedSortable" <?php if(!hasPermissions('!dashboard_staff')):?>style="display:none"<?php endif;?>>
             <!-- Custom tabs (Charts with tabs)-->
             <div class="card">
               <div class="card-header">
