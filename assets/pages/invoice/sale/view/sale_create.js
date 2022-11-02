@@ -392,7 +392,7 @@ const main = () => {
             $('input#grand_total').val(currency(sum_grand_total()));
 
             // validation price discount
-            if (($('input#discount').val() != 0 || $('input#other_cost').val() != 0) && (sum_cap_sub_total() >= currencyToNum($('input#grand_total').val()))) {
+            if (($('input#discount').val() != 0 || $('input#other_cost').val() != 0) && (sum_cap_sub_total() > currencyToNum($('input#grand_total').val()))) {
                 $(`input#discount`).addClass('is-invalid');
                 $(`input#other_cost`).addClass('is-invalid');
             } else {

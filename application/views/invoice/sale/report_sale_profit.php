@@ -101,13 +101,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <th><?=lang('customer_code')?></th>
                     <th><?=lang('store_name')?></th>
                     <th><?=lang('item_capital_price')?></th>
-                    <th><?=lang('item_shadow_selling_price')?></th>
                     <th><?=lang('item_selling_price')?></th>
-                    <th>Selling Price</th>
                     <th><?=lang('profit')?></th>
-                    <th><?=lang('profit_pesudo')?></th>
-                    <th>Actually Profit</th>
+                    <th><?=lang('discount')?></th>
                     <th><?=lang('other_cost')?></th>
+                    <th><?=lang('grandtotal')?></th>
+                    <th>Actually Profit</th>
                     <th>Average Profit</th>
                     <th><?=lang('name')?></th>
                 </tr>
@@ -188,6 +187,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 data: "updated_at",
             },{
                 data: "invoice_code",
+                render: function(data, type, row){
+                    return `<a target="_blank" href="${location.base}invoice/sale/info?id=${data}">${data}</a>`
+                }
             },{
                 data: "customer_code",
             },{
@@ -196,19 +198,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 data: "item_capital_price",
                 render: function(data, type, row){
                     return data?currency(data):0;
-                }
-            },{
-                data: "pseudo_price",
-                visible: false,
-                className: "bg-warning",
-                render: function(data, type, row){
-                    return data?currency(data):0;
-                }
-            },{
-                data: "grand_total",
-                className: "bg-danger",
-                render: function(data, type, row){
-                    return data?currency(row['grand_total']):0;
                 }
             },{
                 data: "item_selling_price",
@@ -223,23 +212,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     return data?currency(data):0;
                 }
             },{
-                data: "pseudo_price",
-                visible: false,
-                className: "bg-warning",
+                data: "discounts",
                 render: function(data, type, row){
-                    return data?currency(row['item_selling_price'] - row['pseudo_price'] - currencyToNum(row['discounts']) + currencyToNum(row['shipping_cost'])):0;
-                }
-            },{
-                data: "grand_total",
-                className: "bg-danger",
-                render: function(data, type, row){
-                    return data?currency(row['grand_total'] - row['item_capital_price']):0;
+                    return data?currency(row['discounts']):0;
                 }
             },{
                 data: "other_cost",
                 className: "bg-danger",
                 render: function(data, type, row){
                     return data?currency(row['other_cost']):0;
+                }
+            },{
+                data: "grand_total",
+                className: "bg-danger",
+                render: function(data, type, row){
+                    return data?currency(row['grand_total']):0;
+                }
+            },{
+                // Actually Profit
+                data: "profit",
+                className: "bg-danger",
+                render: function(data, type, row){
+                    return data?currency(data - row['discounts'] - row['other_cost'] - row['shipping_cost']):0;
                 }
             },{
                 data: "calc",
@@ -299,7 +293,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <span class="text-default"><label>Capital Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['time_capital_price'])}</span><br></span>
 
                                         <span class="text-default"><label>Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'])}</b></span><br></span>
-                                        <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['grand_total'] - response[0]['time_capital_price'])}</b></span><br></span>
+                                        <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'] - (currencyToNum(response[0]['other_cost']) + currencyToNum(response[0]['discounts'])))}</b></span><br></span>
+                                        <!-- <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['grand_total'] - response[0]['time_capital_price'])}</b></span><br></span> -->
                                         <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span>
                                     </div>
                                 </div>

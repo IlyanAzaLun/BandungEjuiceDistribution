@@ -801,7 +801,12 @@ class Report extends MY_Controller
         , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
         , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
-        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
+        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+        , SUM(sale.grand_total) AS grand_total
+        , SUM(sale.shipping_cost) AS shipping_cost
+        , SUM(sale.other_cost) AS other_cost
+        , SUM(sale.discounts) AS discounts
+        ");
 		$this->db->join("users", "transaction.created_by = users.id", "left");
 		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
         $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
@@ -813,6 +818,7 @@ class Report extends MY_Controller
 
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("sale.is_cancelled", 0);
+        $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
             $this->db->select('
             transaction.customer_code
@@ -842,23 +848,11 @@ class Report extends MY_Controller
         switch ($group_by) {
             case 'monthly':
                 # code...
-                $this->db->select('
-                    ,SUM(sale.grand_total) AS grand_total
-                    ,SUM(sale.shipping_cost) AS shipping_cost
-                    ,SUM(sale.other_cost) AS other_cost
-                    ,SUM(sale.discounts) AS discounts
-               ');
                 $this->db->group_by("year");
                 break;
             
             default:
                 # code...
-                $this->db->select('
-                    ,SUM(sale.grand_total) AS grand_total
-                    ,SUM(sale.shipping_cost) AS shipping_cost
-                    ,SUM(sale.other_cost) AS other_cost
-                    ,SUM(sale.discounts) AS discounts
-                ');
                 $this->db->group_by("yearmount");
                 break;
         }

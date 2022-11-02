@@ -214,7 +214,7 @@ $i = 0; $total_price = 0;?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-12">
+                                <div class="col-lg-2 col-sm-12" style="display: none;">
                                     <div class="form-group">
                                         <h6><?= lang('shipping_cost') ?> :</h6>
                                         <div class="input-group mb-3">
@@ -225,16 +225,16 @@ $i = 0; $total_price = 0;?>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12" style="display:none">
-                            <div class="form-group">
-                                <h6><?= lang('other_cost') ?> :</h6>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
+                                <div class="col-lg-3 col-sm-12">
+                                    <div class="form-group">
+                                        <h6><?= lang('other_cost') ?> :</h6>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Rp</span>
+                                            </div>
+                                            <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= number_format($invoice_information_transaction->other_cost) ?>" required readonly>
+                                        </div>
                                     </div>
-                                    <input type="text" name="other_cost" id="other_cost" class="form-control currency" value="<?= number_format($invoice_information_transaction->other_cost) ?>" required readonly>
                                 </div>
                             </div>
                         </div>

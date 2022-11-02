@@ -106,7 +106,8 @@ class Transaction_item_model extends MY_Model {
 
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("sale.is_cancelled", 0);
-        
+        $this->db->where("transaction.is_cancelled", 0);
+
         if($data['customer_code'] != ''){
             $this->db->select('
             transaction.customer_code
