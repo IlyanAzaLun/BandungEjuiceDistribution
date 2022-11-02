@@ -283,36 +283,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-lg-4 col-12">
                                 <div class="row">
                                     <div class="col-6">
-                                    <span class="text-default"><label>Discount</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['discounts']))}</span></br></span>
-                                        <span class="text-primary"><label>Other Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['other_cost']))}</span></br></span>
-                                        <span class="text-default"><label>Shipping Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['shipping_cost']))}</span></br></span>
+                                    <span class="text-default"><label>Discount</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[1]['discounts']))}</span></br></span>
+                                        <span class="text-primary"><label>Other Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[1]['other_cost']))}</span></br></span>
+                                        <span class="text-default"><label>Shipping Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[1]['shipping_cost']))}</span></br></span>
                                     </div>
                                     <div class="col-6">
                                         <span class="text-default"><label>Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['total_price'])}</span><br></span>
-                                        <span class="text-danger"><label>Actully Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['grand_total'])}</span><br></span>
+                                        <span class="text-danger"><label>Actully Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost'])}</span><br></span>
                                         <span class="text-default"><label>Capital Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['time_capital_price'])}</span><br></span>
 
                                         <span class="text-default"><label>Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'])}</b></span><br></span>
-                                        <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'] - (currencyToNum(response[0]['other_cost']) + currencyToNum(response[0]['discounts'])))}</b></span><br></span>
-                                        <!-- <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['grand_total'] - response[0]['time_capital_price'])}</b></span><br></span> -->
-                                        <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span>
+                                        <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'] - (currencyToNum(response[1]['other_cost']) + currencyToNum(response[1]['discounts'])))}</b></span><br></span>
+                                        <!-- <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost']) - response[0]['time_capital_price'])}</b></span><br></span> -->
+                                        <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(((response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost']) - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     `;
-                    data[0]['date'] = response[0]['created_at']
-                    data[0]['capital_price'] = currency(response[0]['time_capital_price'])
-                    data[0]['pesudo_price'] = currency(response[0]['pseudo_price'])
-                    data[0]['actuly_selling_price'] = currency(response[0]['grand_total'])
-                    data[0]['selling_price'] = currency(response[0]['total_price'])
-                    data[0]['profit'] = currency(response[0]['profit'])
-                    data[0]['profit_pesudo'] = response[0]['pseudo_price']?currency(response[0]['total_price'] - response[0]['pseudo_price'] - currencyToNum(response[0]['discounts']) + currencyToNum(response[0]['shipping_cost'])):0
-                    data[0]['actually_profit'] = currency(response[0]['grand_total'] - response[0]['time_capital_price'])
-                    data[0]['calc'] = currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])
                     $("#total_profit").empty()
-                    // $("#total_profit").append(`<pre>${JSON.stringify(data[0], null, 2)}</pre>`);
                     $("#total_profit").append(html);
             });
         })

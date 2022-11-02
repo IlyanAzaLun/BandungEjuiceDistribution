@@ -793,28 +793,15 @@ class Report extends MY_Controller
 
         
 		$this->db->select("
-        , transaction.item_capital_price
-        , transaction.created_at
         , DATE_FORMAT(transaction.created_at, '%Y') AS year
         , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
-        , CAST(SUM(CAST(`purchase`.`shipping_cost` AS INT)) / list_items.item_quantity AS INT) AS calc,
-        , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
         , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
-        , SUM(sale.grand_total) AS grand_total
-        , SUM(sale.shipping_cost) AS shipping_cost
-        , SUM(sale.other_cost) AS other_cost
-        , SUM(sale.discounts) AS discounts
         ");
-		$this->db->join("users", "transaction.created_by = users.id", "left");
 		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
         $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
-        $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
-		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
-		$this->db->join("items", "transaction.item_id = items.id", "left");
-		$this->db->join("(SELECT invoice_code, SUM(item_quantity) item_quantity FROM invoice_transaction_list_item GROUP BY invoice_code) list_items", "list_items.invoice_code = transaction.reference_purchase", "left");
 
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("sale.is_cancelled", 0);
@@ -828,9 +815,7 @@ class Report extends MY_Controller
         if($user != ''){
             $this->db->select('
             transaction.created_by
-           ,users.name
-           ,sale.is_have
-           ,is_have.name AS is_have_name');
+           ,sale.is_have');
             $this->db->group_start();
             $this->db->where("transaction.created_by", $user);
             $this->db->or_where("sale.is_have", $user);
@@ -856,7 +841,50 @@ class Report extends MY_Controller
                 $this->db->group_by("yearmount");
                 break;
         }
-		$records = $this->db->get('fifo_items transaction')->result();
+		$result1 = $this->db->get('fifo_items transaction')->result();
+
+        $this->db->select("
+            DATE_FORMAT(invoice_selling.created_at, '%Y') AS year
+            , DATE_FORMAT(invoice_selling.created_at, '%Y%m') AS yearmount
+            , SUM(invoice_selling.total_price) AS total_price
+            , SUM(invoice_selling.discounts) AS discounts
+            , SUM(invoice_selling.shipping_cost) AS shipping_cost
+            , SUM(invoice_selling.other_cost) AS other_cost 
+        ");
+        if($customer != ''){
+            $this->db->where("invoice_selling.customer", $customer);
+        }
+        if($user != ''){
+            $this->db->group_start();
+            $this->db->where("invoice_selling.is_have", $user);
+            $this->db->group_end();
+        }
+		if ($dateStart != '') {
+            $this->db->group_start();
+			$this->db->where("invoice_selling.created_at >=", $dateStart);
+			$this->db->where("invoice_selling.created_at <=", $dateFinal);
+            $this->db->group_end();
+		}
+        else{
+			$this->db->like("invoice_selling.created_at", date("Y-m"), 'after');
+		}
+        switch ($group_by) {
+            case 'monthly':
+                # code...
+                $this->db->group_by("year");
+                break;
+            
+            default:
+                # code...
+                $this->db->group_by("yearmount");
+                break;
+        }
+        $this->db->group_start();
+        $this->db->where("invoice_selling.is_transaction", 1);
+        $this->db->where("invoice_selling.is_cancelled", 0);
+        $this->db->group_end();
+		$result2 = $this->db->get('invoice_selling')->result();
+        $records = array_merge($result1, $result2);
         $this->output->set_content_type('application/json')->set_output(json_encode($records));
     }
 
