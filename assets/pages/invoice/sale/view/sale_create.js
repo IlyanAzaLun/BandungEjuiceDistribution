@@ -245,7 +245,7 @@ const main = () => {
                     <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                     <td>
-                        <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required>
+                        <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly>
                         <input class="form-control form-control-sm" type="hidden" name="total_price_cap[]" data-id="total_price_cap" value="0" required>
                     </td>
                     <td>
@@ -300,7 +300,7 @@ const main = () => {
                 <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                 <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" min="0" max="100" value="0" required></td>
                 <td>
-                    <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required>
+                    <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly>
                     <input class="form-control form-control-sm" type="hidden" name="total_price_cap[]" data-id="total_price_cap" value="0" required>
                 </td>                
                 <td>

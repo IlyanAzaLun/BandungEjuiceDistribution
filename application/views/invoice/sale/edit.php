@@ -101,6 +101,7 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                         <th width="3%">No.</th>
                                         <th width="10%"><?= lang('item_code') ?></th>
                                         <th><?= lang('item_name') ?></th>
+                                        <th style="display:none"><?= lang('note') ?></th>
                                         <th style="display:none"><?= lang('item_quantity') ?></th>
                                         <th width="12%"><?= lang('item_order_quantity') ?></th>
                                         <th style="display:none"><?= lang('item_capital_price') ?></th>
@@ -122,6 +123,7 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required readonly>
                                             </td>
                                             <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required readonly><?= $value->item_name ?></textarea></td>
+                                            <td style="display:none"><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" value="<?= $this->items_model->getByCodeItem($value->item_code, 'note') ?>" required readonly></td>
                                             <td style="display:none">
                                                 <div class=" input-group input-group-sm">
                                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
@@ -147,7 +149,7 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $_data_item_invoice_child_[$i]->item_capital_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $_data_item_invoice_child_[$i]->item_selling_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= number_format($_data_item_invoice_child_[$i]->item_discount) ?>"></td>
-                                            <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= number_format($_data_item_invoice_child_[$i]->total_price) ?>"></td>
+                                            <td><input class="form-control form-control-sm currency" type="text" readonly name="total_price[]" data-id="total_price" min="0" required value="<?= number_format($_data_item_invoice_child_[$i]->total_price) ?>"></td>
                                             <td>
                                                 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>
@@ -176,7 +178,7 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                                 <input class="form-control form-control-sm" type="text" name="item_code[]" data-id="item_code" value="<?= $value->item_code ?>" required readonly>
                                             </td>
                                             <td><textarea class="form-control form-control-sm" type="text" name="item_name[]" data-id="item_name" required readonly><?= $value->item_name ?></textarea></td>
-                                            <td><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" value="<?= $this->items_model->getByCodeItem($value->item_code, 'note') ?>" required readonly></td>
+                                            <td style="display:none"><input class="form-control form-control-sm" type="text" name="note[]" data-id="note" value="<?= $this->items_model->getByCodeItem($value->item_code, 'note') ?>" required readonly></td>
                                             <td style="display:none">
                                                 <div class=" input-group input-group-sm">
                                                     <input readonly class="form-control form-control-sm" type="text" name="item_quantity[]" data-id="item_quantity" required value="<?= $this->items_model->getByCodeItem($value->item_code, 'quantity') ?>">
@@ -201,7 +203,7 @@ $i = 0; $due = new DateTime($_data_invoice_parent->date_due); $start = new DateT
                                             <td style="display:none"><input class="form-control form-control-sm currency" type="text" name="item_capital_price[]" data-id="item_capital_price" required value="<?= $value->item_capital_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_selling_price[]" data-id="item_selling_price" required value="<?= $value->item_selling_price ?>"></td>
                                             <td><input class="form-control form-control-sm currency" type="text" name="item_discount[]" data-id="discount" min="0" required value="<?= number_format($value->item_discount) ?>"></td>
-                                            <td><input class="form-control form-control-sm currency" type="text" name="total_price[]" data-id="total_price" min="0" required value="<?= number_format($value->total_price) ?>"></td>
+                                            <td><input class="form-control form-control-sm currency" type="text" readonly name="total_price[]" data-id="total_price" min="0" required value="<?= number_format($value->total_price) ?>"></td>
                                             <td>
                                                 <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-default" id="description" data-toggle="tooltip" data-placement="top" title="Open dialog description item purchase"><i class="fas fa-tw fa-ellipsis-h"></i></button>

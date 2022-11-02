@@ -8,7 +8,7 @@
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required readonly>
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
@@ -96,7 +96,7 @@
                     <td><input class="form-control form-control-sm" type="text" name="item_selling_price[]" data-id="item_selling_price" required></td>
                     <td><input class="form-control form-control-sm" type="text" name="item_discount[]" data-id="discount" value="0" required></td>
                     <td>
-                      <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required>
+                      <input class="form-control form-control-sm" type="text" name="total_price[]" data-id="total_price" value="0" required readonly>
                       <input class="form-control form-control-sm" type="hidden" name="total_price_cap[]" data-id="total_price_cap" value="0" required>
                     </td>                
                     <td>
@@ -141,7 +141,7 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text">Rp</span>
                       </div>
-                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required>
+                      <input type="text" name="sub_total" id="sub_total" class="form-control" value="0" min="1" required readonly>
                     </div>
                   </div>
                 </div>
@@ -187,7 +187,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Rp</b></span>
                   </div>
-                  <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required>
+                  <input type="text" name="grand_total" id="grand_total" class="form-control" value="0" min="1" required readonly>
                 </div>
               </div>
             </div>
