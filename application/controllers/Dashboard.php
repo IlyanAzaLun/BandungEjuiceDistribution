@@ -112,48 +112,43 @@ class Dashboard extends MY_Controller {
 	}
 
 	public function daily_statistic()
-	{
-		$user = logged('id');
+	{$user = logged('id');
         $haspermission = hasPermissions('dashboard_staff');
+
+		// ITEMS WITH REFERENCE
 		$this->db->select("
-            , transaction.created_at
-            , transaction.updated_at
-            , DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
-            , DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
-            , DATE_FORMAT(transaction.created_at, '%M') AS month
-            , DATE_FORMAT(transaction.created_at, '%W') AS days
-            , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
-			, SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
-            , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
-			, SUM(CAST(transaction.total_price AS INT)) AS total_price
-			, SUM(selling.discounts) AS discounts
-			, SUM(selling.shipping_cost) AS shipping_cost
-			, SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS profit
-			, selling.is_have
-		");
-		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code');
-		$this->db->join("items", "transaction.item_id = items.id", "left");
-		$this->db->join('users user', 'user.id = selling.is_have');
-		$this->db->group_start();
-        $this->db->where('transaction.is_cancelled', 0);
-        if(!$haspermission){
+		, DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
+		, DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
+		, DATE_FORMAT(transaction.created_at, '%M') AS month
+		, DATE_FORMAT(transaction.created_at, '%W') AS days
+
+        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
+        , SUM(CAST(transaction.total_price AS INT)) AS total_price
+        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+        ");
+		$this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
+        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
+
+        $this->db->where("sale.is_transaction", 1);
+        $this->db->where("sale.is_cancelled", 0);
+        $this->db->where("transaction.is_cancelled", 0);
+		if(!$haspermission){
+			$this->db->select('transaction.created_by ,sale.is_have');
 			$this->db->group_start();
 			$this->db->where("transaction.created_by", $user);
-			$this->db->or_where("selling.is_have", $user);
+			$this->db->or_where("sale.is_have", $user);
 			$this->db->group_end();
         }
-		$this->db->group_end();
-
 		if(post('user_id') != ""){
 			$this->db->group_start();
-			$this->db->where("selling.is_have", post('user_id'));
+			$this->db->where("sale.is_have", post('user_id'));
 			$this->db->group_end();
 		}
-		if(post('date') != "") {
-			$this->db->group_start();
+		if (post('date') != "") {
+            $this->db->group_start();
 			$this->db->where("transaction.created_at >=", post('date')['startdate']);
 			$this->db->where("transaction.created_at <=", post('date')['enddate']);
-			$this->db->group_end();
+            $this->db->group_end();
 		}else{
 			$this->db->group_start();
 			$this->db->where("transaction.created_at >=", 'DATE_FORMAT(DATE_ADD(now(), INTERVAL -7 DAY), "%Y-%m-%d 00:00:00")',false);
@@ -169,17 +164,66 @@ class Dashboard extends MY_Controller {
 				$this->db->group_by("yearmountday");
 				break;
 		}
-		$records = $this->db->get('fifo_items transaction')->result();
+		$result1 = $this->db->get('fifo_items transaction')->result();
+
+		// INVOICE WITH REFERENCE
+        $this->db->select("
+              DATE_FORMAT(invoice_selling.created_at, '%Y-%m-%d') AS yearmountday
+			, DATE_FORMAT(invoice_selling.created_at, '%Y-%m') AS yearmount
+			, DATE_FORMAT(invoice_selling.created_at, '%M') AS month
+			, DATE_FORMAT(invoice_selling.created_at, '%W') AS days
+            , SUM(invoice_selling.total_price) AS total_price
+            , SUM(invoice_selling.discounts) AS discounts
+            , SUM(invoice_selling.shipping_cost) AS shipping_cost
+            , SUM(invoice_selling.other_cost) AS other_cost 
+        ");
+        if(!$haspermission){
+			$this->db->select('invoice_selling.created_by ,invoice_selling.is_have');
+			$this->db->group_start();
+			$this->db->where("invoice_selling.created_by", $user);
+			$this->db->or_where("invoice_selling.is_have", $user);
+			$this->db->group_end();
+        }
+		if(post('user_id') != ""){
+			$this->db->group_start();
+			$this->db->where("invoice_selling.is_have", post('user_id'));
+			$this->db->group_end();
+		}
+		if (post('date') != "") {
+            $this->db->group_start();
+			$this->db->where("invoice_selling.created_at >=", post('date')['startdate']);
+			$this->db->where("invoice_selling.created_at <=", post('date')['enddate']);
+            $this->db->group_end();
+		}else{
+			$this->db->group_start();
+			$this->db->where("invoice_selling.created_at >=", 'DATE_FORMAT(DATE_ADD(now(), INTERVAL -7 DAY), "%Y-%m-%d 00:00:00")',false);
+			$this->db->where("invoice_selling.created_at <=", 'NOW()',false);
+			$this->db->group_end();
+		}
+		switch (post('group_by')) {
+			case 'monthly':
+				$this->db->group_by("yearmount");
+				break;
+				
+			default:
+				$this->db->group_by("yearmountday");
+				break;
+		}
+        $this->db->group_start();
+        $this->db->where("invoice_selling.is_transaction", 1);
+        $this->db->where("invoice_selling.is_cancelled", 0);
+        $this->db->group_end();
+		$result2 = $this->db->get('invoice_selling')->result();
+
 		$data['labels'] = array();
 		$data['datasets'][]['data'] = array();
-		foreach ($records as $key => $record) {
+		foreach ($result2 as $key => $value) {
 			switch (post('group_by')) {
 				case 'monthly':
-					array_push($data['labels'], $record->month);
+					array_push($data['labels'], $value->month);
 					break;
-					
 				default:				
-					array_push($data['labels'], $record->yearmountday);
+					array_push($data['labels'], $value->yearmountday);
 					break;
 			}
 			
@@ -187,11 +231,11 @@ class Dashboard extends MY_Controller {
 			$data['datasets'][0]['backgroundColor'] = 'rgba(0, 109, 255, 0.39)';
 			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
 
-			array_push($data['datasets'][0]['data'], $record->item_selling_price - $record->pseudo_price - $record->discounts + $record->shipping_cost);
+			array_push($data['datasets'][0]['data'], $result1[$key]->total_price - $result1[$key]->time_capital_price - $value->discounts - $value->shipping_cost - $value->other_cost);
 			// array_push($data['datasets'][0]['data'], $record->profit); // IS REAL
 			
 		}
-		## Response
+		
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
 	}
 	
@@ -199,52 +243,129 @@ class Dashboard extends MY_Controller {
 	{
 		$user = logged('id');
         $haspermission = hasPermissions('dashboard_staff');
+
+		// ITEMS WITH REFERENCE
 		$this->db->select("
-            , transaction.created_at
-            , transaction.updated_at
-            , DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
-            , DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
-            , DATE_FORMAT(transaction.created_at, '%M') AS mount
-            , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
-            , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
-			, SUM(CAST(transaction.total_price AS INT)) AS total_price
-			,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
-		");
-		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code');
-		$this->db->group_start();
-        $this->db->where('transaction.is_cancelled', 0);
-        if(!$haspermission){
+		, DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
+		, DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
+		, DATE_FORMAT(transaction.created_at, '%M') AS month
+		, DATE_FORMAT(transaction.created_at, '%W') AS days
+
+        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
+        , SUM(CAST(transaction.total_price AS INT)) AS total_price
+        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+        ");
+		$this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
+        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
+
+        $this->db->where("sale.is_transaction", 1);
+        $this->db->where("sale.is_cancelled", 0);
+        $this->db->where("transaction.is_cancelled", 0);
+		if(!$haspermission){
+			$this->db->select('transaction.created_by ,sale.is_have');
 			$this->db->group_start();
 			$this->db->where("transaction.created_by", $user);
-			$this->db->or_where("selling.is_have", $user);
+			$this->db->or_where("sale.is_have", $user);
 			$this->db->group_end();
         }
-		$this->db->group_end();
-		
-		$this->db->group_start();
-		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -6 MONTH)',false);
-		$this->db->where("transaction.created_at <=", 'NOW()',false);
-		$this->db->group_end();
+		if(post('user_id') != ""){
+			$this->db->group_start();
+			$this->db->where("sale.is_have", post('user_id'));
+			$this->db->group_end();
+		}
+		if (post('date') != "") {
+            $this->db->group_start();
+			$this->db->where("transaction.created_at >=", post('date')['startdate']);
+			$this->db->where("transaction.created_at <=", post('date')['enddate']);
+            $this->db->group_end();
+		}else{
+			$this->db->group_start();
+			$this->db->where("transaction.created_at >=", 'DATE_FORMAT(DATE_ADD(now(), INTERVAL -7 DAY), "%Y-%m-%d 00:00:00")',false);
+			$this->db->where("transaction.created_at <=", 'NOW()',false);
+			$this->db->group_end();
+		}
+		switch (post('group_by')) {
+			case 'monthly':
+				$this->db->group_by("yearmount");
+				break;
+				
+			default:
+				$this->db->group_by("yearmountday");
+				break;
+		}
+		$result1 = $this->db->get('fifo_items transaction')->result();
 
-		$this->db->group_by("yearmount");
-		$records = $this->db->get('fifo_items transaction')->result();
+		// INVOICE WITH REFERENCE
+        $this->db->select("
+              DATE_FORMAT(invoice_selling.created_at, '%Y-%m-%d') AS yearmountday
+			, DATE_FORMAT(invoice_selling.created_at, '%Y-%m') AS yearmount
+			, DATE_FORMAT(invoice_selling.created_at, '%M') AS month
+			, DATE_FORMAT(invoice_selling.created_at, '%W') AS days
+            , SUM(invoice_selling.total_price) AS total_price
+            , SUM(invoice_selling.discounts) AS discounts
+            , SUM(invoice_selling.shipping_cost) AS shipping_cost
+            , SUM(invoice_selling.other_cost) AS other_cost 
+        ");
+        if(!$haspermission){
+			$this->db->select('invoice_selling.created_by ,invoice_selling.is_have');
+			$this->db->group_start();
+			$this->db->where("invoice_selling.created_by", $user);
+			$this->db->or_where("invoice_selling.is_have", $user);
+			$this->db->group_end();
+        }
+		if(post('user_id') != ""){
+			$this->db->group_start();
+			$this->db->where("invoice_selling.is_have", post('user_id'));
+			$this->db->group_end();
+		}
+		if (post('date') != "") {
+            $this->db->group_start();
+			$this->db->where("invoice_selling.created_at >=", post('date')['startdate']);
+			$this->db->where("invoice_selling.created_at <=", post('date')['enddate']);
+            $this->db->group_end();
+		}else{
+			$this->db->group_start();
+			$this->db->where("invoice_selling.created_at >=", 'DATE_FORMAT(DATE_ADD(now(), INTERVAL -7 DAY), "%Y-%m-%d 00:00:00")',false);
+			$this->db->where("invoice_selling.created_at <=", 'NOW()',false);
+			$this->db->group_end();
+		}
+		switch (post('group_by')) {
+			case 'monthly':
+				$this->db->group_by("yearmount");
+				break;
+				
+			default:
+				$this->db->group_by("yearmountday");
+				break;
+		}
+        $this->db->group_start();
+        $this->db->where("invoice_selling.is_transaction", 1);
+        $this->db->where("invoice_selling.is_cancelled", 0);
+        $this->db->group_end();
+		$result2 = $this->db->get('invoice_selling')->result();
+
 		$data['labels'] = array();
 		$data['datasets'][]['data'] = array();
-		foreach ($records as $key => $record) {
-			array_push($data['labels'], $record->mount);
-
+		foreach ($result2 as $key => $value) {
+			switch (post('group_by')) {
+				case 'monthly':
+					array_push($data['labels'], $value->month);
+					break;
+				default:				
+					array_push($data['labels'], $value->yearmountday);
+					break;
+			}
+			
 			$data['datasets'][0]['label'] = 'Profit';
 			$data['datasets'][0]['backgroundColor'] = 'rgba(0, 109, 255, 0.39)';
 			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
 
-			array_push($data['datasets'][0]['data'], bd_nice_number((int) $record->profit));
+			array_push($data['datasets'][0]['data'], $result1[$key]->total_price - $result1[$key]->time_capital_price - $value->discounts - $value->shipping_cost - $value->other_cost);
+			// array_push($data['datasets'][0]['data'], $record->profit); // IS REAL
+			
 		}
-		## Response
-		$this->output
-			->set_status_header(200)
-			->set_content_type('application/json', 'utf-8')
-			->set_output(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-		exit;
+		
+		$this->output->set_content_type('application/json')->set_output(json_encode($data));
 	}
 
 }

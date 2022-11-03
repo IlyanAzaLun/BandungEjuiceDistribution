@@ -507,12 +507,13 @@ class Report extends MY_Controller
             $sheet->setCellValue("E2", "customer_code");
             $sheet->setCellValue("F2", "store_name");
             $sheet->setCellValue("G2", "item_capital_price");
-            $sheet->setCellValue("H2", "item_selling_price");
+            $sheet->setCellValue("H2", "acctuly_item_selling_price");
             $sheet->setCellValue("I2", "discounts");
             $sheet->setCellValue("J2", "shipping_cost");
             $sheet->setCellValue("K2", "other_cost");
-            $sheet->setCellValue("L2", "profit");
-            $sheet->setCellValue("M2", "name");
+            $sheet->setCellValue("L2", "grand_total");
+            $sheet->setCellValue("M2", "profit");
+            $sheet->setCellValue("N2", "name");
             // Here
             foreach ($data as $key => $value) {
                 $sheet->setCellValue("B".$i, $value->created_at);
@@ -525,8 +526,9 @@ class Report extends MY_Controller
                 $sheet->setCellValue("I".$i, $value->discounts);
                 $sheet->setCellValue("J".$i, $value->shipping_cost);
                 $sheet->setCellValue("K".$i, $value->other_cost);
-                $sheet->setCellValue("L".$i, $value->grand_total-$value->time_capital_price);
-                $sheet->setCellValue("M".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
+                $sheet->setCellValue("L".$i, $value->grand_total);
+                $sheet->setCellValue("M".$i, $value->grand_total-$value->time_capital_price);
+                $sheet->setCellValue("N".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
                 $i++;
             }
             $sheet->setCellValue("G".$i, "=SUM(G3:G$i)");
@@ -535,6 +537,7 @@ class Report extends MY_Controller
             $sheet->setCellValue("J".$i, "=SUM(J3:J$i)");
             $sheet->setCellValue("K".$i, "=SUM(K3:K$i)");
             $sheet->setCellValue("L".$i, "=SUM(L3:L$i)");
+            $sheet->setCellValue("M".$i, "=SUM(M3:M$i)");
             // (E) SAVE FILE
             $writer = new Xlsx($spreadsheet);
             $fileName = post('params').'-'. date("Y-m-d-His") .'.xlsx';

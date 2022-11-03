@@ -295,7 +295,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <span class="text-default"><label>Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'])}</b></span><br></span>
                                         <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'] - (currencyToNum(response[1]['other_cost']) + currencyToNum(response[1]['discounts'])))}</b></span><br></span>
                                         <!-- <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost']) - response[0]['time_capital_price'])}</b></span><br></span> -->
-                                        <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(((response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost']) - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span>
+                                        <!-- <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(((response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost']) - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span> -->
                                     </div>
                                 </div>
                             </div>
