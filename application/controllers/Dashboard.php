@@ -126,7 +126,6 @@ class Dashboard extends MY_Controller {
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
         ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
         ");
-		$this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
         $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
 
         $this->db->where("sale.is_transaction", 1);
@@ -146,13 +145,13 @@ class Dashboard extends MY_Controller {
 		}
 		if (post('date') != "") {
             $this->db->group_start();
-			$this->db->where("transaction.created_at >=", post('date')['startdate']);
-			$this->db->where("transaction.created_at <=", post('date')['enddate']);
+			$this->db->where("sale.created_at >=", post('date')['startdate']);
+			$this->db->where("sale.created_at <=", post('date')['enddate']);
             $this->db->group_end();
 		}else{
 			$this->db->group_start();
-			$this->db->where("transaction.created_at >=", 'DATE_FORMAT(DATE_ADD(now(), INTERVAL -7 DAY), "%Y-%m-%d 00:00:00")',false);
-			$this->db->where("transaction.created_at <=", 'NOW()',false);
+			$this->db->where("sale.created_at >=", 'DATE_FORMAT(DATE_ADD(now(), INTERVAL -7 DAY), "%Y-%m-%d 00:00:00")',false);
+			$this->db->where("sale.created_at <=", 'NOW()',false);
 			$this->db->group_end();
 		}
 		switch (post('group_by')) {

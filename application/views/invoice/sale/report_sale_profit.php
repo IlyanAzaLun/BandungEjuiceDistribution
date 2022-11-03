@@ -98,7 +98,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <th><?=lang('created_at')?></th>
                     <th><?=lang('updated_at')?></th>
                     <th><?=lang('invoice_code')?></th>
-                    <th><?=lang('customer_code')?></th>
                     <th><?=lang('store_name')?></th>
                     <th><?=lang('item_capital_price')?></th>
                     <th><?=lang('item_selling_price')?></th>
@@ -107,7 +106,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <th><?=lang('other_cost')?></th>
                     <th><?=lang('grandtotal')?></th>
                     <th>Actually Profit</th>
-                    <th>Average Profit</th>
                     <th><?=lang('name')?></th>
                 </tr>
             </thead>
@@ -188,28 +186,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             },{
                 data: "invoice_code",
                 render: function(data, type, row){
-                    return `<a target="_blank" href="${location.base}invoice/sale/info?id=${data}">${data}</a>`
+                    return data?`<a target="_blank" href="${location.base}invoice/sale/info?id=${data}">${data}</a>`:''
                 }
-            },{
-                data: "customer_code",
             },{
                 data: "store_name",
             },{
-                data: "item_capital_price",
+                data: "time_capital_price",
                 render: function(data, type, row){
                     return data?currency(data):0;
                 }
             },{
-                data: "item_selling_price",
+                data: "total_price",
                 visible: false,
                 render: function(data, type, row){
                     return data?currency(data):0;
                 }
             },{
-                data: "profit",
+                data: "total_price",
                 visible: false,
                 render: function(data, type, row){
-                    return data?currency(data):0;
+                    return data?currency(data - row['time_capital_price']):0;
                 }
             },{
                 data: "discounts",
@@ -230,17 +226,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 }
             },{
                 // Actually Profit
-                data: "profit",
+                data: "total_price",
                 className: "bg-danger",
                 render: function(data, type, row){
-                    return data?currency(data - row['discounts'] - row['other_cost'] - row['shipping_cost']):0;
-                }
-            },{
-                data: "calc",
-                visible: false,
-                className: "bg-primary",
-                render: function(data, type, row){
-                    return currency((row['grand_total'] - row['item_capital_price']) - row['calc']);
+                    return data?currency(data - row['time_capital_price'] - row['discounts'] - row['other_cost'] - row['shipping_cost']):0;
                 }
             },{
                 data: "name",

@@ -125,12 +125,12 @@ class Transaction_item_model extends MY_Model {
         }
 		if ($data['date']['date_start'] != '') {
             $this->db->group_start();
-			$this->db->where("transaction.created_at >=", $data['date']['date_start']);
-			$this->db->where("transaction.created_at <=", $data['date']['date_finish']);
+			$this->db->where("sale.created_at >=", $data['date']['date_start']);
+			$this->db->where("sale.created_at <=", $data['date']['date_finish']);
             $this->db->group_end();
 		}
         else{
-			$this->db->like("transaction.created_at", date("Y-m"), 'after');
+			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
         
         switch ($data['group_by']) {
