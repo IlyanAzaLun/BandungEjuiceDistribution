@@ -513,22 +513,24 @@ class Report extends MY_Controller
             $sheet->setCellValue("K2", "other_cost");
             $sheet->setCellValue("L2", "grand_total");
             $sheet->setCellValue("M2", "profit");
-            $sheet->setCellValue("N2", "name");
+            $sheet->setCellValue("N2", "actully_profit");
+            $sheet->setCellValue("O2", "name");
             // Here
             foreach ($data as $key => $value) {
-                $sheet->setCellValue("B".$i, $value->created_at);
-                $sheet->setCellValue("C".$i, $value->updated_at);
-                $sheet->setCellValue("D".$i, $value->invoice_code);
-                $sheet->setCellValue("E".$i, $value->customer_code);
-                $sheet->setCellValue("F".$i, $value->store_name);
-                $sheet->setCellValue("G".$i, $value->time_capital_price);
-                $sheet->setCellValue("H".$i, $value->total_price);
-                $sheet->setCellValue("I".$i, $value->discounts);
-                $sheet->setCellValue("J".$i, $value->shipping_cost);
-                $sheet->setCellValue("K".$i, $value->other_cost);
-                $sheet->setCellValue("L".$i, $value->grand_total);
-                $sheet->setCellValue("M".$i, $value->grand_total-$value->time_capital_price);
-                $sheet->setCellValue("N".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
+                $sheet->setCellValue("B".$i, $value['created_at']);
+                $sheet->setCellValue("C".$i, $value['updated_at']);
+                $sheet->setCellValue("D".$i, $value['invoice_code']);
+                $sheet->setCellValue("E".$i, $value['customer']);
+                $sheet->setCellValue("F".$i, $value['store_name']);
+                $sheet->setCellValue("G".$i, $value['time_capital_price']);
+                $sheet->setCellValue("H".$i, $value['total_price']);
+                $sheet->setCellValue("I".$i, $value['discounts']);
+                $sheet->setCellValue("J".$i, $value['shipping_cost']);
+                $sheet->setCellValue("K".$i, $value['other_cost']);
+                $sheet->setCellValue("L".$i, $value['grand_total']);
+                $sheet->setCellValue("M".$i, $value['grand_total']-$value['time_capital_price']);
+                $sheet->setCellValue("N".$i, $value['total_price']-$value['time_capital_price']-$value['discounts']-$value['other_cost']);
+                $sheet->setCellValue("O".$i, ($value['is_have_name']!=$value['name'] && $value['is_have_name']!=null)?$value['is_have_name']:$value['name']);
                 $i++;
             }
             $sheet->setCellValue("G".$i, "=SUM(G3:G$i)");
@@ -538,6 +540,7 @@ class Report extends MY_Controller
             $sheet->setCellValue("K".$i, "=SUM(K3:K$i)");
             $sheet->setCellValue("L".$i, "=SUM(L3:L$i)");
             $sheet->setCellValue("M".$i, "=SUM(M3:M$i)");
+            $sheet->setCellValue("N".$i, "=SUM(O3:O$i)");
             // (E) SAVE FILE
             $writer = new Xlsx($spreadsheet);
             $fileName = post('params').'-'. date("Y-m-d-His") .'.xlsx';
@@ -614,6 +617,7 @@ class Report extends MY_Controller
         $this->db->where("sale.is_cancelled", 0);
         $this->db->where("transaction.is_cancelled", 0);
         $this->db->group_end();
+
         if($customer != ''){
             $this->db->select("
               sale.customer
@@ -681,7 +685,6 @@ class Report extends MY_Controller
                  , sale.is_have
                  , is_have.name AS is_have_name
                  ');
-                // $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
                 $this->db->group_by("yearmountday, sale.is_have");
                 break;
 
@@ -713,7 +716,6 @@ class Report extends MY_Controller
 		$records = $this->db->get('fifo_items transaction')->result();
 
         $this->db->select("
-        
                   DATE_FORMAT(invoice_selling.created_at, '%Y%m%d') AS yearmountday
                 , DATE_FORMAT(invoice_selling.created_at, '%Y%m') AS yearmount
                 , DATE_FORMAT(invoice_selling.created_at, '%Y') AS year
@@ -721,8 +723,7 @@ class Report extends MY_Controller
                 , SUM(invoice_selling.discounts) AS discounts
                 , SUM(invoice_selling.shipping_cost) AS shipping_cost
                 , SUM(invoice_selling.other_cost) AS other_cost
-                , SUM(invoice_selling.grand_total) AS grand_total
-        ");
+                , SUM(invoice_selling.grand_total) AS grand_total");
         $this->db->group_start();
         $this->db->where("invoice_selling.is_transaction", 1);
         $this->db->where("invoice_selling.is_cancelled", 0);

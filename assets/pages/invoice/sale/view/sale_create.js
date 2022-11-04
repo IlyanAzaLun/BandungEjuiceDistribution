@@ -391,6 +391,9 @@ const main = () => {
             // get grand total
             $('input#grand_total').val(currency(sum_grand_total()));
 
+            // persent
+            $(`#${this.id}_present`).text(`${Number((currencyToNum($(this).val()) / currencyToNum($('input#sub_total').val())) * 100).toFixed(2)}%`)
+
             // validation price discount
             if (($('input#discount').val() != 0 || $('input#other_cost').val() != 0) && (sum_cap_sub_total() > currencyToNum($('input#grand_total').val()))) {
                 $(`input#discount`).addClass('is-invalid');

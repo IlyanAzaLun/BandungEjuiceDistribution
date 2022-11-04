@@ -8,7 +8,7 @@
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required readonly>
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
@@ -153,6 +153,9 @@
                         <span class="input-group-text">Rp</span>
                       </div>
                       <input type="text" name="discount" id="discount" class="form-control" value="0" required>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="discount_present">0%</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -164,6 +167,9 @@
                         <span class="input-group-text">Rp</span>
                       </div>
                       <input type="text" name="other_cost" id="other_cost" class="form-control" value="0" required>
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="other_cost_present">0%</span>
+                      </div>
                     </div>
                   </div>
                 </div>
