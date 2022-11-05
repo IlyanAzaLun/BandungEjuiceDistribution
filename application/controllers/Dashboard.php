@@ -15,12 +15,21 @@ class Dashboard extends MY_Controller {
 	public function expense_statment_daily()
 	{
 		$this->db->select('
-		DATE_FORMAT(transaction.created_at, "%Y%m%d") as days,
-		, SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Capital Price" 
-        , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"');
-		$this->db->where("transaction.is_cancelled", 0);
-		$this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m%d') = ", "DATE_FORMAT(now(), '%Y%m%d')", false);
+		  SUM((CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS "Total Capital Price" 
+        , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
+		, DATE_FORMAT(sell.created_at, "%Y%m%d") as days');
+		$this->db->join('invoice_selling sell', 'transaction.invoice_code = sell.invoice_code', 'left');
+		
+        $this->db->group_start();
+        $this->db->where("sell.is_transaction", 1);
+        $this->db->where("sell.is_cancelled", 0);
+        $this->db->where("transaction.is_cancelled", 0);
+        $this->db->group_end();
+
+		$this->db->where("DATE_FORMAT(sell.created_at, '%Y%m%d') = ", "DATE_FORMAT(now(), '%Y%m%d')", false);
+		$this->db->group_by('days');
 		$result = $this->db->get('fifo_items transaction')->result_array()[0];
+
 		$data['datasets'][]['data'] = array_values($result);
 		$data['datasets'][0]['backgroundColor'] = array_values(array("#2ecc71", "#3498db"));
 		$data['labels'] = array_keys($result);
