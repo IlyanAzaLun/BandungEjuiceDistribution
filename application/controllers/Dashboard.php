@@ -15,35 +15,38 @@ class Dashboard extends MY_Controller {
 	public function expense_statment_daily()
 	{
 		$this->db->select('
-		  SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Capital Price" 
-        , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
-		');
-		$this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m%d') = ", "concat(year(now()), month(now()), day(now()))", false);
+		DATE_FORMAT(transaction.created_at, "%Y%m%d") as days,
+		, SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Capital Price" 
+        , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"');
+		$this->db->where("transaction.is_cancelled", 0);
+		$this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m%d') = ", "DATE_FORMAT(now(), '%Y%m%d')", false);
 		$result = $this->db->get('fifo_items transaction')->result_array()[0];
 		$data['datasets'][]['data'] = array_values($result);
 		$data['datasets'][0]['backgroundColor'] = array_values(array("#2ecc71", "#3498db"));
 		$data['labels'] = array_keys($result);
-		
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
 	}
 
 	public function expense_statment_monthly()
 	{
 		$this->db->select('SUM(CAST(invoice_selling.grand_total AS INT)) AS "Total Selling"');
-		$this->db->where("DATE_FORMAT(invoice_selling.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
+		$this->db->group_start();
+		$this->db->where("invoice_selling.is_cancelled", 0);
+		$this->db->where("invoice_selling.is_transaction", 1);
+		$this->db->where("DATE_FORMAT(invoice_selling.created_at, '%Y%m') = ", "DATE_FORMAT(now(), '%Y%m')", false);
+		$this->db->group_end();
 		$result = $this->db->get('invoice_selling')->row_array();
 		
+		
 		$this->db->select('SUM(CAST(invoice_purchasing.grand_total AS INT)) AS "Total Purchasing"');
-		$this->db->where("DATE_FORMAT(invoice_purchasing.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
+		
+		$this->db->group_start();
+		$this->db->where("invoice_purchasing.is_cancelled", 0);
+		$this->db->where("invoice_purchasing.is_transaction", 1);
+		$this->db->where("DATE_FORMAT(invoice_purchasing.created_at, '%Y%m') = ", "DATE_FORMAT(now(), '%Y%m')", false);
+		$this->db->group_end();
 		$result = array_merge($result, $this->db->get('invoice_purchasing')->row_array());
 		
-		// $this->db->select('
-		//   SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS "Total Capital Price" 
-        // , SUM(CAST(transaction.total_price AS INT)) AS "Total Selling"
-		// ');
-		// $this->db->where("DATE_FORMAT(transaction.created_at, '%Y%m') = ", "concat(year(now()), month(now()))", false);
-		// $result = $this->db->get('fifo_items transaction')->row_array();
-
 		$data['datasets'][]['data'] = array_values($result);
 		$data['datasets'][0]['backgroundColor'] = array_values(array("#2ecc71", "#3498db"));
 		$data['labels'] = array_keys($result);
@@ -231,7 +234,6 @@ class Dashboard extends MY_Controller {
 			$data['datasets'][0]['borderColor'] = 'rgba(0, 109, 255, 0.30)';
 
 			array_push($data['datasets'][0]['data'], $result1[$key]->total_price - $result1[$key]->time_capital_price - $value->discounts - $value->shipping_cost - $value->other_cost);
-			// array_push($data['datasets'][0]['data'], $record->profit); // IS REAL
 			
 		}
 		

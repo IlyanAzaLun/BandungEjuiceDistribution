@@ -624,7 +624,12 @@ class Report extends MY_Controller
             , customer.store_name");
            
             $this->db->group_start();
-            $this->db->where("sale.customer", $customer);
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            // if(sizeof($arr) > 1){
+            $this->db->where_in('sale.customer', $arr);
+            // }else{
+            //     $this->db->where("sale.customer", $customer);
+            // }
             $this->db->group_end();
         }
         if($user != ''){
@@ -730,7 +735,12 @@ class Report extends MY_Controller
         $this->db->group_end();
         if($customer != ''){
             $this->db->group_start();
-            $this->db->where("invoice_selling.customer", $customer);
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            // if(sizeof($arr) > 1){
+            $this->db->where_in('invoice_selling.customer', $arr);
+            // }else{
+            //     $this->db->where("invoice_selling.customer", $customer);
+            // }
             $this->db->group_end();
         }
         if($user != ''){
@@ -782,7 +792,7 @@ class Report extends MY_Controller
         }
 		$this->db->order_by($columnName, $columnSortOrder);
 		$this->db->limit($rowperpage, $start);
-        $records_2 = $this->db->get('invoice_selling')->result();
+        $record_invoice = $this->db->get('invoice_selling')->result();
 		$data = array();
 		foreach ($records as $key => $record) {
 
@@ -795,11 +805,11 @@ class Report extends MY_Controller
 				'customer' => $record->customer,
 				'store_name' => $record->store_name,
 				'time_capital_price' => $record->time_capital_price,
-				'total_price' => $records_2[$key]->total_price,
-				'shipping_cost' => $records_2[$key]->shipping_cost,
-				'other_cost' => $records_2[$key]->other_cost,
-				'discounts' => $records_2[$key]->discounts,
-				'grand_total' => $records_2[$key]->grand_total,
+				'total_price' => $record_invoice[$key]->total_price,
+				'shipping_cost' => $record_invoice[$key]->shipping_cost,
+				'other_cost' => $record_invoice[$key]->other_cost,
+				'discounts' => $record_invoice[$key]->discounts,
+				'grand_total' => $record_invoice[$key]->grand_total,
 				'name' => $record->name,
 			);
 		}
@@ -812,6 +822,7 @@ class Report extends MY_Controller
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
+    
     public function data_sale_items_profit()
     {		
         $postData = $this->input->post();
@@ -835,17 +846,16 @@ class Report extends MY_Controller
         $this->db->where("sale.is_cancelled", 0);
         $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
-            $this->db->select('
-            transaction.customer_code
-           ,customer.store_name');
-            $this->db->where("transaction.customer_code", $customer);
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            // if(sizeof($arr) > 1){
+            $this->db->where_in('sale.customer', $arr);
+            // }else{
+            //     $this->db->where("sale.customer", $customer);
+            // }
         }
         if($user != ''){
-            $this->db->select('
-            transaction.created_by
-           ,sale.is_have');
             $this->db->group_start();
-            $this->db->where("transaction.created_by", $user);
+            $this->db->where("sale.created_by", $user);
             $this->db->or_where("sale.is_have", $user);
             $this->db->group_end();
         }
@@ -877,14 +887,19 @@ class Report extends MY_Controller
             , SUM(invoice_selling.total_price) AS total_price
             , SUM(invoice_selling.discounts) AS discounts
             , SUM(invoice_selling.shipping_cost) AS shipping_cost
-            , SUM(invoice_selling.other_cost) AS other_cost 
-        ");
+            , SUM(invoice_selling.other_cost) AS other_cost");
         if($customer != ''){
-            $this->db->where("invoice_selling.customer", $customer);
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            // if(sizeof($arr) > 1){
+            $this->db->where_in('invoice_selling.customer', $arr);
+            // }else{
+            //     $this->db->where("invoice_selling.customer", $customer);
+            // }
         }
         if($user != ''){
-            $this->db->group_start();
-            $this->db->where("invoice_selling.is_have", $user);
+            $this->db->group_start();            
+            $this->db->where("invoice_selling.created_by", $user);
+            $this->db->or_where("invoice_selling.is_have", $user);
             $this->db->group_end();
         }
 		if ($dateStart != '') {

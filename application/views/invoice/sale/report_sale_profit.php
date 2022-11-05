@@ -59,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <input type="text" name="user_id" id="user_id" class="form-control">
               </div>
           </div>
-          <div class="col-2">
+          <div class="col-4">
               <label for="customer">Customer</label>
               <div class="input-group">
                   <input type="text" name="customer" id="customer" class="form-control" placeholder="<?= lang('select_group_by') ?>" autocomplete="false">
@@ -336,6 +336,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 table.draw();
         });
         $('#sync').on('click', function(){
+            $('input[id^=user]').val("")
+            $('input[id^=customer]').val("")
             table.draw();
         });
     new $.fn.dataTable.ColReorder(table);

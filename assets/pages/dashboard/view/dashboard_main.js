@@ -138,8 +138,8 @@ const main = () => {
                 pieChart.data = result;
                 pieChart.update();
 
-                $('b#monthly_total_sales').text(currency(result.datasets[0]['data'][1]))
-                $('b#monthly_total_purchase').text(currency(result.datasets[0]['data'][0]))
+                $('b#monthly_total_sales').text(currency(result.datasets[0]['data'][0]))
+                $('b#monthly_total_purchase').text(currency(result.datasets[0]['data'][1]))
             }
         });
 
