@@ -153,7 +153,7 @@
                         <span class="input-group-text">Rp</span>
                       </div>
                       <input type="text" name="discount" id="discount" class="form-control" value="0" required>
-                      <div class="input-group-append">
+                      <div class="input-group-append" style="display: none;">
                         <span class="input-group-text" id="discount_present">0%</span>
                       </div>
                     </div>

@@ -619,17 +619,12 @@ class Report extends MY_Controller
         $this->db->group_end();
 
         if($customer != ''){
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
             $this->db->select("
               sale.customer
-            , customer.store_name");
-           
+            , customer.store_name");           
             $this->db->group_start();
-            $arr = array_filter(array_map('trim',explode(',',$customer)));
-            // if(sizeof($arr) > 1){
             $this->db->where_in('sale.customer', $arr);
-            // }else{
-            //     $this->db->where("sale.customer", $customer);
-            // }
             $this->db->group_end();
         }
         if($user != ''){
@@ -661,9 +656,9 @@ class Report extends MY_Controller
                 # code...
                 $this->db->select('
                   sale.customer
-                , customer.store_name
-                ');
-                $this->db->group_by("yearmount, sale.customer");
+                , customer.store_name');
+                $this->db->group_by("sale.customer");
+                $this->db->group_by("yearmount");
                 break;
             
             case 'monthly_by_user':
@@ -672,13 +667,22 @@ class Report extends MY_Controller
                   sale.created_by
                 , users.name
                 , sale.is_have
-                , is_have.name AS is_have_name
-                ');
-                $this->db->group_by("yearmount, sale.is_have");
+                , is_have.name AS is_have_name');
+                $this->db->group_by("sale.is_have");
+                $this->db->group_by("yearmount");
                 break;
                     
             case 'daily':
                 # code...
+                $this->db->group_by("yearmountday");
+                break;
+
+            case 'daily_by_customer':
+                # code...
+                $this->db->select('
+                  sale.customer
+                , customer.store_name');
+                $this->db->group_by("sale.customer");
                 $this->db->group_by("yearmountday");
                 break;
             
@@ -688,18 +692,9 @@ class Report extends MY_Controller
                    sale.created_by
                  , users.name
                  , sale.is_have
-                 , is_have.name AS is_have_name
-                 ');
-                $this->db->group_by("yearmountday, sale.is_have");
-                break;
-
-            case 'daily_by_customer':
-                # code...
-                $this->db->select('
-                  sale.customer
-                , customer.store_name
-                ');
-                $this->db->group_by("yearmountday, sale.customer");
+                 , is_have.name AS is_have_name');
+                $this->db->group_by("sale.is_have");
+                $this->db->group_by("yearmountday");
                 break;
             
             default:
@@ -711,8 +706,7 @@ class Report extends MY_Controller
                 , sale.is_have
                 , is_have.name AS is_have_name
                 , sale.customer
-                , customer.store_name
-                ');
+                , customer.store_name');
                 $this->db->group_by("sale.invoice_code");
                 break;
         }
@@ -734,13 +728,9 @@ class Report extends MY_Controller
         $this->db->where("invoice_selling.is_cancelled", 0);
         $this->db->group_end();
         if($customer != ''){
-            $this->db->group_start();
             $arr = array_filter(array_map('trim',explode(',',$customer)));
-            // if(sizeof($arr) > 1){
+            $this->db->group_start();
             $this->db->where_in('invoice_selling.customer', $arr);
-            // }else{
-            //     $this->db->where("invoice_selling.customer", $customer);
-            // }
             $this->db->group_end();
         }
         if($user != ''){
@@ -764,25 +754,33 @@ class Report extends MY_Controller
                 break;
 
             case 'monthly_by_customer':
-                $this->db->group_by("yearmount, invoice_selling.customer");
+                $this->db->select('invoice_selling.customer');
+                $this->db->group_by("invoice_selling.customer");
+                $this->db->group_by("yearmount");
                 break;
             
             case 'monthly_by_user':
-                $this->db->group_by("yearmount, invoice_selling.is_have");
+                $this->db->select('invoice_selling.is_have');
+                $this->db->group_by("invoice_selling.is_have");
+                $this->db->group_by("yearmount");
                 break;
                     
             case 'daily':
                 # code...
                 $this->db->group_by("yearmountday");
                 break;
+
+            case 'daily_by_customer':
+                $this->db->select('invoice_selling.customer');
+                $this->db->group_by("invoice_selling.customer");
+                $this->db->group_by("yearmountday");
+                break;
             
             case 'daily_by_user':
                 # code...
-                $this->db->group_by("yearmountday, invoice_selling.is_have");
-                break;
-
-            case 'daily_by_customer':
-                $this->db->group_by("yearmountday, invoice_selling.customer");
+                $this->db->select('invoice_selling.is_have');
+                $this->db->group_by("invoice_selling.is_have");
+                $this->db->group_by("yearmountday");
                 break;
             
             default:
@@ -847,11 +845,7 @@ class Report extends MY_Controller
         $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
             $arr = array_filter(array_map('trim',explode(',',$customer)));
-            // if(sizeof($arr) > 1){
             $this->db->where_in('sale.customer', $arr);
-            // }else{
-            //     $this->db->where("sale.customer", $customer);
-            // }
         }
         if($user != ''){
             $this->db->group_start();

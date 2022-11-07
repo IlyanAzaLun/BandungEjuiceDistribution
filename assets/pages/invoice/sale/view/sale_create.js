@@ -392,7 +392,8 @@ const main = () => {
             $('input#grand_total').val(currency(sum_grand_total()));
 
             // persent
-            $(`#${this.id}_present`).text(`${Number((currencyToNum($(this).val()) / currencyToNum($('input#sub_total').val())) * 100).toFixed(2)}%`)
+            // $(`#${this.id}_present`).text(`${Number(((currencyToNum($("input#discount").val()) + currencyToNum($("input#other_cost").val())) / currencyToNum($('input#sub_total').val())) * 100).toFixed(2)}%`)
+            $(`#other_cost_present`).text(`${Number(((currencyToNum($("input#discount").val()) + currencyToNum($("input#other_cost").val())) / currencyToNum($('input#sub_total').val())) * 100).toFixed(2)}%`)
 
             // validation price discount
             if (($('input#discount').val() != 0 || $('input#other_cost').val() != 0) && (sum_cap_sub_total() > currencyToNum($('input#grand_total').val()))) {
