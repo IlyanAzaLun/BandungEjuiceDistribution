@@ -74,11 +74,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <select class="form-control" name="group_by" id="group_by">
                             <option value="" selected><?=lang('select_group_by')?></option>
                             <option value="daily"><?=lang('daily')?></option>
-                            <option value="daily_by_customer"><?=lang('daily_by_customer')?></option>
-                            <option value="daily_by_user"><?=lang('daily_by_user')?></option>
+                            <!-- <option value="daily_by_customer"><?=lang('daily_by_customer')?></option>
+                            <option value="daily_by_user"><?=lang('daily_by_user')?></option> -->
                             <option value="monthly"><?=lang('monthly')?></option>
-                            <option value="monthly_by_customer"><?=lang('monthly_by_customer')?></option>
-                            <option value="monthly_by_user"><?=lang('monthly_by_user')?></option>
+                            <!-- <option value="monthly_by_customer"><?=lang('monthly_by_customer')?></option>
+                            <option value="monthly_by_user"><?=lang('monthly_by_user')?></option> -->
                         </select>
                     </div>
                 </div>

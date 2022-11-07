@@ -832,8 +832,8 @@ class Report extends MY_Controller
 
         
 		$this->db->select("
-        , DATE_FORMAT(transaction.created_at, '%Y') AS year
-        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
+        , DATE_FORMAT(sale.created_at, '%Y') AS year
+        , DATE_FORMAT(sale.created_at, '%Y%m') AS yearmount
         , SUM((CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS time_capital_price 
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
         ,(SUM(CAST(transaction.total_price AS INT))-SUM((CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)))) AS profit
