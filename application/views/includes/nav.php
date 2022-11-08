@@ -380,12 +380,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </a>
       <ul class="nav nav-treeview">
         <li class="nav-item">
-          <a href="<?php echo url('master_information/account_bank/list') ?>" class="nav-link <?php echo ($page->submenu == 'account_bank_list') ? 'active' : '' ?>">
+          <a href="<?php echo url('master_information/account_bank') ?>" class="nav-link <?php echo ($page->submenu == 'account') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>
-            <p> <?php echo lang('account_bank_list') ?> </p>
+            <p> <?php echo lang('account') ?> </p>
           </a>
         </li>
-      <ul class="nav nav-treeview">
         <li class="nav-item">
           <a href="<?php echo url('master_information/account_bank/list') ?>" class="nav-link <?php echo ($page->submenu == 'account_bank_list') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>
