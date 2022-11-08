@@ -412,6 +412,8 @@ $lang['information_delivery'] = "Information Delivery";
  * bank
  */
 $lang['bank'] = "Bank";
+$lang['account'] = "Account";
+$lang['chart_of_account'] = "Chart of Account";
 $lang['pages_account_bank'] = "Account Bank";
 $lang['account_bank_list'] = "List Account";
 $lang['account_bank_add'] = "Add New Account";
@@ -461,9 +463,11 @@ $lang['report_generate_message'] = "Generate & Download Report";
 $lang['daily'] = "Daily";
 $lang['monthly'] = "Monthly";
 $lang['daily_by_user'] = "Daily User";
-$lang['daily_by_customer'] = "daily Customer";
+$lang['daily_by_customer'] = "Daily Customer";
+$lang['daily_by_supplier'] = "Daily Supplier";
 $lang['monthly_by_user'] = "Monthly User";
 $lang['monthly_by_customer'] = "Monthly Customer";
+$lang['monthly_by_supplier'] = "Monthly Supplier";
 $lang['select_group_by'] = "Select Group By";
 $lang['profit'] = "Profit";
 $lang['profit_pesudo'] = "Pesudo Profit";
