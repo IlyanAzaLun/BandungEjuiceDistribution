@@ -1,10 +1,10 @@
 <?php
 function dfs($HeadCode, $HeadName, $oResult, $visit, $d)
 {
-    if ($d == 0 || $d == 1) {
+    if ($d == 0) {
         echo "<li class='jstree-open' id='$HeadCode'>$HeadName";
-    }elseif($d == 2){
-        echo "<li id='$HeadCode'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
+    }elseif($d == 1){
+        echo "<li id='$HeadCode' class='jstree-open'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
     }else{
         echo "<li id='$HeadCode'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
     }
@@ -81,7 +81,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       </div>
       <div class="col-6">
         <div class="card">
-            <div class="card-header"></div>
+            <div class="card-header">
+              <h3 class="card-title">DataTable with minimal features & hover style</h3>
+              <div class="card-tools pull-right">
+              </div>
+            </div>
             <div class="card-body">
                 <div id="form"></div>
             </div>
