@@ -13,7 +13,24 @@ class Account_bank extends MY_Controller
 
     public function index()
     {
-        $this->list();
+        ifPermissions('account_bank_list');
+        $this->page_data['page']->submenu = 'account';
+        $this->page_data['title'] = 'chart_of_account';
+        $this->page_data['get_account'] = $this->db->select('*')->from('acc_coa')->where('IsActive', 1)->order_by('HeadName')->get()->result();
+        $this->page_data['visit'] = array();
+        for ($i=0; $i < count($this->page_data['get_account']); $i++) { 
+            $this->page_data['visit'][$i] = false;
+        }
+        $this->load->view('account_bank/index', $this->page_data);
+    }
+    public function form()
+    {
+        # code...
+        $request = post('search');
+        $this->page_data['role'] = $this->db->select('*')->from('acc_coa')->where('HeadCode', $request['value'])->get()->row();
+        if($this->page_data['role']){
+            $this->load->view('account_bank/index_form', $this->page_data);
+        }
     }
 
     public function list()
@@ -36,6 +53,8 @@ class Account_bank extends MY_Controller
 
         if ($this->form_validation->run() == false) {
             $this->page_data['customers'] = $this->customer_model->get();
+            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(array('IsActive' => 1, 'HeadLevel >' => 3))->order_by('HeadName')->get()->result();
+
             $this->load->view('account_bank/create', $this->page_data);
         } else {
             $data = [
@@ -43,6 +62,7 @@ class Account_bank extends MY_Controller
                 'no_account' => post('no_account'),
                 'own_by' => strtoupper(post('own_by')),
                 'description' => strtoupper(post('note')),
+                'coa_parent' => post('parent_account'),
                 'created_by' => logged('id'),
             ];
             $account = $this->account_bank_model->create($data);
@@ -58,7 +78,7 @@ class Account_bank extends MY_Controller
     public function update()
     {
         ifPermissions('account_bank_edit');
-        $this->page_data['page']->submenu = 'account_bank_edit';
+        $this->page_data['page']->submenu = 'account_bank_list';
         $this->page_data['title'] = 'account_bank_edit';
 
         $this->form_validation->set_rules('name', lang('bank_name'), 'required|trim');
@@ -75,6 +95,7 @@ class Account_bank extends MY_Controller
                 'submit' => 'Delete it',
             );
             $this->page_data['bank'] = $this->account_bank_model->getById(get('id'));
+            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(array('IsActive' => 1, 'HeadLevel >' => 3))->order_by('HeadName')->get()->result();
             $this->load->view('account_bank/update', $this->page_data);
             $this->load->view('includes/modals', $this->page_data);
         } else {
@@ -84,6 +105,7 @@ class Account_bank extends MY_Controller
                 'own_by' => strtoupper(post('own_by')),
                 'description' => strtoupper(post('note')),
                 'updated_by' => logged('id'),
+                'coa_parent' => post('parent_account'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             $account = $this->account_bank_model->update(get('id'),$data);
@@ -169,7 +191,7 @@ class Account_bank extends MY_Controller
     public function cashflow()
     {
         ifPermissions('cashflow');
-        $this->page_data['page']->submenu = 'account_bank_edit';
+        $this->page_data['page']->submenu = 'account';
         $this->page_data['title'] = 'transaction';
         $this->load->view('account_bank/cashflow', $this->page_data);
     }
@@ -267,6 +289,13 @@ class Account_bank extends MY_Controller
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get('invoice_payment payment')->result();
 
+        // GET TOTAL CASH IN to this BANK ID
+        $this->db->select('SUM(IF(payment.payup > payment.grand_total, payment.grand_total, payment.payup)) AS total_payup');
+        $this->db->where('payment.bank_id', $bank_id);
+        $this->db->where('payment.is_cancelled', null);
+        $this->db->where('payment.payup !=', 0);
+        $get_total = $this->db->get('invoice_payment payment')->row();
+
         $data = array();
 
         foreach ($records as $record) {
@@ -300,7 +329,8 @@ class Account_bank extends MY_Controller
             "draw" => intval($draw),
             "iTotalRecords" => $totalRecords,
             "iTotalDisplayRecords" => $totalRecordwithFilter,
-            "aaData" => $data
+            "aaData" => $data,
+            "ffooterData" => $get_total
         );
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }

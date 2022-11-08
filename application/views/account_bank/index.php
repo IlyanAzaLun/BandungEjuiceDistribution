@@ -1,9 +1,9 @@
 <?php
 function dfs($HeadCode, $HeadName, $oResult, $visit, $d)
 {
-    if ($d == 0) {
+    if ($d == 0 || $d == 1) {
         echo "<li class='jstree-open' id='$HeadCode'>$HeadName";
-    }elseif($d == 1){
+    }elseif($d == 2){
         echo "<li id='$HeadCode'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
     }else{
         echo "<li id='$HeadCode'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
