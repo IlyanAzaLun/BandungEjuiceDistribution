@@ -869,6 +869,7 @@ class Sale extends Invoice_controller
 			$this->db->like('sale.invoice_code', $searchValue, 'after');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
+			$this->db->or_like('sale.expedition', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
@@ -926,6 +927,7 @@ class Sale extends Invoice_controller
 		sale.date_start as date_start, 
 		sale.date_due as date_due, 
 		sale.note as note, 
+		sale.expedition as expedition, 
 		sale.created_at as created_at, 
 		sale.updated_at as updated_at, 
 		sale.created_by as created_by, 
@@ -946,6 +948,7 @@ class Sale extends Invoice_controller
 			$this->db->like('sale.invoice_code', $searchValue, 'both');
 			$this->db->or_like('sale.customer', $searchValue, 'both');
 			$this->db->or_like('sale.note', $searchValue, 'both');
+			$this->db->or_like('sale.expedition', $searchValue, 'both');
 			$this->db->or_like('sale.created_at', $searchValue, 'both');
 			$this->db->or_like('customer.store_name', $searchValue, 'both');
 			$this->db->group_end();
@@ -1013,6 +1016,7 @@ class Sale extends Invoice_controller
 				'date_start' => $record->date_start,
 				'date_due' => $record->date_due,
 				'note' => $record->note,
+				'expedition' => $record->expedition,
 				'created_at' => $record->created_at,
 				'updated_at' => $record->updated_at,
 				'user_id' => $record->user_id,

@@ -210,6 +210,41 @@ defined('BASEPATH') or exit('No direct script access allowed');
           </ul>
         </li>
         <!-- End Data Sale -->
+        <!-- Data Accounting -->
+        <li class="nav-item has-treeview <?php echo ($page->submenu == 'accounting') ? 'menu-open' : '' ?>">
+          <a href="<?php echo url('') ?>" class="nav-link <?php echo ($page->submenu == 'accounting') ? 'active' : '' ?>">
+            <i class="far fa-circle nav-icon"></i>
+            <p>
+              <?php echo lang('accounting') ?>
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/accounting') ?>" class="nav-link <?php echo (@$page->submenu_child == 'journal') ? 'active' : '' ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p> <?php echo lang('journal') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/accounting/report_balance') ?>" class="nav-link <?php echo (@$page->submenu_child == 'balance_sheet') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('balance_sheet') ?> </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?php echo url('master_information/accounting/profit_n_loss') ?>" class="nav-link <?php echo (@$page->submenu_child == 'profit_n_loss') ? 'active' : '' ?>">
+                <i class="far fa-dot-circle nav-icon"></i>
+                <p> <?php echo lang('profit_n_loss') ?> </p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Data Accounting -->
       </ul>
     </li>
   <?php endif ?>
@@ -382,7 +417,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <li class="nav-item">
           <a href="<?php echo url('master_information/account_bank') ?>" class="nav-link <?php echo ($page->submenu == 'account') ? 'active' : '' ?>">
             <i class="far fa-circle nav-icon"></i>
-            <p> <?php echo lang('account') ?> </p>
+            <p> <?php echo lang('chart_of_account') ?> </p>
           </a>
         </li>
         <li class="nav-item">

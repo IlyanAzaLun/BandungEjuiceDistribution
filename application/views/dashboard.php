@@ -158,6 +158,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <td>Total Capital Price :</td>
                             <td width="100" class="text-right"><b id="today_total_purchase">0</b></td>
                           </tr>
+                          <tr>
+                            <td>Total Summery :</td>
+                            <td width="100" class="text-right"><b id="today_summery">0</b></td>
+                          </tr>
                         </table>
                       </div>
                     </div>

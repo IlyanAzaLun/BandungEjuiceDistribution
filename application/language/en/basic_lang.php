@@ -413,6 +413,7 @@ $lang['information_delivery'] = "Information Delivery";
  */
 $lang['bank'] = "Bank";
 $lang['account'] = "Account";
+$lang['accounting'] = "Accounting";
 $lang['chart_of_account'] = "Chart of Account";
 $lang['pages_account_bank'] = "Account Bank";
 $lang['account_bank_list'] = "List Account";
@@ -434,6 +435,7 @@ $lang['nominal'] = "Nominal";
 $lang['reduce'] = "Out";
 $lang['increse'] = "In";
 
+$lang['journal'] = "Journal";
 
 /*
  * Report

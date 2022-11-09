@@ -74,7 +74,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <th width="2%"><?= lang('shipping_cost') ?></th>
                   <th width="10%"><?= lang('other_cost') ?></th>
                   <th width="10%"><?= lang('grandtotal') ?></th>
-                  <th width="2%"><?= lang('payment_type') ?></th>
+                  <th width="2%"><?= lang('expedition') ?></th>
                   <th><?= lang('note') ?></th>
                   <th width="10%"><?= lang('marketing') ?></th>
                   <th width="10%"><?= lang('created_by') ?></th>
@@ -227,9 +227,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             return currency(data)
           }
         },{
-          data: "payment_type",
-          orderable: false,
-          visible: false,
+          data: "expedition",
           render: function(data, type, row) {
             return data
           }

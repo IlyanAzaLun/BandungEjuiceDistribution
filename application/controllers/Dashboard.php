@@ -69,48 +69,75 @@ class Dashboard extends MY_Controller {
 		$user = logged('id');
         $haspermission = hasPermissions('dashboard_staff');
 		$this->db->select("
-            , transaction.created_at
-            , transaction.updated_at
-            , DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
-            , DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
-            , DATE_FORMAT(transaction.created_at, '%M') AS mount
-            , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS item_capital_price
-			, SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
-            , SUM(CAST(transaction.total_price AS INT)) AS item_selling_price
-			, SUM(CAST(transaction.total_price AS INT)) AS total_price
-			,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
-			, SUM(selling.discounts) AS discounts
-			, SUM(selling.shipping_cost) AS shipping_cost
+            , selling.created_at
+            , selling.updated_at
+            , DATE_FORMAT(selling.created_at, '%Y-%m-%d') AS yearmountday
+            , DATE_FORMAT(selling.created_at, '%Y-%m') AS yearmount
+            , DATE_FORMAT(selling.created_at, '%M') AS mount
+            , SUM( (CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) ) AS item_capital_price
 			, selling.is_have
 			, user.name
 		");
 		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code', 'left');
-		$this->db->join("items", "transaction.item_id = items.id", "left");
 		$this->db->join('users user', 'user.id = selling.is_have');
 		$this->db->group_start();
         $this->db->where('transaction.is_cancelled', 0);
+        $this->db->where('selling.is_cancelled', 0);
+        $this->db->where('selling.is_transaction', 1);
         if(!$haspermission){
 			$this->db->group_start();
-			$this->db->where("transaction.created_by", $user);
+			$this->db->where("selling.created_by", $user);
 			$this->db->or_where("selling.is_have", $user);
 			$this->db->group_end();
         }
 		$this->db->group_end();
 		
 		$this->db->group_start();
-		$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -6 MONTH)',false);
-		$this->db->where("transaction.created_at <=", 'NOW()',false);
+		$this->db->where("selling.created_at >=", 'DATE_ADD(NOW(), INTERVAL -6 MONTH)',false);
+		$this->db->where("selling.created_at <=", 'NOW()',false);
 		$this->db->group_end();
 
 		$this->db->group_by("yearmount, selling.is_have");
 		$records = $this->db->get('fifo_items transaction')->result();
+
+		//
+		$this->db->select("
+              DATE_FORMAT(invoice_selling.created_at, '%Y-%m-%d') AS yearmountday
+			, DATE_FORMAT(invoice_selling.created_at, '%Y-%m') AS yearmount
+			, DATE_FORMAT(invoice_selling.created_at, '%M') AS month
+			, DATE_FORMAT(invoice_selling.created_at, '%W') AS days
+            , SUM(invoice_selling.total_price) AS item_selling_price
+            , SUM(invoice_selling.discounts) AS discounts
+            , SUM(invoice_selling.shipping_cost) AS shipping_cost
+            , SUM(invoice_selling.other_cost) AS other_cost 
+        ");
+		$this->db->group_start();
+        $this->db->where('invoice_selling.is_cancelled', 0);
+        $this->db->where('invoice_selling.is_transaction', 1);
+		if(!$haspermission){
+			$this->db->group_start();
+			$this->db->where("invoice_selling.created_by", $user);
+			$this->db->or_where("invoice_selling.is_have", $user);
+			$this->db->group_end();
+        }
+		$this->db->group_end();
+		$this->db->group_start();
+		$this->db->where("invoice_selling.created_at >=", 'DATE_ADD(NOW(), INTERVAL -6 MONTH)',false);
+		$this->db->where("invoice_selling.created_at <=", 'NOW()',false);
+		$this->db->group_end();
+		
+		$this->db->group_by("yearmount, invoice_selling.is_have");
+		
+		$result2 = $this->db->get('invoice_selling')->result();
+		//
+
 		$user = array_unique(array_column($records, 'is_have'));		
 		$data['labels'] = array_unique(array_column($records, 'mount'));
 		foreach ($records as $key => $value) {
 			$rand1 = rand(0, 255);
 			$rand2 = rand(0, 255);
 			$rand3 = rand(0, 255);
-			$data['datasets'][array_search($value->is_have, $user)]['data'][] = $value->item_selling_price - $value->pseudo_price - $value->discounts + $value->shipping_cost;
+			$data['datasets'][array_search($value->is_have, $user)]['data'][] = ($result2[$key]->item_selling_price - $value->item_capital_price) - $result2[$key]->discount - $result2[$key]->other_cost;
 			
 			$data['datasets'][array_search($value->is_have, $user)]['label'] = $value->name;
 			$data['datasets'][array_search($value->is_have, $user)]['backgroundColor'] = "rgba($rand2, $rand1, $rand3, 0.05)";
@@ -129,10 +156,10 @@ class Dashboard extends MY_Controller {
 
 		// ITEMS WITH REFERENCE
 		$this->db->select("
-		, DATE_FORMAT(transaction.created_at, '%Y-%m-%d') AS yearmountday
-		, DATE_FORMAT(transaction.created_at, '%Y-%m') AS yearmount
-		, DATE_FORMAT(transaction.created_at, '%M') AS month
-		, DATE_FORMAT(transaction.created_at, '%W') AS days
+		, DATE_FORMAT(sale.created_at, '%Y-%m-%d') AS yearmountday
+		, DATE_FORMAT(sale.created_at, '%Y-%m') AS yearmount
+		, DATE_FORMAT(sale.created_at, '%M') AS month
+		, DATE_FORMAT(sale.created_at, '%W') AS days
 
         , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
@@ -144,9 +171,9 @@ class Dashboard extends MY_Controller {
         $this->db->where("sale.is_cancelled", 0);
         $this->db->where("transaction.is_cancelled", 0);
 		if(!$haspermission){
-			$this->db->select('transaction.created_by ,sale.is_have');
+			$this->db->select('sale.created_by ,sale.is_have');
 			$this->db->group_start();
-			$this->db->where("transaction.created_by", $user);
+			$this->db->where("sale.created_by", $user);
 			$this->db->or_where("sale.is_have", $user);
 			$this->db->group_end();
         }

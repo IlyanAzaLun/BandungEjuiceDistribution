@@ -8,7 +8,7 @@
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('customer_code') ?></label>
-                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="false" required>
+                <input type="text" name="customer_code" id="customer_code" class="form-control" placeholder="<?= lang('find_customer_code') ?>" autocomplete="off" required>
                 <?= form_error('customer_code', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>
@@ -16,7 +16,7 @@
             <div class="col-sm-4">
               <div class="form-group">
                 <label for="store_name"><?= lang('store_name') ?></label>
-                <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="false" required>
+                <input type="text" name="store_name" id="store_name" class="form-control" placeholder="<?= lang('find_store_name') ?>" autocomplete="off" required>
                 <?= form_error('store_name', '<small class="text-danger">', '</small>') ?>
               </div>
             </div>

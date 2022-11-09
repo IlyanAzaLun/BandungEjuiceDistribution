@@ -128,6 +128,7 @@ const main = () => {
             success: function (result, textStatus, jqXHR) {
                 $('b#today_total_sales').text(currency(result.datasets[0]['data'][1]))
                 $('b#today_total_purchase').text(currency(result.datasets[0]['data'][0]))
+                $('b#today_summery').text(currency(((result.datasets[0]['data'][1] - result.datasets[0]['data'][0]))))
             }
         });
         $.ajax({
