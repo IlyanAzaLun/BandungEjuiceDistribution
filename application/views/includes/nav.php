@@ -148,7 +148,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/purchase') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_purchase_list') ? 'active' : '' ?>">
                 <i class="far fa-dot-circle nav-icon"></i>
-                <p> <?php echo lang('purchase') ?> </p>
+                <p> <?php echo lang('report_purchase_items') ?> </p>
               </a>
             </li>
           </ul>
@@ -173,6 +173,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </p>
           </a>
           <!-- Order -->
+          <?php if(hasPermissions('examples')):?>    
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="<?php echo url('master_information/report/order') ?>" class="nav-link <?php echo (@$page->submenu_child == 'report_order_list') ? 'active' : '' ?>">
@@ -181,6 +182,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
               </a>
             </li>
           </ul>
+          <?php endif; ?>
           <!-- Sale Parents -->
           <ul class="nav nav-treeview">
             <li class="nav-item">

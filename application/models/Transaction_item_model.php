@@ -48,16 +48,31 @@ class Transaction_item_model extends MY_Model {
             ,user_updated.id as id_user_updated
             ,user_updated.name as user_updated'
         );
+        $this->db->group_start();
         $this->db->like('transaction.invoice_code', $data['params'], 'after');
+        $this->db->group_end();
+        $this->db->group_start();
         $this->db->where('transaction.is_cancelled', 0);
+        $this->db->where('invoice.is_cancelled', 0);
+        $this->db->where('invoice.is_transaction', 1);
+        $this->db->group_end();
+        $this->db->group_start();    
         if ($data['date']['date_start'] != '') {
 			$this->db->where("transaction.created_at >=", $data['date']['date_start']);
 			$this->db->where("transaction.created_at <=", $data['date']['date_finish']);
 		}else{
 			$this->db->like("transaction.created_at", date("Y-m"), 'after');
 		}
+        $this->db->group_end();
         if($parameter['item_code']){
+            $this->db->group_start();    
             $this->db->where('transaction.item_code', $parameter['item_code']);
+            $this->db->group_end();
+        }
+        if($parameter['params'] == 'purchase' || $parameter['params'] == 'purchase_returns' ){
+            $this->db->join('invoice_purchasing invoice', 'transaction.invoice_code = invoice.invoice_code', 'left');
+        }else{
+            $this->db->join('invoice_selling invoice', 'transaction.invoice_code = invoice.invoice_code', 'left');
         }
         $this->db->join('users user_created', 'transaction.created_by = user_created.id', 'left');
         $this->db->join('users user_updated', 'transaction.updated_by = user_updated.id', 'left');
