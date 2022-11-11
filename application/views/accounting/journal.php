@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+<link rel="stylesheet" href="<?php echo $url->assets ?>plugins/handsontable/dist/handsontable.full.min.css" />
 
 
 <!-- Content Header (Page header) -->
@@ -15,6 +15,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="<?php echo url('/') ?>">Home</a></li>
+          <li class="breadcrumb-item active"><?php echo lang('pages_report_information') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang('accounting') ?></li>
           <li class="breadcrumb-item active"><?php echo lang('journal') ?></li>
         </ol>
       </div>
@@ -42,16 +44,44 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
       <div class="row">
         <div class="col-sm-12">
-          <?php echo form_open('journal', ['method' => 'GET', 'autocomplete' => 'off']); ?>
+          <?php echo form_open(url('master_information/accounting/journal'), ['method' => 'POST', 'autocomplete' => 'off']); ?>
           <div class="row">
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-2">
                 <label for="">Journal Date</label>
-                <div class="form-group">
-                    <input type="date" class="form-control" name="" id="">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control form-control-sm" name="journal_date" id="journal_date">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
           </div>
-          <div id="handsontable"></div>
+          <div id="parenttable">
+            <div id="handsontable"></div>
+          </div>
+          <div class="total">
+            <table class="table text-right">
+                <tbody>
+                    <tr>
+                      <td></td>
+                      <td class="text-right bold"><?php echo lang('debit'); ?></td>
+                      <td class="text-right bold"><?php echo lang('credit'); ?></td>
+                    </tr>
+                  <tr>
+                      <td><span class="bold"><b>Total :</b></span>
+                      </td>
+                      <td class="total_debit">0</td>
+                      <td class="total_credit">0</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+          <?php echo form_hidden('journal_entry'); ?>
+          <?php echo form_hidden('amount'); ?>
+          <div class="float-right">
+            <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
+            <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
+          </div>
           <?php echo form_close(); ?>
         </div>
       </div>
@@ -63,57 +93,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </section>
 <!-- /.content -->
 <?php include viewPath('includes/footer'); ?>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<script type="text/javascript" src="<?php echo $url->assets ?>plugins/handsontable/dist/handsontable.full.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/accounting/journal/MainJournal.js"></script>
 <script>
-    const data = [
-        ['', '', , , ],
-        ['', '', , , ],
-        ['', '', , , ],
-        ['', '', , , ],
-        ['', '', , , ],
-    ];
-
-    const container = document.querySelector('#handsontable');
-    const hot = new Handsontable(container, {
-        data: data,
-        rowHeaders: true,
-        width: '100%',
-        height: 450,
-        colWidths: [200, 100, 100, 200],
-        colHeaders: ["Account","Debit","Credit","Description",],
-        columns: [
-            {
-                type: 'dropdown',
-                source: function(query, process){
-                    $.ajax({
-                        url: location.base+'master_information/accounting/chart_of_account_list',
-                        method: 'POST',
-                        dataType: 'JSON',
-                        data: {
-                            query: query
-                        },
-                        success: function(response){
-                            console.log('response', response);
-                            process(response.data)
-                        }
-                    })
-                }
-            },
-            {},
-            {},
-            {}
-        ],
-        contextMenu: true,
-        multiColumnSorting: true,
-        filters: true,
-        rowHeaders: true,
-        manualRowMove: true,
-        stretchH: 'all',
-        manualColumnResize: true,
-        licenseKey: "non-commercial-and-evaluation",
-        afterChange: function(change, source){
-            // ajax here
-            console.log(JSON.stringify({data: change}))
-        }
-    });
+  $('#journal_date').daterangepicker({
+      "singleDatePicker": true,
+      "autoApply": true,
+  })
 </script>

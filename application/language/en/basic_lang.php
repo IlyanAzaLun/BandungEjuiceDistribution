@@ -524,6 +524,7 @@ $lang['debt'] = "Debt";
 $lang['cash'] = "Cash";
 $lang['payed'] = "Payed";
 $lang['credit'] = "Credit";
+$lang['debit'] = "Debit";
 $lang['deposit'] = "Deposit";
 $lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";
