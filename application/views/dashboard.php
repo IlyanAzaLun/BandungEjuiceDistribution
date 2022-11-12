@@ -64,9 +64,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3><?=$this->db->get('users')->num_rows()?></h3>
+                <h3><?=getCurrentcy($items_assets->assets)?></h3>
 
-                <p><?php echo lang('dashboard_user_register');?></p>
+                <p><?php echo lang('assets_items');?></p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -96,6 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="row">
 
           <div class="col-12 col-lg">
+          <div class="card"><div class="card-header">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex qui saepe quod maiores sint ipsum modi aliquam, pariatur enim fuga!</div></div>
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">

@@ -309,6 +309,8 @@ $lang['item_quantity_out'] = "Item Out";
 $lang['item_shadow_selling_price'] = "Pesudo Price";
 $lang['shadow_selling_price_desc'] = "This Price Will Be Displayed As Capital Price.";
 
+$lang['assets_items'] = "Assets Items";
+
 
 /*
  * Customer

@@ -246,6 +246,16 @@ class Items_fifo_model extends MY_Model
 
     }
 
+    public function assets_items()
+    {
+        $this->db->select('SUM(fifo_items.item_quantity * fifo_items.item_capital_price) AS assets');
+        $this->db->where('is_cancelled', 0);
+        $this->db->where('is_readable', 1);
+        
+        $record = $this->db->get("fifo_items")->row();
+        return $record;
+    }
+
 }
 
 /* End of file Items_model.php */
