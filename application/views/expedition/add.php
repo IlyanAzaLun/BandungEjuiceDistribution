@@ -45,14 +45,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-sm-4">
                           <div class="row">
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-8">
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('shipping_services')?></label>
-                                    <select class="form-control" multiple size="2" name="service_expedition[]" id="service_expedition" required>
-                                      <option value="DARAT">DARAT</option>
-                                      <option value="UDARA">UDARA</option>
-                                    </select>
+                                    <input class="form-control" name="service_expedition[]" id="service_expedition">
                                     <?=form_error('service_expedition[]', '<small class="text-danger">','</small>')?>
                                 </div>
                             </div>

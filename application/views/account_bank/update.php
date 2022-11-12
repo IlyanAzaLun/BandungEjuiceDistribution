@@ -33,6 +33,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="card-body">
 
                     <div class="row">
+                      <div class="col-lg-3 col-sm-12">
+                        <!-- text input -->
+                            <div class="form-group">
+                                <label><?=lang('account')?></label>
+                                <select name="parent_account" id="parent_account" class="form-control form-control-sm">
+                                  <?php foreach ($parent_account as $key => $value):?>
+                                  <option <?=($bank->coa_parent == $value->HeadCode)?'selected':''?> value="<?=$value->HeadCode?>"><?=$value->HeadName?></option>
+                                  <?php endforeach; ?>
+                                </select>
+                                <?=form_error('coa_parent', '<small class="text-danger">','</small>')?>
+                            </div>
+                        </div>
                         <div class="col-sm-3">
                         <!-- text input -->
                             <div class="form-group">

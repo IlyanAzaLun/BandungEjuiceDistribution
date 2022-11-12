@@ -47,14 +47,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <?php $service = explode(',',$expedition->services_expedition);?>
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-8">
                             <!-- text input -->
                                 <div class="form-group">
                                     <label><?=lang('shipping_services')?></label>
-                                    <select class="form-control" multiple size="2" name="service_expedition[]" id="service_expedition" required>
-                                      <option value="DARAT"<?=($service[0]=="DARAT")?' selected':'';?>>DARAT</option>
-                                      <option value="UDARA"<?=($service[0]=="UDARA"||$service[1]=="UDARA")?' selected':'';?>>UDARA</option>
-                                    </select>
+                                    <input class="form-control" name="service_expedition[]" id="service_expedition" value="<?=$expedition->services_expedition?>">
                                     <?=form_error('service_expedition[]', '<small class="text-danger">','</small>')?>
                                 </div>
                             </div>

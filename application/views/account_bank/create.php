@@ -38,12 +38,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <!-- text input -->
                           <div class="form-group">
                               <label><?=lang('account')?></label>
-                              <select name="coa_parent" id="coa_parent" class="form-control form-control-sm">
+                              <select name="parent_account" id="parent_account" class="form-control form-control-sm">
                                 <?php foreach ($parent_account as $key => $value):?>
                                 <option value="<?=$value->HeadCode?>"><?=$value->HeadName?></option>
                                 <?php endforeach; ?>
                               </select>
-                              <?=form_error('coa_parent', '<small class="text-danger">','</small>')?>
+                              <?=form_error('parent_account', '<small class="text-danger">','</small>')?>
                           </div>
                       </div>  
                       <div class="col-lg-3 col-sm-12">

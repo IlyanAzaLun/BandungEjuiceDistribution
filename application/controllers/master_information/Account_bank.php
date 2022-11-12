@@ -100,7 +100,12 @@ class Account_bank extends MY_Controller
                 'submit' => 'Delete it',
             );
             $this->page_data['bank'] = $this->account_bank_model->getById(get('id'));
-            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(array('IsActive' => 1, 'HeadLevel >' => 3))->order_by('HeadName')->get()->result();
+            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(
+                array(
+                    'PHeadCode' => 111, 
+                    'IsActive' => 1, 
+                    'HeadLevel >' => 3
+                ))->order_by('HeadName')->get()->result();
             $this->load->view('account_bank/update', $this->page_data);
             $this->load->view('includes/modals', $this->page_data);
         } else {
