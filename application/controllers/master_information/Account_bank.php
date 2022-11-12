@@ -53,7 +53,12 @@ class Account_bank extends MY_Controller
 
         if ($this->form_validation->run() == false) {
             $this->page_data['customers'] = $this->customer_model->get();
-            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(array('IsActive' => 1, 'HeadLevel >' => 3))->order_by('HeadName')->get()->result();
+            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(
+                array(
+                    'PHeadCode' => 111, 
+                    'IsActive' => 1, 
+                    'HeadLevel >' => 3
+                ))->order_by('HeadName')->get()->result();
 
             $this->load->view('account_bank/create', $this->page_data);
         } else {

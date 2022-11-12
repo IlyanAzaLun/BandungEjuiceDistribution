@@ -598,6 +598,7 @@ class Purchase extends Invoice_controller
 		$item_fifo = array();
 		foreach ($data as $key => $value) {
 			if ($value['id']) {
+				// update fifo 
 				$this->db->trans_start();
 				$this->db->set('item_capital_price', setCurrency($value['item_capital_price']));
 				$this->db->group_start();
@@ -607,9 +608,29 @@ class Purchase extends Invoice_controller
 				$this->db->group_end();
 				$this->db->update('fifo_items');
 				$this->db->trans_complete();
+				$this->db->reset_query();
+
+				// select invoice_sale and item where reference invoice 
+				$this->db->trans_start();
+				$this->db->select('invoice_code, item_id');
+				$this->db->where('reference_purchase', $this->data['invoice_code']);
+				$this->db->where('item_id', $value['item_id']);
+				$this->db->where('item_code', $value['item_code']);
+				$update = $this->db->get('fifo_items')->result();
+				$this->db->reset_query();
+				$this->db->trans_complete();
+				// update item_transaction
+				$this->db->trans_start();
+				foreach ($update as $key2 => $child) {
+					$this->db->where('invoice_code', $child->invoice_code);
+					$this->db->where('item_id', $child->item_id);
+					$this->db->set('item_capital_price', setCurrency($value['item_capital_price']));
+					$this->db->update('invoice_transaction_list_item');
+				}
+				$this->db->trans_complete();
 			}
 		}
-		return $item;
+		return $update;
 	}
 
 	
