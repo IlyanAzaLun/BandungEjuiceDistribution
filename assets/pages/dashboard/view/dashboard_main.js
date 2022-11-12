@@ -35,7 +35,63 @@ const main = () => {
             zIndex: 999999
         })
         $('.connectedSortable .card-header, .connectedSortable .nav-tabs-custom').css('cursor', 'move')
+        // Expedition chart
 
+        var mode = 'index'
+        var intersect = true
+        var ticksStyle = {
+            fontColor: '#495057',
+            fontStyle: 'bold'
+        }
+        var expeditionBarCanvas = document.getElementById('expedition-chart').getContext('2d');
+        var expeditionBar = new Chart(expeditionBarCanvas, {
+            type: 'bar',
+            data: {},
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                hover: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        // display: false,
+                        gridLines: {
+                            display: true,
+                            lineWidth: '4px',
+                            color: 'rgba(0, 0, 0, .2)',
+                            zeroLineColor: 'transparent'
+                        },
+                        ticks: $.extend({
+                            beginAtZero: true,
+
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                if (value >= 1000) {
+                                    value /= 1000
+                                    value += 'k'
+                                }
+                                return value
+                            }
+                        }, ticksStyle)
+                    }],
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: ticksStyle
+                    }]
+                }
+            }
+        })
         // Sales chart
         var salesChartCanvas = document.getElementById('revenue-chart-canvas').getContext('2d');
 
@@ -148,22 +204,6 @@ const main = () => {
         var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d');
         //$('#revenue-chart').get(0).getContext('2d');
 
-        var salesGraphChartData = {
-            labels: ['2011 Q1', '2011 Q2', '2011 Q3', '2011 Q4', '2012 Q1', '2012 Q2', '2012 Q3', '2012 Q4', '2013 Q1', '2013 Q2'],
-            datasets: [
-                {
-                    label: 'Digital Goods',
-                    fill: false,
-                    borderWidth: 2,
-                    lineTension: 0,
-                    spanGaps: true,
-                    pointRadius: 3,
-                    pointHoverRadius: 7,
-                    data: ["2666", "2778", "4912", "3767", "6810", "5670", "4820", "15073", "10687", "8432"]
-                }
-            ]
-        }
-
         var salesGraphChartOptions = {
             maintainAspectRatio: false,
             responsive: true,
@@ -227,6 +267,24 @@ const main = () => {
                     salesGraphChart.update();
                 }
             });
+            $.ajax({
+                type: 'POST', //post method
+                url: location.base + 'dashboard/expedition', //ajaxformexample url
+                data: {
+                    'date': {
+                        'startdate': startdate,
+                        'enddate': enddate
+                    },
+                    'user_id': data['user_id'],
+                    'user': data['user'],
+                },
+                dataType: "json",
+                success: function (result, textStatus, jqXHR) {
+                    expeditionBar.data = result;
+                    expeditionBar.update();
+                }
+            });
+
         }
 
         request();

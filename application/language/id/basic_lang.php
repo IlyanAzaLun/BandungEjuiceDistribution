@@ -309,6 +309,7 @@ $lang['item_quantity_out'] = "Barang Keluar";
 $lang['item_shadow_selling_price'] = "Harga Semu";
 $lang['shadow_selling_price_desc'] = "Harga Yang Akan Di Tampilkan Sebagai Harga Pokok.";
 
+$lang['assets_items'] = "Assets Barang";
 
 /*
  * Pelanggan
@@ -411,6 +412,7 @@ $lang['delivery_code'] = "Kode Dokumen";
 $lang['bank'] = "Bank";
 $lang['pages_account_bank'] = "Rekening Bank";
 $lang['account'] = "Account";
+$lang['accounting'] = "Accounting";
 $lang['chart_of_account'] = "Chart of Account";
 $lang['account_bank_list'] = "Akun";
 $lang['account_bank_add'] = "Tambah Akun Baru";
@@ -430,6 +432,9 @@ $lang['balance'] = "Saldo";
 $lang['nominal'] = "Nominal";
 $lang['reduce'] = "Keluar";
 $lang['increse'] = "Masuk";
+
+$lang['journal'] = "Journal";
+
 
 /*
  * Laporan

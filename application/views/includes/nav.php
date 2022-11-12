@@ -808,7 +808,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
   <!-- end delivery documents -->
   
 <?php //if(hasPermissions('example')):?>    
-<?php if(hasPermissions('examples')):?>    
+<?php if(hasPermissions('example')):?>    
 <li class="nav-header text-danger"><strong> <?php echo lang('ci_examples') ?> </strong> &nbsp;
   <span class="right badge badge-primary">New</span>
 </li>

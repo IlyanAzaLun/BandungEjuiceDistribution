@@ -69,7 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <p><?php echo lang('assets_items');?></p>
               </div>
               <div class="icon">
-                <i class="ion ion-person-add"></i>
+                <i class="ion ion-archive"></i>
               </div>
               <a href="<?=url('users')?>" class="small-box-footer"><?php echo lang('dashboard_more_info');?><i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- row-grouping -->
         <div class="row">
 
-          <div class="col-12 col-lg">
+          <div class="col-12 col-lg-3">
           <div class="card"><div class="card-header">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex qui saepe quod maiores sint ipsum modi aliquam, pariatur enim fuga!</div></div>
             <div class="card">
               <div class="card-header">
@@ -137,7 +137,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               </div>
             </div>
           </div>
-          <div class="col-12 col-lg-8" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
+          <div class="col-12 col-lg-4">
+            <div class="card">
+              <div class="card-header"><i class="fas fa-shipping-fast"></i> <?=lang('expedition')?></div>
+
+                <div class="card-body">
+                  <!-- /.d-flex -->
+
+                  <div class="position-relative mb-4">
+                    <canvas id="expedition-chart"></canvas>
+                  </div>
+                </div>
+            <!--  -->
+            </div>
+          </div>
+          <!-- Chart Harian -->
+          <div class="col-12 col-lg-5" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
