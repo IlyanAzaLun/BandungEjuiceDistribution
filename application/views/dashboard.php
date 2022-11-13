@@ -96,7 +96,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="row">
 
           <div class="col-12 col-lg-3">
-          <div class="card"><div class="card-header">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex qui saepe quod maiores sint ipsum modi aliquam, pariatur enim fuga!</div></div>
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
@@ -136,8 +135,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </span>
               </div>
             </div>
+            <div class="card">
+              <div class="card-header">
+                <p><?=lang('top-item-order')?>: <hr><b id="top-item"></b></p>
+              </div>
+            </div>
           </div>
-          <div class="col-12 col-lg-4">
+          <div class="col-12 col-lg-5">
             <div class="card">
               <div class="card-header"><i class="fas fa-shipping-fast"></i> <?=lang('expedition')?></div>
 
@@ -145,14 +149,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <!-- /.d-flex -->
 
                   <div class="position-relative mb-4">
-                    <canvas id="expedition-chart"></canvas>
+                    <canvas id="expedition-chart" style="height: 205px;"></canvas>
                   </div>
                 </div>
             <!--  -->
             </div>
           </div>
           <!-- Chart Harian -->
-          <div class="col-12 col-lg-5" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
+          <div class="col-12 col-lg-4" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
@@ -175,8 +179,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <td width="100" class="text-right"><b id="today_total_purchase">0</b></td>
                           </tr>
                           <tr>
-                            <td>Total Summery :</td>
-                            <td width="100" class="text-right"><b id="today_summery">0</b></td>
+                            <td>Today Summary :</td>
+                            <td width="100" class="text-right"><b id="today_summary">0</b></td>
                           </tr>
                         </table>
                       </div>

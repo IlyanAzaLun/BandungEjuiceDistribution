@@ -310,6 +310,7 @@ $lang['item_shadow_selling_price'] = "Harga Semu";
 $lang['shadow_selling_price_desc'] = "Harga Yang Akan Di Tampilkan Sebagai Harga Pokok.";
 
 $lang['assets_items'] = "Assets Barang";
+$lang['top-item-order'] = "Item Terbanyak Dipesan";
 
 /*
  * Pelanggan

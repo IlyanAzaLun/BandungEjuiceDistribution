@@ -89,6 +89,10 @@ const main = () => {
                         },
                         ticks: ticksStyle
                     }]
+                },
+                onClick: function (event, data) {
+                    console.log(event)
+                    console.log(data)
                 }
             }
         })
@@ -184,7 +188,7 @@ const main = () => {
             success: function (result, textStatus, jqXHR) {
                 $('b#today_total_sales').text(currency(result.datasets[0]['data'][1]))
                 $('b#today_total_purchase').text(currency(result.datasets[0]['data'][0]))
-                $('b#today_summery').text(currency(((result.datasets[0]['data'][1] - result.datasets[0]['data'][0]))))
+                $('b#today_summary').text(currency(((result.datasets[0]['data'][1] - result.datasets[0]['data'][0]))))
             }
         });
         $.ajax({
@@ -282,6 +286,7 @@ const main = () => {
                 success: function (result, textStatus, jqXHR) {
                     expeditionBar.data = result;
                     expeditionBar.update();
+                    $('b#top-item').text(result['items']['item_name'])
                 }
             });
 

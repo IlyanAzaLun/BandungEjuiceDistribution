@@ -308,6 +308,31 @@ class Dashboard extends MY_Controller {
 		$data['datasets'][0]['backgroundColor'] = '#f56954';
 		$data['datasets'][0]['borderColor'] = '#f56954';
 		$data['datasets'][0]['data'] =  array_column($result, 'counter');
+		
+		// select item top
+		$this->db->select('fifo_items.item_id, fifo_items.item_name, SUM(fifo_items.item_quantity) total_item_sales');
+		$this->db->join('invoice_selling sale', 'sale.invoice_code = fifo_items.invoice_code', 'right');
+		$this->db->group_start();
+		if (post('date') != "") {
+            $this->db->group_start();
+			$this->db->where("sale.created_at >=", post('date')['startdate']." 00:00:00");
+			$this->db->where("sale.created_at <=", post('date')['enddate']." 23:59:59");
+            $this->db->group_end();
+		}else{
+			$this->db->group_start();
+			$this->db->where("sale.created_at >=", 'DATE_FORMAT(DATE_ADD(now(), INTERVAL -7 DAY), "%Y-%m-%d 00:00:00")',false);
+			$this->db->where("sale.created_at <=", 'NOW()',false);
+			$this->db->group_end();
+		}
+		$this->db->group_end();
+		$this->db->group_start();
+        $this->db->where('fifo_items.is_cancelled', 0);
+        $this->db->where("sale.is_transaction", 1);
+        $this->db->where("sale.is_cancelled", 0);
+		$this->db->group_end();
+        $this->db->group_by('fifo_items.item_id');
+		$this->db->order_by('total_item_sales', 'DESC');
+		$data['items'] = $this->db->get("fifo_items")->row();
 
 		$this->output->set_content_type('application/json')->set_output(json_encode($data));
 	}
