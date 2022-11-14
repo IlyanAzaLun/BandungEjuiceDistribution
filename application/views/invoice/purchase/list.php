@@ -92,6 +92,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <script>
   $(function() {
+    var type;
     var startdate;
     var enddate;
     //Date range picker
@@ -108,7 +109,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('.ui-buttonset').draggable();
     var table = $("#example2").DataTable({
 
-      dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B>>><'col-2'<'float-right'l>>>
+      dom: `<'row'<'col-10'<'row'<'col-3'f><'col-9'B<'select dt-buttons btn-group flex-wrap'>>>><'col-2'<'float-right'l>>>
             <'row'<'col-12'tr>>
             <'row'<'col-5 col-xs-12'i><'col-7 col-xs-12'p>>`,
       processing: true,
@@ -137,6 +138,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         "url": "<?php echo url('invoice/purchase/serverside_datatables_data_purchase') ?>",
         "type": "POST",
         "data": function(d) {
+          d.Dtype = type;
           d.startDate = startdate;
           d.finalDate = enddate;
         }
@@ -306,6 +308,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ]
     });
+    $('.select').html(`
+    <select class="form-control" id="grouping_by">
+      <option value="all">All</option>
+      <option value="fixed">Fixed</option>
+      <option value="deleted">Deleted</option>
+    </select>`);
+    $('select#grouping_by').on('change', function(){
+      type = $(this).val();
+      table.draw();
+    })
     $('#example2 tbody').on( 'click', 'td:not(.group,[tabindex=0], :nth-last-child(1))', function(){
         table.search(table.cell( this ).data()).draw();
         $('input[type="search"]').focus()
