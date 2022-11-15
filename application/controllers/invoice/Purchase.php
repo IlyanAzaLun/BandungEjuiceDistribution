@@ -926,4 +926,4 @@ class Purchase extends Invoice_controller
 
 /* End of file Purchasing.php */
 /* Abstract file Location: ./application/controllers/Invoice.php */
-/* Location: ./application/controllers/invoices/Purchasing.php *//
+/* Location: ./application/controllers/invoices/Purchasing.php */

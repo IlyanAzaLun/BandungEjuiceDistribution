@@ -20,6 +20,7 @@ class Accounting extends MY_Controller
                 case 'journal':
                     // SELECT JOURNAL EACH DAY
                     $this->db->where('created_at', DateFomatDb($data));
+                    $this->db->order_by('id', 'ASC');
                     $result = $this->db->get('journal')->result();
                     foreach ($result as $key => $value) {
                         $response[$key]['code'] = $value->id_account.'/'.$value->HeadCode;
@@ -31,17 +32,13 @@ class Accounting extends MY_Controller
                     break;
                 case 'balance_sheet':
                     // SELECT JOURNAL GROUP MOUNTH WITH SUM AND EACH HEAD ACCOUNT CODE
-                    $this->db->select('
-                        id_account
-                      , HeadCode
-                      , HeadName
-                      , debit
-                      , SUM(debit) as total_debit
-                      , credit
-                      , SUM(credit) as total_credit
-                      , created_at');
-                    $this->db->where('DATE_FORMAT(`created_at`, "%Y-%m") =', "$data");
+                    $this->db->select('id_account , HeadCode , HeadName, PHeadCode, debit , SUM(debit) as total_debit , credit , SUM(credit) as total_credit , created_at');
+                    $this->db->group_start();
+                    $this->db->where('DATE_FORMAT(`created_at`, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
+                    $this->db->group_end();
+                            
                     $this->db->group_by('id_account');
+                    $this->db->order_by('id_account', 'ASC');
                     $response = $this->db->get('journal')->result();
                     break;
                 default:
@@ -70,8 +67,10 @@ class Accounting extends MY_Controller
             foreach ($juournal_enry as $key => $value) {
                 if ($value[0] != '') {
                     $request[$key]['id_account'] = explode('/', $value[0])[0];
-                    $request[$key]['HeadCode'] = explode('/', $value[0])[1];
-                    $request[$key]['HeadName'] = explode('-', $value[1])[1];
+                    $data = $this->db->get_where('acc_coa', array('id'=>explode('/', $value[0])[0]))->row();
+                    $request[$key]['HeadCode'] = $data->HeadCode;
+                    $request[$key]['HeadName'] = $data->HeadName;
+                    $request[$key]['PHeadCode'] = $data->PHeadCode;
                     $request[$key]['debit'] = $value[2];
                     $request[$key]['credit'] = $value[3];
                     $request[$key]['description'] = $value[4];
@@ -102,6 +101,11 @@ class Accounting extends MY_Controller
         // ifPermissions('journal_list');
         $this->page_data['page']->submenu_child = 'balance_sheet';
         $this->page_data['title'] = 'balance_sheet';
+        $this->page_data['accounts'] = $this->db->where(array(
+            'IsActive' => 1,
+            'HeadLevel >' => 1,
+            'HeadType' => 'A',
+        ))->get('acc_coa')->result();
         $this->load->view('accounting/balance_sheet', $this->page_data);
     }
     
