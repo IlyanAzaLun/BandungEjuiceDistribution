@@ -166,7 +166,8 @@ const main = () => {
                 method: 'POST',
                 dataType: 'JSON',
                 data: {
-                    'date': date
+                    'date': date,
+                    'type': 'journal'
                 },
                 async: true,
                 success: function (res) {

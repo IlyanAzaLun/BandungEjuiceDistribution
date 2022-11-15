@@ -435,6 +435,8 @@ $lang['reduce'] = "Keluar";
 $lang['increse'] = "Masuk";
 
 $lang['journal'] = "Journal";
+$lang['balance_sheet'] = "Laporan Neraca";
+$lang['month_balance_sheet'] = "Neraca Bulan";
 
 
 /*

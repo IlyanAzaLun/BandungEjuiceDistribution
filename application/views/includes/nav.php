@@ -224,14 +224,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="<?php echo url('master_information/accounting') ?>" class="nav-link <?php echo (@$page->submenu_child == 'journal') ? 'active' : '' ?>">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('journal') ?> </p>
               </a>
             </li>
           </ul>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?php echo url('master_information/accounting/report_balance') ?>" class="nav-link <?php echo (@$page->submenu_child == 'balance_sheet') ? 'active' : '' ?>">
+              <a href="<?php echo url('master_information/accounting/balance_sheet') ?>" class="nav-link <?php echo (@$page->submenu_child == 'balance_sheet') ? 'active' : '' ?>">
                 <i class="far fa-dot-circle nav-icon"></i>
                 <p> <?php echo lang('balance_sheet') ?> </p>
               </a>

@@ -16,14 +16,38 @@ class Accounting extends MY_Controller
     {
         $data = $this->input->post('date');
         if($data){
-            $this->db->where('created_at', DateFomatDb($data));
-            $result = $this->db->get('journal')->result();
-            foreach ($result as $key => $value) {
-                $response[$key]['code'] = $value->id_account.'/'.$value->HeadCode;
-                $response[$key]['account'] = $value->id_account.'/'.$value->HeadCode.'-'.$value->HeadName;
-                $response[$key]['debit'] = $value->debit;
-                $response[$key]['credit'] = $value->credit;
-                $response[$key]['description'] = $value->description;
+            switch (post('type')) {
+                case 'journal':
+                    // SELECT JOURNAL EACH DAY
+                    $this->db->where('created_at', DateFomatDb($data));
+                    $result = $this->db->get('journal')->result();
+                    foreach ($result as $key => $value) {
+                        $response[$key]['code'] = $value->id_account.'/'.$value->HeadCode;
+                        $response[$key]['account'] = $value->id_account.'/'.$value->HeadCode.'-'.$value->HeadName;
+                        $response[$key]['debit'] = $value->debit;
+                        $response[$key]['credit'] = $value->credit;
+                        $response[$key]['description'] = $value->description;
+                    }
+                    break;
+                case 'balance_sheet':
+                    // SELECT JOURNAL GROUP MOUNTH WITH SUM AND EACH HEAD ACCOUNT CODE
+                    $this->db->select('
+                        id_account
+                      , HeadCode
+                      , HeadName
+                      , debit
+                      , SUM(debit) as total_debit
+                      , credit
+                      , SUM(credit) as total_credit
+                      , created_at');
+                    $this->db->where('DATE_FORMAT(`created_at`, "%Y-%m") =', "$data");
+                    $this->db->group_by('id_account');
+                    $response = $this->db->get('journal')->result();
+                    break;
+                default:
+                    header("Location: ".url('master_information/accounting/journal'));
+                    die();
+                    break;
             }
             $callback['data'] = $response?$response:null;
             $this->output->set_content_type('application/json')->set_output(json_encode($callback));
@@ -73,17 +97,12 @@ class Accounting extends MY_Controller
         }
     }
     
-    public function report_balance()
+    public function balance_sheet()
     {
         // ifPermissions('journal_list');
-        $this->page_data['page']->submenu_child = 'report_balance';
-        $this->page_data['title'] = 'journal';
-        $this->page_data['get_account'] = $this->db->select('*')->from('acc_coa')->where('IsActive', 1)->order_by('HeadName')->get()->result();
-        $this->page_data['visit'] = array();
-        for ($i=0; $i < count($this->page_data['get_account']); $i++) { 
-            $this->page_data['visit'][$i] = false;
-        }
-        $this->load->view('accounting/report_balance', $this->page_data);
+        $this->page_data['page']->submenu_child = 'balance_sheet';
+        $this->page_data['title'] = 'balance_sheet';
+        $this->load->view('accounting/balance_sheet', $this->page_data);
     }
     
     public function profit_n_loss()
