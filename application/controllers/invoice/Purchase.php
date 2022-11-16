@@ -625,12 +625,12 @@ class Purchase extends Invoice_controller
 					$this->db->where('invoice_code', $child->invoice_code);
 					$this->db->where('item_id', $child->item_id);
 					$this->db->set('item_capital_price', setCurrency($value['item_capital_price']));
-					$this->db->update('invoice_transaction_list_item');
+					$result = $this->db->update('invoice_transaction_list_item');
 				}
 				$this->db->trans_complete();
 			}
 		}
-		return $update;
+		return $result;
 	}
 
 	
