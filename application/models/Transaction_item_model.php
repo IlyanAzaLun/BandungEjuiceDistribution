@@ -28,6 +28,7 @@ class Transaction_item_model extends MY_Model {
         }
         $this->db->select(
             'transaction.*
+            ,fifo_items.item_capital_price as item_capital_prices 
             ,supplier.store_name
             ,customer.store_name            
             ,supplier.owner_name
@@ -69,10 +70,11 @@ class Transaction_item_model extends MY_Model {
             $this->db->where('transaction.item_code', $parameter['item_code']);
             $this->db->group_end();
         }
+        $this->db->join('fifo_items', '(transaction.invoice_code = fifo_items.invoice_code AND transaction.item_id = fifo_items.item_id)', 'left');
         if($parameter['params'] == 'purchase' || $parameter['params'] == 'purchase_returns' ){
-            $this->db->join('invoice_purchasing invoice', 'transaction.invoice_code = invoice.invoice_code', 'left');
+            $this->db->join('invoice_purchasing invoice', 'transaction.invoice_code = invoice.invoice_code', 'right');
         }else{
-            $this->db->join('invoice_selling invoice', 'transaction.invoice_code = invoice.invoice_code', 'left');
+            $this->db->join('invoice_selling invoice', 'transaction.invoice_code = invoice.invoice_code', 'right');
         }
         $this->db->join('users user_created', 'transaction.created_by = user_created.id', 'left');
         $this->db->join('users user_updated', 'transaction.updated_by = user_updated.id', 'left');

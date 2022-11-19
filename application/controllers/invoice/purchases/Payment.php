@@ -52,7 +52,7 @@ class Payment extends MY_Controller
 		$this->page_data['modals'] = (object) array(
 			'id' => 'remmove_pay',
 			'title' => 'Remove Payment',
-			'link' => "invoice/purchase/payment/delete",
+			'link' => "invoice/purchases/payment/delete",
 			'content' => 'delete',
 			'btn' => 'btn-primary',
 			'submit' => 'Yes do it',
@@ -117,13 +117,11 @@ class Payment extends MY_Controller
 
 	public function delete()
 	{
-		echo '<pre>';
 		$response = $this->payment_model->getById(post('id'));
 		$response->is_cancelled = 1;
 		$response->cancel_note = post('note');
 		$request = $this->payment_model->update($response->id, $response);
 		$this->db->reset_query();
-		echo '</pre>';
 		if($request){
 			$this->activity_model->add("Delete Payment Invoice, #" . $response->id, (array) $response);
 			$this->session->set_flashdata('alert-type', 'success');
@@ -140,11 +138,23 @@ class Payment extends MY_Controller
 	{
 		postAllowed();
 		$this->page_data['requset_post'] = $this->input->post();
-		if(!($this->page_data['requset_post']['id_payment'] && ((int) $this->page_data['requset_post']['to_pay'] > 0))){
+		if($this->page_data['requset_post']['bank_id'] == ""){
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Faild, Worng Bank information');
+			redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['request_post']['invoice_code']);
+		}
+		if($this->page_data['requset_post']['to_pay'] < 0 || $this->page_data['requset_post']['to_pay'] == "NaN" ){
+			$this->session->set_flashdata('alert-type', 'danger');
+			$this->session->set_flashdata('alert', 'Faild, Worng Nominal information');
+			redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['request_post']['invoice_code']);
+
+		}
+		if(!($this->page_data['requset_post']['id_payment'])){
 			$this->session->set_flashdata('alert-type', 'danger');
 			$this->session->set_flashdata('alert', 'Faild, Worng information');
-			redirect('invoice/purchases/payment/debt');
-		}else{
+			redirect('invoice/purchases/payment/history?invoice_code='.$this->page_data['request_post']['invoice_code']);
+		}
+		else{
 			$next_request = false;
 			$request = $this->payment_model->getById($this->page_data['requset_post']['id_payment']);
 			$dataPost = $this->input->post();

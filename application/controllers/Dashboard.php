@@ -39,6 +39,23 @@ class Dashboard extends MY_Controller {
 
 	public function expense_statment_monthly()
 	{
+		$this->db->select("
+              selling.created_at
+            , selling.updated_at
+            , DATE_FORMAT(selling.created_at, '%Y-%m-%d') AS yearmountday
+            , DATE_FORMAT(selling.created_at, '%Y-%m') AS yearmount
+            , DATE_FORMAT(selling.created_at, '%M') AS mount
+            , SUM( (CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) ) AS item_capital_price");
+		$this->db->join('invoice_selling selling', 'selling.invoice_code = transaction.invoice_code', 'left');
+		$this->db->group_start();
+        $this->db->where('transaction.is_cancelled', 0);
+        $this->db->where('selling.is_cancelled', 0);
+        $this->db->where('selling.is_transaction', 1);
+		$this->db->where("DATE_FORMAT(selling.created_at, '%Y%m') = ", "DATE_FORMAT(now(), '%Y%m')", false);
+		$this->db->group_end();
+		$capital_price = $this->db->get('fifo_items transaction')->row_array();
+		//
+		
 		$this->db->select('SUM(CAST(invoice_selling.grand_total AS INT)) AS "Total Selling"');
 		$this->db->group_start();
 		$this->db->where("invoice_selling.is_cancelled", 0);
@@ -61,7 +78,7 @@ class Dashboard extends MY_Controller {
 		$data['datasets'][0]['backgroundColor'] = array_values(array("#2ecc71", "#3498db"));
 		$data['labels'] = array_keys($result);
 		
-		$this->output->set_content_type('application/json')->set_output(json_encode($data));
+		$this->output->set_content_type('application/json')->set_output(json_encode([$data, $capital_price]));
 	}
 
 	public function monthly_statistic()

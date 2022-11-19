@@ -186,9 +186,9 @@ const main = () => {
             url: location.base + 'dashboard/expense_statment_daily', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
-                $('b#today_total_sales').text(currency(result.datasets[0]['data'][1]))
-                $('b#today_total_purchase').text(currency(result.datasets[0]['data'][0]))
-                $('b#today_summary').text(currency(((result.datasets[0]['data'][1] - result.datasets[0]['data'][0]))))
+                $('b#today_total_sales').text(currency(result.datasets[0]['data'] ? result.datasets[0]['data'][1] : 0))
+                $('b#today_total_purchase').text(currency(result.datasets[0]['data'] ? result.datasets[0]['data'][0] : 0))
+                $('b#today_summary').text(currency(((result.datasets[0]['data'] ? result.datasets[0]['data'][1] - result.datasets[0]['data'][0] : 0))))
             }
         });
         $.ajax({
@@ -196,11 +196,12 @@ const main = () => {
             url: location.base + 'dashboard/expense_statment_monthly', //ajaxformexample url
             dataType: "json",
             success: function (result, textStatus, jqXHR) {
-                pieChart.data = result;
+                pieChart.data = result[0];
                 pieChart.update();
 
-                $('b#monthly_total_sales').text(currency(result.datasets[0]['data'][0]))
-                $('b#monthly_total_purchase').text(currency(result.datasets[0]['data'][1]))
+                $('b#monthly_total_sales').text(currency(result[0].datasets[0]['data'][0]))
+                $('b#monthly_total_purchase').text(currency(result[0].datasets[0]['data'][1]))
+                $('b#monthly_total_profit').text(currency(result[0].datasets[0]['data'][0] - result[1]['item_capital_price'])).parents('tr').addClass('bg-primary')
             }
         });
 

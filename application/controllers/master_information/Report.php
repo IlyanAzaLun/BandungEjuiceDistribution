@@ -446,7 +446,7 @@ class Report extends MY_Controller
             $sheet->setCellValue("A".$i, $value->invoice_code);
             $sheet->setCellValue("B".$i, $value->item_code);
             $sheet->setCellValue("C".$i, $value->item_name);
-            $sheet->setCellValue("D".$i, $value->item_capital_price);
+            $sheet->setCellValue("D".$i, $value->item_capital_prices);
             $sheet->setCellValue("E".$i, $value->item_selling_price);
             $sheet->setCellValue("F".$i, $value->item_quantity);
             $sheet->setCellValue("G".$i, $value->item_unit);
@@ -476,7 +476,7 @@ class Report extends MY_Controller
         }
         // (E) SAVE FILE
         $writer = new Csv($spreadsheet);
-		$fileName = post('params').'-'. date("Y-m-d-His") .'.csv';
+		$fileName = post('params').'-report-'. date("Y-m-d-His") .'.csv';
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="'. urlencode($fileName).'"');
         $writer->save('php://output');
@@ -874,6 +874,15 @@ class Report extends MY_Controller
                 break;
         }
 		$result1 = $this->db->get('fifo_items transaction')->result();
+        $callback_items = new stdClass();
+
+        foreach ($result1 as $key => $value) {
+            $callback_items->year = $value->year;
+            $callback_items->yearmount = $value->yearmount;
+            $callback_items->time_capital_price += $value->time_capital_price;
+            $callback_items->total_price += $value->total_price;
+            $callback_items->profit += $value->profit;
+        }
 
         $this->db->select("
             DATE_FORMAT(invoice_selling.created_at, '%Y') AS year
@@ -921,8 +930,17 @@ class Report extends MY_Controller
         $this->db->where("invoice_selling.is_cancelled", 0);
         $this->db->group_end();
 		$result2 = $this->db->get('invoice_selling')->result();
+        $callback_invoice = new stdClass();
 
-        $records = array_merge($result1, $result2);
+        foreach ($result2 as $key => $value) {
+            $callback_invoice->year = $value->year;
+            $callback_invoice->yearmount = $value->yearmount;
+            $callback_invoice->discounts += $value->discounts;
+            $callback_invoice->total_price += $value->total_price;
+            $callback_invoice->shipping_cost += $value->shipping_cost;
+            $callback_invoice->other_cost += $value->other_cost;
+        }
+        $records = array_merge(array($callback_items), array($callback_invoice));
         $this->output->set_content_type('application/json')->set_output(json_encode($records));
     }
 }

@@ -197,6 +197,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <td>Total Purchase :</td>
                             <td width="100" class="text-right"><b id="monthly_total_purchase">0</b></td>
                           </tr>
+                          
+                          <tr>
+                            <td>Total Profit :</td>
+                            <td width="100" class="text-right"><b id="monthly_total_profit">0</b></td>
+                          </tr>
                         </table>
                       </div>
                     </div>
