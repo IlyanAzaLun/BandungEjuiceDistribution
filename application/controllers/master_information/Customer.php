@@ -261,12 +261,17 @@ class Customer extends MY_Controller
         if (hasPermissions('requst_data_customer')) {
             $search = (object) post('search');
             $this->db->limit(5);
+            $this->db->join('address_information', 'address_information.customer_code=customer_information.customer_code', 'right');
             if (isset($search->value)) {
+                $this->db->group_start();
                 $this->db->like('customer_information.customer_code', $search->value, 'both');
                 $this->db->or_like('customer_information.store_name', $search->value, 'both');
                 $this->db->or_like('customer_information.owner_name', $search->value, 'both');
+                $this->db->group_end();
             }
-            $this->db->join('address_information', 'address_information.customer_code=customer_information.customer_code', 'left');
+            $this->db->group_start();
+            $this->db->where('address_information.is_active', 1);
+            $this->db->group_end();
             $response = $this->db->get('customer_information')->result();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         }else{
