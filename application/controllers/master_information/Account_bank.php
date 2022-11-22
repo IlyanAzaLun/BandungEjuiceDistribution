@@ -16,12 +16,57 @@ class Account_bank extends MY_Controller
         ifPermissions('account_bank_list');
         $this->page_data['page']->submenu = 'account';
         $this->page_data['title'] = 'chart_of_account';
-        $this->page_data['get_account'] = $this->db->select('*')->from('acc_coa')->where('IsActive', 1)->order_by('HeadName')->get()->result();
-        $this->page_data['visit'] = array();
-        for ($i=0; $i < count($this->page_data['get_account']); $i++) { 
-            $this->page_data['visit'][$i] = false;
+        
+        $this->form_validation->set_rules('txtHeadName', lang('bank_name'), 'required|trim');
+
+        if ($this->form_validation->run() == false) {
+            $this->page_data['get_account'] = $this->db->select('*')->from('acc_coa')->where('IsActive', 1)->order_by('HeadName')->get()->result();
+            $this->page_data['visit'] = array();
+            for ($i=0; $i < count($this->page_data['get_account']); $i++) { 
+                $this->page_data['visit'][$i] = false;
+            }
+            $this->load->view('account_bank/index', $this->page_data);
         }
-        $this->load->view('account_bank/index', $this->page_data);
+        else{
+            echo '<pre>';
+            $this->db->where('HeadCode', post('txtHeadCode'));
+            $this->db->from('acc_coa');
+            $callback = $this->db->count_all_results();
+            $this->db->reset_query();
+            if ($callback) {
+                // UPDATE INFORMATION OF COA
+                $data = array(
+                    'HeadName' => post('txtHeadName')?post('txtHeadName'):null,
+                    'IsActive' => post('IsActive')?post('IsActive'):null,
+                    'isCashNature' => post('isCashNature')?post('isCashNature'):null,
+                    'isBankNature' => post('isBankNature')?post('isBankNature'):null,
+                    'DepreciationRate' => post('DepreciationRate')?post('DepreciationRate'):null,
+                    'UpdateBy' => logged('id'),
+                    'UpdateDate' => date('Y-m-d H:i:s'),
+                    'isSubType' => post('isSubType')?post('isSubType'):null,
+                    'isStock' => post('isStock')?post('isStock'):null,
+                    'isFixedAssetSch' => post('isFixedAssetSch')?post('isFixedAssetSch'):null,
+                    'noteNo' => post('noteNo')?post('noteNo'):null,
+                    'assetCode' => post('assetCode')?post('assetCode'):null,
+                    'depCode' => post('depCode')?post('depCode'):null 
+                );
+                $this->db->where('HeadCode', post('txtHeadCode'));
+                $result = $this->db->update('acc_coa', $data);
+                if ($result) {
+                    $this->activity_model->add("Update Chart Of Account, #" . post('txtHeadCode'), (array) $this->input->post());
+                    $this->session->set_flashdata('alert-type', 'success');
+                    $this->session->set_flashdata('alert', 'Update Chart Of Account Successfully');
+                }
+                else{
+                    $this->session->set_flashdata('alert-type', 'error');
+                    $this->session->set_flashdata('alert', 'Update Chart Of Account Failed');
+                }
+                redirect('master_information/account_bank');
+            }else{
+                // CREATE INFORMATION OF COA
+            }
+            echo '</pre>';
+        }
     }
     public function form()
     {

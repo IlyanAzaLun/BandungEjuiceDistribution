@@ -57,29 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <section class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-6">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">DataTable with minimal features & hover style</h3>
-            <div class="card-tools pull-right">
-            </div>
-
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body">
-            <div id="jstree_demo_div">
-                <ul>
-                    <?php dfs("0", "COA", $get_account, $visit, 0); ?>
-                </ul>
-            </div>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-
-
-      </div>
-      <div class="col-6">
+      <div class="col-12">
         <div class="card">
             <div class="card-header">
               <h3 class="card-title">DataTable with minimal features & hover style</h3>
@@ -90,6 +68,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div id="form"></div>
             </div>
         </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">DataTable with minimal features & hover style</h3>
+            <div class="card-tools pull-right">
+            </div>
+
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <div id="jstree_demo_div">
+                    <ul>
+                        <?php dfs("0", "COA", $get_account, $visit, 0); ?>
+                    </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
       </div>
       <!-- /.col -->
     </div>

@@ -34,14 +34,19 @@ const main = () => {
             }
         });
 
+        $('a.jstree-anchor').click(function () {
+            return false;
+        })
         // OPEN FORM
         $('li').on('click', 'a[data-id="child"]', function () {
             let id = this.id;
             let HeadCode = $(this).data('code');
             let area_val = $(`#${HeadCode}`).attr('aria-level')
             form.open(HeadCode, function (result) {
-                $('div#form').html(result)
-            })
+                $('div#form').html(result).fadeIn('slow')
+            });
+
+            $('html,body').animate({ scrollTop: "0" }, 100);
         })
     })
 }

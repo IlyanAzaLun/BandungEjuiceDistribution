@@ -24,7 +24,8 @@ class Accounting extends MY_Controller
                     $result = $this->db->get('journal')->result();
                     foreach ($result as $key => $value) {
                         $response[$key]['code'] = $value->id_account.'/'.$value->HeadCode;
-                        $response[$key]['account'] = $value->id_account.'/'.$value->HeadCode.'-'.$value->HeadName;
+                        $HeadName = $this->db->select('HeadName')->get_where('acc_coa', array('id'=>$value->id_account))->row()->HeadName;
+                        $response[$key]['account'] = $value->id_account.'/'.$value->HeadCode.'-'.$HeadName;
                         $response[$key]['debit'] = $value->debit;
                         $response[$key]['credit'] = $value->credit;
                         $response[$key]['description'] = $value->description;

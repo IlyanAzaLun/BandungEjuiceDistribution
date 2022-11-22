@@ -27,9 +27,10 @@ const main = () => {
                     let _total_credit = 0;
                     let curent;
                     // LOOPING DATA
+                    console.log(res)
                     $.each(res.data, function (index, item) {
                         // SET DATA
-                        $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.debit ? currency(item.total_debit) : '(' + currency(item.total_credit) + ')'};`)
+                        $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total_debit != 0 ? currency(item.total_debit) : '(' + currency(item.total_credit) + ')'};`)
                         // CONDITION IF CURENT CODE IS NOT SAME WITH NEXT CODE
                         if (curent != item.PHeadCode.substring(0, 2)) {
                             // RESET TO 0
