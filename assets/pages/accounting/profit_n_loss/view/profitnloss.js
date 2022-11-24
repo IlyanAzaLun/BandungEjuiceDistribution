@@ -3,8 +3,8 @@ const main = () => {
         'use strict'
 
         $(document).ready(function () {
-            loadDataHansonTable($('input#balance_sheet').val());
-            $('input#balance_sheet').on('change', function () {
+            loadDataHansonTable($('input#profit_n_loss').val());
+            $('input#profit_n_loss').on('change', function () {
                 loadDataHansonTable(this.value)
             })
         })
@@ -17,7 +17,7 @@ const main = () => {
                 data: {
                     'date': date,
                     'request': 'report',
-                    'type': 'balance_sheet'
+                    'type': 'profit_n_loss'
                 },
                 async: true,
                 success: function (res) {

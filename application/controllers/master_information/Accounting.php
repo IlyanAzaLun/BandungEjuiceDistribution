@@ -16,7 +16,7 @@ class Accounting extends MY_Controller
     {
         $data = $this->input->post('date');
         if($data){
-            switch (post('type')) {
+            switch (post('request')) {
                 case 'journal':
                     // SELECT JOURNAL EACH DAY
                     $this->db->where('created_at', DateFomatDb($data));
@@ -31,15 +31,24 @@ class Accounting extends MY_Controller
                         $response[$key]['description'] = $value->description;
                     }
                     break;
-                case 'balance_sheet':
+                case 'report':
                     // SELECT JOURNAL GROUP MOUNTH WITH SUM AND EACH HEAD ACCOUNT CODE
-                    $this->db->select('id_account , HeadCode , HeadName, PHeadCode, debit , SUM(debit) as total_debit , credit , SUM(credit) as total_credit , created_at');
+                    $this->db->select('journal.id_account , journal.HeadCode , journal.HeadName, journal.PHeadCode, journal.debit , SUM(journal.debit) as total_debit , journal.credit , SUM(journal.credit) as total_credit , SUM(journal.debit)-SUM(journal.credit) as total, journal.created_at');
+                    $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
                     $this->db->group_start();
-                    $this->db->where('DATE_FORMAT(`created_at`, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
+                    $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
                     $this->db->group_end();
-                            
-                    $this->db->group_by('id_account');
-                    $this->db->order_by('id_account', 'ASC');
+                    switch (post('type')) {
+                        case 'balance_sheet':
+                            $this->db->where('acc_coa.HeadType', 'A');
+                            break;
+                        
+                        default:
+                            $this->db->where('acc_coa.HeadType', 'B');
+                            break;
+                    }
+                    $this->db->group_by('journal.id_account');
+                    $this->db->order_by('journal.id_account', 'ASC');
                     $response = $this->db->get('journal')->result();
                     break;
                 default:
@@ -114,12 +123,12 @@ class Accounting extends MY_Controller
     {
         // ifPermissions('journal_list');
         $this->page_data['page']->submenu_child = 'profit_n_loss';
-        $this->page_data['title'] = 'journal';
-        $this->page_data['get_account'] = $this->db->select('*')->from('acc_coa')->where('IsActive', 1)->order_by('HeadName')->get()->result();
-        $this->page_data['visit'] = array();
-        for ($i=0; $i < count($this->page_data['get_account']); $i++) { 
-            $this->page_data['visit'][$i] = false;
-        }
+        $this->page_data['title'] = 'profit_n_loss';
+        $this->page_data['accounts'] = $this->db->where(array(
+            'IsActive' => 1,
+            'HeadLevel >' => 1,
+            'HeadType' => 'B',
+        ))->get('acc_coa')->result();
         $this->load->view('accounting/profit_n_loss', $this->page_data);
     }
 

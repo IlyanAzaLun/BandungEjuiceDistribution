@@ -34,9 +34,6 @@ const main = () => {
             }
         });
 
-        $('a.jstree-anchor').click(function () {
-            return false;
-        })
         // OPEN FORM
         $('li').on('click', 'a[data-id="child"]', function () {
             let id = this.id;

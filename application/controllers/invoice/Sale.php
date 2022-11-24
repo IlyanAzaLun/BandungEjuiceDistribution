@@ -119,7 +119,6 @@ class Sale extends Invoice_controller
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
-			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
 			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
 			$this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			$this->db->trans_complete();
@@ -220,7 +219,6 @@ class Sale extends Invoice_controller
 			$this->create_item_history($items[$key], ['CREATE', 'UPDATE']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items[$key]);
-			$this->create_or_update_list_item_fifo($items[$key]); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
 			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
 			$this->update_items($items[$key]); // NOT USE HERE, BUT USED ON ORDER CREATE
 			$this->db->trans_complete();
@@ -333,7 +331,6 @@ class Sale extends Invoice_controller
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 			);// Check
 			
-			echo '<pre>';
 			// // EDIT
 			$this->db->trans_start();
 			if(sizeof($items) > 0){
@@ -345,7 +342,6 @@ class Sale extends Invoice_controller
 				$this->db->reset_query();
 				$this->create_or_update_list_item_transcation($items);
 				$this->db->reset_query();
-				$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
 				$this->db->reset_query();		
 			}
 			$this->create_or_update_invoice($payment);
@@ -353,7 +349,7 @@ class Sale extends Invoice_controller
 			$this->create_or_update_list_chart_cash($payment);
 			$this->db->reset_query();
 			$this->db->trans_complete();
-			echo '</pre>';
+			
 			$this->activity_model->add("Edit Sale Invoice, #" . $this->data['invoice_code'], (array) $payment);
 			$this->session->set_flashdata('alert-type', 'success');
 			$this->session->set_flashdata('alert', 'Edit Sale Invoice Successfully');
@@ -652,20 +648,19 @@ class Sale extends Invoice_controller
 		}
 	}
 
-	protected function create_or_update_list_item_fifo($data)
-	{
+	protected function create_or_update_list_item_fifo($data){
 		$item = array();
 		$item_fifo = array();
 		foreach ($data as $key => $value) {
-			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
-			// 
-			array_push($item_fifo, $this->items_fifo_model->select_fifo_by_item_code($value['item_code']));
-			// 
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // PRIMARY FOR FIND ITEMS WITH CODE ITEM
+
+			$item_fifo = $this->items_fifo_model->select_fifo_by_item_code($value['item_code']); // FIND THE CURRENT INFORMATION ABOUT FIFO ITEMS
+
 			$request[$key]['invoice_code'] = $this->data['invoice_code'];
 			$request[$key]['item_id'] = $value['item_id'];
 			$request[$key]['item_code'] = $item[$key]->item_code;
 			$request[$key]['item_name'] = $value['item_name'];
-			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']);
+			$request[$key]['item_capital_price'] = setCurrency($value['item_capital_price']); // IF MORE THEN ONE IT MUST BE HAVE A PRISE,
 			$request[$key]['item_quantity'] = abs($value['item_order_quantity']);
 			$request[$key]['item_unit'] = $value['item_unit'];
 			$request[$key]['item_discount'] = setCurrency($value['item_discount']);
@@ -679,8 +674,9 @@ class Sale extends Invoice_controller
 				$request[$key]['updated_at'] = date('Y-m-d H:i:s');
 				// //$this->items_fifo_model->update_by_code($this->data['invoice_code'], $request[$key]);
 				$data_positif[] = $request[$key];
-			} else {
-				$request[$key]['reference_purchase'] = $item_fifo[$key]->invoice_code;
+			}
+			else {
+				$request[$key]['reference_purchase'] = $item_fifo->invoice_code;
 				$request[$key]['created_at'] = $value['created_at'];
 				$request[$key]['created_by'] = logged('id');
 				// //$this->items_fifo_model->create($request[$key]);
@@ -691,7 +687,8 @@ class Sale extends Invoice_controller
 			if ($this->items_fifo_model->create_batch($data_negatif) && $this->items_fifo_model->update_batch($data_positif, 'id')) {
 				return true;
 			}
-		} else {
+		} 
+		else {
 			$this->items_fifo_model->update_batch($data_positif, 'id');
 			return true;
 		}
@@ -713,7 +710,8 @@ class Sale extends Invoice_controller
 		if($data['payment_type'] == 'cash'){
 			$request['payup'] = setCurrency($data['grand_total']); // want to pay
 			$request['leftovers'] = 0; // remaind
-		}else{
+		}
+		else{
 			$request['payup'] = 0; // want to pay
 			$request['leftovers'] = setCurrency($data['grand_total']); // remaind
 		}
@@ -749,14 +747,16 @@ class Sale extends Invoice_controller
 					$result[$key]->grand_total = setCurrency($data['grand_total']);
 				}
 				return $this->receivables->update_batch($result, 'id');
-			}else{
+			}
+			else{
 				/**
 				 * ELSE CONDITION, JIKA TIDAK ADA INVOICE SEBELUMNYA PADA PERIODE YANG DI TENTUKAN MAKA, HANYA INVOICE PEMBAYARAN NYA SAJA YANG BERUBAH 
 				**/
 				return $this->payment_model->update_by_code_invoice($this->data['invoice_code'], $request);
 			}
 			// END UPDATE ALL PAYMENT
-		} else {
+		}
+		else {
 			$request['created_by'] = logged('id');
 			//	
 			return $this->payment_model->create($request);
@@ -800,7 +800,8 @@ class Sale extends Invoice_controller
 					$result[$a] = $this->items_fifo_model->update_fifo_by_item_code($item[$a], $status);
 					$a++;
 				}
-			} else {
+			}
+			else {
 				while ($a <= $value['item_order_quantity']) {
 					// 'Create';
 					$item[$a] = $this->items_fifo_model->select_fifo_by_item_code($value['item_code']); // Primary for find items with code item
@@ -809,6 +810,7 @@ class Sale extends Invoice_controller
 				}
 			}
 		}
+		$this->create_or_update_list_item_fifo($data); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
 		return $item;
 	}
 
@@ -879,7 +881,8 @@ class Sale extends Invoice_controller
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
+		}
+		else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
@@ -890,7 +893,8 @@ class Sale extends Invoice_controller
 		}
 		if(!$is_super_user){
 			$this->db->where("sale.is_cancelled", 0);
-		}else{
+		}
+		else{
 			switch ($type) {
 				case 'fixed':
 					$this->db->where("sale.is_cancelled", 1);
@@ -962,7 +966,8 @@ class Sale extends Invoice_controller
 			$this->db->where("sale.created_at >=", $dateStart);
 			$this->db->where("sale.created_at <=", $dateFinal);
 			$this->db->group_end();
-		}else{
+		}
+		else{
 			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
 		if(!$haspermission){
@@ -973,7 +978,8 @@ class Sale extends Invoice_controller
 		}
 		if(!$is_super_user){
 			$this->db->where("sale.is_cancelled", 0);
-		}else{
+		}
+		else{
 			switch ($type) {
 				case 'fixed':
 					$this->db->where("sale.is_cancelled", 0);
@@ -1126,7 +1132,8 @@ class Sale extends Invoice_controller
 			$this->db->where("transaction.created_at >=", post('date')['startdate']);
 			$this->db->where("transaction.created_at <=", post('date')['enddate']);
 			$this->db->group_end();
-		}else{
+		}
+		else{
 			$this->db->group_start();
 			$this->db->where("transaction.created_at >=", 'DATE_ADD(NOW(), INTERVAL -7 DAY)',false);
 			$this->db->where("transaction.created_at <=", 'NOW()',false);

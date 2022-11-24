@@ -167,7 +167,7 @@ const main = () => {
                 dataType: 'JSON',
                 data: {
                     'date': date,
-                    'type': 'journal'
+                    'request': 'journal',
                 },
                 async: true,
                 success: function (res) {

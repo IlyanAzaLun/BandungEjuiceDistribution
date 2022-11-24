@@ -440,6 +440,7 @@ $lang['increse'] = "In";
 
 $lang['journal'] = "Journal";
 $lang['balance_sheet'] = "Balance Sheet";
+$lang['profit_n_loss'] = "Profit and Loss";
 $lang['month_balance_sheet'] = "Month Balance Sheet";
 $lang['month_balance_sheet'] = "View Report";
 

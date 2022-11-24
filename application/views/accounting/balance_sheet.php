@@ -111,7 +111,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </tr>
             <tr>
                 <td colspan="2" class="text-right">
-                    <strong>Total</strong>
+                    <strong>Total Sisa</strong>
                 </td>
                 <td class="text-right"><b class="text-left">Rp. </b><strong id="total">0</strong>
                 </td>

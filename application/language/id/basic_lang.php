@@ -436,6 +436,7 @@ $lang['increse'] = "Masuk";
 
 $lang['journal'] = "Journal";
 $lang['balance_sheet'] = "Laporan Neraca";
+$lang['profit_n_loss'] = "Laporan Laba dan Rugi";
 $lang['month_balance_sheet'] = "Neraca Keuangan pada Bulan";
 $lang['see-report'] = "Melihat Laporan";
 
