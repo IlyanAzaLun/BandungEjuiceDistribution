@@ -39,14 +39,14 @@ const main = () => {
                         }
                         // SET CURENT CODE
                         curent = item.PHeadCode.substring(0, 2);
-                        _total += item.total_credit - item.total_debit;
+                        _total += item.total_debit - item.total_credit;
                         _total_debit += Number(item.total_debit);
                         _total_credit += Number(item.total_credit);
                         $(`thead>tr>td#${curent}>span.currency`).html(`<b>${(_total >= 0) ? currency(_total) : `(${currency(Math.abs(_total))})`}</b>`)
                     })
                     $('strong#total_debit').text(currency(_total_debit))
                     $('strong#total_credit').text(currency(_total_credit))
-                    $('strong#total').text(((_total_credit - _total_debit) >= 0) ? currency(_total_credit - _total_debit) : `(${currency(Math.abs(_total_credit - _total_debit))})`)
+                    $('strong#total').text(((_total_debit - _total_credit) >= 0) ? currency(_total_debit - _total_credit) : `(${currency(Math.abs(_total_debit - _total_credit))})`)
                 }
             })
         }
