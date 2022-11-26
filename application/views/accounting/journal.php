@@ -99,5 +99,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   $('#journal_date').daterangepicker({
       "singleDatePicker": true,
       "autoApply": true,
+      "locale": {
+        "format": "D/M/YYYY",
+        "firstDay": 1
+    },
   })
 </script>

@@ -33,7 +33,7 @@ class Accounting extends MY_Controller
                     break;
                 case 'report':
                     // SELECT JOURNAL GROUP MOUNTH WITH SUM AND EACH HEAD ACCOUNT CODE
-                    $this->db->select('journal.id_account , journal.HeadCode , journal.HeadName, journal.PHeadCode, journal.debit , SUM(journal.debit) as total_debit , journal.credit , SUM(journal.credit) as total_credit , SUM(journal.debit)-SUM(journal.credit) as total, journal.created_at');
+                    $this->db->select('journal.id_account , journal.HeadCode , journal.HeadName, journal.PHeadCode, journal.debit , SUM(journal.debit) as total_debit , journal.credit , SUM(journal.credit) as total_credit , SUM(IFNULL(journal.credit,0)) - SUM(IFNULL(journal.debit,0)) as total, journal.created_at');
                     $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
                     $this->db->group_start();
                     $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
@@ -74,6 +74,11 @@ class Accounting extends MY_Controller
             $this->load->view('accounting/journal', $this->page_data);
         }else{
             $juournal_enry = json_decode($this->input->post('journal_entry'));
+            
+            $this->db->where('created_at', DateFomatDb(post('journal_date')));
+            $this->db->delete('journal');
+            $this->db->reset_query();
+
             foreach ($juournal_enry as $key => $value) {
                 if ($value[0] != '') {
                     $request[$key]['id_account'] = explode('/', $value[0])[0];
@@ -88,15 +93,11 @@ class Accounting extends MY_Controller
                     $request[$key]['created_by'] = logged('id');
                 }
             }
-            $this->db->where('created_at', DateFomatDb(post('journal_date')));
-            $this->db->delete('journal');
-            $this->db->reset_query();
             $result = $this->db->insert_batch('journal', $request);
             if($result > 0){
                 $this->activity_model->add("New Journal #".DateFomatDb(post('journal_date')).", Created by User: #" . logged('id'), (array)$request);
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'New Journal Created Successfully');
-    
                 redirect('master_information/accounting/journal');
             }else {
                 echo '<pre>';

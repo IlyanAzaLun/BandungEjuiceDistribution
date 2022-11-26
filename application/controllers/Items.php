@@ -965,6 +965,30 @@ class Items extends MY_Controller
     {
         if (ifPermissions('items_list')) {
             $search = (object) post('search');
+            /**
+             *   WITH RECURSIVES AS (SELECT 
+             *       `id`
+             *       , SUBSTRING(`invoice_code`, 5) AS invoice
+             *       , `created_at`
+             *       , `updated_at`
+             *       , `invoice_code`
+             *       , `item_code`
+             *       , `item_name`
+             *       , SUM( IF(parent IS NULL, `item_quantity`, item_quantity*-1)) AS item_quantity
+             *       , `item_discount`
+             *       , `item_capital_price`
+             *       , `total_price`
+             *       , (total_price IS NOT TRUE) AS is_free
+             *       , `is_readable`
+             *       , `is_cancelled`
+             *   FROM fifo_items
+             *   WHERE is_cancelled = 0 AND is_readable = 1 AND item_quantity > 0
+             *   GROUP BY invoice, item_code,is_free
+             *   ORDER BY created_at ASC)
+             *   SELECT items.*, RECURSIVES.item_quantity AS quantity, RECURSIVES.item_capital_price AS capital_price FROM items
+             *   LEFT JOIN RECURSIVES ON items.item_code = RECURSIVES.item_code
+             *   ORDER BY id DESC
+             **/ 
             $this->db->select('*, CAST(quantity AS INT) as quantity');
             $this->db->limit(15);
             if ($search->value) {

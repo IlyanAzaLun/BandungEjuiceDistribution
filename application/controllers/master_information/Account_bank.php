@@ -29,6 +29,14 @@ class Account_bank extends MY_Controller
         }
         else{
             echo '<pre>';
+            /*
+            SELECT 
+                IF(bank_information.id, CONCAT(bank_information.coa_parent,bank_information.id), acc_coa.HeadCode) ,
+                IF(bank_information.id, CONCAT(bank_information.name), acc_coa.HeadName),
+                acc_coa.*
+            FROM acc_coa
+                LEFT JOIN bank_information ON bank_information.coa_parent = acc_coa.HeadCode
+            */
             $this->db->where('HeadCode', post('txtHeadCode'));
             $this->db->from('acc_coa');
             $callback = $this->db->count_all_results();
