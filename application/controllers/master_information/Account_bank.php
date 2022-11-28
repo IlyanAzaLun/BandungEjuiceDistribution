@@ -28,7 +28,6 @@ class Account_bank extends MY_Controller
             $this->load->view('account_bank/index', $this->page_data);
         }
         else{
-            echo '<pre>';
             /*
             SELECT 
                 IF(bank_information.id, CONCAT(bank_information.coa_parent,bank_information.id), acc_coa.HeadCode) ,
@@ -41,10 +40,10 @@ class Account_bank extends MY_Controller
             $this->db->from('acc_coa');
             $callback = $this->db->count_all_results();
             $this->db->reset_query();
-            if ($callback) {
+            if ($callback && post('submit')) {
                 // UPDATE INFORMATION OF COA
                 $data = array(
-                    'HeadName' => post('txtHeadName')?post('txtHeadName'):null,
+                    'HeadName' => post('txtHeadName')?strtoupper(post('txtHeadName')):null,
                     'IsActive' => post('IsActive')?post('IsActive'):null,
                     'isCashNature' => post('isCashNature')?post('isCashNature'):null,
                     'isBankNature' => post('isBankNature')?post('isBankNature'):null,
@@ -70,10 +69,31 @@ class Account_bank extends MY_Controller
                     $this->session->set_flashdata('alert', 'Update Chart Of Account Failed');
                 }
                 redirect('master_information/account_bank');
-            }else{
-                // CREATE INFORMATION OF COA
             }
-            echo '</pre>';
+            if(post('add_new')){
+                $callback = array();
+                $this->db->where('PHeadCode', post('txtHeadCode'));
+                $this->db->from('acc_coa');
+                $callback['row'] = $this->db->count_all_results();
+                $this->db->reset_query();
+                
+                $this->db->where('PHeadCode', post('txtHeadCode'));
+                $callback['data'] = $this->db->get('acc_coa')->row();
+
+                unset($callback['data']->id);
+                $callback['data']->HeadCode = substr_replace($callback['data']->HeadCode,$callback['row']+1, -1);
+                $callback['data']->HeadName = strtoupper(post('txtHeadName'));
+
+                if ($this->db->insert('acc_coa', $callback['data'])) {
+                    $this->activity_model->add("Insert Chart Of Account, #" . post('txtHeadCode'), (array) $callback['data']);
+                    $this->session->set_flashdata('alert-type', 'success');
+                    $this->session->set_flashdata('alert', 'Create Chart Of Account Successfully');
+                }
+                else{
+                    $this->session->set_flashdata('alert-type', 'error');
+                    $this->session->set_flashdata('alert', 'Create Chart Of Account Failed');
+                }
+            }
         }
     }
     public function form()

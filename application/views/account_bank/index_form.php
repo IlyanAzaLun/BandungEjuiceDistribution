@@ -114,10 +114,10 @@
             
             <div class="float-right">
                 <?php if($role->HeadLevel < 3): ## FIRST GROUP CONDITION ?>
-                <input type="add_new" class="btn btn-info" value="Create New">
+                <input type="submit" name='add_new' class="btn btn-info" value="Create New">
                 <?php endif; ## ./FIRST?>
                 <?php if($role->HeadLevel >= 2): ## FIRST GROUP CONDITION ?>
-                <input type="submit" class="btn btn-success" value="Submit">
+                <input type="submit" name='submit' class="btn btn-success" value="Submit">
                 <?php endif;?>
             </div>
 
