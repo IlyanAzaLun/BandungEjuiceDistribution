@@ -192,6 +192,8 @@ class Transaction_item_model extends MY_Model {
                 $this->db->select('
                  sale.invoice_code
                 ,sale.created_by
+                ,sale.expedition
+                ,sale.note
                 ,users.name
                 ,sale.is_have
                 ,is_have.name AS is_have_name
@@ -292,6 +294,7 @@ class Transaction_item_model extends MY_Model {
 				'shipping_cost' => $result_invoice[$key]->shipping_cost,
 				'other_cost' => $result_invoice[$key]->other_cost,
 				'discounts' => $result_invoice[$key]->discounts,
+                'expedition' => $value->expedition,
 				'grand_total' => $result_invoice[$key]->grand_total,
 				'name' => isset($value->name)?$value->name:null,
 			);

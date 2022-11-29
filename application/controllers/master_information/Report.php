@@ -500,21 +500,23 @@ class Report extends MY_Controller
             $sheet->setTitle("Account Bank");
 
             $data = $this->transaction_item_model->get_report_items_profit($this->input->post());
-            $i = 3;
-            $sheet->setCellValue("B2", "created_at");
-            $sheet->setCellValue("C2", "updated_at");
-            $sheet->setCellValue("D2", "invoice_code");
-            $sheet->setCellValue("E2", "customer_code");
-            $sheet->setCellValue("F2", "store_name");
-            $sheet->setCellValue("G2", "item_capital_price");
-            $sheet->setCellValue("H2", "acctuly_item_selling_price");
-            $sheet->setCellValue("I2", "discounts");
-            $sheet->setCellValue("J2", "shipping_cost");
-            $sheet->setCellValue("K2", "other_cost");
-            $sheet->setCellValue("L2", "grand_total");
-            $sheet->setCellValue("M2", "profit");
-            $sheet->setCellValue("N2", "actully_profit");
-            $sheet->setCellValue("O2", "name");
+            $i = 2;
+            $sheet->setCellValue("B1", "created_at");
+            $sheet->setCellValue("C1", "updated_at");
+            $sheet->setCellValue("D1", "invoice_code");
+            $sheet->setCellValue("E1", "customer_code");
+            $sheet->setCellValue("F1", "store_name");
+            $sheet->setCellValue("G1", "item_capital_price");
+            $sheet->setCellValue("H1", "acctuly_item_selling_price");
+            $sheet->setCellValue("I1", "discounts");
+            $sheet->setCellValue("J1", "shipping_cost");
+            $sheet->setCellValue("K1", "other_cost");
+            $sheet->setCellValue("L1", "grand_total");
+            $sheet->setCellValue("M1", "profit");
+            $sheet->setCellValue("N1", "actully_profit");
+            $sheet->setCellValue("O1", "name");
+            $sheet->setCellValue("P1", "expedition");
+            $sheet->setCellValue("Q1", "description");
             // Here
             foreach ($data as $key => $value) {
                 $sheet->setCellValue("B".$i, $value['created_at']);
@@ -531,6 +533,8 @@ class Report extends MY_Controller
                 $sheet->setCellValue("M".$i, $value['grand_total']-$value['time_capital_price']);
                 $sheet->setCellValue("N".$i, $value['total_price']-$value['time_capital_price']-$value['discounts']-$value['other_cost']);
                 $sheet->setCellValue("O".$i, ($value['is_have_name']!=$value['name'] && $value['is_have_name']!=null)?$value['is_have_name']:$value['name']);
+                $sheet->setCellValue("P".$i, ($value['expedition']));
+                $sheet->setCellValue("Q".$i, ($value['description']));
                 $i++;
             }
             $sheet->setCellValue("G".$i, "=SUM(G3:G$i)");

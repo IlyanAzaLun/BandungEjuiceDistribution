@@ -117,7 +117,29 @@ class Accounting extends MY_Controller
             'HeadLevel >' => 1,
             'HeadType' => 'A',
         ))->get('acc_coa')->result();
-        $this->load->view('accounting/balance_sheet', $this->page_data);
+        
+        $this->form_validation->set_rules('balance_sheet', lang('balance_sheet'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+            $this->load->view('accounting/balance_sheet', $this->page_data);
+        }
+        else{
+
+            $this->db->select('
+                    CONCAT(journal.id_account,"-",journal.HeadCode,"/",journal.HeadName)  AS account
+                   ,journal.debit 
+                   ,journal.credit 
+                   ,journal.description 
+                   ,DATE_FORMAT(journal.created_at, "%d/%m/%Y") AS date');
+            $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
+            $this->db->group_start();
+            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('balance_sheet')).'", "%Y-%m")', false);
+            $this->db->group_end();
+            $this->db->where('acc_coa.HeadType', 'A');
+            $this->db->order_by('journal.created_at, journal.id', 'ASC');
+            $this->page_data['journal_report'] = $this->db->get('journal')->result();
+            
+            $this->load->view('accounting/journal_report', $this->page_data);
+        }
     }
     
     public function profit_n_loss()
@@ -130,7 +152,29 @@ class Accounting extends MY_Controller
             'HeadLevel >' => 1,
             'HeadType' => 'B',
         ))->get('acc_coa')->result();
-        $this->load->view('accounting/profit_n_loss', $this->page_data);
+        
+        $this->form_validation->set_rules('profit_n_loss', lang('profit_n_loss'), 'required|trim');
+		if ($this->form_validation->run() == false) {
+            $this->load->view('accounting/profit_n_loss', $this->page_data);
+        }
+        else{
+
+            $this->db->select('
+                    CONCAT(journal.id_account,"-",journal.HeadCode,"/",journal.HeadName)  AS account
+                   ,journal.debit 
+                   ,journal.credit 
+                   ,journal.description 
+                   ,DATE_FORMAT(journal.created_at, "%d/%m/%Y") AS date');
+            $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
+            $this->db->group_start();
+            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y-%m")', false);
+            $this->db->group_end();
+            $this->db->where('acc_coa.HeadType', 'B');
+            $this->db->order_by('journal.created_at, journal.id', 'ASC');
+            $this->page_data['journal_report'] = $this->db->get('journal')->result();
+
+            $this->load->view('accounting/journal_report', $this->page_data);
+        }
     }
 
     public function chart_of_account_list()

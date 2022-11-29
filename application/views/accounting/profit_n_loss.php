@@ -57,7 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <div class="col-12 col-lg-2">
-              <button class="btn btn-sm btn-primary" type="button"><i class="fa fa-eye"></i>&nbsp;&nbsp;<?=lang('see-report')?></button>
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-eye"></i>&nbsp;&nbsp;<?=lang('see-report')?></button>
             </div>
           </div>
           <?php echo form_close(); ?>

@@ -522,7 +522,6 @@ class Sale extends Invoice_controller
 		$this->session->set_flashdata('alert-type', 'success');
 		$this->session->set_flashdata('alert', 'Cancel Sale Invoice Successfully');	
 		echo '</pre>';
-		
 		redirect('invoice/sale/list');
 	}
 	
@@ -821,10 +820,17 @@ class Sale extends Invoice_controller
 	 */
 	protected function update_list_item_fifo_on_cancel($data)
 	{
+		$temp = array();
 		$items = array();
 		$request = array();
 		// update list_item_fifo where return
-		$this->items_fifo_model->update_batch($data, 'id');
+		foreach ($data as $key => $value) {
+			$temp[$key]['id'] = $value['id'];
+			$temp[$key]['item_id'] = $value['item_id'];
+			$temp[$key]['invoice_code'] = $value['invoice_code'];
+			$temp[$key]['is_cancelled'] = 1;
+		}
+		$this->items_fifo_model->update_batch($temp, 'id');
 		// prepare data
 		foreach ($data as $key => $value) {
 			array_push($items, $this->items_fifo_model->select_fifo_by_item_code_is_canceled($value['item_code']));

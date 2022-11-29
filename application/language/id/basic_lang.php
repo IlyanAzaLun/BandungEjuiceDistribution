@@ -438,7 +438,7 @@ $lang['journal'] = "Journal";
 $lang['balance_sheet'] = "Laporan Neraca";
 $lang['profit_n_loss'] = "Laporan Laba dan Rugi";
 $lang['month_balance_sheet'] = "Neraca Keuangan pada Bulan";
-$lang['see-report'] = "Melihat Laporan";
+$lang['see-report'] = "Melihat Rincian Laporan";
 
 
 /*
@@ -524,6 +524,7 @@ $lang['debt'] = "Hutang";
 $lang['cash'] = "Tunai";
 $lang['payed'] = "Dibayar";
 $lang['credit'] = "Kredit";
+$lang['debit'] = "Debit";
 $lang['deposit'] = "Setoran";
 $lang['online'] = "Daring";
 $lang['returns_failed'] = "Pengembalian Gagal, Ubah Jumlah Barang Yang Dikembalikan";

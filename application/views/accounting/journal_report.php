@@ -10,7 +10,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1><?php echo lang('journal') ?></h1>
+        <h1><?php echo lang('journal') ?> <?php echo lang($title) ?></h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -18,6 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           <li class="breadcrumb-item active"><?php echo lang('pages_report_information') ?></li>
           <li class="breadcrumb-item active"><?php echo lang('accounting') ?></li>
           <li class="breadcrumb-item active"><?php echo lang('journal') ?></li>
+          <li class="breadcrumb-item active"><?php echo lang($title) ?></li>
         </ol>
       </div>
     </div>
@@ -49,7 +50,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-12 col-lg-2">
                 <label for="">Journal Date</label>
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control form-control-sm" name="journal_date" id="journal_date">
+                    <input type="text" class="form-control form-control-sm" name="journal_date" id="journal_date" value="<?=post($title)?>" disabled>
                     <div class="input-group-append">
                       <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                     </div>
@@ -73,12 +74,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </tbody>
             </table>
           </div>
-          <?php echo form_hidden('journal_entry'); ?>
+          <?php echo form_hidden('journal_entry', json_encode($journal_report)); ?>
           <?php echo form_hidden('amount'); ?>
-          <div class="float-right">
-            <button type="submit" class="btn btn-info float-right"><?= lang('save') ?></button>
-            <button type="button" class="btn btn-default mr-2" onclick="history.back()"><?= lang('back') ?></button>
-          </div>
           <?php echo form_close(); ?>
         </div>
       </div>
@@ -91,13 +88,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- /.content -->
 <?php include viewPath('includes/footer'); ?>
 <script type="text/javascript" src="<?php echo $url->assets ?>plugins/handsontable/dist/handsontable.full.js"></script>
-<script type="module" src="<?php echo $url->assets ?>pages/accounting/journal/MainJournal.js"></script>
+<script type="module" src="<?php echo $url->assets ?>pages/accounting/balance_sheet/MainBalanceSheetReport.js"></script>
 <script>
   $('#journal_date').daterangepicker({
       "singleDatePicker": true,
       "autoApply": true,
       "locale": {
-        "format": "D/M/YYYY",
+        "format": "MMMM YYYY",
         "firstDay": 1
     },
   })
