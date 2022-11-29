@@ -295,6 +295,7 @@ class Transaction_item_model extends MY_Model {
 				'other_cost' => $result_invoice[$key]->other_cost,
 				'discounts' => $result_invoice[$key]->discounts,
                 'expedition' => $value->expedition,
+                'note' => $value->note,
 				'grand_total' => $result_invoice[$key]->grand_total,
 				'name' => isset($value->name)?$value->name:null,
 			);

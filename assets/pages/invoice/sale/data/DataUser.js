@@ -7,7 +7,6 @@ class DataUser {
             data: {
                 'search': {
                     'value': request,
-                    'role': 3
                 },
                 'length': 10
             },

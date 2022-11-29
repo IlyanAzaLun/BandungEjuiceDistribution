@@ -534,7 +534,7 @@ class Report extends MY_Controller
                 $sheet->setCellValue("N".$i, $value['total_price']-$value['time_capital_price']-$value['discounts']-$value['other_cost']);
                 $sheet->setCellValue("O".$i, ($value['is_have_name']!=$value['name'] && $value['is_have_name']!=null)?$value['is_have_name']:$value['name']);
                 $sheet->setCellValue("P".$i, ($value['expedition']));
-                $sheet->setCellValue("Q".$i, ($value['description']));
+                $sheet->setCellValue("Q".$i, ($value['note']));
                 $i++;
             }
             $sheet->setCellValue("G".$i, "=SUM(G3:G$i)");
