@@ -183,18 +183,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           }
         },
         {
-          data: "item_capital_price",
+          data: "capital_price",
           <?php if(!hasPermissions('items_edit')):?>
           visible: false,
           <?php endif ?>
-          orderable: false,
           render: function(data, type, row) {
             return (data) ? currency(data) : 0
           }
         },
         {
-          data: "item_selling_price",
-          orderable: false,
+          data: "selling_price",
           render: function(data, type, row) {
             return (data) ? currency(data) : 0
           }
@@ -202,6 +200,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         {
           data: "shadow_selling_price",
           orderable: false,
+          visible: false,
           render: function(data, type, row) {
             return (data) ? currency(data) : 0
           }

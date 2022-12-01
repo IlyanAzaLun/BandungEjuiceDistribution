@@ -412,7 +412,14 @@ class Items extends MY_Controller
         $this->db->join("(SELECT id, item_code, item_id, item_quantity, created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') purchase_transactions", 'purchase_transactions.item_id = items.id', 'left');
         $this->db->join("(SELECT id,item_id,created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') p2", '(p2.item_id = items.id AND (purchase_transactions.created_at < p2.created_at OR (purchase_transactions.created_at = p2.created_at AND purchase_transactions.id < p2.id)))', 'left');
         ***/
-        $this->db->select('invoice_transaction_list_item.total_item_quantity AS transaction_quantity, invoice_transaction_list_item.created_at AS restock_date, sale_transactions.created_at AS sales_date, items.*, CAST(items.quantity AS INT) as quantity');
+        $this->db->select('
+                        invoice_transaction_list_item.total_item_quantity AS transaction_quantity, 
+                        invoice_transaction_list_item.created_at AS restock_date, 
+                        sale_transactions.created_at AS sales_date, 
+                        items.*, 
+                        CAST(items.quantity AS INT) as quantity,
+                        CAST(items.capital_price AS INT) as capital_price,
+                        CAST(items.selling_price AS INT) as selling_price');
         // ONE TO MANY QUERY, to get last date data information on each infromation data
         // Reference : https://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
         $this->db->join("(SELECT id, item_code, item_id, created_at,
@@ -466,8 +473,8 @@ class Items extends MY_Controller
                 "item_unit" => $record->unit,
                 "brand" => $record->brand,
                 "brands" => $record->brands,
-                "item_capital_price" => $record->capital_price,
-                "item_selling_price" => $record->selling_price,
+                "capital_price" => $record->capital_price,
+                "selling_price" => $record->selling_price,
                 "shadow_selling_price" => $record->shadow_selling_price,
                 "note" => $record->note,
                 "is_active" => $record->is_active,
@@ -965,44 +972,63 @@ class Items extends MY_Controller
     {
         if (ifPermissions('items_list')) {
             $search = (object) post('search');
-            /**
-             *   WITH RECURSIVES AS (SELECT 
-             *       `id`
-             *       , SUBSTRING(`invoice_code`, 5) AS invoice
-             *       , `created_at`
-             *       , `updated_at`
-             *       , `invoice_code`
-             *       , `item_code`
-             *       , `item_name`
-             *       , SUM( IF(parent IS NULL, `item_quantity`, item_quantity*-1)) AS item_quantity
-             *       , `item_discount`
-             *       , `item_capital_price`
-             *       , `total_price`
-             *       , (total_price IS NOT TRUE) AS is_free
-             *       , `is_readable`
-             *       , `is_cancelled`
-             *   FROM fifo_items
-             *   WHERE is_cancelled = 0 AND is_readable = 1 AND item_quantity > 0
-             *   GROUP BY invoice, item_code,is_free
-             *   ORDER BY created_at ASC)
-             *   SELECT items.*, RECURSIVES.item_quantity AS quantity, RECURSIVES.item_capital_price AS capital_price FROM items
-             *   LEFT JOIN RECURSIVES ON items.item_code = RECURSIVES.item_code
-             *   ORDER BY id DESC
-             **/ 
-            $this->db->select('*, CAST(quantity AS INT) as quantity');
-            $this->db->limit(15);
+            $this->db->trans_start();
+            $this->db->trans_strict(FALSE);
             if ($search->value) {
-                $this->db->group_start();
-                $this->db->like('item_code', $search->value, 'both');
-                $this->db->or_like('item_name', $search->value, 'both');
-                $this->db->or_like('brand', $search->value, 'after');
-                $this->db->or_like('brands', $search->value, 'after');
-                $this->db->or_like('note', $search->value, 'both');
-                $this->db->group_end();
+            $where = "WHERE (
+                        items.item_code LIKE '%$search->value%' OR 
+                        items.item_name LIKE '%$search->value%'
+                    ) AND items.is_active = 1";
+            }else{
+            $where = "WHERE items.is_active = 1";
             }
-            $this->db->where('is_active', 1);
-            $this->db->order_by('quantity', 'DESC');
-            $response = $this->db->get('items')->result();
+            $response = $this->db->query("
+                WITH RECURSIVES AS (SELECT `id`
+                      , `invoice_code` AS invoice
+                      , `created_at`
+                      , `updated_at`
+                      , `invoice_code`
+                      , `item_code`
+                      , `item_name`
+                      , SUM( IF(parent IS NULL, `item_quantity`, item_quantity*-1)) AS item_quantity
+                      , `item_discount`
+                      , `item_capital_price`
+                      , `total_price`
+                      , (total_price IS NOT TRUE) AS is_free
+                      , `is_readable`
+                      , `is_cancelled`
+                  FROM fifo_items
+                  WHERE is_cancelled = 0 AND is_readable = 1 AND item_quantity > 0
+                  GROUP BY invoice, item_code, is_free
+                  ORDER BY created_at ASC)
+
+                  SELECT 
+                        items.*
+                      , RECURSIVES.invoice
+                      , IFNULL(RECURSIVES.item_quantity,0) AS quantity
+                      , IFNULL(RECURSIVES.item_capital_price,0) AS capital_price 
+                  FROM items
+                  LEFT JOIN RECURSIVES ON items.item_code = RECURSIVES.item_code
+                  $where
+                  -- if won't grouping, you can show all item, 
+                  GROUP BY items.item_code
+                  ORDER BY RECURSIVES.item_quantity DESC
+                  LIMIT 15")->result();
+            // $this->db->select('*, CAST(quantity AS INT) as quantity');
+            // $this->db->limit(15);
+            // if ($search->value) {
+            //     $this->db->group_start();
+            //     $this->db->like('item_code', $search->value, 'both');
+            //     $this->db->or_like('item_name', $search->value, 'both');
+            //     $this->db->or_like('brand', $search->value, 'after');
+            //     $this->db->or_like('brands', $search->value, 'after');
+            //     $this->db->or_like('note', $search->value, 'both');
+            //     $this->db->group_end();
+            // }
+            // $this->db->where('is_active', 1);
+            // $this->db->order_by('quantity', 'DESC');
+            // $response = $this->db->get('items')->result();
+            $this->db->trans_complete();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         };
     }
