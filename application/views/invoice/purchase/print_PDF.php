@@ -114,7 +114,7 @@ $i = 0;
                         <td><?=$value->item_name?></td>
                         <td class="text-right"><?=$value->item_quantity - $_data_item_invoice_child_[$i]->item_quantity?></td>
                         <td><?=$value->item_unit?></td>
-                        <td class="text-right"><?=getCurrentcy($_data_item_invoice_child_[$i]->item_selling_price)?></td>
+                        <td class="text-right"><?=getCurrentcy($_data_item_invoice_child_[$i]->item_capital_price)?></td>
                         <td class="text-right"><?=getCurrentcy($_data_item_invoice_child_[$i]->discount)?></td>
                         <td class="text-right"><?=getCurrentcy($_data_item_invoice_child_[$i]->total_price)?></td>
                     </tr>
@@ -128,7 +128,7 @@ $i = 0;
                         <td><?=$value->item_name?></td>
                         <td class="text-right"><?=$value->item_quantity?></td>
                         <td><?=$value->item_unit?></td>
-                        <td class="text-right"><?=getCurrentcy($value->item_selling_price)?></td>
+                        <td class="text-right"><?=getCurrentcy($value->item_capital_price)?></td>
                         <td class="text-right"><?=getCurrentcy($value->discount)?></td>
                         <td class="text-right"><?=getCurrentcy($value->total_price)?></td>
                     </tr>

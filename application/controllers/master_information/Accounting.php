@@ -73,13 +73,13 @@ class Accounting extends MY_Controller
             $this->page_data['title'] = 'journal';
             $this->load->view('accounting/journal', $this->page_data);
         }else{
-            $juournal_enry = json_decode($this->input->post('journal_entry'));
+            $juournal_entry = json_decode($this->input->post('journal_entry'));
             
             $this->db->where('created_at', DateFomatDb(implode('/',array_reverse(explode('/', post('journal_date'))))));
             $this->db->delete('journal');
             $this->db->reset_query();
 
-            foreach ($juournal_enry as $key => $value) {
+            foreach ($juournal_entry as $key => $value) {
                 if ($value[0] != '') {
                     $request[$key]['id_account'] = explode('/', $value[0])[0];
                     $data = $this->db->get_where('acc_coa', array('id'=>explode('/', $value[0])[0]))->row();
@@ -105,6 +105,32 @@ class Accounting extends MY_Controller
                 echo '</pre>';
             }
         }
+    }
+
+    public function report_journal()
+    {
+        
+        $this->page_data['page']->submenu_child = 'journal';
+        $this->page_data['date'] = DateFomatDb(implode('/',array_reverse(explode('/', post('journal_date')))));
+        $this->db->select('
+                CONCAT(journal.id_account,"-",journal.HeadCode,"/",journal.HeadName)  AS account
+                ,journal.debit 
+                ,journal.credit 
+                ,journal.description 
+                ,DATE_FORMAT(journal.created_at, "%d/%m/%Y") AS date');
+        $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
+        $this->db->group_start();
+        if (post('group') == 'year') {
+            $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.$this->page_data['date'].'", "%Y")', false);
+        }
+        else{
+            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.$this->page_data['date'].'", "%Y-%m")', false);
+        }
+        $this->db->group_end();
+        $this->db->order_by('journal.created_at, journal.id', 'ASC');
+        $this->page_data['journal_report'] = $this->db->get('journal')->result();
+        
+        $this->load->view('accounting/journal_report', $this->page_data);
     }
     
     public function balance_sheet()

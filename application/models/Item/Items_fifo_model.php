@@ -273,8 +273,12 @@ class Items_fifo_model extends MY_Model
     public function assets_items()
     {
         $this->db->select('SUM(fifo_items.item_quantity * fifo_items.item_capital_price) AS assets');
-        $this->db->where('is_cancelled', 0);
-        $this->db->where('is_readable', 1);
+        $this->db->join('invoice_purchasing', 'fifo_items.invoice_code = invoice_purchasing.invoice_code', 'left');
+        $this->db->group_start();
+        $this->db->where('fifo_items.is_cancelled', 0);
+        $this->db->where('fifo_items.is_readable', 1);
+        $this->db->where('invoice_purchasing.is_cancelled', 0);
+        $this->db->group_end();
         
         $record = $this->db->get("fifo_items")->row();
         return $record;

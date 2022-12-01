@@ -44,18 +44,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
       <div class="row">
         <div class="col-sm-12">
-          <?php echo form_open(url('master_information/accounting/journal'), ['method' => 'POST', 'autocomplete' => 'off']); ?>
+          <?php echo form_open(url('master_information/accounting/report_journal'), ['method' => 'POST', 'autocomplete' => 'off']); ?>
           <div class="row">
             <div class="col-12 col-lg-2">
-                <label for="">Journal Date</label>
+              <label for="">Journal Date</label>
+            </div>
+            <div class="col-12 col-lg-1">
+              <label for="">Group By</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-lg-2">
                 <div class="input-group mb-2">
                     <input type="text" class="form-control form-control-sm" name="journal_date" id="journal_date">
                     <div class="input-group-append">
                       <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                     </div>
                 </div>
+            </div>            
+            <div class="col-12 col-lg-1">
+              <select name="group" class="form-control form-control-sm">
+                <option value="month" selected>Month</option>
+                <option value="year">Year</option>
+              </select>
+            </div>
+            <div class="col-12 col-lg-2">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-eye"></i>&nbsp;&nbsp;<?=lang('see-report')?></button>
             </div>
           </div>
+          <?php echo form_close(); ?>
+          <?php echo form_open(url('master_information/accounting/journal'), ['method' => 'POST', 'autocomplete' => 'off']); ?>
+          <input type="hidden" name="journal_date" id="journal_input" value="">
           <div id="parenttable">
             <div id="handsontable"></div>
           </div>
@@ -97,8 +116,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       "singleDatePicker": true,
       "autoApply": true,
       "locale": {
-        "format": "D/M/YYYY",
+        "format": "DD/MM/YYYY",
         "firstDay": 1
     },
-  })
+  },function(start, end, label) {
+    $('input#journal_input').val(start.format('DD/MM/YYYY'));
+  });
+  
+  $('input#journal_input').val($('#journal_date').val());
 </script>
