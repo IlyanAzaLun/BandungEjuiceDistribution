@@ -76,13 +76,18 @@
 
                     <input type="hidden" name="isSubType" value=0>
                     <input type="checkbox" name="isSubType" value="1" id="isSubType" onchange="isSubType_chage()" <?=($role->isSubType == 1)?'checked':''?>>
-                    <label for="isSubType" class="mr-2" >is Bank Nature</label>
+                    <label for="isSubType" class="mr-2" >is Sub Type</label>
+
+                    <input type="hidden" name="IsDepreciation" value=0>
+                    <input type="checkbox" name="IsDepreciation" value="1" id="IsDepreciation" onchange="IsDepreciation_chage()" <?=($role->IsDepreciation == 1)?'checked':''?>>
+                    <label for="IsDepreciation" class="mr-2" >Is Depreciation</label>
 
                     <?php endif; ## ./FIRST?>
                 </div>
             </div>
             
-            <?php if($role->isFixedAssetSch == 1): ## FIRST GROUP CONDITION?>
+            <?php //if($role->isFixedAssetSch == 1): ## FIRST GROUP CONDITION?>
+            <?php if($role->IsDepreciation == 1 && $role->isFixedAssetSch = 1): ## FIRST GROUP CONDITION?>
             <?php if($role->HeadLevel >= 3 && $role->HeadType == 'A'): ## SECOND GROUP CONDITION?>
             
             <div class="form-group row">
