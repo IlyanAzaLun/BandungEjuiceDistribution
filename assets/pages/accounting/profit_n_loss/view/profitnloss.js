@@ -28,10 +28,14 @@ const main = () => {
                     let _total_credit = 0;
                     let curent;
                     // LOOPING DATA
-                    console.log(res)
                     $.each(res.data, function (index, item) {
                         // SET DATA
-                        $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total >= 0 ? currency(item.total) : '(' + currency(Math.abs(item.total)) + ')'};`)
+                        if (item.IsTransaction == 1) { // PENDAPATAN & PENJUALAN
+                            $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total_debit >= 0 ? currency(item.total_debit) : '(' + currency(Math.abs(item.total_debit)) + ')'};`)
+                        }
+                        else {
+                            $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total >= 0 ? currency(item.total) : '(' + currency(Math.abs(item.total)) + ')'};`)
+                        }
                         // CONDITION IF CURENT CODE IS NOT SAME WITH NEXT CODE
                         if (curent != item.PHeadCode.substring(0, 2)) {
                             // RESET TO 0
@@ -39,9 +43,15 @@ const main = () => {
                         }
                         // SET CURENT CODE
                         curent = item.PHeadCode.substring(0, 2);
-                        _total += item.total_debit - item.total_credit;
-                        _total_debit += Number(item.total_debit);
-                        _total_credit += Number(item.total_credit);
+                        if (item.IsTransaction == 1) { // PENDAPATAN & PENJUALAN
+                            _total += Number(item.total_debit);
+                            _total_debit += Number(item.total_debit);
+                        }
+                        else {
+                            _total += item.total_debit - item.total_credit;
+                            _total_debit += Number(item.total_debit);
+                            _total_credit += Number(item.total_credit);
+                        }
                         $(`thead>tr>td#${curent}>span.currency`).html(`<b>${(_total >= 0) ? currency(_total) : `(${currency(Math.abs(_total))})`}</b>`)
                     })
                     $('strong#total_debit').text(currency(_total_debit))

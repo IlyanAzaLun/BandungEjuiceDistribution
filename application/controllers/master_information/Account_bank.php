@@ -51,8 +51,10 @@ class Account_bank extends MY_Controller
                     'UpdateBy' => logged('id'),
                     'UpdateDate' => date('Y-m-d H:i:s'),
                     'isSubType' => post('isSubType')?post('isSubType'):null,
+                    'IsTransaction' => post('IsTransaction')?post('IsTransaction'):null,
                     'isStock' => post('isStock')?post('isStock'):null,
                     'isFixedAssetSch' => post('isFixedAssetSch')?post('isFixedAssetSch'):null,
+                    'IsDepreciation' => post('IsDepreciation')?post('IsDepreciation'):null,
                     'noteNo' => post('noteNo')?post('noteNo'):null,
                     'assetCode' => post('assetCode')?post('assetCode'):null,
                     'depCode' => post('depCode')?post('depCode'):null 

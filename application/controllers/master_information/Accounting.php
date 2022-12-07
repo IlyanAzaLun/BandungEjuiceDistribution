@@ -33,7 +33,28 @@ class Accounting extends MY_Controller
                     break;
                 case 'report':
                     // SELECT JOURNAL GROUP MOUNTH WITH SUM AND EACH HEAD ACCOUNT CODE
-                    $this->db->select('journal.id_account , journal.HeadCode , journal.HeadName, journal.PHeadCode, journal.debit , SUM(journal.debit) as total_debit , journal.credit , SUM(journal.credit) as total_credit , SUM(IFNULL(journal.debit,0)) - SUM(IFNULL(journal.credit,0)) as total, journal.created_at');
+                    $this->db->select('
+                      journal.id_account 
+                    , journal.HeadCode 
+                    , journal.HeadName
+                    , journal.PHeadCode
+                    , journal.debit 
+                    , SUM(journal.debit) as total_debit 
+                    , journal.credit 
+                    , SUM(journal.credit) as total_credit 
+                    , SUM(IFNULL(journal.debit,0)) - SUM(IFNULL(journal.credit,0)) as total
+                    , journal.created_at
+                    , acc_coa.IsGL
+                    , acc_coa.IsTransaction
+                    , acc_coa.isCashNature
+                    , acc_coa.isBankNature
+                    , acc_coa.IsBudget
+                    , acc_coa.IsDepreciation
+                    , acc_coa.depCode
+                    , acc_coa.DepreciationRate
+                    , acc_coa.isStock
+                    , acc_coa.assetCode
+                    , acc_coa.isFixedAssetSch');
                     $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
                     $this->db->group_start();
                     $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);

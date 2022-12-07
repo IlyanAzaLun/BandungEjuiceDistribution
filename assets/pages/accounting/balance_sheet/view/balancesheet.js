@@ -39,9 +39,16 @@ const main = () => {
                         }
                         // SET CURENT CODE
                         curent = item.PHeadCode.substring(0, 2);
-                        _total += item.total_debit - item.total_credit;
-                        _total_debit += Number(item.total_debit);
-                        _total_credit += Number(item.total_credit);
+                        if (item.isFixedAssetSch == 1 && item.IsDepreciation == 0) { // AKTIVA TETAP, TANPA PENYUSUTAN
+                            _total -= item.total_debit - item.total_credit;
+                            _total_debit -= Number(item.total_debit);
+                            _total_credit += Number(item.total_debit);
+                        }
+                        else {
+                            _total += item.total_debit - item.total_credit;
+                            _total_debit += Number(item.total_debit);
+                            _total_credit += Number(item.total_credit);
+                        }
                         $(`thead>tr>td#${curent}>span.currency`).html(`<b>${(_total >= 0) ? currency(_total) : `(${currency(Math.abs(_total))})`}</b>`)
                     })
                     $('strong#total_debit').text(currency(_total_debit))

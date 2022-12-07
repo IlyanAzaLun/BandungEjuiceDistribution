@@ -359,21 +359,8 @@ class Sale extends Invoice_controller
 				'is_delivered' => null,
 				'is_have' => post('is_have'),
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
-			);// Check
+			);
 			
-			$result = $this->validation_items($items);
-			$error = $result['error'];
-			$success = $result['success'];
-			$items = array_values($success);
-			$failed = array_values($error);
-			$error = array_column($failed, 'item_name');
-
-			if(!$items){
-				$this->session->set_flashdata('alert-type', 'danger');
-				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
-				redirect("invoice/order/create");
-				return false;
-			}
 			// // EDIT
 			$this->db->trans_start();
 			if(sizeof($items) > 0){

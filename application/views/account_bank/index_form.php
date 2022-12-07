@@ -73,6 +73,10 @@
                     <label for="isBankNature" class="mr-2" >is Bank Nature</label>
 
                     <?php endif; ## ./SECOND?>
+                    
+                    <input type="hidden" name="IsTransaction" value=0>
+                    <input type="checkbox" name="IsTransaction" value="1" id="IsTransaction" onchange="IsTransaction_chage()" <?=($role->IsTransaction == 1)?'checked':''?>>
+                    <label for="IsTransaction" class="mr-2" >is Transaction</label>
 
                     <input type="hidden" name="isSubType" value=0>
                     <input type="checkbox" name="isSubType" value="1" id="isSubType" onchange="isSubType_chage()" <?=($role->isSubType == 1)?'checked':''?>>

@@ -836,13 +836,12 @@ class Report extends MY_Controller
 
         
 		$this->db->select("
-        , DATE_FORMAT(sale.created_at, '%Y') AS year
+          DATE_FORMAT(sale.created_at, '%Y') AS year
         , DATE_FORMAT(sale.created_at, '%Y%m') AS yearmount
         , SUM((CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS time_capital_price 
-        , SUM(CAST(transaction.total_price AS INT)) AS total_price
-        ,(SUM(CAST(transaction.total_price AS INT))-SUM((CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)))) AS profit
-        ");
-        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
+        , SUM(CAST(transaction.total_price AS INT)) AS total_price");
+        
+        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "right");
 
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("sale.is_cancelled", 0);
@@ -885,7 +884,7 @@ class Report extends MY_Controller
             $callback_items->yearmount = $value->yearmount;
             $callback_items->time_capital_price += $value->time_capital_price;
             $callback_items->total_price += $value->total_price;
-            $callback_items->profit += $value->profit;
+            $callback_items->profit += ($value->total_price - $value->time_capital_price);
         }
 
         $this->db->select("
@@ -895,13 +894,15 @@ class Report extends MY_Controller
             , SUM(invoice_selling.discounts) AS discounts
             , SUM(invoice_selling.shipping_cost) AS shipping_cost
             , SUM(invoice_selling.other_cost) AS other_cost");
+        $this->db->group_start();
+        $this->db->where("invoice_selling.is_transaction", 1);
+        $this->db->where("invoice_selling.is_cancelled", 0);
+        $this->db->group_end();
         if($customer != ''){
             $arr = array_filter(array_map('trim',explode(',',$customer)));
-            // if(sizeof($arr) > 1){
+            $this->db->group_start();
             $this->db->where_in('invoice_selling.customer', $arr);
-            // }else{
-            //     $this->db->where("invoice_selling.customer", $customer);
-            // }
+            $this->db->group_end();
         }
         if($user != ''){
             $this->db->group_start();            
@@ -929,10 +930,6 @@ class Report extends MY_Controller
                 $this->db->group_by("yearmount");
                 break;
         }
-        $this->db->group_start();
-        $this->db->where("invoice_selling.is_transaction", 1);
-        $this->db->where("invoice_selling.is_cancelled", 0);
-        $this->db->group_end();
 		$result2 = $this->db->get('invoice_selling')->result();
         $callback_invoice = new stdClass();
 
