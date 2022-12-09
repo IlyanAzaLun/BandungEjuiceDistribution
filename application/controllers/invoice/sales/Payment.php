@@ -155,7 +155,7 @@ class Payment extends MY_Controller
 			$request->bank_id = $dataPost['bank_id'];
 			$request->created_at = ($dataPost['created_at'] == true)?date("Y-m-d H:i:s",strtotime(trim(str_replace('/', '-',$dataPost['created_at'])))):nice_date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
 			// unset($request->created_at);
-			if($request->leftovers > 0){
+			if($request->leftovers >= 1){
 				unset($request->id);
 				$response = $this->payment_model->create($request);
 				$this->db->reset_query();

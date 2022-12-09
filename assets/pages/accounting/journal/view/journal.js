@@ -121,6 +121,26 @@ const main = () => {
                 // }
                 // // 
             },
+            afterRemoveRow: function (index, amount, physicalRows, source) {
+                var journal_entry = null;
+                var total_debit = 0, total_credit = 0;
+                journal_entry = JSON.parse(JSON.stringify(commodity_type_value.getData()));
+                $.each(journal_entry, function (index, value) {
+                    if (value[0] != '') {
+                        if (value[2] != '' && value[2] != null) {
+                            total_debit += parseFloat(value[2]);
+                        }
+                        if (value[3] != '' && value[3] != null) {
+                            total_credit += parseFloat(value[3]);
+                        }
+                    }
+                });
+                $('input[name="journal_entry"]').val(JSON.stringify(commodity_type_value.getData()));
+                $('.total_debit').html(currency(total_debit));
+                $('.total_credit').html(currency(total_credit));
+                $('input[name="amount"]').val(total_debit.toFixed(2));
+
+            },
             afterLoadData: function (sourceData, initialLoad, source) {
                 var total_debit = 0, total_credit = 0;
                 $.each(sourceData, function (index, value) {

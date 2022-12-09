@@ -171,7 +171,7 @@ class Payment extends MY_Controller
 			
 
 			//// IF LEFTOVER IS LARGE THEN ZERO WILL BE STOP HERE
-			if($request->leftovers > 0){
+			if($request->leftovers >= 1){
 				unset($request->id);
 				$response = $this->payment_model->create($request);
 				$this->db->reset_query();

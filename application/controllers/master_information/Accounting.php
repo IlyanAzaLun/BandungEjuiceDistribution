@@ -44,6 +44,7 @@ class Accounting extends MY_Controller
                     , SUM(journal.credit) as total_credit 
                     , SUM(IFNULL(journal.debit,0)) - SUM(IFNULL(journal.credit,0)) as total
                     , journal.created_at
+                    , acc_coa.HeadType
                     , acc_coa.IsGL
                     , acc_coa.IsTransaction
                     , acc_coa.isCashNature
@@ -197,9 +198,17 @@ class Accounting extends MY_Controller
         $this->page_data['accounts'] = $this->db->where(array(
             'IsActive' => 1,
             'HeadLevel >' => 1,
-            'HeadType' => 'B',
-        ))->get('acc_coa')->result();
-        
+        ))->like('HeadType','B','after')->get('acc_coa')->result();
+        // ORDER ACCOUNTS WITH HEAD TYPE THEN ORDER BY ID
+        usort($this->page_data['accounts'], function($a, $b) {
+            // ORDER HEADTYPE
+            $retval = $b->HeadType <=> $a->HeadType;
+            // ORDER ID
+            if ($retval == 0) {
+                $retval = $a->id <=> $b->id;
+            }
+            return $retval;
+        });
         $this->form_validation->set_rules('profit_n_loss', lang('profit_n_loss'), 'required|trim');
 		if ($this->form_validation->run() == false) {
             $this->load->view('accounting/profit_n_loss', $this->page_data);

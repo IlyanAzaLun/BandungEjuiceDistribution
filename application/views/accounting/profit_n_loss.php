@@ -85,37 +85,39 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <td id="<?=$value->HeadCode?>" class="text-right"><b class="text-left">Rp. </b><span class="currency"></span></td>
                 </tr>
             </thead>
+            <tbody>
             <?php else:?>
-            <!--  -->
-            <tboday>
-                <tr>
-                    <td><?=$i;$i++?></td>
-                    <td>[<?=$value->HeadCode?>] <?=$value->HeadName?></td>
-                    <td id="<?=$value->HeadCode?>" class="text-right"><span class="text-left">Rp. </span><span class="currency"></span></td>
-                </tr>
-            </tboday>
+              <!--  -->
+              <tr data-headtype="<?=$value->HeadType?>">
+                  <td><?=$i;$i++?></td>
+                  <td>[<?=$value->HeadCode?>] <?=$value->HeadName?></td>
+                  <td id="<?=$value->HeadCode?>" class="text-right"><span class="text-left">Rp. </span><span class="currency"></span></td>
+              </tr>
             <?php endif; ?>
             <?php endforeach; ?>
-            <tr>
-                <td colspan="2" class="text-right">
-                    <strong>Total Debit</strong>
-                </td>
-                <td class="text-right"><b class="text-left">Rp. </b><strong id="total_debit">0</strong>
-                </td>
-            </tr><tr>
-                <td colspan="2" class="text-right">
-                    <strong>Total Kredit</strong>
-                </td>
-                <td class="text-right"><b class="text-left">Rp. </b><strong id="total_credit">0</strong>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class="text-right">
-                    <strong>Total Sisa</strong>
-                </td>
-                <td class="text-right"><b class="text-left">Rp. </b><strong id="total">0</strong>
-                </td>
-            </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                  <td colspan="2" class="text-right">
+                      <strong>Total Debit</strong>
+                  </td>
+                  <td class="text-right"><b class="text-left">Rp. </b><strong id="total_debit">0</strong>
+                  </td>
+              </tr><tr>
+                  <td colspan="2" class="text-right">
+                      <strong>Total Kredit</strong>
+                  </td>
+                  <td class="text-right"><b class="text-left">Rp. </b><strong id="total_credit">0</strong>
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="2" class="text-right">
+                      <strong>Total Sisa</strong>
+                  </td>
+                  <td class="text-right"><b class="text-left">Rp. </b><strong id="total">0</strong>
+                  </td>
+              </tr>
+            </tfoot>
             <!--  -->
           </table>
         </div>
