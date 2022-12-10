@@ -195,6 +195,7 @@ const main = () => {
                 }
             })
         }
+        $('#handsontable').find('table').addClass('zebraStyle');
     })
 };
 export default main;
