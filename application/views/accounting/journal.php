@@ -3,12 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
 <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/handsontable/dist/handsontable.full.min.css" />
-<style>
-  body {background: white; margin: 20px;}
-  h2 {margin: 20px 0;}
-  .zebraStyle > tbody > tr:nth-child(2n) > td {background: #c4e0ff;}
-  .zebraStyle > tbody > tr:nth-child(2n+1) > td {background: #fff;}
-</style>
+
 
 <!-- Content Header (Page header) -->
 <section class="content-header">

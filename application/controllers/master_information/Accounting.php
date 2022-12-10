@@ -110,7 +110,7 @@ class Accounting extends MY_Controller
                     $request[$key]['PHeadCode'] = $data->PHeadCode;
                     $request[$key]['debit'] = $value[2];
                     $request[$key]['credit'] = $value[3];
-                    $request[$key]['description'] = $value[4];
+                    $request[$key]['description'] = strtoupper($value[4]);
                     $request[$key]['created_at'] = DateFomatDb(implode('/',array_reverse(explode('/', post('journal_date')))));
                     $request[$key]['created_by'] = logged('id');
                 }
@@ -180,7 +180,12 @@ class Accounting extends MY_Controller
                    ,DATE_FORMAT(journal.created_at, "%d/%m/%Y") AS date');
             $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
             $this->db->group_start();
-            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('balance_sheet')).'", "%Y-%m")', false);
+            if (post('group') == 'year') {
+                $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('balance_sheet')).'", "%Y")', false);
+            }
+            else{
+                $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('balance_sheet')).'", "%Y-%m")', false);
+            }
             $this->db->group_end();
             $this->db->where('acc_coa.HeadType', 'A');
             $this->db->order_by('journal.created_at, journal.id', 'ASC');
@@ -223,7 +228,13 @@ class Accounting extends MY_Controller
                    ,DATE_FORMAT(journal.created_at, "%d/%m/%Y") AS date');
             $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
             $this->db->group_start();
-            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y-%m")', false);
+            
+            if (post('group') == 'year') {
+                $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y")', false);
+            }
+            else{
+                $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y-%m")', false);
+            }
             $this->db->group_end();
             $this->db->where('acc_coa.HeadType', 'B');
             $this->db->order_by('journal.created_at, journal.id', 'ASC');

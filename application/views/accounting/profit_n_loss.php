@@ -56,6 +56,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div>
+            <div class="col-12 col-lg-1">
+              <select name="group" class="form-control form-control-sm">
+                <option value="month" selected>Month</option>
+                <option value="year">Year</option>
+              </select>
+            </div>
             <div class="col-12 col-lg-2">
               <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-eye"></i>&nbsp;&nbsp;<?=lang('see-report')?></button>
             </div>

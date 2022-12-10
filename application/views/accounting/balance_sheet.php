@@ -56,6 +56,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div>
+                        
+            <div class="col-12 col-lg-1">
+              <select name="group" class="form-control form-control-sm">
+                <option value="month" selected>Month</option>
+                <option value="year">Year</option>
+              </select>
+            </div>
             <div class="col-12 col-lg-2">
               <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-eye"></i>&nbsp;&nbsp;<?=lang('see-report')?></button>
             </div>
@@ -98,22 +105,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php endforeach; ?>
             <tfoot>
               <tr>
-                  <td>  
+                  <td class="text-right" width="3%">  
+                  </td>
+                  <td class="text-right" width="15%">
+                    <strong class="float-left">JUMLAH AKTIVA LANCAR</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%">
+                    <strong class="float-left">JUMLAH AKTIVA TETAP</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%"> 
+                    <strong class="float-left">JUMLAH KEWAJIBAN</strong> <b class="text-left">Rp. </b><strong id="">0</strong>  
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%">  
                   </td>
                   
-                  <td>  
-                  </td>
-                  
-                  <td>  
+                  <td class="text-right" width="15%">  
                   </td>
                   
                   <td class="text-right">
@@ -121,22 +130,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </td>
               </tr>
               <tr>
-                  <td>  
+                  <td class="text-right" width="3%">  
+                  </td>
+                  <td class="text-right" width="15%">
+                    <strong class="float-left">JUMLAH AKTIVA LANCAR LAINNYA</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%">
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%"> 
+                    <strong class="float-left">JUMLAH EKUITAS</strong> <b class="text-left">Rp. </b><strong id="">0</strong> 
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%">  
                   </td>
                   
-                  <td>  
-                  </td>
-                  
-                  <td>  
+                  <td class="text-right" width="15%">  
                   </td>
                   
                   <td class="text-right">
@@ -144,22 +154,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </td>
               </tr>
               <tr>
-                  <td>  
+                  <td class="text-right" width="3%">  
+                  </td>
+                  <td class="text-right" width="15%">
+                    <strong class="float-left">JUMLAH TOTAL AKTIVA LANCAR</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%">
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%">  
                   </td>
                   
-                  <td>  
+                  <td class="text-right" width="15%">  
                   </td>
                   
-                  <td>  
-                  </td>
-                  
-                  <td>  
+                  <td class="text-right" width="15%">  
                   </td>
                   
                   <td class="text-right">
