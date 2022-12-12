@@ -412,17 +412,23 @@ class Items extends MY_Controller
         $this->db->join("(SELECT id, item_code, item_id, item_quantity, created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') purchase_transactions", 'purchase_transactions.item_id = items.id', 'left');
         $this->db->join("(SELECT id,item_id,created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/PURCHASE/%') p2", '(p2.item_id = items.id AND (purchase_transactions.created_at < p2.created_at OR (purchase_transactions.created_at = p2.created_at AND purchase_transactions.id < p2.id)))', 'left');
         ***/
-        $this->db->select('invoice_transaction_list_item.total_item_quantity AS transaction_quantity, invoice_transaction_list_item.created_at AS restock_date, sale_transactions.created_at AS sales_date, items.*, CAST(items.quantity AS INT) as quantity');
+        $this->db->select('invoice_transaction_list_item.total_item_quantity AS transaction_quantity, 
+                           invoice_transaction_list_item.created_at AS restock_date, 
+                           sale_transactions.created_at AS sales_date, 
+                           items.*, 
+                           CAST(items.quantity AS INT) as quantity,
+                           CAST(items.capital_price AS INT) as capital_price,
+                           CAST(items.selling_price AS INT) as selling_price');
         // ONE TO MANY QUERY, to get last date data information on each infromation data
         // Reference : https://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
-        $this->db->join("(SELECT id, item_code, item_id, created_at,
+        $this->db->join("(
+                        SELECT id, item_code, item_id, created_at,
                                 DATE_FORMAT(created_at, '%y%m%d') AS ordered_at,
                                 SUM(item_quantity) AS total_item_quantity
                         FROM invoice_transaction_list_item 
                         WHERE 
                                 invoice_code LIKE 'INV/PURCHASE/%'
-                        GROUP BY item_code, DATE_FORMAT(created_at, '%y%m%d'))
-                        invoice_transaction_list_item", 'invoice_transaction_list_item.item_id = items.id', 'left');
+                        GROUP BY item_code, DATE_FORMAT(created_at, '%y%m%d')) invoice_transaction_list_item", 'invoice_transaction_list_item.item_id = items.id', 'left');
         $this->db->join("(
                         SELECT id, item_code, item_id, created_at,
                             MAX(DATE_FORMAT(created_at, '%y%m%d')) AS ordered_at,
@@ -432,7 +438,12 @@ class Items extends MY_Controller
                                 invoice_code LIKE 'INV/PURCHASE/%'
                         GROUP BY item_code) p2", '(items.item_code = p2.item_code AND (invoice_transaction_list_item.ordered_at < p2.ordered_at OR (invoice_transaction_list_item.ordered_at = p2.ordered_at AND invoice_transaction_list_item.id < p2.id)))', 'left');
         // END OF ONE TO MANY QUERY
-        $this->db->join("(SELECT id, item_id, item_code, MAX(created_at) AS created_at FROM invoice_transaction_list_item WHERE invoice_code LIKE 'INV/SALE/%' GROUP BY item_id) sale_transactions", 'sale_transactions.item_id = items.id', 'left');
+        $this->db->join("(
+                        SELECT id, item_id, item_code, MAX(created_at) AS created_at 
+                        FROM invoice_transaction_list_item 
+                        WHERE 
+                            invoice_code LIKE 'INV/SALE/%' 
+                        GROUP BY item_id) sale_transactions", 'sale_transactions.item_id = items.id', 'left');
         if ($searchQuery != '') {
             $this->db->group_start();
             $this->db->like('items.item_name', $searchValue, 'both');
@@ -650,9 +661,10 @@ class Items extends MY_Controller
             ,fifo_items.invoice_code
             ,fifo_items.item_code
             ,fifo_items.item_name
-            ,fifo_items.item_quantity
+            ,SUM(fifo_items.item_quantity) AS item_quantity
             ,fifo_items.item_discount
             ,fifo_items.total_price
+            ,fifo_items.item_capital_price
             ,fifo_items.customer_code
             ,fifo_items.is_cancelled
             ,fifo_items.parent
@@ -664,15 +676,20 @@ class Items extends MY_Controller
         $this->db->join('users user_updated', 'user_updated.id=fifo_items.updated_by', 'left');
         $this->db->join('supplier_information supplier', 'supplier.customer_code = fifo_items.customer_code', 'left');
         $this->db->join('customer_information customer', 'customer.customer_code = fifo_items.customer_code', 'left');
+        $this->db->group_start();
         $this->db->where('item_code', $item_code);
         $this->db->where('is_cancelled', 0);
         $this->db->where('is_readable', 1);
+        $this->db->group_end();
         if ($searchValue != '') {
-            $this->db->like('item_name', $searchValue, 'both');
-            $this->db->or_like('fifo_items.customer_code', $searchValue, 'both');
+            $this->db->group_start();
+            $this->db->like('fifo_items.invoice_code', $searchValue, 'both');
+            $this->db->group_end();
         }
         if ($customer || $supplier) {
+            $this->db->group_start();
             $this->db->where("(fifo_items.customer_code = '$customer' OR fifo_items.customer_code = '$supplier')");
+            $this->db->group_end();
         }
         if($dateStart != '') {
             // $this->db->where("((fifo_items.created_at >= '$dateStart' AND fifo_items.created_at <= '$dateFinal') OR (fifo_items.updated_at >= '$dateStart' AND fifo_items.updated_at <= '$dateFinal'))");
@@ -682,6 +699,7 @@ class Items extends MY_Controller
             $this->db->group_end(); 
         }
         $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->group_by('fifo_items.invoice_code, fifo_items.item_capital_price');
         $this->db->limit($rowperpage, $start);
         $records = $this->db->get("fifo_items")->result();
         $data = array();
@@ -699,6 +717,7 @@ class Items extends MY_Controller
                 "item_name" => $record->item_name,
                 "item_quantity" => $record->item_quantity,
                 "item_discount"=>$record->item_discount,
+                "item_capital_price"=>$record->item_capital_price,
                 "total_price"=>$record->total_price,
                 "customer_code"=>$record->customer_code,
                 "is_cancelled"=>$record->is_cancelled,
@@ -905,6 +924,7 @@ class Items extends MY_Controller
                 $this->db->where("transaction.created_at <=", $dateFinal);
                 $this->db->group_end();                
             }
+            $this->db->where('transaction.is_cancelled', 0);
             $this->db->where('transaction.item_code', $item_code);
             $this->db->order_by($columnName, $columnSortOrder);
             $this->db->limit($rowperpage, $start);
@@ -961,24 +981,110 @@ class Items extends MY_Controller
         }
     }
 
+    // public function data_items()
+    // {
+    //     if (ifPermissions('items_list')) {
+    //         $search = (object) post('search');
+    //         $this->db->select('*, CAST(quantity AS INT) as quantity');
+    //         $this->db->limit(15);
+    //         if ($search->value) {
+    //             $this->db->group_start();
+    //             $this->db->like('item_code', $search->value, 'both');
+    //             $this->db->or_like('item_name', $search->value, 'both');
+    //             $this->db->or_like('brand', $search->value, 'after');
+    //             $this->db->or_like('brands', $search->value, 'after');
+    //             $this->db->or_like('note', $search->value, 'both');
+    //             $this->db->group_end();
+    //         }
+    //         $this->db->where('is_active', 1);
+    //         $this->db->order_by('quantity', 'DESC');
+    //         $response = $this->db->get('items')->result();
+    //         $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    //     };
+    // }
     public function data_items()
     {
         if (ifPermissions('items_list')) {
             $search = (object) post('search');
-            $this->db->select('*, CAST(quantity AS INT) as quantity');
-            $this->db->limit(15);
+            $this->db->trans_start();
+            $this->db->trans_strict(FALSE);
             if ($search->value) {
-                $this->db->group_start();
-                $this->db->like('item_code', $search->value, 'both');
-                $this->db->or_like('item_name', $search->value, 'both');
-                $this->db->or_like('brand', $search->value, 'after');
-                $this->db->or_like('brands', $search->value, 'after');
-                $this->db->or_like('note', $search->value, 'both');
-                $this->db->group_end();
+            $where = "WHERE (
+                        items.item_code LIKE '%$search->value%' OR 
+                        items.item_name LIKE '%$search->value%'
+                    ) AND items.is_active = 1";
+            }else{
+            $where = "WHERE items.is_active = 1";
             }
-            $this->db->where('is_active', 1);
-            $this->db->order_by('quantity', 'DESC');
-            $response = $this->db->get('items')->result();
+            $response = $this->db->query("
+                WITH RECURSIVES AS (SELECT `id`
+                      , `invoice_code` AS invoice
+                      , `created_at`
+                      , `updated_at`
+                      , `invoice_code`
+                      , `item_code`
+                      , `item_name`
+                      , SUM( IF(parent IS NULL, `item_quantity`, item_quantity*-1)) AS item_quantity
+                      , `item_discount`
+                      , `item_capital_price`
+                      , `total_price`
+                      , (total_price IS NOT TRUE) AS is_free
+                      , `is_readable`
+                      , `is_cancelled`
+                  FROM fifo_items
+                  WHERE is_cancelled = 0 AND is_readable = 1 AND item_quantity > 0
+                  GROUP BY item_capital_price, item_code, is_free
+                  -- GROUP BY invoice, item_code, is_free
+                  ORDER BY created_at ASC)
+                  SELECT items.id 
+                      , items.item_code 
+                      , items.item_name 
+                      , items.category 
+                      , items.brand 
+                      , items.brands 
+                      , items.mg 
+                      , items.ml 
+                      , items.vg 
+                      , items.pg 
+                      , items.flavour 
+                      , items.unit 
+                      , items.weight 
+                      , items.broken 
+                      , items.selling_price 
+                      , items.shadow_selling_price 
+                      , items.customs 
+                      , items.note 
+                      , items.is_active 
+                      , items.created_at 
+                      , items.created_by 
+                      , items.updated_at 
+                      , items.updated_by
+                      , RECURSIVES.invoice
+                      , IFNULL(RECURSIVES.item_quantity,0) AS quantity
+                      , IFNULL(RECURSIVES.item_capital_price,0) AS capital_price 
+                  FROM items
+                  LEFT JOIN RECURSIVES ON items.item_code = RECURSIVES.item_code
+                  $where
+                  -- if won't grouping, you can show all item, 
+                  -- item_capital_price, item_code, 
+                  GROUP BY item_code
+                  ORDER BY RECURSIVES.item_quantity DESC
+                  LIMIT 15")->result();
+            // $this->db->select('*, CAST(quantity AS INT) as quantity');
+            // $this->db->limit(15);
+            // if ($search->value) {
+            //     $this->db->group_start();
+            //     $this->db->like('item_code', $search->value, 'both');
+            //     $this->db->or_like('item_name', $search->value, 'both');
+            //     $this->db->or_like('brand', $search->value, 'after');
+            //     $this->db->or_like('brands', $search->value, 'after');
+            //     $this->db->or_like('note', $search->value, 'both');
+            //     $this->db->group_end();
+            // }
+            // $this->db->where('is_active', 1);
+            // $this->db->order_by('quantity', 'DESC');
+            // $response = $this->db->get('items')->result();
+            $this->db->trans_complete();
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
         };
     }

@@ -124,6 +124,20 @@ class Sale extends Invoice_controller
 				'shipping_cost_to_invoice' => post('shipping_cost_to_invoice'),
 				'transaction_destination' => post('transaction_destination'),
 			);
+			
+			$result = $this->validation_items($items);
+			$error = $result['error'];
+			$success = $result['success'];
+			$items = array_values($success);
+			$failed = array_values($error);
+			$error = array_column($failed, 'item_name');
+
+			if(!$items){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
+				redirect("invoice/order/create");
+				return false;
+			}
 			// // CREATE
 			echo '<pre>';
 			$this->db->trans_start();
@@ -132,7 +146,6 @@ class Sale extends Invoice_controller
 			$this->create_item_history($items, ['CREATE', 'UPDATE']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
-			$this->create_or_update_list_item_fifo($items); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
 			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
 			// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			$this->db->trans_complete();
@@ -149,6 +162,22 @@ class Sale extends Invoice_controller
 
 			redirect('invoice/sale/list');
 		}
+	}
+
+	private function validation_items($data)
+	{
+		$item = array();
+		$result = array();
+		foreach ($data as $key => $value) {
+			array_push($item, $this->db->get_where('items', ['item_code' => $value['item_code']])->row()); // Primary for find items with code item
+			if (($item[$key]->quantity - $value['item_order_quantity']) < 0) {
+				$result['error'][$key] = $data[$key];
+				unset($data[$key]);
+				continue;
+			}
+			$result['success'][$key] = $data[$key];
+		}
+		return $result;
 	}
 
 	public function import(){
@@ -233,7 +262,6 @@ class Sale extends Invoice_controller
 			$this->create_item_history($items[$key], ['CREATE', 'UPDATE']);
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items[$key]);
-			$this->create_or_update_list_item_fifo($items[$key]); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
 			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
 			$this->update_items($items[$key]); // NOT USE HERE, BUT USED ON ORDER CREATE
 			$this->db->trans_complete();
@@ -347,6 +375,20 @@ class Sale extends Invoice_controller
 			);// Check
 			
 			echo '<pre>';
+
+			$result = $this->validation_items($items);
+			$error = $result['error'];
+			$success = $result['success'];
+			$items = array_values($success);
+			$failed = array_values($error);
+			$error = array_column($failed, 'item_name');
+
+			if(!$items){
+				$this->session->set_flashdata('alert-type', 'danger');
+				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
+				redirect("invoice/order/create");
+				return false;
+			}
 			// // EDIT
 			$this->db->trans_start();
 			if(sizeof($items) > 0){
@@ -357,8 +399,6 @@ class Sale extends Invoice_controller
 				$this->update_items($items);
 				$this->db->reset_query();
 				$this->create_or_update_list_item_transcation($items);
-				$this->db->reset_query();
-				$this->create_or_update_list_item_fifo($items); // CREATE ONLY FOR SALE.. NEED FOR CANCEL
 				$this->db->reset_query();		
 			}
 			$this->create_or_update_invoice($payment);
@@ -822,6 +862,7 @@ class Sale extends Invoice_controller
 				}
 			}
 		}
+		$this->create_or_update_list_item_fifo($data); // CREATE OR UPDATE ONLY FOR SALE.. NEED FOR CANCEL
 		return $item;
 	}
 

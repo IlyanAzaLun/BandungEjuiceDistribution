@@ -64,12 +64,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3><?=$this->db->get('users')->num_rows()?></h3>
+                <h3><?=getCurrentcy($items_assets->assets)?></h3>
 
-                <p><?php echo lang('dashboard_user_register');?></p>
+                <p><?php echo lang('assets_items');?></p>
               </div>
               <div class="icon">
-                <i class="ion ion-person-add"></i>
+                <i class="ion ion-archive"></i>
               </div>
               <a href="<?=url('users')?>" class="small-box-footer"><?php echo lang('dashboard_more_info');?><i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -91,146 +91,188 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           </div>
           <!-- ./col -->
         </div>
-        <!-- /.row -->
-        <!-- row-grouping -->
+        <!--  -->
         <div class="row">
+          <div class="col-12 col-lg-8">
+            <!-- row-grouping -->
+            <div class="row">
+              <!-- Filter -->
+              <div class="col-12 col-lg-5">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-search"></i>&nbsp;Find Sales Daily Chart
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <span>
+                      <div class="row" id="custom_graph">
+                        <div class="col-12 col-lg-12">
+                          <span class="form-group">
+                            <input type="text" class="form-control" name="date" id="min">
+                          </span>
+                          
+                          <div class="row mt-2">
+                            <!-- Search By -->
+                            <div class="col-4 col-lg-4 form-group">
+                              <input type="text" class="form-control" name="user" id="user" placeholder="Select Marketing"  autocomplete="false">
+                              <input type="hidden" name="user_id" id="user_id" class="form-control" readonly>
+                            </div>
+                            <div class="col-4 col-lg-4 form-group">
+                              <div class="input-group">
+                                <select class="form-control" name="group_by" id="group_by">
+                                    <option value="daily" selected><?=lang('daily')?></option>
+                                    <option value="monthly"><?=lang('monthly')?></option>
+                                </select>
+                              </div>
+                            </div>
+                            <!--  -->
+                            <div class="col-4 col-lg-4">
+                              <button class="btn btn-block btn-primary" id="search"><i class="fa fa-search"></i>&nbsp;&nbsp;Search</button>
+                            </div>
+                          </div>
 
-          <div class="col-12 col-lg">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-search"></i>&nbsp;Find Sales Daily Chart
-                </h3>
-              </div>
-              <div class="card-body">
-                <span>
-                  <div class="row" id="custom_graph">
-                    <div class="col-12 col-lg-12">
-                      <span class="form-group">
-                        <input type="text" class="form-control" name="date" id="min">
-                      </span>
-                      
-                      <div class="row mt-2">
-                        <!-- Search By -->
-                        <div class="col-4 col-lg-4 form-group">
-                          <input type="text" class="form-control" name="user" id="user" placeholder="Select Marketing"  autocomplete="false">
-                          <input type="hidden" name="user_id" id="user_id" class="form-control" readonly>
                         </div>
-                        <div class="col-4 col-lg-4 form-group">
-                          <div class="input-group">
-                            <select class="form-control" name="group_by" id="group_by">
-                                <option value="daily" selected><?=lang('daily')?></option>
-                                <option value="monthly"><?=lang('monthly')?></option>
-                            </select>
+                      </div>
+                    </span>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header">
+                    <p><?=lang('top-item-order')?>: <hr><b id="top-item"></b></p>
+                  </div>
+                </div>
+              </div>
+              <!-- Expedition -->
+              <div class="col-12 col-lg-7">
+                <div class="card">
+                  <div class="card-header"><i class="fas fa-shipping-fast"></i> <?=lang('expedition')?></div>
+
+                    <div class="card-body">
+                      <!-- /.d-flex -->
+
+                      <div class="position-relative mb-4">
+                        <canvas id="expedition-chart" style="height: 205px;"></canvas>
+                      </div>
+                    </div>
+                <!--  -->
+                </div>
+              </div>
+            </div>
+            <div class="row">              
+              <!-- Line Chart Profit -->
+              <div class="col-12 connectedSortable">
+
+                <!-- solid sales graph -->
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-th mr-1"></i>
+                      <?php echo lang('dashboard_sales') ?>
+                    </h3>
+                    <div class="card-tools">
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <canvas class="chart" id="line-chart" style="height: 300px;"></canvas>
+                  </div>
+                  <!-- /.card-footer -->
+                </div>
+              <!-- /.card -->
+              </div>
+            </div>
+            <!-- ./row-grouping -->
+          </div>
+          <div class="col-12 col-lg-4">
+            <!-- // -->
+            <div class="row">
+              <!-- Monthly Review -->
+              <div class="col-12" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-dollar-sign"></i> Report Overview
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <span>
+                      <div class="row">
+                        <div class="col-lg-6 col-12">
+                          <div class="form-group">
+                            <h4 for="info-daily">Today Overview</h4>
+                            <table class="table table-striped">
+                              <tr>
+                                <td>Total Selling Price :</td>
+                                <td width="100" class="text-right"><b id="today_total_sales">0</b></td>
+                              </tr>
+                              <tr>
+                                <td>Total Capital Price :</td>
+                                <td width="100" class="text-right"><b id="today_total_purchase">0</b></td>
+                              </tr>
+                              <tr>
+                                <td>Today Summary :</td>
+                                <td width="100" class="text-right"><b id="today_summary">0</b></td>
+                              </tr>
+                            </table>
                           </div>
                         </div>
-                        <!--  -->
-                        <div class="col-4 col-lg-4">
-                          <button class="btn btn-block btn-primary" id="search"><i class="fa fa-search"></i>&nbsp;&nbsp;Search</button>
+                        <div class="col-lg-6 col-12">
+                          <div class="form-group">
+                              <h4 for="info-monthly">Monthly Overview</h4>
+                              <table class="table table-striped">
+                              <tr>
+                                <td>Total Sales :</td>
+                                <td width="100" class="text-right"><b id="monthly_total_sales">0</b></td>
+                              </tr>
+                              <tr>
+                                <td>Total Purchase :</td>
+                                <td width="100" class="text-right"><b id="monthly_total_purchase">0</b></td>
+                              </tr>
+                              
+                              <tr>
+                                <td>Total Profit :</td>
+                                <td width="100" class="text-right"><b id="monthly_total_profit">0</b></td>
+                              </tr>
+                            </table>
+                          </div>
                         </div>
                       </div>
-
-                    </div>
+                    </span>
                   </div>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-lg-8" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-dollar-sign"></i> Report Overview
-                </h3>
-              </div>
-              <div class="card-body">
-                <span>
-                  <div class="row">
-                    <div class="col-lg-6 col-12">
-                      <div class="form-group">
-                        <h4 for="info-daily">Today Overview</h4>
-                        <table class="table table-striped">
-                          <tr>
-                            <td>Total Selling Price :</td>
-                            <td width="100" class="text-right"><b id="today_total_sales">0</b></td>
-                          </tr>
-                          <tr>
-                            <td>Total Capital Price :</td>
-                            <td width="100" class="text-right"><b id="today_total_purchase">0</b></td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
-                    <div class="col-lg-6 col-12">
-                      <div class="form-group">
-                          <h4 for="info-monthly">Monthly Overview</h4>
-                          <table class="table table-striped">
-                          <tr>
-                            <td>Total Sales :</td>
-                            <td width="100" class="text-right"><b id="monthly_total_sales">0</b></td>
-                          </tr>
-                          <tr>
-                            <td>Total Purchase :</td>
-                            <td width="100" class="text-right"><b id="monthly_total_purchase">0</b></td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <!-- ./row-grouping -->
-        <!-- Main row -->
-        <div class="row">
-          
-          <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-12 col-lg-8 connectedSortable">
-
-            <!-- solid sales graph -->
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-th mr-1"></i>
-                  <?php echo lang('dashboard_sales') ?>
-                </h3>
-                <div class="card-tools">
                 </div>
               </div>
-              <div class="card-body">
-                <canvas class="chart" id="line-chart" style="height: 300px;"></canvas>
-              </div>
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-          </section>
-          <section class="col-12 col-lg-4 connectedSortable"  <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
+              <!-- Pie Chart Sales and Purchase-->
+              <div class="col-12 connectedSortable" <?php if(!hasPermissions('dashboard_staff')):?>style="display:none"<?php endif;?>>
 
-            <!-- solid sales graph -->
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-th mr-1"></i>
-                  <?php echo lang('dashboard_sales') ?> Monthly
-                </h3>
-                <div class="card-tools">
+                <!-- solid sales graph -->
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-th mr-1"></i>
+                      <?php echo lang('dashboard_sales') ?> Monthly
+                    </h3>
+                    <div class="card-tools">
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>                         
+                  </div>
+                  <!-- /.card-footer -->
                 </div>
+                <!-- /.card -->
               </div>
-              <div class="card-body">
-                <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>                         
-              </div>
-              <!-- /.card-footer -->
+              <!-- right col -->
             </div>
-            <!-- /.card -->
-          </section>
-          <!-- right col -->
+            <!-- // -->
+          </div>
         </div>
+        <!--  -->
+        <!-- /.row -->
+
+        <!-- Don't Use It -->
         <div class="row">
           <!-- Left col -->
-          <section class="col-12 col-lg-12 connectedSortable">
+          <section class="col-12 col-lg-12 connectedSortable" <?php if(!hasPermissions('!dashboard_staff')):?>style="display:none"<?php endif;?>>
             <!-- Custom tabs (Charts with tabs)-->
             <div class="card">
               <div class="card-header">

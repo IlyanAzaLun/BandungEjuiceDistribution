@@ -309,6 +309,8 @@ $lang['item_quantity_out'] = "Barang Keluar";
 $lang['item_shadow_selling_price'] = "Harga Semu";
 $lang['shadow_selling_price_desc'] = "Harga Yang Akan Di Tampilkan Sebagai Harga Pokok.";
 
+$lang['assets_items'] = "Assets Barang";
+$lang['top-item-order'] = "Item Terbanyak Dipesan";
 
 /*
  * Pelanggan
@@ -409,10 +411,11 @@ $lang['delivery_code'] = "Kode Dokumen";
  *bank
  */
 $lang['bank'] = "Bank";
-$lang['account'] = "Akun";
-$lang['chart_of_account'] = "Chart of Account";
 $lang['pages_account_bank'] = "Rekening Bank";
-$lang['account_bank_list'] = "Daftar Akun";
+$lang['account'] = "Account";
+$lang['accounting'] = "Accounting";
+$lang['chart_of_account'] = "Chart of Account";
+$lang['account_bank_list'] = "Akun";
 $lang['account_bank_add'] = "Tambah Akun Baru";
 $lang['account_bank_edit'] = "Ubah Informasi Akun";
 $lang['info_add'] = "Tambahkan Informasi Lebih Lanjut";
@@ -430,6 +433,13 @@ $lang['balance'] = "Saldo";
 $lang['nominal'] = "Nominal";
 $lang['reduce'] = "Keluar";
 $lang['increse'] = "Masuk";
+
+$lang['journal'] = "Journal";
+$lang['balance_sheet'] = "Laporan Neraca";
+$lang['profit_n_loss'] = "Laporan Laba dan Rugi";
+$lang['month_balance_sheet'] = "Neraca Keuangan pada Bulan";
+$lang['see-report'] = "Melihat Rincian Laporan";
+
 
 /*
  * Laporan
@@ -459,11 +469,9 @@ $lang['report_generate_message'] = "Buat & Unduh Laporan";
 $lang['daily'] = "Harian";
 $lang['daily_by_user'] = "Harian User";
 $lang['daily_by_customer'] = "Harian Pelanggan";
-$lang['daily_by_supplier'] = "Harian Penyuplai";
 $lang['monthly'] = "Bulanan";
 $lang['monthly_by_user'] = "Bulanan User";
 $lang['monthly_by_customer'] = "Bulanan Pelanggan";
-$lang['monthly_by_supplier'] = "Bulanan Penyuplai";
 $lang['select_group_by'] = "Pilih Pengelompokan";
 $lang['profit'] = "Laba";
 $lang['profit_pesudo'] = "Laba Semu";
@@ -516,6 +524,7 @@ $lang['debt'] = "Hutang";
 $lang['cash'] = "Tunai";
 $lang['payed'] = "Dibayar";
 $lang['credit'] = "Kredit";
+$lang['debit'] = "Debit";
 $lang['deposit'] = "Setoran";
 $lang['online'] = "Daring";
 $lang['returns_failed'] = "Pengembalian Gagal, Ubah Jumlah Barang Yang Dikembalikan";

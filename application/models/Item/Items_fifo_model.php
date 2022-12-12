@@ -135,6 +135,30 @@ class Items_fifo_model extends MY_Model
             ORDER BY created_at ASC)
             SELECT * FROM RECURSIVES
             WHERE RECURSIVES.item_quantity > 0")->row();
+
+        if(!$result){
+            $result = $this->db->query(
+                "WITH RECURSIVES AS (SELECT 
+                    `id`
+                    , SUBSTRING(`invoice_code`, 5) AS invoice
+                    , `created_at`
+                    , `updated_at`
+                    , `invoice_code`
+                    , `item_code`
+                    , `item_name`
+                    , SUM( IF(parent IS NULL, `item_quantity`, item_quantity*-1)) AS item_quantity
+                    , `item_discount`
+                    , `total_price`
+                    , (total_price IS NOT TRUE) AS is_free
+                    , `is_readable`
+                    , `is_cancelled`
+                FROM fifo_items
+                WHERE item_code = '$data' AND (is_cancelled = 0 AND is_readable = 1)
+                GROUP BY invoice, is_free
+                ORDER BY created_at ASC)
+                SELECT * FROM RECURSIVES
+                WHERE RECURSIVES.item_quantity >= 0 ORDER BY id DESC")->row();
+        }
         
         $this->db->trans_complete();
 

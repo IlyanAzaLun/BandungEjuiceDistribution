@@ -309,6 +309,9 @@ $lang['item_quantity_out'] = "Item Out";
 $lang['item_shadow_selling_price'] = "Pesudo Price";
 $lang['shadow_selling_price_desc'] = "This Price Will Be Displayed As Capital Price.";
 
+$lang['assets_items'] = "Assets Items";
+$lang['top-item-order'] = "Top Item Orderd";
+
 
 /*
  * Customer
@@ -413,6 +416,7 @@ $lang['information_delivery'] = "Information Delivery";
  */
 $lang['bank'] = "Bank";
 $lang['account'] = "Account";
+$lang['accounting'] = "Accounting";
 $lang['chart_of_account'] = "Chart of Account";
 $lang['pages_account_bank'] = "Account Bank";
 $lang['account_bank_list'] = "List Account";
@@ -434,6 +438,13 @@ $lang['nominal'] = "Nominal";
 $lang['reduce'] = "Out";
 $lang['increse'] = "In";
 
+$lang['journal'] = "Journal";
+$lang['balance_sheet'] = "Balance Sheet";
+$lang['profit_n_loss'] = "Profit and Loss";
+$lang['month_balance_sheet'] = "Month Balance Sheet";
+$lang['month_balance_sheet'] = "View Report";
+$lang['see-report'] = "See Details Report";
+
 
 /*
  * Report
@@ -441,6 +452,7 @@ $lang['increse'] = "In";
 $lang['report'] = "Report";
 $lang['report_master'] = "Data Master";
 $lang['report_purchase'] = "Purchase Information";
+$lang['report_purchase_items'] = "Items Information";
 $lang['report_sale'] = "Sale Information";
 $lang['report_order_items'] = "Order Information";
 $lang['report_sale_items'] = "Items Information";
@@ -522,6 +534,7 @@ $lang['debt'] = "Debt";
 $lang['cash'] = "Cash";
 $lang['payed'] = "Payed";
 $lang['credit'] = "Credit";
+$lang['debit'] = "Debit";
 $lang['deposit'] = "Deposit";
 $lang['online'] = "Online";
 $lang['returns_failed'] = "Return failed, change the quantity of the returned item";

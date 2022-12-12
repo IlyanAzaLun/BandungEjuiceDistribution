@@ -83,6 +83,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <th><?= lang('item_name') ?></th>
                         <th><?= lang('item_quantity') ?></th>
                         <th><?= lang('item_discount') ?></th>
+                        <th><?= lang('item_capital_price') ?></th>
                         <th><?= lang('total_price') ?></th>
                         <th><?= lang('created_by') ?></th>
                         <th><?= lang('updated_by') ?></th>
@@ -98,6 +99,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <th><?= lang('item_name') ?></th>
                         <th><?= lang('item_quantity') ?></th>
                         <th><?= lang('item_discount') ?></th>
+                        <th><?= lang('item_capital_price') ?></th>
                         <th><?= lang('total_price') ?></th>
                         <th><?= lang('created_by') ?></th>
                         <th><?= lang('updated_by') ?></th>
@@ -186,6 +188,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             },
             {
                 data: "item_discount",
+                render: function(data, type, row){
+                    return currency(data);
+                }
+            },
+            {
+                data: "item_capital_price",
                 render: function(data, type, row){
                     return currency(data);
                 }
