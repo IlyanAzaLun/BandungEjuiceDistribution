@@ -3,19 +3,20 @@ const main = () => {
         'use strict'
 
         $(document).ready(function () {
-            loadDataHansonTable($('input#profit_n_loss').val());
-            $('input#profit_n_loss').on('change', function () {
-                loadDataHansonTable(this.value)
+            loadDataHansonTable($('input#profit_n_loss').val(), $('select#balance_sheet').val());
+            $('input#profit_n_loss, select#balance_sheet').on('change', function () {
+                loadDataHansonTable($('input#profit_n_loss').val(), $('select#balance_sheet').val())
             })
         })
         // FUNCTION
-        function loadDataHansonTable(date) {
+        function loadDataHansonTable(date, group) {
             $.ajax({
                 url: `${location.base}master_information/accounting`,
                 method: 'POST',
                 dataType: 'JSON',
                 data: {
                     'date': date,
+                    'group': group,
                     'request': 'report',
                     'type': 'profit_n_loss'
                 },

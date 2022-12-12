@@ -57,7 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <div class="col-12 col-lg-1">
-              <select name="group" class="form-control form-control-sm">
+              <select name="group" id="balance_sheet" class="form-control form-control-sm">
                 <option value="month" selected>Month</option>
                 <option value="year">Year</option>
               </select>

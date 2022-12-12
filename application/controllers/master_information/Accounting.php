@@ -58,7 +58,15 @@ class Accounting extends MY_Controller
                     , acc_coa.isFixedAssetSch');
                     $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
                     $this->db->group_start();
-                    $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
+                    switch (post('group')) {
+                        case 'year':
+                            $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y")', false);
+                            break;
+                        
+                        default:
+                            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
+                            break;
+                    }
                     $this->db->group_end();
                     switch (post('type')) {
                         case 'balance_sheet':
