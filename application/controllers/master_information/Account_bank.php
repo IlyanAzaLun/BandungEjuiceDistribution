@@ -16,12 +16,88 @@ class Account_bank extends MY_Controller
         ifPermissions('account_bank_list');
         $this->page_data['page']->submenu = 'account';
         $this->page_data['title'] = 'chart_of_account';
-        $this->page_data['get_account'] = $this->db->select('*')->from('acc_coa')->where('IsActive', 1)->order_by('HeadName')->get()->result();
-        $this->page_data['visit'] = array();
-        for ($i=0; $i < count($this->page_data['get_account']); $i++) { 
-            $this->page_data['visit'][$i] = false;
+        
+        $this->form_validation->set_rules('txtHeadName', lang('bank_name'), 'required|trim');
+
+        if ($this->form_validation->run() == false) {
+            $this->page_data['get_account'] = $this->db->select('*')->from('acc_coa')->where('IsActive', 1)->order_by('HeadName')->get()->result();
+            $this->page_data['visit'] = array();
+            for ($i=0; $i < count($this->page_data['get_account']); $i++) { 
+                $this->page_data['visit'][$i] = false;
+            }
+            $this->load->view('account_bank/index', $this->page_data);
         }
-        $this->load->view('account_bank/index', $this->page_data);
+        else{
+            /*
+            SELECT 
+                IF(bank_information.id, CONCAT(bank_information.coa_parent,bank_information.id), acc_coa.HeadCode) ,
+                IF(bank_information.id, CONCAT(bank_information.name), acc_coa.HeadName),
+                acc_coa.*
+            FROM acc_coa
+                LEFT JOIN bank_information ON bank_information.coa_parent = acc_coa.HeadCode
+            */
+            $this->db->where('HeadCode', post('txtHeadCode'));
+            $this->db->from('acc_coa');
+            $callback = $this->db->count_all_results();
+            $this->db->reset_query();
+            if ($callback && post('submit')) {
+                // UPDATE INFORMATION OF COA
+                $data = array(
+                    'HeadName' => post('txtHeadName')?strtoupper(post('txtHeadName')):null,
+                    'IsActive' => post('IsActive')?post('IsActive'):null,
+                    'isCashNature' => post('isCashNature')?post('isCashNature'):null,
+                    'isBankNature' => post('isBankNature')?post('isBankNature'):null,
+                    'DepreciationRate' => post('DepreciationRate')?post('DepreciationRate'):null,
+                    'UpdateBy' => logged('id'),
+                    'UpdateDate' => date('Y-m-d H:i:s'),
+                    'isSubType' => post('isSubType')?post('isSubType'):null,
+                    'IsTransaction' => post('IsTransaction')?post('IsTransaction'):null,
+                    'isStock' => post('isStock')?post('isStock'):null,
+                    'isFixedAssetSch' => post('isFixedAssetSch')?post('isFixedAssetSch'):null,
+                    'IsDepreciation' => post('IsDepreciation')?post('IsDepreciation'):null,
+                    'noteNo' => post('noteNo')?post('noteNo'):null,
+                    'assetCode' => post('assetCode')?post('assetCode'):null,
+                    'depCode' => post('depCode')?post('depCode'):null 
+                );
+                $this->db->where('HeadCode', post('txtHeadCode'));
+                $result = $this->db->update('acc_coa', $data);
+                if ($result) {
+                    $this->activity_model->add("Update Chart Of Account, #" . post('txtHeadCode'), (array) $this->input->post());
+                    $this->session->set_flashdata('alert-type', 'success');
+                    $this->session->set_flashdata('alert', 'Update Chart Of Account Successfully');
+                }
+                else{
+                    $this->session->set_flashdata('alert-type', 'error');
+                    $this->session->set_flashdata('alert', 'Update Chart Of Account Failed');
+                }
+                redirect('master_information/account_bank');
+            }
+            if(post('add_new')){
+                $callback = array();
+                $this->db->where('PHeadCode', post('txtHeadCode'));
+                $this->db->from('acc_coa');
+                $callback['row'] = $this->db->count_all_results();
+                $this->db->reset_query();
+                
+                $this->db->where('PHeadCode', post('txtHeadCode'));
+                $callback['data'] = $this->db->get('acc_coa')->row();
+
+                unset($callback['data']->id);
+                $callback['data']->HeadCode = substr_replace($callback['data']->HeadCode,$callback['row']+1, -1);
+                $callback['data']->HeadName = strtoupper(post('txtHeadName'));
+
+                if ($this->db->insert('acc_coa', $callback['data'])) {
+                    $this->activity_model->add("Insert Chart Of Account, #" . post('txtHeadCode'), (array) $callback['data']);
+                    $this->session->set_flashdata('alert-type', 'success');
+                    $this->session->set_flashdata('alert', 'Create Chart Of Account Successfully');
+                }
+                else{
+                    $this->session->set_flashdata('alert-type', 'error');
+                    $this->session->set_flashdata('alert', 'Create Chart Of Account Failed');
+                }
+                redirect('master_information/account_bank');
+            }
+        }
     }
     public function form()
     {
@@ -53,7 +129,12 @@ class Account_bank extends MY_Controller
 
         if ($this->form_validation->run() == false) {
             $this->page_data['customers'] = $this->customer_model->get();
-            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(array('IsActive' => 1, 'HeadLevel >' => 3))->order_by('HeadName')->get()->result();
+            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(
+                array(
+                    'PHeadCode' => 111, 
+                    'IsActive' => 1, 
+                    'HeadLevel >' => 3
+                ))->order_by('HeadName')->get()->result();
 
             $this->load->view('account_bank/create', $this->page_data);
         } else {
@@ -71,7 +152,7 @@ class Account_bank extends MY_Controller
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'New Account Bank Created Successfully');
 
-            redirect('master_information/account_bank/list');
+            redirect('master_information/account_bank');
         }
     }
 
@@ -95,7 +176,12 @@ class Account_bank extends MY_Controller
                 'submit' => 'Delete it',
             );
             $this->page_data['bank'] = $this->account_bank_model->getById(get('id'));
-            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(array('IsActive' => 1, 'HeadLevel >' => 3))->order_by('HeadName')->get()->result();
+            $this->page_data['parent_account'] = $this->db->select('*')->from('acc_coa')->where(
+                array(
+                    'PHeadCode' => 111, 
+                    'IsActive' => 1, 
+                    'HeadLevel >' => 3
+                ))->order_by('HeadName')->get()->result();
             $this->load->view('account_bank/update', $this->page_data);
             $this->load->view('includes/modals', $this->page_data);
         } else {

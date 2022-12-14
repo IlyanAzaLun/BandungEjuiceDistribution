@@ -502,40 +502,50 @@ class Report extends MY_Controller
 
             $data = $this->transaction_item_model->get_report_items_profit($this->input->post());
             $i = 2;
-            $sheet->setCellValue("A1", "created_at");
-            $sheet->setCellValue("B1", "updated_at");
-            $sheet->setCellValue("C1", "invoice_code");
-            $sheet->setCellValue("D1", "customer_code");
-            $sheet->setCellValue("E1", "store_name");
-            $sheet->setCellValue("F1", "item_capital_price");
-            $sheet->setCellValue("G1", "item_selling_price");
-            $sheet->setCellValue("H1", "discounts");
-            $sheet->setCellValue("I1", "shipping_cost");
-            $sheet->setCellValue("J1", "profit");
-            $sheet->setCellValue("K1", "average");
-            $sheet->setCellValue("L1", "name");
+            $sheet->setCellValue("B1", "created_at");
+            $sheet->setCellValue("C1", "updated_at");
+            $sheet->setCellValue("D1", "invoice_code");
+            $sheet->setCellValue("E1", "customer_code");
+            $sheet->setCellValue("F1", "store_name");
+            $sheet->setCellValue("G1", "item_capital_price");
+            $sheet->setCellValue("H1", "acctuly_item_selling_price");
+            $sheet->setCellValue("I1", "discounts");
+            $sheet->setCellValue("J1", "shipping_cost");
+            $sheet->setCellValue("K1", "other_cost");
+            $sheet->setCellValue("L1", "grand_total");
+            $sheet->setCellValue("M1", "profit");
+            $sheet->setCellValue("N1", "actully_profit");
+            $sheet->setCellValue("O1", "name");
+            $sheet->setCellValue("P1", "expedition");
+            $sheet->setCellValue("Q1", "description");
             // Here
             foreach ($data as $key => $value) {
-                $sheet->setCellValue("A".$i, $value->created_at);
-                $sheet->setCellValue("B".$i, $value->updated_at);
-                $sheet->setCellValue("C".$i, $value->invoice_code);
-                $sheet->setCellValue("D".$i, $value->customer_code);
-                $sheet->setCellValue("E".$i, $value->store_name);
-                $sheet->setCellValue("F".$i, $value->time_capital_price);
-                $sheet->setCellValue("G".$i, $value->total_price);
-                $sheet->setCellValue("H".$i, $value->discounts);
-                $sheet->setCellValue("I".$i, $value->shipping_cost);
-                $sheet->setCellValue("J".$i, $value->total_price-$value->time_capital_price);
-                $sheet->setCellValue("K".$i, ($value->grand_total-$value->time_capital_price) - $value->calc);
-                $sheet->setCellValue("L".$i, ($value->is_have_name!=$value->name && $value->is_have_name!=null)?$value->is_have_name:$value->name);
+                $sheet->setCellValue("B".$i, $value['created_at']);
+                $sheet->setCellValue("C".$i, $value['updated_at']);
+                $sheet->setCellValue("D".$i, $value['invoice_code']);
+                $sheet->setCellValue("E".$i, $value['customer']);
+                $sheet->setCellValue("F".$i, $value['store_name']);
+                $sheet->setCellValue("G".$i, $value['time_capital_price']);
+                $sheet->setCellValue("H".$i, $value['total_price']);
+                $sheet->setCellValue("I".$i, $value['discounts']);
+                $sheet->setCellValue("J".$i, $value['shipping_cost']);
+                $sheet->setCellValue("K".$i, $value['other_cost']);
+                $sheet->setCellValue("L".$i, $value['grand_total']);
+                $sheet->setCellValue("M".$i, $value['grand_total']-$value['time_capital_price']);
+                $sheet->setCellValue("N".$i, $value['total_price']-$value['time_capital_price']-$value['discounts']-$value['other_cost']);
+                $sheet->setCellValue("O".$i, ($value['is_have_name']!=$value['name'] && $value['is_have_name']!=null)?$value['is_have_name']:$value['name']);
+                $sheet->setCellValue("P".$i, ($value['expedition']));
+                $sheet->setCellValue("Q".$i, ($value['note']));
                 $i++;
             }
-            $sheet->setCellValue("F".$i, "=SUM(F2:F$i)");
-            $sheet->setCellValue("G".$i, "=SUM(G2:G$i)");
-            $sheet->setCellValue("H".$i, "=SUM(H2:H$i)");
-            $sheet->setCellValue("I".$i, "=SUM(I2:I$i)");
-            $sheet->setCellValue("J".$i, "=SUM(J2:J$i)");
-            $sheet->setCellValue("K".$i, "=SUM(K2:K$i)");
+            $sheet->setCellValue("G".$i, "=SUM(G3:G$i)");
+            $sheet->setCellValue("H".$i, "=SUM(H3:H$i)");
+            $sheet->setCellValue("I".$i, "=SUM(I3:I$i)");
+            $sheet->setCellValue("J".$i, "=SUM(J3:J$i)");
+            $sheet->setCellValue("K".$i, "=SUM(K3:K$i)");
+            $sheet->setCellValue("L".$i, "=SUM(L3:L$i)");
+            $sheet->setCellValue("M".$i, "=SUM(M3:M$i)");
+            $sheet->setCellValue("N".$i, "=SUM(O3:O$i)");
             // (E) SAVE FILE
             $writer = new Xlsx($spreadsheet);
             $fileName = post('params').'-'. date("Y-m-d-His") .'.xlsx';
@@ -549,238 +559,278 @@ class Report extends MY_Controller
     {
         $response = array();
 
-		$postData = $this->input->post();
+        $postData = $this->input->post();
 
-		## Read value
-		$draw = $postData['draw'];
-		$start = $postData['start'];
-		$rowperpage = $postData['length']; // Rows display per page
-		$columnIndex = $postData['order'][0]['column']; // Column index
-		$columnName = $postData['columns'][$columnIndex]['data']; // Column name
-		$columnSortOrder = $postData['order'][0]['dir']; // asc or desc
-		$searchValue = $postData['search']['value']; // Search value
-		$dateStart = $postData['startDate'];
-		$dateFinal = $postData['finalDate'];
-		$customer = $postData['customer'];
-		$user = $postData['users'];
-		$group_by = $postData['group_by'];
-		$logged = logged('id');
+        ## Read value
+        $draw = $postData['draw'];
+        $start = $postData['start'];
+        $rowperpage = $postData['length']; // Rows display per page
+        $columnIndex = $postData['order'][0]['column']; // Column index
+        $columnName = $postData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
+        $searchValue = $postData['search']['value']; // Search value
+        $dateStart = $postData['startDate'];
+        $dateFinal = $postData['finalDate'];
+        $customer = $postData['customer'];
+        $user = $postData['users'];
+        $group_by = $postData['group_by'];
+        $logged = logged('id');
 
-		## Total number of records without filtering
-		$this->db->select('count(*) as allcount');
+        ## Total number of records without filtering
+        $this->db->select('count(*) as allcount');
         $this->db->like('invoice_code', 'INV/SALE/', 'after');
         $this->db->where('is_cancelled', 0);
         $this->db->group_by('invoice_code');
-		// $records = $this->db->get('invoice_transaction_list_item')->result();
-		$records = $this->db->get('fifo_items')->result();
-		$totalRecords = $records[0]->allcount;
+        // $records = $this->db->get('invoice_transaction_list_item')->result();
+        $records = $this->db->get('fifo_items')->result();
+        $totalRecords = $records[0]->allcount;
 
-		## Total number of record with filtering
-		$this->db->select('count(transaction.invoice_code) as allcount');
+        ## Total number of record with filtering
+        $this->db->select('count(transaction.invoice_code) as allcount');
         $this->db->join('invoice_selling sale', 'transaction.invoice_code=sale.invoice_code', 'left');
         $this->db->where('sale.is_transaction', 1);
         $this->db->where('transaction.is_cancelled', 0);
-		if ($dateStart != '') {
+        if ($dateStart != '') {
             $this->db->group_start();
             $this->db->where("transaction.created_at >=", $dateStart);
-			$this->db->where("transaction.created_at <=", $dateFinal);
+            $this->db->where("transaction.created_at <=", $dateFinal);
             $this->db->group_end();
-		}else{            
+        }else{            
             $this->db->like("transaction.created_at", date("Y-m"), 'after');
-		}
-		// $records = $this->db->get('invoice_transaction_list_item transaction')->result();
-		$records = $this->db->get('fifo_items transaction')->result();
-		$totalRecordwithFilter = $records[0]->allcount;
-		
-        ## Fetch records //
-		$this->db->select("transaction.id
-        , transaction.item_id
-        , transaction.item_code
-        , transaction.item_name
-        , transaction.item_capital_price
-        , transaction.item_quantity
-        , transaction.item_unit
-        , transaction.is_cancelled
-        , transaction.created_at
-        , transaction.updated_at
-        , transaction.updated_by
-        , DATE_FORMAT(transaction.created_at, '%Y%m%d') AS yearmountday
-        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
-        , CAST(SUM(CAST(`purchase`.`shipping_cost` AS DECIMAL)) / list_items.item_quantity AS DECIMAL) AS calc,
-        , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
-        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
+        }
+        // $records = $this->db->get('invoice_transaction_list_item transaction')->result();
+        $records = $this->db->get('fifo_items transaction')->result();
+        $totalRecordwithFilter = $records[0]->allcount;
+        
+        ## FETCH RECORDS LIST ITEMS
+        $this->db->select("sale.created_at
+        , sale.updated_at
+        , sale.updated_by
+        , DATE_FORMAT(sale.created_at, '%Y%m%d') AS yearmountday
+        , DATE_FORMAT(sale.created_at, '%Y%m') AS yearmount
+        
+        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price
         , SUM(CAST(transaction.total_price AS INT)) AS total_price
-        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
-		$this->db->join("users", "transaction.created_by = users.id", "left");
-		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
-        $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
+        
+        , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
+        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit
+        ");
+        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "right");
+        $this->db->join("items", "transaction.item_id = items.id", "left");
         $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
-        $this->db->join("invoice_selling sale", "transaction.invoice_code = sale.invoice_code", "left");
-		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
-		$this->db->join("items", "transaction.item_id = items.id", "left");
-		$this->db->join("(SELECT invoice_code, SUM(item_quantity) item_quantity FROM invoice_transaction_list_item GROUP BY invoice_code) list_items", "list_items.invoice_code = transaction.reference_purchase", "left");
+        $this->db->join("users", "sale.created_by = users.id", "left");
+        $this->db->join("users is_have", "sale.is_have = is_have.id", "left");
 
+        $this->db->group_start();
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("sale.is_cancelled", 0);
         $this->db->where("transaction.is_cancelled", 0);
+        $this->db->group_end();
+
         if($customer != ''){
-            $this->db->select('
-            transaction.customer_code
-           ,customer.store_name');
-            $this->db->where("transaction.customer_code", $customer);
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            $this->db->select("
+            sale.customer
+            , customer.store_name");           
+            $this->db->group_start();
+            $this->db->where_in('sale.customer', $arr);
+            $this->db->group_end();
         }
         if($user != ''){
             $this->db->select('
-            transaction.created_by
-           ,users.name
-           ,sale.is_have
-           ,is_have.name AS is_have_name');
+            sale.created_by
+            , users.name
+            , sale.is_have
+            , is_have.name AS is_have_name');
             $this->db->group_start();
-            $this->db->where("transaction.created_by", $user);
+            $this->db->where("sale.created_by", $user);
             $this->db->or_where("sale.is_have", $user);
             $this->db->group_end();
         }
-		if ($dateStart != '') {
+        if ($dateStart != '') {
             $this->db->group_start();
-			$this->db->where("transaction.created_at >=", $dateStart);
-			$this->db->where("transaction.created_at <=", $dateFinal);
+            $this->db->where("sale.created_at >=", $dateStart);
+            $this->db->where("sale.created_at <=", $dateFinal);
             $this->db->group_end();
-		}
+        }
         else{
-			$this->db->like("transaction.created_at", date("Y-m"), 'after');
-		}
+            $this->db->like("sale.created_at", date("Y-m"), 'after');
+        }
         switch ($group_by) {
             case 'monthly':
-                # code...
-                $this->db->select('
-               ,SUM(sale.grand_total) AS grand_total
-               ,SUM(sale.shipping_cost) AS shipping_cost
-               ,SUM(sale.other_cost) AS other_cost
-               ,SUM(sale.discounts) AS discounts
-               ');
                 $this->db->group_by("yearmount");
                 break;
 
             case 'monthly_by_customer':
                 # code...
                 $this->db->select('
-                 transaction.customer_code
-                ,customer.store_name
-                ,SUM(sale.grand_total) AS grand_total
-                ,SUM(sale.shipping_cost) AS shipping_cost
-                ,SUM(sale.other_cost) AS other_cost
-                ,SUM(sale.discounts) AS discounts
-                ');
-                $this->db->group_by("yearmount, transaction.customer_code");
+                sale.customer
+                , customer.store_name');
+                $this->db->group_by("sale.customer");
+                $this->db->group_by("yearmount");
                 break;
             
             case 'monthly_by_user':
                 # code...
                 $this->db->select('
-                 transaction.created_by
-                ,users.name
-                ,sale.is_have
-                ,is_have.name AS is_have_name
-                ,SUM(sale.grand_total) AS grand_total
-                ,SUM(sale.shipping_cost) AS shipping_cost
-                ,SUM(sale.other_cost) AS other_cost
-                ,SUM(sale.discounts) AS discounts
-                ');
-                // $this->db->group_by("yearmount, transaction.created_by, sale.is_have");
-                $this->db->group_by("yearmount, sale.is_have");
+                sale.created_by
+                , users.name
+                , sale.is_have
+                , is_have.name AS is_have_name');
+                $this->db->group_by("sale.is_have");
+                $this->db->group_by("yearmount");
                 break;
                     
             case 'daily':
                 # code...
+                $this->db->group_by("yearmountday");
+                break;
+
+            case 'daily_by_customer':
+                # code...
                 $this->db->select('
-               ,SUM(sale.grand_total) AS grand_total
-               ,SUM(sale.shipping_cost) AS shipping_cost
-               ,SUM(sale.other_cost) AS other_cost
-               ,SUM(sale.discounts) AS discounts
-               ');
+                sale.customer
+                , customer.store_name');
+                $this->db->group_by("sale.customer");
                 $this->db->group_by("yearmountday");
                 break;
             
             case 'daily_by_user':
                 # code...
                 $this->db->select('
-                 transaction.created_by
-                 ,users.name
-                 ,sale.is_have
-                 ,is_have.name AS is_have_name
-                 ,SUM(sale.grand_total) AS grand_total
-                 ,SUM(sale.shipping_cost) AS shipping_cost
-                 ,SUM(sale.other_cost) AS other_cost
-                 ,SUM(sale.discounts) AS discounts
-                 ');
-                // $this->db->group_by("yearmountday, transaction.created_by, sale.is_have");
-                $this->db->group_by("yearmountday, sale.is_have");
-                break;
-
-            case 'daily_by_customer':
-                # code...
-                $this->db->select('
-                 transaction.customer_code
-                ,customer.store_name
-                ,SUM(sale.grand_total) AS grand_total
-                ,SUM(sale.shipping_cost) AS shipping_cost
-                ,SUM(sale.other_cost) AS other_cost
-                ,SUM(sale.discounts) AS discounts
-                ');
-                $this->db->group_by("yearmountday, transaction.customer_code");
+                sale.created_by
+                , users.name
+                , sale.is_have
+                , is_have.name AS is_have_name');
+                $this->db->group_by("sale.is_have");
+                $this->db->group_by("yearmountday");
                 break;
             
             default:
                 # code...
                 $this->db->select('
-                 transaction.invoice_code
-                ,transaction.created_by
-                ,users.name
-                ,sale.is_have
-                ,is_have.name AS is_have_name
-                ,transaction.customer_code
-                ,customer.store_name
-                ,sale.grand_total
-                ,sale.shipping_cost
-                ,sale.other_cost
-                ,sale.discounts
-                ');
-                $this->db->group_by("transaction.invoice_code");
+                sale.invoice_code
+                , sale.created_by
+                , users.name
+                , sale.is_have
+                , is_have.name AS is_have_name
+                , sale.customer
+                , customer.store_name');
+                $this->db->group_by("sale.invoice_code");
                 break;
         }
-		$this->db->order_by($columnName, $columnSortOrder);
-		$this->db->limit($rowperpage, $start);
-		$records = $this->db->get('fifo_items transaction')->result();
-		$data = array();
-		foreach ($records as $record) {
+        $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->limit($rowperpage, $start);
+        $records = $this->db->get('fifo_items transaction')->result();
 
-			$data[] = array(
-				'is_have' => $record->is_have,
-				'is_have_name' => $record->is_have_name,
-				'created_at' => $record->created_at,
-				'updated_at' => $record->updated_at,
-				'invoice_code' => $record->invoice_code,
-				'customer_code' => $record->customer_code,
-				'store_name' => $record->store_name,
-				'pseudo_price' => $record->pseudo_price,
-				'item_capital_price' => $record->time_capital_price,
-				'item_selling_price' => $record->total_price,
-				'shipping_cost' => $record->shipping_cost,
-				'discounts' => $record->discounts,
-				'grand_total' => $record->grand_total,
-				'profit' => $record->profit,
-				'name' => $record->name,
-				'calc' => $record->calc,
-			);
-		}
-		## Response
-		$response = array(
-			"draw" => intval($draw),
-			"iTotalRecords" => $totalRecords,
-			"iTotalDisplayRecords" => $totalRecordwithFilter,
-			"aaData" => $data,
-		);
-		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+        $this->db->select("
+                DATE_FORMAT(invoice_selling.created_at, '%Y%m%d') AS yearmountday
+                , DATE_FORMAT(invoice_selling.created_at, '%Y%m') AS yearmount
+                , DATE_FORMAT(invoice_selling.created_at, '%Y') AS year
+                , SUM(invoice_selling.total_price) AS total_price
+                , SUM(invoice_selling.discounts) AS discounts
+                , SUM(invoice_selling.shipping_cost) AS shipping_cost
+                , SUM(invoice_selling.other_cost) AS other_cost
+                , SUM(invoice_selling.grand_total) AS grand_total");
+        $this->db->group_start();
+        $this->db->where("invoice_selling.is_transaction", 1);
+        $this->db->where("invoice_selling.is_cancelled", 0);
+        $this->db->group_end();
+        if($customer != ''){
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            $this->db->group_start();
+            $this->db->where_in('invoice_selling.customer', $arr);
+            $this->db->group_end();
+        }
+        if($user != ''){
+            $this->db->group_start();
+            $this->db->where("invoice_selling.created_by", $user);
+            $this->db->or_where("invoice_selling.is_have", $user);
+            $this->db->group_end();
+        }
+        if ($dateStart != '') {
+            $this->db->group_start();
+            $this->db->where("invoice_selling.created_at >=", $dateStart);
+            $this->db->where("invoice_selling.created_at <=", $dateFinal);
+            $this->db->group_end();
+        }
+        else{
+            $this->db->like("invoice_selling.created_at", date("Y-m"), 'after');
+        }
+        switch ($group_by) {
+            case 'monthly':
+                $this->db->group_by("yearmount");
+                break;
+
+            case 'monthly_by_customer':
+                $this->db->select('invoice_selling.customer');
+                $this->db->group_by("invoice_selling.customer");
+                $this->db->group_by("yearmount");
+                break;
+            
+            case 'monthly_by_user':
+                $this->db->select('invoice_selling.is_have');
+                $this->db->group_by("invoice_selling.is_have");
+                $this->db->group_by("yearmount");
+                break;
+                    
+            case 'daily':
+                # code...
+                $this->db->group_by("yearmountday");
+                break;
+
+            case 'daily_by_customer':
+                $this->db->select('invoice_selling.customer');
+                $this->db->group_by("invoice_selling.customer");
+                $this->db->group_by("yearmountday");
+                break;
+            
+            case 'daily_by_user':
+                # code...
+                $this->db->select('invoice_selling.is_have');
+                $this->db->group_by("invoice_selling.is_have");
+                $this->db->group_by("yearmountday");
+                break;
+            
+            default:
+                $this->db->select('invoice_selling.invoice_code');
+                $this->db->group_by("invoice_selling.invoice_code");
+                break;
+        }
+        $this->db->order_by($columnName, $columnSortOrder);
+        $this->db->limit($rowperpage, $start);
+        $record_invoice = $this->db->get('invoice_selling')->result();
+        $data = array();
+        foreach ($records as $key => $record) {
+
+            $data[] = array(
+                'is_have' => $record->is_have,
+                'is_have_name' => $record->is_have_name,
+                'created_at' => $record->created_at,
+                'updated_at' => $record->updated_at,
+                'invoice_code' => $record->invoice_code,
+                'customer' => $record->customer,
+                'store_name' => $record->store_name,
+                'time_capital_price' => $record->time_capital_price,
+                'total_price' => $record_invoice[$key]->total_price,
+                'shipping_cost' => $record_invoice[$key]->shipping_cost,
+                'other_cost' => $record_invoice[$key]->other_cost,
+                'discounts' => $record_invoice[$key]->discounts,
+                'grand_total' => $record_invoice[$key]->grand_total,
+                'name' => $record->name,
+                'pseudo_price' => $record->pseudo_price,
+                'profit' => $record->profit,
+                'calc' => $record->calc?$record->calc:0,
+            );
+        }
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data,
+        );
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
     public function data_sale_items_profit()
     {		
@@ -793,77 +843,113 @@ class Report extends MY_Controller
 
         
 		$this->db->select("
-        , transaction.item_capital_price
-        , transaction.created_at
-        , DATE_FORMAT(transaction.created_at, '%Y') AS year
-        , DATE_FORMAT(transaction.created_at, '%Y%m') AS yearmount
-        , CAST(SUM(CAST(`purchase`.`shipping_cost` AS INT)) / list_items.item_quantity AS INT) AS calc,
-        , SUM(CAST(IF(STRCMP(items.shadow_selling_price,0), items.shadow_selling_price, transaction.item_capital_price) AS INT) * CAST(transaction.item_quantity AS INT)) AS pseudo_price
-        , SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT)) AS time_capital_price 
-        , SUM(CAST(transaction.total_price AS INT)) AS total_price
-        ,(SUM(CAST(transaction.total_price AS INT))-SUM(CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS profit");
-		$this->db->join("users", "transaction.created_by = users.id", "left");
-		// $this->db->join("(SELECT fifo_items.invoice_code, SUM(fifo_items.item_quantity) AS item_total FROM fifo_items GROUP BY invoice_code) items_purchase", "items_purchase.invoice_code = transaction.invoice_code", "left");
-        $this->db->join("(SELECT * FROM invoice_purchasing WHERE is_shipping_cost = 1 AND is_cancelled = 0) purchase", "purchase.invoice_code = transaction.reference_purchase", "left");
-        $this->db->join("customer_information customer", "customer.customer_code = transaction.customer_code", "left");
-        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "left");
-		$this->db->join("users is_have", "sale.is_have = is_have.id", "left");
-		$this->db->join("items", "transaction.item_id = items.id", "left");
-		$this->db->join("(SELECT invoice_code, SUM(item_quantity) item_quantity FROM invoice_transaction_list_item GROUP BY invoice_code) list_items", "list_items.invoice_code = transaction.reference_purchase", "left");
+          DATE_FORMAT(sale.created_at, '%Y') AS year
+        , DATE_FORMAT(sale.created_at, '%Y%m') AS yearmount
+        , SUM((CAST(transaction.item_capital_price AS INT) * CAST(transaction.item_quantity AS INT))) AS time_capital_price 
+        , SUM(CAST(transaction.total_price AS INT)) AS total_price");
+        
+        $this->db->join("invoice_selling sale", "transaction.invoice_code=sale.invoice_code", "right");
 
         $this->db->where("sale.is_transaction", 1);
         $this->db->where("sale.is_cancelled", 0);
-        // $this->db->where("transaction.is_cancelled", 0);
+        $this->db->where("transaction.is_cancelled", 0);
         if($customer != ''){
-            $this->db->select('
-            transaction.customer_code
-           ,customer.store_name');
-            $this->db->where("transaction.customer_code", $customer);
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            $this->db->where_in('sale.customer', $arr);
         }
         if($user != ''){
-            $this->db->select('
-            transaction.created_by
-           ,users.name
-           ,sale.is_have
-           ,is_have.name AS is_have_name');
             $this->db->group_start();
-            $this->db->where("transaction.created_by", $user);
+            $this->db->where("sale.created_by", $user);
             $this->db->or_where("sale.is_have", $user);
             $this->db->group_end();
         }
 		if ($dateStart != '') {
             $this->db->group_start();
-			$this->db->where("transaction.created_at >=", $dateStart);
-			$this->db->where("transaction.created_at <=", $dateFinal);
+			$this->db->where("sale.created_at >=", $dateStart);
+			$this->db->where("sale.created_at <=", $dateFinal);
             $this->db->group_end();
 		}
         else{
-			$this->db->like("transaction.created_at", date("Y-m"), 'after');
+			$this->db->like("sale.created_at", date("Y-m"), 'after');
 		}
         switch ($group_by) {
             case 'monthly':
                 # code...
-                $this->db->select('
-                    ,SUM(sale.grand_total) AS grand_total
-                    ,SUM(sale.shipping_cost) AS shipping_cost
-                    ,SUM(sale.other_cost) AS other_cost
-                    ,SUM(sale.discounts) AS discounts
-               ');
                 $this->db->group_by("year");
                 break;
             
             default:
                 # code...
-                $this->db->select('
-                    ,SUM(sale.grand_total) AS grand_total
-                    ,SUM(sale.shipping_cost) AS shipping_cost
-                    ,SUM(sale.other_cost) AS other_cost
-                    ,SUM(sale.discounts) AS discounts
-                ');
                 $this->db->group_by("yearmount");
                 break;
         }
-		$records = $this->db->get('fifo_items transaction')->result();
+		$result1 = $this->db->get('fifo_items transaction')->result();
+        $callback_items = new stdClass();
+
+        foreach ($result1 as $key => $value) {
+            $callback_items->year = $value->year;
+            $callback_items->yearmount = $value->yearmount;
+            $callback_items->time_capital_price += $value->time_capital_price;
+            $callback_items->total_price += $value->total_price;
+            $callback_items->profit += ($value->total_price - $value->time_capital_price);
+        }
+
+        $this->db->select("
+            DATE_FORMAT(invoice_selling.created_at, '%Y') AS year
+            , DATE_FORMAT(invoice_selling.created_at, '%Y%m') AS yearmount
+            , SUM(invoice_selling.total_price) AS total_price
+            , SUM(invoice_selling.discounts) AS discounts
+            , SUM(invoice_selling.shipping_cost) AS shipping_cost
+            , SUM(invoice_selling.other_cost) AS other_cost");
+        $this->db->group_start();
+        $this->db->where("invoice_selling.is_transaction", 1);
+        $this->db->where("invoice_selling.is_cancelled", 0);
+        $this->db->group_end();
+        if($customer != ''){
+            $arr = array_filter(array_map('trim',explode(',',$customer)));
+            $this->db->group_start();
+            $this->db->where_in('invoice_selling.customer', $arr);
+            $this->db->group_end();
+        }
+        if($user != ''){
+            $this->db->group_start();            
+            $this->db->where("invoice_selling.created_by", $user);
+            $this->db->or_where("invoice_selling.is_have", $user);
+            $this->db->group_end();
+        }
+		if ($dateStart != '') {
+            $this->db->group_start();
+			$this->db->where("invoice_selling.created_at >=", $dateStart);
+			$this->db->where("invoice_selling.created_at <=", $dateFinal);
+            $this->db->group_end();
+		}
+        else{
+			$this->db->like("invoice_selling.created_at", date("Y-m"), 'after');
+		}
+        switch ($group_by) {
+            case 'monthly':
+                # code...
+                $this->db->group_by("year");
+                break;
+            
+            default:
+                # code...
+                $this->db->group_by("yearmount");
+                break;
+        }
+		$result2 = $this->db->get('invoice_selling')->result();
+        $callback_invoice = new stdClass();
+
+        foreach ($result2 as $key => $value) {
+            $callback_invoice->calc = 0;
+            $callback_invoice->year = $value->year;
+            $callback_invoice->yearmount = $value->yearmount;
+            $callback_invoice->discounts += $value->discounts;
+            $callback_invoice->total_price += $value->total_price;
+            $callback_invoice->shipping_cost += $value->shipping_cost;
+            $callback_invoice->other_cost += $value->other_cost;
+        }
+        $records = array_merge(array($callback_items), array($callback_invoice));
         $this->output->set_content_type('application/json')->set_output(json_encode($records));
     }
 

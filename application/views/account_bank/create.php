@@ -34,19 +34,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="card-body">
 
                     <div class="row">
-                        <div class="col-md-2 col-12">
-                        <!-- text input -->
-                            <div class="form-group">
-                                <label>Parent Account</label>
-                                <select name="parent_account" id="parent_account" class="form-control form-control-sm">
-                                  <option selected disabled>Select ...</option>
-                                  <?php foreach($parent_account as $key => $value):?>
-                                  <option value="<?=$value->HeadCode?>"><?=$value->HeadName?></option>
-                                  <?php endforeach;?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-12">
+                      <div class="col-lg-3 col-sm-12">
+                      <!-- text input -->
+                          <div class="form-group">
+                              <label><?=lang('account')?></label>
+                              <select name="parent_account" id="parent_account" class="form-control form-control-sm">
+                                <?php foreach ($parent_account as $key => $value):?>
+                                <option value="<?=$value->HeadCode?>"><?=$value->HeadName?></option>
+                                <?php endforeach; ?>
+                              </select>
+                              <?=form_error('parent_account', '<small class="text-danger">','</small>')?>
+                          </div>
+                      </div>  
+                      <div class="col-lg-3 col-sm-12">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('bank_name')?></label>
@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <?=form_error('name', '<small class="text-danger">','</small>')?>
                             </div>
                         </div>
-                        <div class="col-md-2 col-12">
+                        <div class="col-lg-3 col-sm-12">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('no_account')?></label>
@@ -62,7 +62,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <?=form_error('no_account', '<small class="text-danger">','</small>')?>
                             </div>
                         </div>
-                        <div class="col-md col-12">
+                        <div class="col-lg-3 col-sm-12">
                         <!-- text input -->
                             <div class="form-group">
                                 <label><?=lang('own_by')?></label>

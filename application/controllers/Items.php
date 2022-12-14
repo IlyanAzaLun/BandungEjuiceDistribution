@@ -1033,7 +1033,8 @@ class Items extends MY_Controller
                       , `is_cancelled`
                   FROM fifo_items
                   WHERE is_cancelled = 0 AND is_readable = 1 AND item_quantity > 0
-                  GROUP BY item_capital_price, item_code, is_free
+                  GROUP BY item_code
+                  -- GROUP BY item_capital_price, item_code, is_free
                   -- GROUP BY invoice, item_code, is_free
                   ORDER BY created_at ASC)
                   SELECT items.id 

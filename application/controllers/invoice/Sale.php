@@ -125,20 +125,22 @@ class Sale extends Invoice_controller
 				'transaction_destination' => post('transaction_destination'),
 			);
 			
-			$result = $this->validation_items($items);
-			$error = $result['error'];
-			$success = $result['success'];
-			$items = array_values($success);
-			$failed = array_values($error);
-			$error = array_column($failed, 'item_name');
+			//// CUZ IS QUANTITY IS DECREASE FIRST
+			// $result = $this->validation_items($items);
+			// $error = $result['error'];
+			// $success = $result['success'];
+			// $items = array_values($success);
+			// $failed = array_values($error);
+			// $error = array_column($failed, 'item_name');
 
-			if(!$items){
-				$this->session->set_flashdata('alert-type', 'danger');
-				$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
-				redirect("invoice/order/create");
-				return false;
-			}
-			// // CREATE
+			// if(!$items){
+			// 	$this->session->set_flashdata('alert-type', 'danger');
+			// 	$this->session->set_flashdata('alert', 'Quantity is over: '.json_encode($error, true));
+			// 	redirect("invoice/order/create");
+			// 	return false;
+			// }
+
+			//// CREATE
 			echo '<pre>';
 			$this->db->trans_start();
 			$this->update_item_fifo($items); // UPDATE ON PURCHASE QUANTITY
@@ -147,7 +149,7 @@ class Sale extends Invoice_controller
 			$this->create_or_update_invoice($payment);
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_chart_cash($payment);			// Transaction Payment
-			// // $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
+			//// $this->update_items($items); // NOT USE HERE, BUT USED ON ORDER CREATE
 			$this->db->trans_complete();
 			echo '</pre>';
 			if($this->db->trans_status() === FALSE){
@@ -189,7 +191,6 @@ class Sale extends Invoice_controller
         }
 		$this->page_data['data'] = $this->uploadlib->uploadFile();
 
-		// 
 		echo "<pre>";
 		$j = 0;
 		$i = 0;

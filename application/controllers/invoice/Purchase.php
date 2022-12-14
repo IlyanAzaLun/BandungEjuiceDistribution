@@ -106,6 +106,7 @@ class Purchase extends Invoice_controller
 			$this->create_or_update_list_item_transcation($items);
 			$this->create_or_update_list_item_fifo($items);
 			$this->create_or_update_list_chart_cash($payment);
+			$this->journal_create($payment);
 			$this->db->trans_complete();
 			echo "</pre>";
 			if($this->db->trans_status() === FALSE){
@@ -254,7 +255,14 @@ class Purchase extends Invoice_controller
 			}
 			echo "<hr>";
 			// var_dump($this->db->last_query());
-
+			$this->db->like('description', $this->data['invoice_code'], 'both');
+			$journal = $this->db->get('journal')->num_rows();
+			$this->db->reset_query();
+			if ($journal) {
+				$this->db->like('description', $this->data['invoice_code'], 'both');
+				$this->db->delete('journal');
+			}
+			$this->journal_create($payment);
 			$this->db->trans_complete();
 			echo "</pre>";
 			if($this->db->trans_status() === FALSE){
@@ -878,6 +886,122 @@ class Purchase extends Invoice_controller
 			"aaData" => $data,
 		);
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+	}
+
+	private function journal_create($data)
+	{
+		/** coa
+		 * `id`
+		 * `HeadCode`
+		 * `HeadName`
+		 * `PHeadCode`
+		**/
+		// PERSEDIAAN BARANG: 1311//
+		if(setCurrency($data['sub_total']) == setCurrency($data['grand_total'])){
+			$temp = $this->db->where('HeadCode', 1311)->get('acc_coa')->row();
+			$request = array(
+				'id_account' => $temp->id,
+				'HeadCode' => $temp->HeadCode,
+				'HeadName' => $temp->HeadName,
+				'PHeadCode' => $temp->PHeadCode,
+				'debit' => setCurrency($data['grand_total']),
+				'credit' => null,
+				'description' => $data["note"]." [".$this->data['invoice_code']."]",
+				'created_at' => $data['created_at'],
+				'created_by' => logged('id'),
+			);
+			$this->db->trans_start();
+			$this->db->insert('journal', $request);
+			$this->db->trans_complete();
+		}
+		else{
+			$temp = $this->db->where('HeadCode', 1311)->get('acc_coa')->row();
+			$request = array(
+				'id_account' => $temp->id,
+				'HeadCode' => $temp->HeadCode,
+				'HeadName' => $temp->HeadName,
+				'PHeadCode' => $temp->PHeadCode,
+				'debit' => setCurrency($data['total_price']),
+				'credit' => null,
+				'description' => $data["note"]." [".$this->data['invoice_code']."]",
+				'created_at' => $data['created_at'],
+				'created_by' => logged('id'),
+			);
+			$this->db->trans_start();
+			$this->db->insert('journal', $request);
+			$this->db->trans_complete();
+			if (setCurrency($data['shipping_cost']) != 0 && $data['shipping_cost_to_invoice']) {
+				$temp = $this->db->where('HeadCode', 2214)->get('acc_coa')->row();
+				$request = array(
+					'id_account' => $temp->id,
+					'HeadCode' => $temp->HeadCode,
+					'HeadName' => $temp->HeadName,
+					'PHeadCode' => $temp->PHeadCode,
+					'debit' => setCurrency($data['shipping_cost']),
+					'credit' => null,
+					'description' => $temp->HeadName." [".$this->data['invoice_code']."]",
+					'created_at' => $data['created_at'],
+					'created_by' => logged('id'),
+				);
+				$this->db->trans_start();
+				$this->db->insert('journal', $request);
+				$this->db->trans_complete();
+			}
+			if(setCurrency($data['discounts']) != 0){
+				$temp = $this->db->where('HeadCode', 2213)->get('acc_coa')->row();
+				$request = array(
+					'id_account' => $temp->id,
+					'HeadCode' => $temp->HeadCode,
+					'HeadName' => $temp->HeadName,
+					'PHeadCode' => $temp->PHeadCode,
+					'debit' => setCurrency($data['discounts']),
+					'credit' => null,
+					'description' => $temp->HeadName." [".$this->data['invoice_code']."]",
+					'created_at' => $data['created_at'],
+					'created_by' => logged('id'),
+				);
+				$this->db->trans_start();
+				$this->db->insert('journal', $request);
+				$this->db->trans_complete();
+			}
+		}
+
+		if ($data['payment_type'] == 'credit') {
+			// UTANG USAHA: 15113//
+			$temp = $this->db->where('HeadCode', 15113)->get('acc_coa')->row();
+			$request = array(
+				'id_account' => $temp->id,
+				'HeadCode' => $temp->HeadCode,
+				'HeadName' => $temp->HeadName,
+				'PHeadCode' => $temp->PHeadCode,
+				'debit' => null,
+				'credit' => setCurrency($data['grand_total']),
+				'description' => $temp->HeadName." [".$this->data['invoice_code']."]",
+				'created_at' => $data['created_at'],
+				'created_by' => logged('id'),
+			);
+			$this->db->trans_start();
+			$this->db->insert('journal', $request);
+			$this->db->trans_complete();
+		}
+		else{
+			// BANK: 1112//
+			$temp = $this->db->where('HeadCode', 1112)->get('acc_coa')->row();
+			$request = array(
+				'id_account' => $temp->id,
+				'HeadCode' => $temp->HeadCode,
+				'HeadName' => $temp->HeadName,
+				'PHeadCode' => $temp->PHeadCode,
+				'debit' => null,
+				'credit' => setCurrency($data['grand_total']),
+				'description' => $temp->HeadName." [".$this->data['invoice_code']."]",
+				'created_at' => $data['created_at'],
+				'created_by' => logged('id'),
+			);
+			$this->db->trans_start();
+			$this->db->insert('journal', $request);
+			$this->db->trans_complete();
+		}
 	}
 
 }

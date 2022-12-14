@@ -189,7 +189,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             },{
                 data: "invoice_code",
             },{
-                data: "customer_code",
+                data: "customer",
             },{
                 data: "store_name",
             },{
@@ -210,7 +210,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     return data?currency(row['grand_total']):0;
                 }
             },{
-                data: "item_selling_price",
+                data: "total_price",
                 render: function(data, type, row){
                     return data?currency(data):0;
                 }
@@ -223,27 +223,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 data: "pseudo_price",
                 className: "bg-warning",
                 render: function(data, type, row){
-                    return data?currency(row['item_selling_price'] - row['pseudo_price'] - currencyToNum(row['discounts']) + currencyToNum(row['shipping_cost'])):0;
+                    return data?currency(row['total_price'] - currencyToNum(row['pseudo_price']) - currencyToNum(row['discounts']) + currencyToNum(row['shipping_cost'])):0;
                 }
             },{
                 data: "grand_total",
                 className: "bg-danger",
                 render: function(data, type, row){
-                    return data?currency(row['grand_total'] - row['item_capital_price']):0;
+                    return data?currency(row['grand_total'] - row['time_capital_price']):0;
                 }
-            },{
-                data: "calc",
+            },
+            {
+                // data: "calc",
+                data: "grand_total",
                 className: "bg-danger",
                 render: function(data, type, row){
-                    return data?currency(row['calc']):0;
+                    return data?currency(data):0;
                 }
             },{
                 data: "calc",
                 className: "bg-primary",
                 render: function(data, type, row){
-                    return currency((row['grand_total'] - row['item_capital_price']) - row['calc']);
+                    return currency((row['grand_total'] - row['time_capital_price']) - data);
                 }
-            },{
+            },
+            {
                 data: "name",
                 render: function(data, type, row){
                     return (row['is_have_name']!=row['name'] && row['is_have_name']!=null)?row['is_have_name']:row['name']
@@ -284,20 +287,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-lg-4 col-12">
                                 <div class="row">
                                     <div class="col-6">
-                                        <span class="text-default"><label>Discount</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['discounts']))}</span></br></span>
-                                        <span class="text-primary"><label>Other Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['other_cost']))}</span></br></span>
-                                        <span class="text-default"><label>Shipping Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency(currencyToNum(response[0]['shipping_cost']))}</span></br></span>
+                                    <span class="text-default"><label>Discount</label>&nbsp;:&nbsp;<span class="float-right">${currency((response[1]['discounts']))}</span></br></span>
+                                        <span class="text-primary"><label>Other Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency((response[1]['other_cost']))}</span></br></span>
+                                        <span class="text-default"><label>Shipping Cost</label>&nbsp;:&nbsp;<span class="float-right">${currency((response[1]['shipping_cost']))}</span></br></span>
                                     </div>
                                     <div class="col-6">
                                         <span class="text-default"><label>Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['total_price'])}</span><br></span>
-                                        <span class="text-warning"><label>Pesudo Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['pseudo_price'])}</span><br></span>
-                                        <span class="text-danger"><label>Actully Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['grand_total'])}</span><br></span>
+                                        <span class="text-danger"><label>Actully Selling Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost'])}</span><br></span>
                                         <span class="text-default"><label>Capital Price</label>&nbsp;:&nbsp;<span class="float-right">${currency(response[0]['time_capital_price'])}</span><br></span>
 
                                         <span class="text-default"><label>Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'])}</b></span><br></span>
-                                        <span class="text-warning"><label>Profit Pesudo</label>&nbsp;:&nbsp;<span class="float-right"><b>${response[0]['pseudo_price']?currency(response[0]['total_price'] - response[0]['pseudo_price'] - currencyToNum(response[0]['discounts']) + currencyToNum(response[0]['shipping_cost'])):0}</b></span><br></span>
-                                        <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['grand_total'] - response[0]['time_capital_price'])}</b></span><br></span>
-                                        <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[0]['grand_total'] - response[0]['time_capital_price']) - response[0]['calc'])}</b></span><br></span>
+                                        <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(response[0]['profit'] - ((response[1]['other_cost']) + (response[1]['discounts'])))}</b></span><br></span>
+                                        <!-- <span class="text-danger"><label>Actully Profit</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency((response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost']) - response[0]['time_capital_price'])}</b></span><br></span> -->
+                                        <span class="text-primary"><label>Calculation</label>&nbsp;:&nbsp;<span class="float-right"><b>${currency(((response[1]['total_price'] - response[1]['discounts'] - response[1]['other_cost'] - response[1]['shipping_cost']) - response[0]['time_capital_price']) - response[1]['calc'])}</b></span><br></span>
                                     </div>
                                 </div>
                             </div>

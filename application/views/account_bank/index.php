@@ -4,7 +4,7 @@ function dfs($HeadCode, $HeadName, $oResult, $visit, $d)
     if ($d == 0) {
         echo "<li class='jstree-open' id='$HeadCode'>$HeadName";
     }elseif($d == 1){
-        echo "<li id='$HeadCode'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
+        echo "<li id='$HeadCode' class='jstree-open'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
     }else{
         echo "<li id='$HeadCode'><a data-id='child' data-code='$HeadCode' >$HeadName</a>";
     }
@@ -57,7 +57,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <section class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-6">
+      <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">DataTable with minimal features & hover style</h3>
+              <div class="card-tools pull-right">
+              </div>
+            </div>
+            <div class="card-body">
+                <div id="form"></div>
+            </div>
+        </div>
+      </div>
+      <div class="col-12">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">DataTable with minimal features & hover style</h3>
@@ -67,25 +79,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <div id="jstree_demo_div">
-                <ul>
-                    <?php dfs("0", "COA", $get_account, $visit, 0); ?>
-                </ul>
+            <div class="row">
+              <div class="col-12">
+                <div id="jstree_demo_div">
+                    <ul>
+                        <?php dfs("0", "COA", $get_account, $visit, 0); ?>
+                    </ul>
+                </div>
+              </div>
             </div>
           </div>
           <!-- /.card-body -->
         </div>
         <!-- /.card -->
-
-
-      </div>
-      <div class="col-6">
-        <div class="card">
-            <div class="card-header"></div>
-            <div class="card-body">
-                <div id="form"></div>
-            </div>
-        </div>
       </div>
       <!-- /.col -->
     </div>
