@@ -62,6 +62,10 @@ class Accounting extends MY_Controller
                         case 'year':
                             $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y")', false);
                             break;
+
+                        case 'day':
+                            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m-%d") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m-%d")', false);
+                            break;
                         
                         default:
                             $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
@@ -153,8 +157,11 @@ class Accounting extends MY_Controller
         if (post('group') == 'year') {
             $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.$this->page_data['date'].'", "%Y")', false);
         }
-        else{
+        if (post('group') == 'month') {
             $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.$this->page_data['date'].'", "%Y-%m")', false);
+        }
+        if (post('group') == 'day') {
+            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m-%d") =', 'DATE_FORMAT("'.$this->page_data['date'].'", "%Y-%m-%d")', false);
         }
         $this->db->group_end();
         $this->db->order_by('journal.created_at, journal.id', 'ASC');
@@ -191,8 +198,11 @@ class Accounting extends MY_Controller
             if (post('group') == 'year') {
                 $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('balance_sheet')).'", "%Y")', false);
             }
-            else{
+            if (post('group') == 'month'){
                 $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('balance_sheet')).'", "%Y-%m")', false);
+            }
+            if (post('group') == 'day'){
+                $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m-%d") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('balance_sheet')).'", "%Y-%m-%d")', false);
             }
             $this->db->group_end();
             $this->db->where('acc_coa.HeadType', 'A');
@@ -240,8 +250,11 @@ class Accounting extends MY_Controller
             if (post('group') == 'year') {
                 $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y")', false);
             }
-            else{
+            if (post('group') == 'month') {
                 $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y-%m")', false);
+            }
+            if (post('group') == 'day') {
+                $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m-%d") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y-%m-%d")', false);
             }
             $this->db->group_end();
             $this->db->where('acc_coa.HeadType', 'B');

@@ -59,6 +59,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         
             <div class="col-12 col-lg-1">
               <select name="group" id="balance_sheet" class="form-control form-control-sm">
+                <option value="day">Day</option>
                 <option value="month" selected>Month</option>
                 <option value="year">Year</option>
               </select>
@@ -108,21 +109,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <td class="text-right" width="3%">  
                   </td>
                   <td class="text-right" width="15%">
-                    <strong class="float-left">JUMLAH AKTIVA LANCAR</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
+                    <strong class="float-left">Jumlah Aktiva Lancar</strong>
                   </td>
                   
                   <td class="text-right" width="15%">
-                    <strong class="float-left">JUMLAH AKTIVA TETAP</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
+                    <b class="text-left">Rp. </b><strong id="">0</strong>
+                  </td>
+                  
+                  <td class="text-right bg-secondary disabled" width="15%">
+                    <strong class="float-left">Jumlah Aktiva Tetap</strong>
+                  </td>
+                  
+                  <td class="text-right bg-secondary disabled" width="15%"> 
+                    <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right" width="15%"> 
-                    <strong class="float-left">JUMLAH KEWAJIBAN</strong> <b class="text-left">Rp. </b><strong id="">0</strong>  
-                  </td>
-                  
-                  <td class="text-right" width="15%">  
-                  </td>
-                  
-                  <td class="text-right" width="15%">  
                   </td>
                   
                   <td class="text-right">
@@ -133,17 +135,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <td class="text-right" width="3%">  
                   </td>
                   <td class="text-right" width="15%">
-                    <strong class="float-left">JUMLAH AKTIVA LANCAR LAINNYA</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
+                    <strong class="float-left">Jumlah Aktiva Lancar Lainnya</strong>
                   </td>
                   
                   <td class="text-right" width="15%">
+                    <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
-                  <td class="text-right" width="15%"> 
-                    <strong class="float-left">JUMLAH EKUITAS</strong> <b class="text-left">Rp. </b><strong id="">0</strong> 
+                  <td class="text-right bg-secondary disabled" width="15%"> 
+                    <strong class="float-left">Jumlah Ekuitas</strong>
                   </td>
                   
-                  <td class="text-right" width="15%">  
+                  <td class="text-right bg-secondary disabled" width="15%">  
+                    <b class="text-left">Rp. </b><strong id="">0</strong> 
                   </td>
                   
                   <td class="text-right" width="15%">  
@@ -157,16 +161,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <td class="text-right" width="3%">  
                   </td>
                   <td class="text-right" width="15%">
-                    <strong class="float-left">JUMLAH TOTAL AKTIVA LANCAR</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
+                    <strong class="float-left">Jumlah Total Aktiva Lancar</strong>
                   </td>
                   
                   <td class="text-right" width="15%">
+                    <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
-                  <td class="text-right" width="15%">  
+                  <td class="text-right bg-secondary disabled" width="15%">  
+                    <strong class="float-left">Jumlah Kewajiban</strong> 
                   </td>
                   
-                  <td class="text-right" width="15%">  
+                  <td class="text-right bg-secondary disabled" width="15%">  
+                    <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right" width="15%">  
@@ -195,7 +202,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     "singleDatePicker": true,
     "autoApply": true,
     "locale": {
-        "format": "MMMM YYYY",
+        "format": "DD MMMM YYYY",
         "firstDay": 1
     },
   })

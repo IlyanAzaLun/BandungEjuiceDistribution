@@ -58,6 +58,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
             <div class="col-12 col-lg-1">
               <select name="group" id="balance_sheet" class="form-control form-control-sm">
+                <option value="day">Day</option>
                 <option value="month" selected>Month</option>
                 <option value="year">Year</option>
               </select>
@@ -113,19 +114,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </td>
                   
                   <td class="text-right" width="15%">  
+                  <strong class="float-left">Laba Kotor</strong>  
+                  </td>
+                  
+                  <td class="text-right" width="15%">  
+                  <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right" width="15%">  
                   </td>
                   
-                  <td class="text-right" width="15%">  
-                  </td>
-                  
-                  <td class="text-right" width="15%">  
+                  <td class="text-right" width="15%">
                   </td>
                   
                   <td class="text-right" width="20%">
-                    <strong class="float-left">LABA KOTOR</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right">
@@ -135,10 +137,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <td class="text-right" width="3%">  
                   </td>
                   
-                  <td class="text-right" width="15%">  
+                  <td class="text-right" width="15%">
+                    <strong class="float-left">Total Beban Operasional Dan Non Operasional</strong>  
                   </td>
                   
                   <td class="text-right" width="15%">  
+                    <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right" width="15%">  
@@ -148,7 +152,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </td>
                   
                   <td class="text-right">
-                    <strong class="float-left">TOTAL BEBAN OPERSIONAL DAN NON OPERASIONAL</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right">
@@ -159,10 +162,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <td class="text-right" width="3%">  
                   </td>
                   
-                  <td class="text-right" width="15%">  
+                  <td class="text-right" width="15%"> 
+                    <strong class="float-left">[Pendapatan Lain - Total Biaya Lain]</strong> 
                   </td>
                   
                   <td class="text-right" width="15%">  
+                  <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right" width="15%">  
@@ -172,7 +177,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </td>
                   
                   <td class="text-right">
-                    <strong class="float-left">[PENDAPATAN LAIN - TOTAL BIAYA LAIN]</strong> <b class="text-left">Rp. </b><strong id="">0</strong>
                   </td>
                   
                   <td class="text-right">
@@ -198,7 +202,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     "singleDatePicker": true,
     "autoApply": true,
     "locale": {
-        "format": "MMMM YYYY",
+        "format": "DD MMMM YYYY",
         "firstDay": 1
     },
   })
