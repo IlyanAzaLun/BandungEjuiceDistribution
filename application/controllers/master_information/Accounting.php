@@ -78,11 +78,45 @@ class Accounting extends MY_Controller
                             break;
                         
                         default:
-                            $this->db->where('acc_coa.HeadType', 'B');
+                            $this->db->like('acc_coa.HeadType','B','after');
                             break;
                     }
                     $this->db->group_by('journal.id_account');
                     $this->db->order_by('journal.id_account', 'ASC');
+                    $response = $this->db->get('journal')->result();
+                    break;
+                case 'data':
+                    $this->db->select('
+                      journal.id_account
+                    , journal.HeadCode
+                    , journal.debit
+                    , journal.credit
+                    , journal.created_at
+                    , journal.description');
+                    $this->db->join('acc_coa', 'journal.id_account = acc_coa.id', 'right');
+                    $this->db->group_start();
+                    $this->db->where('journal.HeadCode', post('id'));
+                    switch (post('group')) {
+                        case 'year':
+                            $this->db->where('DATE_FORMAT(journal.created_at, "%Y") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y")', false);
+                            break;
+
+                        case 'day':
+                            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m-%d") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m-%d")', false);
+                            break;
+                        
+                        default:
+                            $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m") =', 'DATE_FORMAT("'.DateFomatDb($data).'", "%Y-%m")', false);
+                            break;
+                    }
+                    if (post('type') == 'balance_sheet') {
+                        $this->db->where('acc_coa.HeadType', 'A');
+                    }
+                    if (post('type') == 'profit_n_loss') {
+                        $this->db->like('acc_coa.HeadType','B','after');
+                    }
+                    $this->db->group_end();
+                    $this->db->order_by('journal.created_at', 'ASC');
                     $response = $this->db->get('journal')->result();
                     break;
                 default:
@@ -257,7 +291,9 @@ class Accounting extends MY_Controller
                 $this->db->where('DATE_FORMAT(journal.created_at, "%Y-%m-%d") =', 'DATE_FORMAT("'.DateFomatDb($this->input->post('profit_n_loss')).'", "%Y-%m-%d")', false);
             }
             $this->db->group_end();
-            $this->db->where('acc_coa.HeadType', 'B');
+            $this->db->group_start();
+            $this->db->like('acc_coa.HeadType','B','after');
+            $this->db->group_end();
             $this->db->order_by('journal.created_at, journal.id', 'ASC');
             $this->page_data['journal_report'] = $this->db->get('journal')->result();
 

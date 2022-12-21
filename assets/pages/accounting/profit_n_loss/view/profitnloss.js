@@ -1,11 +1,48 @@
+import DataSourceAccount from "../data/DataSourceAccount.js";
+const dataSourceAccount = new DataSourceAccount();
+
 const main = () => {
     $(document).ready(function () {
         'use strict'
 
         $(document).ready(function () {
-            loadDataHansonTable($('input#profit_n_loss').val(), $('select#balance_sheet').val());
-            $('input#profit_n_loss, select#balance_sheet').on('change', function () {
-                loadDataHansonTable($('input#profit_n_loss').val(), $('select#balance_sheet').val())
+            loadDataHansonTable($('input#profit_n_loss').val(), $('select#profit_n_loss').val());
+            $('input#profit_n_loss, select#profit_n_loss').on('change', function () {
+                loadDataHansonTable($('input#profit_n_loss').val(), $('select#profit_n_loss').val())
+            });
+
+            // extention
+            $(`tbody>tr>td[colspan=5]`).on('click', function () {
+                let element = $(this).parent()
+                let id = this.textContent.substring(this.textContent.indexOf("[") + 1, this.textContent.lastIndexOf("]"))
+                let group = $('select#profit_n_loss').val();
+                let date = $('input#profit_n_loss').val();
+
+                dataSourceAccount.account_get(id, date, group, function (output) {
+                    let html = '';
+                    if (output['data'] != null) {
+                        html += `
+                        <tr>
+                            <th></th>
+                            <th class="bg-primary">Tanggal</th>
+                            <th class="bg-primary">Kredit</th>
+                            <th class="bg-primary">Debit</th>
+                            <th class="bg-primary" colspan="3">Description</th>
+                        </tr>
+                        `;
+                    }
+                    $.each(output['data'], function (index, item) {
+                        html += `
+                        <tr>
+                            <td></td>
+                            <td class="bg-secondary">${item.created_at}</td>
+                            <td class="bg-secondary">Rp.${currency(item.credit)}</td>
+                            <td class="bg-secondary">Rp.${currency(item.debit)}</td>
+                            <td class="bg-secondary" colspan="3">${item.description}</td>
+                        </tr>`
+                    })
+                    element.after(html)
+                })
             })
         })
         // FUNCTION

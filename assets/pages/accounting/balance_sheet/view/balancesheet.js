@@ -1,3 +1,6 @@
+import DataSourceAccount from "../data/DataSourceAccount.js";
+const dataSourceAccount = new DataSourceAccount();
+
 const main = () => {
     $(document).ready(function () {
         'use strict'
@@ -6,6 +9,40 @@ const main = () => {
             loadDataHansonTable($('input#balance_sheet').val(), $('select#balance_sheet').val());
             $('input#balance_sheet, select#balance_sheet').on('change', function () {
                 loadDataHansonTable($('input#balance_sheet').val(), $('select#balance_sheet').val())
+            });
+
+            // extention
+            $(`tbody>tr>td[colspan=5]`).on('click', function () {
+                let element = $(this).parent()
+                let id = this.textContent.substring(this.textContent.indexOf("[") + 1, this.textContent.lastIndexOf("]"))
+                let group = $('select#balance_sheet').val();
+                let date = $('input#balance_sheet').val();
+
+                dataSourceAccount.account_get(id, date, group, function (output) {
+                    let html = '';
+                    if (output['data'] != null) {
+                        html += `
+                        <tr>
+                            <th></th>
+                            <th class="bg-primary">Tanggal</th>
+                            <th class="bg-primary">Kredit</th>
+                            <th class="bg-primary">Debit</th>
+                            <th class="bg-primary" colspan="3">Description</th>
+                        </tr>
+                        `;
+                    }
+                    $.each(output['data'], function (index, item) {
+                        html += `
+                        <tr>
+                            <td></td>
+                            <td class="bg-secondary">${item.created_at}</td>
+                            <td class="bg-secondary">Rp.${currency(item.credit)}</td>
+                            <td class="bg-secondary">Rp.${currency(item.debit)}</td>
+                            <td class="bg-secondary" colspan="3">${item.description}</td>
+                        </tr>`
+                    })
+                    element.after(html)
+                })
             })
         })
         // FUNCTION
@@ -29,7 +66,6 @@ const main = () => {
                     let _total_credit = 0;
                     let curent;
                     // LOOPING DATA
-                    console.log(res)
                     $.each(res.data, function (index, item) {
                         // SET DATA
                         $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total >= 0 ? currency(item.total) : '(' + currency(Math.abs(item.total)) + ')'};`)
