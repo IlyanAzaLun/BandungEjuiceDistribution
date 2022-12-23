@@ -61,6 +61,7 @@
             }
         </style>
     </head>
+    <?php for($i = 1; $i <= $post['pack']?(int) $post['pack']:0; $i++):?>
     <body>
         <main>
             <table>
@@ -84,13 +85,19 @@
                         </th>
                     </tr>
                     <tr>
-                        <th class="text-left" colspan="2" >
+                        <th colspan="2" class="text-top text-left">
+                            EKSPEDISI: <?=$post['expedition_name']?><?=($post['services_expedition'])?" - ".$post['services_expedition']:"";?><?=($post['type_payment_shipping'])?" - ".$post['type_payment_shipping']:"";?><br>
+                            KOLI: <?="$i/".$post['pack']?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-top text-left">
                             PENGIRIM: <?=$information->contact_us?><br>
-                            EXPEDISI: <?=$post['expedition_name']?><?=($post['services_expedition'])?" - ".$post['services_expedition']:""?>
                         </th>
                     </tr>
                 </tbody>
             </table>
         </main>
     </body>
+    <?php endfor; ?>
 </html>

@@ -40,20 +40,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="form-group">
                                     <label><?= lang('customer_code') ?></label>
                                     <input type="hidden" class="form-control form-control-sm" name="id" id="id" readonly value="<?= $information->id ?>">
-                                    <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" value="<?= $information->customer_code ?>">
+                                    <input type="text" class="form-control form-control-sm" name="customer_code" id="customer_code" readonly value="<?= $information->customer_code ?>">
                                 </div>
                             </div>
 
-                            <div class="col-sm-12 col-lg-2">
+                            <div class="col-sm-12 col-lg-3">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('store_name') ?></label>
-                                    <input type="text" class="form-control form-control-sm" name="store_name" id="store_name" value="<?= $information->store_name ?>">
+                                    <textarea type="text" class="form-control form-control-sm" name="store_name" id="store_name" value="<?= $information->store_name ?>"><?= $information->store_name ?></textarea>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-lg-3">
+                            <div class="col-sm-12 col-lg-4">
                                 <div class="row">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-6">
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label><?= lang('customer_owner') ?></label>
@@ -62,7 +62,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 col-lg-4">
+                                    <div class="col-sm-12 col-lg-6">
                                         <div class="form-group">
                                             <label><?= lang('category_customer') ?></label>
                                             <select class="form-control select2" style="width: 100%;" name="customer_type" id="category" value="<?= set_value('category') ?>">
@@ -80,7 +80,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
 
-                            <div class="col-sm-12 col-lg-2">
+                            <div class="col-lg-4 col-sm-12">
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('contact_us') ?></label>
@@ -91,7 +91,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-2 col-sm-12">
                                 <div class="form-group">
                                     <h6><?= lang('expedition_name') ?></h6>
-                                    <select class="custom-select" name="expedition_name" id="expedition_name" required>
+                                    <select class="form-control form-control-sm" name="expedition_name" id="expedition_name" required>
                                         <option value="" selected disabled><?=lang('option')?></option>
                                         <?php foreach ($expedition as $key => $value):?>
                                             <option value="<?= $value->expedition_name ?>"<?=($value->expedition_name == $invoice->expedition)?' selected':''?> data-services="<?= $value->services_expedition ?>"><?= $value->expedition_name ?></option>
@@ -102,9 +102,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-2 col-sm-12">
                                 <div class="form-group">
                                     <h6><?= lang('expedition_services') ?></h6>
-                                    <select class="custom-select" name="services_expedition" id="services_expedition">
+                                    <select class="form-control form-control-sm" name="services_expedition" id="services_expedition">
                                         <option value=""><?=lang('option')?></option>
                                         <option value="<?=$invoice->services_expedition?>" selected><?=$invoice->services_expedition?></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-sm-12">
+                                <div class="form-group">
+                                    <h6><?= lang('pack') ?></h6>
+                                    <input type="number" class="form-control form-control-sm" name="pack" required>
+                                </div>
+                            </div>
+                            
+                                
+                            <div class="col-lg-2 col-sm-12">
+                                <div class="form-group">
+                                    <h6><?= lang('select_payment_shipping') ?></h6>
+                                    <select class="form-control form-control-sm" name="type_payment_shipping" id="type_payment_shipping">
+                                        <option value="" <?=$invoice->type_payment_shipping==""?'selected':''?>><?=lang('option')?></option>
+                                        <option value="TAGIH TUJUAN" <?=$invoice->type_payment_shipping=="TAGIH TUJUAN"?'selected':''?>>TAGIH TUJUAN</option>
+                                        <option value="KREDIT" <?=$invoice->type_payment_shipping=="KREDIT"?'selected':''?>>KREDIT</option>
+                                        <option value="TUNAI" <?=$invoice->type_payment_shipping=="TUNAI"?'selected':''?>>TUNAI</option>
+                                        <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                     </select>
                                 </div>
                             </div>

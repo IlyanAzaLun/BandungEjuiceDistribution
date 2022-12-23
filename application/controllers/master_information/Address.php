@@ -133,7 +133,7 @@ class Address extends MY_Controller
             }
             $this->db->trans_complete();
             $this->page_data['information'] = $this->address_model->full_information(get('id'));  
-            $this->page_data['post'] = $this->input->post();  
+            $this->page_data['post'] = $this->input->post();
             // then print information
             $this->load->library('pdf');
         

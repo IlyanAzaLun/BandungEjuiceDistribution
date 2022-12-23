@@ -48,7 +48,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="province"><?= lang('province') ?></label>
-                  <select class="custom-select" name="province" id="province" required>
+                  <select class="custom-select" name="province" id="province">
 
                   </select>
                 </div>
@@ -56,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="city"><?= lang('city') ?></label>
-                  <select class="custom-select" name="city" id="city" required>
+                  <select class="custom-select" name="city" id="city">
 
                 </select>
                 </div>
