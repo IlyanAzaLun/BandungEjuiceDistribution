@@ -36,8 +36,8 @@ const main = () => {
                         <tr>
                             <td></td>
                             <td class="bg-secondary">${item.created_at}</td>
-                            <td class="bg-secondary">Rp.${currency(item.credit)}</td>
-                            <td class="bg-secondary">Rp.${currency(item.debit)}</td>
+                            <td class="bg-secondary">Rp.${currency(Math.abs(item.credit).toFixed(2))}</td>
+                            <td class="bg-secondary">Rp.${currency(Math.abs(item.debit).toFixed(2))}</td>
                             <td class="bg-secondary" colspan="3">${item.description}</td>
                         </tr>`
                     })
@@ -68,7 +68,7 @@ const main = () => {
                     // LOOPING DATA
                     $.each(res.data, function (index, item) {
                         // SET DATA
-                        $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total >= 0 ? currency(item.total) : '(' + currency(Math.abs(item.total)) + ')'};`)
+                        $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total >= 0 ? currency(Math.abs(item.total).toFixed(2)) : '(' + currency(Math.abs(item.total).toFixed(2)) + ')'};`)
                         // CONDITION IF CURENT CODE IS NOT SAME WITH NEXT CODE
                         if (curent != item.PHeadCode.substring(0, 2)) {
                             // RESET TO 0
@@ -86,11 +86,11 @@ const main = () => {
                             _total_debit += Number(item.total_debit);
                             _total_credit += Number(item.total_credit);
                         }
-                        $(`thead>tr>td#${curent}>span.currency`).html(`<b>${(_total >= 0) ? currency(_total) : `(${currency(Math.abs(_total))})`}</b>`)
+                        $(`thead>tr>td#${curent}>span.currency`).html(`<b>${(_total >= 0) ? currency(_total.toFixed(2)) : `(${currency(Math.abs(_total).toFixed(2))})`}</b>`)
                     })
-                    $('strong#total_debit').text(currency(_total_debit))
-                    $('strong#total_credit').text(currency(_total_credit))
-                    $('strong#total').text(((_total_debit - _total_credit) >= 0) ? currency(_total_debit - _total_credit) : `(${currency(Math.abs(_total_debit - _total_credit))})`)
+                    $('strong#total_debit').text(currency(Math.abs(_total_debit).toFixed(2)))
+                    $('strong#total_credit').text(currency(Math.abs(_total_credit).toFixed(2)))
+                    $('strong#total').text(((_total_debit - _total_credit) >= 0) ? currency(Math.abs(_total_debit - _total_credit).toFixed(2)) : `(${currency(Math.abs(_total_debit - _total_credit).toFixed(2))})`)
                 }
             })
         }

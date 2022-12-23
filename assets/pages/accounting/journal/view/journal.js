@@ -98,28 +98,6 @@ const main = () => {
                     $('input[name="amount"]').val(total_debit.toFixed(2));
 
                 }
-                // $.each(journal_entry, function (index, value) {
-                //     if (value[0] != '') {
-                //         if (value[1] != '' && value[2] != null) {
-                //             total_debit += parseFloat(value[2]);
-                //         }
-                //         if (value[2] != '' && value[3] != null) {
-                //             total_credit += parseFloat(value[3]);
-                //         }
-                //     }
-                // });
-
-                // // VALIDATION
-                // if (total_debit.toFixed(2) == total_credit.toFixed(2)) {
-                //     if (total_debit > 0) {
-                //         $('input[name="amount"]').val(total_debit.toFixed(2));
-                //     } else {
-                //         alert('you_must_fill_out_at_least_two_detail_lines');
-                //     }
-                // } else {
-                //     alert('please_balance_debits_and_credits');
-                // }
-                // // 
             },
             afterRemoveRow: function (index, amount, physicalRows, source) {
                 var journal_entry = null;
