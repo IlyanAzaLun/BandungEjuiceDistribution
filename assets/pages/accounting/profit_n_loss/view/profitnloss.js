@@ -69,7 +69,7 @@ const main = () => {
                     $.each(res.data, function (index, item) {
                         // SET DATA
                         if (item.IsTransaction == 1) { // PENDAPATAN & PENJUALAN
-                            $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total_debit >= 0 ? currency(Math.abs(item.total_debit)).toFixed(2) : '(' + currency(Math.abs(item.total_debit).toFixed(2)) + ')'};`)
+                            $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total_debit >= 0 ? currency(Math.abs(item.total_debit).toFixed(2)) : '(' + currency(Math.abs(item.total_debit).toFixed(2)) + ')'};`)
                         }
                         else {
                             $(`tbody>tr>td#${item.HeadCode}>span.currency`).html(`${item.total >= 0 ? currency(Math.abs(item.total).toFixed(2)) : '(' + currency(Math.abs(item.total).toFixed(2)) + ')'};`)

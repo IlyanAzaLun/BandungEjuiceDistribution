@@ -118,7 +118,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   </div>
                 </div>
               </td>
-            <?php $grandtotal += $list->grand_total;$payup += $list->payup;$leftovers += $list->leftovers;?>
+            <?php $grandtotal += $list->grand_total;
+                  $payup += ($list->payup > $list->grand_total)?$list->grand_total:$list->$list->payup;?>
             </tr>
             <tr class="child-row-<?=$key;?>" style="display: none;"></tr>
             <?php endif; ?>
@@ -132,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col-md-2 col sm-12"></div>
                     <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($grandtotal)?></b></span></div>
                     <div class="col-md-1 col sm-12"><span class="float-right"><b><?=getCurrentcy($payup)?></b></span></div>
-                    <div class="col-md-2 col sm-12"><span class="float-right"><b><?=getCurrentcy($leftovers)?></b></span></div>
+                    <div class="col-md-2 col sm-12"><span class="float-right"><b><?=getCurrentcy($grandtotal - $payup)?></b></span></div>
                     <div class="col-md-1 col sm-12"></div>
                     <div class="col-md-1 col sm-12"></div>
                   </div>
