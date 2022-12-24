@@ -45,11 +45,14 @@ class Address extends REST_Controller {
 		if ($searchValue != '') {
             $this->db->group_start();
             $this->db->like('customer_information.store_name', $searchValue, 'both');
-            $this->db->like('supplier_information.owner_name', $searchValue, 'both');
+            $this->db->or_like('supplier_information.owner_name', $searchValue, 'both');
             $this->db->or_like('customer_information.store_name', $searchValue, 'both');
             $this->db->or_like('supplier_information.owner_name', $searchValue, 'both');
             $this->db->group_end();
         }
+        $this->db->group_start();
+        $this->db->like('address_information.is_active', 1);
+        $this->db->group_end();
 		$records = $this->db->get('address_information')->result();
 		$totalRecordwithFilter = $records[0]->allcount;
 
@@ -77,6 +80,11 @@ class Address extends REST_Controller {
         $this->db->join('customer_information', 'customer_information.customer_code = address_information.customer_code','left');
         $this->db->join('supplier_information', 'supplier_information.customer_code = address_information.customer_code','left');
         $this->db->from('address_information');
+        
+        $this->db->group_start();
+        $this->db->like('address_information.is_active', 1);
+        $this->db->group_end();
+        
         if(!empty($id)){
             $records = $this->db->where("id", $id)->row();
         }else{

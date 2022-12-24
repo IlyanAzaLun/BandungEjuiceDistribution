@@ -81,7 +81,7 @@
                             <?php echo ($information->sub_district)?"$information->sub_district, ":false;?>
                             <?php echo ($information->village)?"$information->village, ":false;?><br>
                             
-                            <?php echo ($information->contact_phone)?$information->contact_phone:false?>
+                            <?php echo ($post['temporary_number'])?$post['temporary_number']:$information->contact_phone;?>
                         </th>
                     </tr>
                     <tr>

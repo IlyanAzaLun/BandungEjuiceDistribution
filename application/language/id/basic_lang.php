@@ -407,6 +407,7 @@ $lang['contact_us'] = "Nomor Pengirim";
 $lang['create_delivery_information'] = "Buat Informasi Pengiriman";
 $lang['information_delivery'] = "Informasi Pengiriman";
 $lang['delivery_code'] = "Kode Dokumen";
+$lang['temporary_number'] = "Nomor Customer Sementara";
 
 /*
  *bank

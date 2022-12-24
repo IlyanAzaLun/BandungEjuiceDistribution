@@ -114,7 +114,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <input type="number" class="form-control form-control-sm" name="pack" required>
                                 </div>
                             </div>
-                            
                                 
                             <div class="col-lg-2 col-sm-12">
                                 <div class="form-group">
@@ -126,6 +125,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <option value="TUNAI" <?=$invoice->type_payment_shipping=="TUNAI"?'selected':''?>>TUNAI</option>
                                         <option value="DFOD" <?=$invoice->type_payment_shipping=="DFOD"?'selected':''?>>DFOD</option>
                                     </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-3 col-sm-12">
+                                <div class="form-group">
+                                    <h6><?= lang('temporary_number') ?></h6>
+                                    <input type="number" class="form-control form-control-sm" name="temporary_number">
                                 </div>
                             </div>
 
