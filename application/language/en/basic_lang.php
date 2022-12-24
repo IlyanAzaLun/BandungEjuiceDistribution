@@ -336,7 +336,7 @@ $lang['customer_category_special'] = "Special Agent";
 $lang['customer_category_distributor'] = "Distributor";
 $lang['customer_category_other'] = "Other";
 $lang['customer_type'] = "Customer type";
-$lang['customer_category_other'] = "Other";
+$lang['temporary_address'] = "Temporary Address";
 
 /*
  * Supplier

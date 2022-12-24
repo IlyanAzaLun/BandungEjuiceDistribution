@@ -132,8 +132,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-sm-12 col-lg-12">
                                 <!-- text input -->
                                 <div class="form-group">
-                                    <label><?= lang('note') ?></label>
-                                    <textarea type="text" class="form-control form-control-sm" name="note" id="note"><?= $information->note ?></textarea>
+                                    <label><?= lang('temporary_address') ?></label>
+                                    <textarea type="text" class="form-control form-control-sm" name="temporary_address" id="temporary_address"></textarea>
                                     <?= form_error('note', '<small class="text-danger">', '</small>') ?>
                                 </div>
                             </div>

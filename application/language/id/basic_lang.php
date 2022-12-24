@@ -335,6 +335,7 @@ $lang['customer_category_special'] = "Agen Khusus";
 $lang['customer_category_distributor'] = "Distributor";
 $lang['customer_category_other'] = "Lainnya";
 $lang['customer_type'] = "Tipe Pelanggan";
+$lang['temporary_address'] = "Alamat Sementara";
 
 /*
  * Pemasok
@@ -402,7 +403,7 @@ $lang['address_info_add'] = "Tambahkan alamat Data Informasi Lainnya";
 $lang['address_info_edit'] = "Edit Informasi alamat Data";
 $lang['is_open'] = "Terbuka";
 $lang['warehouse_address_list'] = "Gudang Alamat";
-$lang['contact_us'] = "Hubungi Kami";
+$lang['contact_us'] = "Nomor Pengirim";
 $lang['create_delivery_information'] = "Buat Informasi Pengiriman";
 $lang['information_delivery'] = "Informasi Pengiriman";
 $lang['delivery_code'] = "Kode Dokumen";

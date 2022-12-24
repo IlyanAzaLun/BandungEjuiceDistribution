@@ -75,7 +75,7 @@
                     <tr>
                         <th colspan="2" class="text-top text-left">
                             
-                            <?php echo $information->address; ?>
+                            <?php echo ($post['temporary_address'])?strtoupper($post['temporary_address']):$information->address; ?>
                             <?php echo ($information->province)?"$information->province, ":false;?>
                             <?php echo ($information->city)?"$information->city, ":false;?>
                             <?php echo ($information->sub_district)?"$information->sub_district, ":false;?>
