@@ -173,14 +173,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }
       ],
       buttons: [{
-          text: 'Expand All',
+          text: 'Detail All',
           className: 'btn-sm btn-success',
           attr: {
             id: 'btn-show-all-children',
           }
         },
         {
-          text: 'Collapse All',
+          text: 'Hide Detail All',
           className: 'btn-sm btn-info',
           attr: {
             id: 'btn-hide-all-children',
