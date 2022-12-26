@@ -131,7 +131,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group">
                                     <h6><?= lang('temporary_number') ?></h6>
-                                    <input type="number" class="form-control form-control-sm" name="temporary_number">
+                                    <input type="number" class="form-control form-control-sm" name="temporary_number" <?=($information->contact_phone)?"":"required"?>>
                                 </div>
                             </div>
 
@@ -139,7 +139,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <!-- text input -->
                                 <div class="form-group">
                                     <label><?= lang('temporary_address') ?></label>
-                                    <textarea type="text" class="form-control form-control-sm" name="temporary_address" id="temporary_address"></textarea>
+                                    <textarea type="text" class="form-control form-control-sm" name="temporary_address" id="temporary_address" <?=($information->address)?"":"required"?>></textarea>
                                     <?= form_error('note', '<small class="text-danger">', '</small>') ?>
                                 </div>
                             </div>

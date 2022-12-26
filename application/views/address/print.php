@@ -68,19 +68,21 @@
                 <thead>
                     <tr class="text-right">
                         <!-- <th rowspan="4" class="text-center"><img src="<?php echo url('uploads/company/').setting('company_icon')?>" alt="" width="50px"></th> -->
-                        <th class="text-left" colspan="2">PENERIMA: <?=$information->owner_name?></th>
+                        <th class="text-left" colspan="2">PENERIMA: <?=($information->owner_name)?$information->owner_name:$information->store_name;?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th colspan="2" class="text-top text-left">
-                            
-                            <?php echo ($post['temporary_address'])?strtoupper($post['temporary_address']):$information->address; ?>
+                            <?php if($post['temporary_address']):?>
+                            <?php echo strtoupper($post['temporary_address']); ?><br>
+                            <?php else:?>
+                            <?php echo $information->address; ?>
                             <?php echo ($information->province)?"$information->province, ":false;?>
                             <?php echo ($information->city)?"$information->city, ":false;?>
                             <?php echo ($information->sub_district)?"$information->sub_district, ":false;?>
                             <?php echo ($information->village)?"$information->village, ":false;?><br>
-                            
+                            <?php endif;?>
                             <?php echo ($post['temporary_number'])?$post['temporary_number']:$information->contact_phone;?>
                         </th>
                     </tr>
